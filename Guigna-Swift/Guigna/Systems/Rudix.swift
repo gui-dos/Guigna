@@ -131,7 +131,7 @@ class Rudix: GSystem {
     }
     
     override func contents(item: GItem) -> String {
-        if item.installed {
+        if item.installed != nil {
             return output("\(cmd) --files \(item.name)")
         } else {
             return "" // TODO: parse http://rudix.org/packages/%@.html

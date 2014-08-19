@@ -191,7 +191,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
         sourceListBackgroundColor = sourcesOutline.backgroundColor
         linkTextAttributes = infoText.linkTextAttributes
-        if !defaults["Theme"] {
+        if defaults["Theme"] == nil {
             defaults["Theme"] = "Default"
         }
         let theme = defaults["Theme"] as String
@@ -238,10 +238,10 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         terminal.doScript("clear ; printf \"\\e[3J\" ; echo Welcome to Guigna! ; echo", `in`:shell)
         
         if fileManager.fileExistsAtPath(portPath) || fileManager.fileExistsAtPath("\(APPDIR)/MacPorts/PortIndex") {
-            if !defaults["MacPortsStatus"] {
+            if defaults["MacPortsStatus"] == nil {
                 defaults["MacPortsStatus"] = GState.On.toRaw()
             }
-            if !defaults["MacPortsParsePortIndex"] {
+            if defaults["MacPortsParsePortIndex"] == nil {
                 defaults["MacPortsParsePortIndex"] = true
             }
         }
@@ -260,7 +260,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
         
         if fileManager.fileExistsAtPath(brewPath) {
-            if !defaults["HomebrewStatus"] {
+            if defaults["HomebrewStatus"] == nil {
                 defaults["HomebrewStatus"] = GState.On.toRaw()
             }
         }
@@ -282,7 +282,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
         
         if fileManager.fileExistsAtPath("/sw/bin/fink") {
-            if !defaults["FinkStatus"] {
+            if defaults["FinkStatus"] == nil {
                 defaults["FinkStatus"] = GState.On.toRaw()
             }
         }
@@ -296,7 +296,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         
         // TODO: Index user defaults
         if fileManager.fileExistsAtPath("/usr/pkg/sbin/pkg_info") || fileManager.fileExistsAtPath("\(APPDIR)/pkgsrc/INDEX") {
-            if !defaults["pkgsrcStatus"] {
+            if defaults["pkgsrcStatus"] == nil {
                 defaults["pkgsrcStatus"] = GState.On.toRaw()
                 defaults["pkgsrcCVS"] = true
             }
@@ -310,7 +310,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
         
         if fileManager.fileExistsAtPath("\(APPDIR)/FreeBSD/INDEX") {
-            if !defaults["FreeBSDStatus"] {
+            if defaults["FreeBSDStatus"] == nil {
                 defaults["FreeBSDStatus"] = GState.On.toRaw()
             }
         }
@@ -321,7 +321,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
         
         if fileManager.fileExistsAtPath("/usr/local/bin/rudix") {
-            if !defaults["RudixStatus"] {
+            if defaults["RudixStatus"] == nil {
                 defaults["RudixStatus"] = GState.On.toRaw()
             }
         }
@@ -333,7 +333,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             systems.append(rudix)
         }
         
-        if !defaults["iTunesStatus"] {
+        if defaults["iTunesStatus"] == nil {
             defaults["iTunesStatus"] = GState.On.toRaw()
         }
         if defaults["iTunesStatus"] != nil && defaults["iTunesStatus"] == GState.On.toRaw() {
@@ -343,11 +343,11 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         
         systems.append(MacOSX(agent: agent))
         
-        if !defaults["DebugMode"] {
+        if defaults["DebugMode"] == nil {
             defaults["DebugMode"] = false
         }
         
-        if !defaults["ScrapesCount"] {
+        if defaults["ScrapesCount"] == nil {
             defaults["ScrapesCount"] = 15
         }
         

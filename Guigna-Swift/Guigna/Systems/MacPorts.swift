@@ -63,12 +63,12 @@ class MacPorts: GSystem {
                     s.scanUpToString(" ", intoString: &key)
                     s.scanString(" ", intoString: nil)
                     s.scanUpToCharactersFromSet(endsCharacterSet, intoString: &str)
-                    value.setString(str)
+                    value.setString(str!)
                     var range = value.rangeOfString("{")
                     while range.location != NSNotFound {
                         value.replaceCharactersInRange(range, withString: "")
                         if s.scanUpToString("}", intoString: &str) {
-                            value.appendString(str)
+                            value.appendString(str!)
                         }
                         s.scanString("}", intoString: nil)
                         range = value.rangeOfString("{")

@@ -114,7 +114,7 @@ class GSystem: GSource {
         return command.stringByReplacingOccurrencesOfString("\(cmd)", withString: "\(cmd) -d")
     }
     
-    func output(command: String) -> String {
+    func output(command: String) -> String! {
         return agent.output(command)
     }
 }

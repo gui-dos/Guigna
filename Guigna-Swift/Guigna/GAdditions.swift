@@ -14,11 +14,15 @@ protocol GAppDelegate {
 extension Array {
     
     func join() -> String {
-        return " ".join(self)
+        // return " ".join(self) // doesn't compile anymore with B6
+        return self._bridgeToObjectiveC().componentsJoinedByString(" ")
+
     }
     
     func join(separator: String) -> String {
-        return separator.join(self)
+        // return separator.join(self) // doesn't compile anymore with B6
+        return self._bridgeToObjectiveC().componentsJoinedByString(separator)
+
     }
     
 }
@@ -142,7 +146,7 @@ extension NSXMLNode {
     
     var href: String { // FIXME: coompiling error when used
         get {
-            return (self as NSXMLElement).attributeForName("href").stringValue!
+            return (self as NSXMLElement).attributeForName("href")!.stringValue!
         }
     }
 }

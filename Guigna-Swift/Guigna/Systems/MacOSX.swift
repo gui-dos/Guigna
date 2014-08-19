@@ -96,7 +96,7 @@ class MacOSX: GSystem {
                 let pkgId = (results[0] as NSDictionary)["trackId"]!.stringValue!
                 let url = NSURL(string: "http://itunes.apple.com/app/id\(pkgId)")
                 let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil)
-                let mainDiv = xmlDoc.rootElement().nodesForXPath("//div[@id=\"main\"]", error: nil)[0] as NSXMLNode
+                let mainDiv = xmlDoc.rootElement().nodesForXPath("//div[@id=\"main\"]")[0]
                 let links = mainDiv["//div[@class=\"app-links\"]/a"]
                 // TODO: get screenshots via JSON
                 let screenshotsImgs = mainDiv["//div[contains(@class, \"screenshots\")]//img"]
@@ -167,8 +167,8 @@ class MacOSX: GSystem {
             dirs.removeLast()
             for dir in dirs {
                 let dirPath = NSString.pathWithComponents([plist["volume"]!, plist["install-location"]!, dir])
-                let fileAttributes = fileManager.attributesOfItemAtPath(dirPath, error: nil) as NSDictionary
-                if (!(Int(fileAttributes.fileOwnerAccountID()) == 0) && !dirPath.hasPrefix("/usr/local"))
+                let fileAttributes = fileManager.attributesOfItemAtPath(dirPath, error: nil)! as NSDictionary
+                if (!(Int(fileAttributes.fileOwnerAccountID()!) == 0) && !dirPath.hasPrefix("/usr/local"))
                     || dirPath.contains(pkg.name)
                     || dirPath.contains(".")
                     || dirPath.hasPrefix("/opt/") {

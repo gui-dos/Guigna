@@ -1,10 +1,9 @@
 FIXME
 
 * Swift:
-  - MacPorts.list() really slow because of the NString <-> String
-    conversions in NSScanner
-  - Erratic visibility of enum values causing compiling errors
-  - Inactive packages are filtered for systems other than MacPorts and Homebrew
+  - MacPorts.list() too slow
+  - Erratic visibility of enum values
+  - inactive.filter() should be called only for MacPorts and Homebrew
 * RubyMotion huge memory leaks
 * Help doesn't always open the wiki page
 * The password to sudo is echoed in clear text
@@ -14,10 +13,8 @@ FIXME
 
 TODO
 
-* Swift port:
-    - port remaining systems and scrapes
-    - line-by-line review compared to RubyMotion
-* Rudix commands
+* Swift:
+    - complete port of inactive packages management
 * mdfind 'kMDItemContentType==com.apple.application-bundle'
 * Manage --force flags
 * suggest 'sudo chown $USER:admin /usr/local'

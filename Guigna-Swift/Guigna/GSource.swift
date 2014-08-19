@@ -86,7 +86,7 @@ class GSourceTransformer: NSValueTransformer {
     }
     
     override func transformedValue(source: AnyObject!) -> AnyObject! {
-        if !source {
+        if source == nil {
             return nil
         }
         let name: String = source.name

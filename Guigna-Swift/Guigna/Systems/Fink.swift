@@ -17,7 +17,7 @@ class Fink: GSystem {
         if mode == GMode.Online { // FIXME: the compiler requires expilicit enum the first time it is seen
             let url = NSURL(string: "http://pdb.finkproject.org/pdb/browse.php")
             let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil)
-            var nodes = xmlDoc.rootElement().nodesForXPath("//tr[@class=\"package\"]", error: nil) as [NSXMLNode]
+            var nodes = xmlDoc.rootElement().nodesForXPath("//tr[@class=\"package\"]")
             for node in nodes {
                 let dataRows = node["td"]
                 var description = dataRows[2].stringValue!

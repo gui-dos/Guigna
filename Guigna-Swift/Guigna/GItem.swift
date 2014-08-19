@@ -146,7 +146,7 @@ class GStatusTransformer: NSValueTransformer {
     }
     
     override func transformedValue(value: AnyObject!) -> AnyObject! {
-        if !value {
+        if value == nil {
             return nil
         }
         let status = GStatus.fromRaw(value.integerValue)!
@@ -182,7 +182,7 @@ class GMarkTransformer: NSValueTransformer {
     }
     
     override func transformedValue(value: AnyObject!) -> AnyObject! {
-        if !value  {
+        if value == nil {
             return nil
         }
         let mark = GMark.fromRaw(value.integerValue)!
