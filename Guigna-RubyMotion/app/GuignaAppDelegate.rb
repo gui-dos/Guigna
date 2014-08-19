@@ -1459,6 +1459,7 @@ class GuignaAppDelegate
   
   def closeOptions(sender)
     window.endSheet optionsPanel
+    syncButton.setEnabled true
   end
   
   def options_status(msg)
