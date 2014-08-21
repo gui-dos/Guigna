@@ -76,18 +76,18 @@ Some advice and warnings:
     The following methods build and return the corresponding commands
     as strings:
 
-    -   install_cmd(pkg)
-    - uninstall_cmd(pkg)
-    -   upgrade_cmd(pkg)
+    -   installCmd(pkg)
+    - uninstallCmd(pkg)
+    -   upgradeCmd(pkg)
     
     The following methods execute specific commands and return the output:
    
-    -     home(pkg)   URL of the original website
-    -      log(pkg)   URL of the page listing the versions/commits
-    -     info(pkg)   output of the 'info' command
-    -     deps(pkg)   list of the dependencies/requirements
-    -      cat(pkg)   portfile, formula, spec or makefile
-    - contents(pkg)   list of installed files
+    -     home(item)   URL of the original website
+    -      log(item)   URL of the page listing the versions/commits
+    -     info(item)   output of the 'info' command
+    -     deps(item)   list of the dependencies/requirements
+    -      cat(item)   portfile, formula, spec or makefile
+    - contents(item)   list of installed files
 
 
     Other GSystem methods and properties:
@@ -102,12 +102,10 @@ Some advice and warnings:
 
     - cmd       prefix + /bin/port | bin/brew | /bin/fink | ...
 
-    - agent     passed by appDelegate/app_delegate and implementing
-                the methods:
-                - nodesForURL:XPath: (nodes_for_url(url, xpath) in Ruby)
+    - agent     passed by appDelegate and implementing the methods:
+                - nodesForURL:XPath:
                 - outputForCommand:
-                - appDelegate / app_delegate (it gives access to
-                  GuignaAppDelegate)
+                - appDelegate (it gives access to GuignaAppDelegate)
 
     - outputFor shortcut for calling agent's outputForCommand: method,
                 passing a format and a va_list of args
@@ -122,15 +120,16 @@ Some advice and warnings:
 
     - mark       enum: install, uninstall, upgrade, fetch, ...
 
-    - options    available variants/options/flags joined by space
+    - options    available variants/options/flags, joined by space
 
-    - marked_    variants/options/flags marked by the user for committing
-      options
+    - marked     variants/options/flags marked by the user for committing
+      Options
 
-    - *_cmd      shortcuts to self.system.*_cmd, passing itself as argument
+    - *Cmd       shortcuts to self.system.*Cmd(pkg), passing itself as argument
       
-    Inactive packages are not indexed and are inserted also in
-    app_delegate's all_packages / allPackages.
+    Inactive packages are not indexed and are inserted also directly in
+    the appDelegate's allPackages array.
+	Ruby versions use underscores instead of camel case.
 
 ```
 --

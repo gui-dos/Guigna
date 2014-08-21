@@ -1676,7 +1676,9 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     
     @IBAction func closeOptions(sender: AnyObject) {
         self.window.endSheet(self.optionsPanel)
-        self.syncButton.enabled = true
+        if self.ready {
+			syncButton.enabled = true
+		}
     }
     
     
