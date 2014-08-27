@@ -129,7 +129,8 @@ Some advice and warnings:
       
     Inactive packages are not indexed and are inserted also directly in
     the appDelegate's allPackages array.
-	Ruby versions use underscores instead of camel case.
+
+    Ruby versions use underscores instead of camel case.
 
 ```
 --

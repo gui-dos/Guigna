@@ -24,31 +24,32 @@ class ITunes: GSystem {
         var pkgs = [GPackage]()
         pkgs.reserveCapacity(1000)
         let fileManager = NSFileManager.defaultManager()
-        let contents = fileManager.contentsOfDirectoryAtPath("~/Music/iTunes/iTunes Media/Mobile Applications".stringByExpandingTildeInPath, error: nil) as [String]
-        for filename in contents {
-            let ipa = "~/Music/iTunes/iTunes Media/Mobile Applications/\(filename)".stringByExpandingTildeInPath
-            let idx = filename.rindex(" ")
-            if idx == NSNotFound {
-                continue
+        if let contents = fileManager.contentsOfDirectoryAtPath("~/Music/iTunes/iTunes Media/Mobile Applications".stringByExpandingTildeInPath, error: nil) as? [String] {
+            for filename in contents {
+                let ipa = "~/Music/iTunes/iTunes Media/Mobile Applications/\(filename)".stringByExpandingTildeInPath
+                let idx = filename.rindex(" ")
+                if idx == NSNotFound {
+                    continue
+                }
+                let version = filename.substring(idx + 1, filename.length - idx - 5)
+                var escapedIpa = ipa.stringByReplacingOccurrencesOfString(" ", withString: "__")
+                var plist = output("/usr/bin/unzip -p \(escapedIpa) iTunesMetadata.plist")
+                if  plist == nil { // binary plist
+                    escapedIpa = ipa.stringByReplacingOccurrencesOfString(" ", withString: "\\__")
+                    plist = output("/bin/sh -c /usr/bin/unzip__-p__\(escapedIpa)__iTunesMetadata.plist__|__plutil__-convert__xml1__-o__-__-")
+                }
+                let metadata = plist.propertyList() as NSDictionary
+                let name = metadata["itemName"]! as String
+                let pkg = GPackage(name: name, version: "", system: self, status: .UpToDate)
+                pkg.id = filename.substringToIndex(filename.length - 4)
+                pkg.installed = version
+                pkg.categories = metadata["genre"]! as? String
+                pkgs.append(pkg)
             }
-            let version = filename.substring(idx + 1, filename.length - idx - 5)
-            var escapedIpa = ipa.stringByReplacingOccurrencesOfString(" ", withString: "__")
-            var plist = output("/usr/bin/unzip -p \(escapedIpa) iTunesMetadata.plist")
-            if  plist == nil { // binary plist
-                escapedIpa = ipa.stringByReplacingOccurrencesOfString(" ", withString: "\\__")
-                plist = output("/bin/sh -c /usr/bin/unzip__-p__\(escapedIpa)__iTunesMetadata.plist__|__plutil__-convert__xml1__-o__-__-")
-            }
-            let metadata = plist.propertyList() as NSDictionary
-            let name = metadata["itemName"]! as String
-            let pkg = GPackage(name: name, version: "", system: self, status: .UpToDate)
-            pkg.id = filename.substringToIndex(filename.length - 4)
-            pkg.installed = version
-            pkg.categories = metadata["genre"]! as? String
-            pkgs.append(pkg)
+            //    for pkg in installed() {
+            //        index[pkg.key].status = pkg.status
+            //    }
         }
-        //    for pkg in installed() {
-        //        index[pkg.key].status = pkg.status
-        //    }
         return pkgs
     }
     

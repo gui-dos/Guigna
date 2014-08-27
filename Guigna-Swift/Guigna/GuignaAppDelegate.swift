@@ -379,7 +379,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         self.applyButton.enabled = false
         self.stopButton.enabled = false
         self.syncButton.enabled = false
-
+        
         
         self.options(self)
     }
@@ -1677,8 +1677,8 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     @IBAction func closeOptions(sender: AnyObject) {
         self.window.endSheet(self.optionsPanel)
         if self.ready {
-			syncButton.enabled = true
-		}
+            syncButton.enabled = true
+        }
     }
     
     

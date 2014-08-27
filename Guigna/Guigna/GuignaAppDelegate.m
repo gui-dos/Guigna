@@ -1598,8 +1598,8 @@
 
 - (IBAction)closeOptions:(id)sender {
     [NSApp endSheet:optionsPanel];
-	if (self.ready)
-    	[syncButton setEnabled:YES];
+    if (self.ready)
+        [syncButton setEnabled:YES];
 }
 
 
