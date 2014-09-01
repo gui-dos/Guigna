@@ -1322,7 +1322,9 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     }
                 }
                 tableProgressIndicator.stopAnimation(self)
-                status("OK.")
+                if !statusField.stringValue.hasPrefix("Executing") {
+                    status("OK.")
+                }
                 
             } else if title == "Commands" {
                 while commandsPopUp.numberOfItems > 1 {

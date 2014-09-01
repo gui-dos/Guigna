@@ -1269,7 +1269,8 @@
                 }
             }
             [tableProgressIndicator stopAnimation:self];
-            [self status:@"OK."];
+            if (![[statusField stringValue] hasPrefix:@"Executing"])
+                [self status:@"OK."];
             
         } else if ([title is:@"Commands"]) {
             while ([commandsPopUp numberOfItems] > 1) {

@@ -1187,7 +1187,9 @@ class GuignaAppDelegate
           end
         end
         tableProgressIndicator.stopAnimation self
-        status "OK."
+        if !statusField.stringValue.start_with? "Executing"
+          status "OK."
+        end
       
       elsif title == "Commands"
         while commandsPopUp.numberOfItems > 1
