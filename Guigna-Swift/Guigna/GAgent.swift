@@ -51,7 +51,7 @@ class GAgent: NSObject {
         }
         var data: NSData = page!.dataUsingEncoding(NSUTF8StringEncoding)!
         var doc = NSXMLDocument(data: data, options: Int(NSXMLDocumentTidyHTML), error: &error)
-        var nodes = doc.rootElement().nodesForXPath(xpath, error: &error) as [NSXMLNode]
+        var nodes = doc.rootElement()!.nodesForXPath(xpath, error: &error) as [NSXMLNode]
         return nodes
     }
 }

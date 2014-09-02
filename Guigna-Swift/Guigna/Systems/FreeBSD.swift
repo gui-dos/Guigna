@@ -40,7 +40,7 @@ class FreeBSD: GSystem {
         } else {
             let url = NSURL(string: "http://www.freebsd.org/ports/master-index.html")
             let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil)
-            let root = xmlDoc.rootElement()["/*"][0]
+            let root = xmlDoc.rootElement()!["/*"][0]
             let names = root["//p/strong/a"]
             let descriptions = root["//p/em"]
             var i = 0

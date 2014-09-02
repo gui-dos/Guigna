@@ -53,7 +53,7 @@ class Pkgsrc: GSystem {
         } else {
             let url = NSURL(string: "http://ftp.netbsd.org/pub/pkgsrc/current/pkgsrc/README-all.html")
             let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil)
-            var nodes = xmlDoc.rootElement()["//tr"]
+            var nodes = xmlDoc.rootElement()!["//tr"]
             for node in nodes {
                 let rowData = node["td"]
                 if rowData.count == 0 {

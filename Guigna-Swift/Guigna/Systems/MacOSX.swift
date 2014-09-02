@@ -96,7 +96,7 @@ class MacOSX: GSystem {
                 let pkgId = (results[0] as NSDictionary)["trackId"]!.stringValue!
                 let url = NSURL(string: "http://itunes.apple.com/app/id\(pkgId)")
                 let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil)
-                let mainDiv = xmlDoc.rootElement()["//div[@id=\"main\"]"][0]
+                let mainDiv = xmlDoc.rootElement()!["//div[@id=\"main\"]"][0]
                 let links = mainDiv["//div[@class=\"app-links\"]/a"]
                 // TODO: get screenshots via JSON
                 let screenshotsImgs = mainDiv["//div[contains(@class, \"screenshots\")]//img"]
