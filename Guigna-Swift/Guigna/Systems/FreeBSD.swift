@@ -49,7 +49,7 @@ class FreeBSD: GSystem {
                 var idx = name.rindex("-")
                 let version = name.substringFromIndex(idx + 1)
                 name = name.substringToIndex(idx)
-                var category = node.attribute("href")
+                var category = node.href
                 category = category.substringToIndex(category.index(".html"))
                 var description = descriptions[i].stringValue!
                 let pkg = GPackage(name: name, version: version, system: self, status: .Available)

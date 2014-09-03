@@ -144,7 +144,7 @@ extension NSXMLNode {
         }
     }
     
-    var href: String { // FIXME: coompiling error when used
+    var href: String {
         get {
             return (self as NSXMLElement).attributeForName("href")!.stringValue!
         }

@@ -169,7 +169,7 @@ class Pkgsrc: GSystem {
             return item.homepage
         } else {
             let links = agent.nodes(URL: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories)/\(item.name)/README.html", XPath: "//p/a")
-            return links[2].attribute("href")
+            return links[2].href
         }
     }
     

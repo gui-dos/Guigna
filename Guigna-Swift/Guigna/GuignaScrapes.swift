@@ -60,7 +60,7 @@ class PkgsrcSE: GScrape {
     }
     
     override func home(item: GItem) -> String {
-        return agent.nodes(URL: self.log(item), XPath: "//div[@id=\"main\"]//a")[2].attribute("href")
+        return agent.nodes(URL: self.log(item), XPath: "//div[@id=\"main\"]//a")[2].href
     }
     
     override func log(item: GItem) -> String {
@@ -98,7 +98,7 @@ class Debian: GScrape {
         var page = log(item)
         let links = agent.nodes(URL: page, XPath: "//a[text()=\"Homepage\"]")
         if links.count > 0 {
-            page = links[0].attribute("href")
+            page = links[0].href
         }
         return page
     }
@@ -128,7 +128,7 @@ class PyPI: GScrape {
         for node in nodes {
             let rowData = node["td"]
             let date = rowData[0].stringValue!
-            let link = rowData[1]["a"][0].attribute("href")
+            let link = rowData[1]["a"][0].href
             let splits = link.split("/")
             let name = splits[splits.count - 2]
             let version = splits[splits.count - 1]
@@ -185,7 +185,7 @@ class RubyGems: GScrape {
         if links.count > 0 {
             for link in links {
                 if link.stringValue! == "Homepage" {
-                    page = link.attribute("href")
+                    page = link.href
                 }
             }
         }
@@ -222,7 +222,7 @@ class MacUpdate: GScrape {
                 name = name.substringToIndex(idx)
             }
             let description = node["span"][0].stringValue!.substringFromIndex(2)
-            let id = node["a"][0].attribute("href").split("/")[3]
+            let id = node["a"][0].href.split("/")[3]
             let app = GItem(name: name, version: version, source: self, status: .Available)
             app.id = id
             app.description = description
@@ -233,7 +233,7 @@ class MacUpdate: GScrape {
     
     override func home(item: GItem) -> String {
         let nodes = agent.nodes(URL: log(item), XPath: "//a[@target=\"devsite\"]")
-        let href = nodes[0].attribute("href").stringByReplacingPercentEscapesUsingEncoding(NSUTF8StringEncoding)
+        let href = nodes[0].href.stringByReplacingPercentEscapesUsingEncoding(NSUTF8StringEncoding)
         return "http://www.macupdate.com\(href!)"
     }
     
@@ -263,7 +263,7 @@ class AppShopper: GScrape {
             var version = node[".//dd"][2].stringValue!
             version = version.substringToIndex(version.length - 1)  // trim final \n
             var id = node["@id"][0].stringValue!.substringFromIndex(4)
-            let nick = node["a"][0].attribute("href").lastPathComponent
+            let nick = node["a"][0].href.lastPathComponent
             id += " \(nick)"
             var category = node["div[@class=\"category\"]"][0].stringValue!
             category = category.substringToIndex(category.length - 1) // trim final \n
@@ -293,9 +293,9 @@ class AppShopper: GScrape {
         let links = mainDiv["//div[@class=\"app-links\"]/a"]
         let screenshotsImgs = mainDiv["//div[contains(@class, \"screenshots\")]//img"]
         item.screenshots = " ".join(screenshotsImgs.map {$0.attribute("src")})
-        var homepage = links[0].attribute("href")
+        var homepage = links[0].href
         if homepage == "http://" {
-            homepage = links[1].attribute("href")
+            homepage = links[1].href
         }
         return homepage
     }
@@ -328,7 +328,7 @@ class AppShopperIOS: GScrape {
             var version = node[".//dd"][2].stringValue!
             version = version.substringToIndex(version.length - 1)  // trim final \n
             var id = node["@id"][0].stringValue!.substringFromIndex(4)
-            let nick = node["a"][0].attribute("href").lastPathComponent
+            let nick = node["a"][0].href.lastPathComponent
             id += " \(nick)"
             var category = node["div[@class=\"category\"]"][0].stringValue!
             category = category.substringToIndex(category.length - 1) // trim final \n
@@ -358,9 +358,9 @@ class AppShopperIOS: GScrape {
         let links = mainDiv["//div[@class=\"app-links\"]/a"]
         let screenshotsImgs = mainDiv["//div[contains(@class, \"screenshots\")]//img"]
         item.screenshots = " ".join(screenshotsImgs.map {$0.attribute("src")})
-        var homepage = links[0].attribute("href")
+        var homepage = links[0].href
         if homepage == "http://" {
-            homepage = links[1].attribute("href")
+            homepage = links[1].href
         }
         return homepage
     }

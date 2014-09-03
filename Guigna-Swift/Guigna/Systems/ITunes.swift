@@ -76,9 +76,9 @@ class ITunes: GSystem {
         // TODO: get screenshots via JSON
         let screenshotsImgs = mainDiv["//div[contains(@class, \"screenshots\")]//img"]
         item.screenshots = " ".join(screenshotsImgs.map {$0.attribute("src")})
-        homepage = links[0].attribute("href")
+        homepage = links[0].href
         if homepage == "http://" {
-            homepage = links[1].attribute("href")
+            homepage = links[1].href
         }
         return homepage
     }
