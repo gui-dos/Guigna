@@ -37,7 +37,7 @@ class GItem: NSObject {
     }
     var statusValue: NSNumber {
         get {
-            return NSNumber.numberWithInteger(self.status.toRaw())
+            return NSNumber(integer: self.status.toRaw())
         }
         set {
             status = GStatus.fromRaw(newValue.integerValue)!
@@ -54,7 +54,7 @@ class GItem: NSObject {
     }
     var markValue: NSNumber {
         get {
-            return NSNumber.numberWithInteger(self.mark.toRaw())
+            return NSNumber(integer: self.mark.toRaw())
         }
         set {
             mark = GMark.fromRaw(newValue.integerValue)!
