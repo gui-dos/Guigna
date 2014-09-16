@@ -35,7 +35,7 @@ class MacPorts: GSystem {
             var portIndex = "" as NSString
             if mode == GMode.Online {  // FIXME: the compiler requires expilicit enum the first time it is seen
                 // TODO: fetch PortIndex
-                portIndex = NSString(contentsOfFile: "~/Library/Application Support/Guigna/MacPorts/PortIndex".stringByExpandingTildeInPath, encoding: NSUTF8StringEncoding, error: nil)
+                portIndex = NSString(contentsOfFile: "~/Library/Application Support/Guigna/MacPorts/PortIndex".stringByExpandingTildeInPath, encoding: NSUTF8StringEncoding, error: nil) ?? ""
             } else {
                 portIndex = NSString(contentsOfFile: "\(prefix)/var/macports/sources/rsync.macports.org/release/tarballs/ports/PortIndex", encoding: NSUTF8StringEncoding, error: nil) ?? ""
             }
@@ -296,7 +296,7 @@ class MacPorts: GSystem {
     
     override func cat(item: GItem) -> String {
         if self.isHidden || mode == .Online {
-            return NSString(contentsOfURL: NSURL(string: "http://trac.macports.org/browser/trunk/dports/\(item.categories!.split()[0])/\(item.name)/Portfile?format=txt")!, encoding: NSUTF8StringEncoding, error:nil)
+            return NSString(contentsOfURL: NSURL(string: "http://trac.macports.org/browser/trunk/dports/\(item.categories!.split()[0])/\(item.name)/Portfile?format=txt")!, encoding: NSUTF8StringEncoding, error:nil) ?? ""
         }
         return output("\(cmd) cat \(item.name)")
     }

@@ -39,25 +39,26 @@ class FreeBSD: GSystem {
             
         } else {
             let url = NSURL(string: "http://www.freebsd.org/ports/master-index.html")!
-            let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil)
-            let root = xmlDoc.rootElement()!["/*"][0]
-            let names = root["//p/strong/a"]
-            let descriptions = root["//p/em"]
-            var i = 0
-            for node in names {
-                var name = node.stringValue!
-                var idx = name.rindex("-")
-                let version = name.substringFromIndex(idx + 1)
-                name = name.substringToIndex(idx)
-                var category = node.href
-                category = category.substringToIndex(category.index(".html"))
-                var description = descriptions[i].stringValue!
-                let pkg = GPackage(name: name, version: version, system: self, status: .Available)
-                pkg.categories = category
-                pkg.description = description
-                items.append(pkg)
-                // self[id] = pkg
-                i++
+            if let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil) {
+                let root = xmlDoc.rootElement()!["/*"][0]
+                let names = root["//p/strong/a"]
+                let descriptions = root["//p/em"]
+                var i = 0
+                for node in names {
+                    var name = node.stringValue!
+                    var idx = name.rindex("-")
+                    let version = name.substringFromIndex(idx + 1)
+                    name = name.substringToIndex(idx)
+                    var category = node.href
+                    category = category.substringToIndex(category.index(".html"))
+                    var description = descriptions[i].stringValue!
+                    let pkg = GPackage(name: name, version: version, system: self, status: .Available)
+                    pkg.categories = category
+                    pkg.description = description
+                    items.append(pkg)
+                    // self[id] = pkg
+                    i++
+                }
             }
         }
         // self.installed() // update status
@@ -68,10 +69,10 @@ class FreeBSD: GSystem {
     override func info(item: GItem) -> String { // TODO: Offline mode
         let category = item.categories!.split()[0]
         var itemName = item.name
-        var pkgDescr = NSString(contentsOfURL: NSURL(string: "http://svnweb.freebsd.org/ports/head/\(category)/\(item.name)/pkg-descr?view=co")!, encoding: NSUTF8StringEncoding, error: nil)
+        var pkgDescr = NSString(contentsOfURL: NSURL(string: "http://svnweb.freebsd.org/ports/head/\(category)/\(item.name)/pkg-descr?view=co")!, encoding: NSUTF8StringEncoding, error: nil) ?? ""
         if pkgDescr.hasPrefix("<!DOCTYPE") { // 404 File Not Found
             itemName = itemName.lowercaseString
-            pkgDescr = NSString(contentsOfURL: NSURL(string: "http://svnweb.freebsd.org/ports/head/\(category)/\(item.name)/pkg-descr?view=co")!, encoding: NSUTF8StringEncoding, error: nil)
+            pkgDescr = NSString(contentsOfURL: NSURL(string: "http://svnweb.freebsd.org/ports/head/\(category)/\(item.name)/pkg-descr?view=co")!, encoding: NSUTF8StringEncoding, error: nil) ?? ""
         }
         if pkgDescr.hasPrefix("<!DOCTYPE") { // 404 File Not Found
             pkgDescr = "[Info not reachable]"
@@ -109,10 +110,10 @@ class FreeBSD: GSystem {
     override func contents(item: GItem) -> String {
         let category = item.categories!.split()[0]
         var itemName = item.name
-        var pkgPlist = NSString(contentsOfURL: NSURL(string: "http://svnweb.freebsd.org/ports/head/\(category)/\(item.name)/pkg-plist?view=co")!, encoding: NSUTF8StringEncoding, error: nil)
+        var pkgPlist = NSString(contentsOfURL: NSURL(string: "http://svnweb.freebsd.org/ports/head/\(category)/\(item.name)/pkg-plist?view=co")!, encoding: NSUTF8StringEncoding, error: nil) ?? ""
         if pkgPlist.hasPrefix("<!DOCTYPE") { // 404 File Not Found
             itemName = itemName.lowercaseString
-            pkgPlist = NSString(contentsOfURL: NSURL(string: "http://svnweb.freebsd.org/ports/head/\(category)/\(item.name)/pkg-plist?view=co")!, encoding: NSUTF8StringEncoding, error: nil)
+            pkgPlist = NSString(contentsOfURL: NSURL(string: "http://svnweb.freebsd.org/ports/head/\(category)/\(item.name)/pkg-plist?view=co")!, encoding: NSUTF8StringEncoding, error: nil) ?? ""
         }
         if pkgPlist.hasPrefix("<!DOCTYPE") { // 404 File Not Found
             pkgPlist = ""
@@ -123,10 +124,10 @@ class FreeBSD: GSystem {
     override func cat(item: GItem) -> String {
         let category = item.categories!.split()[0]
         var itemName = item.name
-        var makefile = NSString(contentsOfURL: NSURL(string: "http://svnweb.freebsd.org/ports/head/\(category)/\(item.name)/Makefile?view=co")!, encoding: NSUTF8StringEncoding, error: nil)
+        var makefile = NSString(contentsOfURL: NSURL(string: "http://svnweb.freebsd.org/ports/head/\(category)/\(item.name)/Makefile?view=co")!, encoding: NSUTF8StringEncoding, error: nil) ?? ""
         if makefile.hasPrefix("<!DOCTYPE") { // 404 File Not Found
             itemName = itemName.lowercaseString
-            makefile = NSString(contentsOfURL: NSURL(string: "http://svnweb.freebsd.org/ports/head/\(category)/\(item.name)/Makefile?view=co")!, encoding: NSUTF8StringEncoding, error: nil)
+            makefile = NSString(contentsOfURL: NSURL(string: "http://svnweb.freebsd.org/ports/head/\(category)/\(item.name)/Makefile?view=co")!, encoding: NSUTF8StringEncoding, error: nil) ?? ""
         }
         if makefile.hasPrefix("<!DOCTYPE") { // 404 File Not Found
             makefile = "[Makefile not reachable]"

@@ -70,17 +70,20 @@ class ITunes: GSystem {
         let metadata = plist.propertyList() as NSDictionary
         let itemId: Int = metadata["itemId"]! as Int
         let url = NSURL(string: "http://itunes.apple.com/app/id\(itemId)")!
-        let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil)
-        let mainDiv = xmlDoc.rootElement()!["//div[@id=\"main\"]"][0]
-        let links = mainDiv["//div[@class=\"app-links\"]/a"]
-        // TODO: get screenshots via JSON
-        let screenshotsImgs = mainDiv["//div[contains(@class, \"screenshots\")]//img"]
-        item.screenshots = " ".join(screenshotsImgs.map {$0.attribute("src")})
-        homepage = links[0].href
-        if homepage == "http://" {
-            homepage = links[1].href
+        if let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil) {
+            let mainDiv = xmlDoc.rootElement()!["//div[@id=\"main\"]"][0]
+            let links = mainDiv["//div[@class=\"app-links\"]/a"]
+            // TODO: get screenshots via JSON
+            let screenshotsImgs = mainDiv["//div[contains(@class, \"screenshots\")]//img"]
+            item.screenshots = " ".join(screenshotsImgs.map {$0.attribute("src")})
+            homepage = links[0].href
+            if homepage == "http://" {
+                homepage = links[1].href
+            }
+            return homepage
+        } else {
+            return log(item)
         }
-        return homepage
     }
     
     override func log(item: GItem!) -> String {

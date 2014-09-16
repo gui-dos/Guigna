@@ -215,7 +215,7 @@ class Homebrew: GSystem {
         if !self.isHidden {
             return output("\(cmd) cat \(item.name)")
         } else {
-            return NSString(contentsOfFile: "\(prefix)_off/Library/Formula/\(item.name).rb", encoding: NSUTF8StringEncoding, error: nil)
+            return NSString(contentsOfFile: "\(prefix)_off/Library/Formula/\(item.name).rb", encoding: NSUTF8StringEncoding, error: nil) ?? ""
         }
     }
     

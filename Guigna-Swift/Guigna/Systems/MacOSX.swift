@@ -27,7 +27,7 @@ class MacOSX: GSystem {
         var pkgIds = output("/usr/sbin/pkgutil --pkgs").split("\n")
         pkgIds.removeLast()
         
-        let history = (NSArray(contentsOfFile: "/Library/Receipts/InstallHistory.plist") as Array).reverse()
+        let history = (NSArray(contentsOfFile: "/Library/Receipts/InstallHistory.plist") ?? [] as Array).reverse()
         var keepPkg: Bool
         for dict in history as [NSDictionary] {
             keepPkg = false
@@ -90,20 +90,21 @@ class MacOSX: GSystem {
         var homepage = "http://support.apple.com/downloads/"
         if item.categories == "storeagent" || item.categories == "storedownloadd" {
             let url = "http://itunes.apple.com/lookup?bundleId=\(item.id)"
-            let data = NSData(contentsOfURL: NSURL(string: url)!)
+            let data = NSData(contentsOfURL: NSURL(string: url)!) ?? NSData()
             let results = ((NSJSONSerialization.JSONObjectWithData(data, options: nil, error: nil) as NSDictionary)["results"]! as NSArray)
             if results.count > 0 {
                 let pkgId = (results[0] as NSDictionary)["trackId"]!.stringValue!
                 let url = NSURL(string: "http://itunes.apple.com/app/id\(pkgId)")!
-                let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil)
-                let mainDiv = xmlDoc.rootElement()!["//div[@id=\"main\"]"][0]
-                let links = mainDiv["//div[@class=\"app-links\"]/a"]
-                // TODO: get screenshots via JSON
-                let screenshotsImgs = mainDiv["//div[contains(@class, \"screenshots\")]//img"]
-                item.screenshots = " ".join(screenshotsImgs.map {$0.attribute("src")})
-                homepage = links[0].href
-                if homepage == "http://" {
-                    homepage = links[1].href
+                if let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil) {
+                    let mainDiv = xmlDoc.rootElement()!["//div[@id=\"main\"]"][0]
+                    let links = mainDiv["//div[@class=\"app-links\"]/a"]
+                    // TODO: get screenshots via JSON
+                    let screenshotsImgs = mainDiv["//div[contains(@class, \"screenshots\")]//img"]
+                    item.screenshots = " ".join(screenshotsImgs.map {$0.attribute("src")})
+                    homepage = links[0].href
+                    if homepage == "http://" {
+                        homepage = links[1].href
+                    }
                 }
             }
         }
@@ -115,7 +116,7 @@ class MacOSX: GSystem {
         if item != nil {
             if item.categories == "storeagent" || item.categories == "storedownloadd" {
                 let url = "http://itunes.apple.com/lookup?bundleId=\(item.id)"
-                let data = NSData(contentsOfURL: NSURL(string: url)!)
+                let data = NSData(contentsOfURL: NSURL(string: url)!) ?? NSData()
                 let results = ((NSJSONSerialization.JSONObjectWithData(data, options: nil, error: nil) as NSDictionary)["results"]! as NSArray)
                 if results.count > 0 {
                     let pkgId = (results[0] as NSDictionary)["trackId"]!.stringValue!

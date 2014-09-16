@@ -52,34 +52,35 @@ class Pkgsrc: GSystem {
             
         } else {
             let url = NSURL(string: "http://ftp.netbsd.org/pub/pkgsrc/current/pkgsrc/README-all.html")!
-            let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil)
-            var nodes = xmlDoc.rootElement()!["//tr"]
-            for node in nodes {
-                let rowData = node["td"]
-                if rowData.count == 0 {
-                    continue
+            if let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil) {
+                var nodes = xmlDoc.rootElement()!["//tr"]
+                for node in nodes {
+                    let rowData = node["td"]
+                    if rowData.count == 0 {
+                        continue
+                    }
+                    var name = rowData[0].stringValue!
+                    var idx = name.rindex("-")
+                    if idx == NSNotFound {
+                        continue
+                    }
+                    let version = name.substring(idx + 1, name.length - idx - 3)
+                    name = name.substringToIndex(idx)
+                    var category = rowData[1].stringValue!
+                    category = category.substring(1, category.length - 3)
+                    var description = rowData[2].stringValue!
+                    idx = description.rindex("  ")
+                    if idx != NSNotFound {
+                        description = description.substringToIndex(idx)
+                    }
+                    let pkg = GPackage(name: name, version: version, system: self, status: .Available)
+                    pkg.categories = category
+                    pkg.description = description
+                    let id = "\(category)/\(name)"
+                    pkg.id = id
+                    items.append(pkg)
+                    self[id] = pkg
                 }
-                var name = rowData[0].stringValue!
-                var idx = name.rindex("-")
-                if idx == NSNotFound {
-                    continue
-                }
-                let version = name.substring(idx + 1, name.length - idx - 3)
-                name = name.substringToIndex(idx)
-                var category = rowData[1].stringValue!
-                category = category.substring(1, category.length - 3)
-                var description = rowData[2].stringValue!
-                idx = description.rindex("  ")
-                if idx != NSNotFound {
-                    description = description.substringToIndex(idx)
-                }
-                let pkg = GPackage(name: name, version: version, system: self, status: .Available)
-                pkg.categories = category
-                pkg.description = description
-                let id = "\(category)/\(name)"
-                pkg.id = id
-                items.append(pkg)
-                self[id] = pkg
             }
         }
         self.installed() // update status
@@ -156,9 +157,9 @@ class Pkgsrc: GSystem {
             return output("\(cmd) \(item.name)")
         } else {
             if item.id != nil {
-                return NSString(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.id)/DESCR")!, encoding: NSUTF8StringEncoding, error: nil)
+                return NSString(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.id)/DESCR")!, encoding: NSUTF8StringEncoding, error: nil) ?? ""
             } else { // TODO lowercase (i.e. Hermes -> hermes)
-                return NSString(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories)/\(item.name)/DESCR")!, encoding: NSUTF8StringEncoding, error: nil)
+                return NSString(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories)/\(item.name)/DESCR")!, encoding: NSUTF8StringEncoding, error: nil) ?? ""
             }
         }
     }
@@ -190,9 +191,9 @@ class Pkgsrc: GSystem {
             return output("\(cmd) -L \(item.name)").split("Files:\n")[1]
         } else {
             if item.id != nil {
-                return NSString(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.id)/PLIST")!, encoding: NSUTF8StringEncoding, error: nil)
+                return NSString(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.id)/PLIST")!, encoding: NSUTF8StringEncoding, error: nil) ?? ""
             } else { // TODO lowercase (i.e. Hermes -> hermes)
-                return NSString(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories)/\(item.name)/PLIST")!, encoding: NSUTF8StringEncoding, error: nil)
+                return NSString(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories)/\(item.name)/PLIST")!, encoding: NSUTF8StringEncoding, error: nil) ?? ""
             }
         }
     }
@@ -203,9 +204,9 @@ class Pkgsrc: GSystem {
             item.id = filtered[0].id
         }
         if item.id != nil {
-            return NSString(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.id)/Makefile")!, encoding: NSUTF8StringEncoding, error: nil)
+            return NSString(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.id)/Makefile")!, encoding: NSUTF8StringEncoding, error: nil) ?? ""
         } else { // TODO lowercase (i.e. Hermes -> hermes)
-            return NSString(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories)/\(item.name)/Makefile")!, encoding: NSUTF8StringEncoding, error: nil)
+            return NSString(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories)/\(item.name)/Makefile")!, encoding: NSUTF8StringEncoding, error: nil) ?? ""
         }
     }
     

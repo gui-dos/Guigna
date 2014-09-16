@@ -16,20 +16,21 @@ class Fink: GSystem {
         
         if mode == GMode.Online { // FIXME: the compiler requires expilicit enum the first time it is seen
             let url = NSURL(string: "http://pdb.finkproject.org/pdb/browse.php")!
-            let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil)
-            var nodes = xmlDoc.rootElement()!["//tr[@class=\"package\"]"]
-            for node in nodes {
-                let dataRows = node["td"]
-                var description = dataRows[2].stringValue!
-                if description.hasPrefix("[virtual") {
-                    continue
+            if let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil) {
+                var nodes = xmlDoc.rootElement()!["//tr[@class=\"package\"]"]
+                for node in nodes {
+                    let dataRows = node["td"]
+                    var description = dataRows[2].stringValue!
+                    if description.hasPrefix("[virtual") {
+                        continue
+                    }
+                    let name = dataRows[0].stringValue!
+                    let version = dataRows[1].stringValue!
+                    let pkg = GPackage(name: name, version: version, system: self, status: .Available)
+                    pkg.description = description
+                    items.append(pkg)
+                    self[name] = pkg
                 }
-                let name = dataRows[0].stringValue!
-                let version = dataRows[1].stringValue!
-                let pkg = GPackage(name: name, version: version, system: self, status: .Available)
-                pkg.description = description
-                items.append(pkg)
-                self[name] = pkg
             }
         } else {
             var outputLines = output("\(cmd) list --tab").split("\n")
@@ -190,7 +191,7 @@ class Fink: GSystem {
                 return "[.info not reachable]"
             } else {
                 let cvs = nodes[0].stringValue!
-                let info = NSString(contentsOfURL: NSURL(string: "http://fink.cvs.sourceforge.net/fink/\(cvs)")!, encoding: NSUTF8StringEncoding, error: nil)
+                let info = NSString(contentsOfURL: NSURL(string: "http://fink.cvs.sourceforge.net/fink/\(cvs)")!, encoding: NSUTF8StringEncoding, error: nil) ?? ""
                 return info
             }
         } else {
