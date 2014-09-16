@@ -45,9 +45,9 @@ class GAgent: NSObject {
     func nodes(URL url: String, XPath xpath: String) -> [NSXMLNode] {
         // FIXME: doesn't allow xpath on childnodes
         var error: NSError? = nil
-        var page: NSMutableString? = NSMutableString(contentsOfURL: NSURL(string: url), encoding: NSUTF8StringEncoding, error: &error)
+        var page: NSMutableString? = NSMutableString(contentsOfURL: NSURL(string: url)!, encoding: NSUTF8StringEncoding, error: &error)
         if page == nil {
-            page = NSMutableString(contentsOfURL: NSURL(string: url), encoding: NSISOLatin1StringEncoding, error: &error)
+            page = NSMutableString(contentsOfURL: NSURL(string: url)!, encoding: NSISOLatin1StringEncoding, error: &error)
         }
         var data: NSData = page!.dataUsingEncoding(NSUTF8StringEncoding)!
         var doc = NSXMLDocument(data: data, options: Int(NSXMLDocumentTidyHTML), error: &error)

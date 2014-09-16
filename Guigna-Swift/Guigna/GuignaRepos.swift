@@ -15,7 +15,7 @@ class Native: GRepo {
     
     override func refresh() {
         var pkgs = [GItem]()
-        let url = NSURL(string: "https://docs.google.com/spreadsheet/ccc?key=0AryutUy3rKnHdHp3MFdabGh6aFVnYnpnUi1mY2E2N0E")
+        let url = NSURL(string: "https://docs.google.com/spreadsheet/ccc?key=0AryutUy3rKnHdHp3MFdabGh6aFVnYnpnUi1mY2E2N0E")!
         let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil)
         var nodes = xmlDoc.rootElement()!["//table[@id=\"tblMain\"]//tr"]
         for node in nodes {

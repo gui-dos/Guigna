@@ -1368,7 +1368,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             
             if title == "Install" {
                 if (item.source is GScrape) && item.URL != nil {
-                    NSWorkspace.sharedWorkspace().openURL(NSURL(string: item.URL))
+                    NSWorkspace.sharedWorkspace().openURL(NSURL(string: item.URL)!)
                     continue
                 }
                 mark = .Install
@@ -1384,7 +1384,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 
             } else if title == "Fetch" {
                 if (item.source is GScrape) && item.URL != nil {
-                    NSWorkspace.sharedWorkspace().openURL(NSURL(string: item.URL))
+                    NSWorkspace.sharedWorkspace().openURL(NSURL(string: item.URL)!)
                     continue
                 }
                 mark = .Fetch
@@ -1634,7 +1634,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             firstWindow.setValue(lastTab, forKey: "currentTab")
         }
         firstWindow = (browser.valueForKey("windows") as [NSObject])[0]
-        firstWindow.valueForKey("document").setValue(NSURL(string: url), forKey: "URL")
+        firstWindow.valueForKey("document").setValue(NSURL(string: url)!, forKey: "URL")
     }
     
     func raiseShell(sender: AnyObject) {

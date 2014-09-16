@@ -15,7 +15,7 @@ class Fink: GSystem {
         items.removeAll(keepCapacity: true)
         
         if mode == GMode.Online { // FIXME: the compiler requires expilicit enum the first time it is seen
-            let url = NSURL(string: "http://pdb.finkproject.org/pdb/browse.php")
+            let url = NSURL(string: "http://pdb.finkproject.org/pdb/browse.php")!
             let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil)
             var nodes = xmlDoc.rootElement()!["//tr[@class=\"package\"]"]
             for node in nodes {
@@ -190,7 +190,7 @@ class Fink: GSystem {
                 return "[.info not reachable]"
             } else {
                 let cvs = nodes[0].stringValue!
-                let info = NSString(contentsOfURL: NSURL(string: "http://fink.cvs.sourceforge.net/fink/\(cvs)"), encoding: NSUTF8StringEncoding, error: nil)
+                let info = NSString(contentsOfURL: NSURL(string: "http://fink.cvs.sourceforge.net/fink/\(cvs)")!, encoding: NSUTF8StringEncoding, error: nil)
                 return info
             }
         } else {

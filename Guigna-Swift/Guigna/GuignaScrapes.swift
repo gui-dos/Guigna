@@ -24,7 +24,7 @@ class PkgsrcSE: GScrape {
     
     override func refresh() {
         var entries = [GItem]()
-        let url = NSURL(string: "http://pkgsrc.se/?page=\(pageNumber)")
+        let url = NSURL(string: "http://pkgsrc.se/?page=\(pageNumber)")!
         let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil)
         let mainDiv = xmlDoc.rootElement()!["//div[@id=\"main\"]"][0]
         var dates = mainDiv["h3"]
@@ -80,7 +80,7 @@ class Debian: GScrape {
     
     override func refresh() {
         var pkgs = [GItem]()
-        let url = NSURL(string: "http://news.gmane.org/group/gmane.linux.debian.devel.changes.unstable/last=")
+        let url = NSURL(string: "http://news.gmane.org/group/gmane.linux.debian.devel.changes.unstable/last=")!
         let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil)
         var nodes = xmlDoc.rootElement()!["//table[@class=\"threads\"]//table/tr"]
         for node in nodes {
@@ -120,7 +120,7 @@ class PyPI: GScrape {
     
     override func refresh() {
         var eggs = [GItem]()
-        let url = NSURL(string: homepage)
+        let url = NSURL(string: homepage)!
         let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil)
         var nodes = xmlDoc.rootElement()!["//table[@class=\"list\"]//tr"]
         nodes.removeAtIndex(0)
@@ -162,7 +162,7 @@ class RubyGems: GScrape {
     
     override func refresh() {
         var gems = [GItem]()
-        let url = NSURL(string: "http://m.rubygems.org/")
+        let url = NSURL(string: "http://m.rubygems.org/")!
         let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil)
         let nodes = xmlDoc.rootElement()!["//li"]
         for node in nodes {
@@ -210,7 +210,7 @@ class MacUpdate: GScrape {
     
     override func refresh() {
         var apps = [GItem]()
-        let url = NSURL(string: "https://www.macupdate.com/apps/page/\(pageNumber - 1)")
+        let url = NSURL(string: "https://www.macupdate.com/apps/page/\(pageNumber - 1)")!
         let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil)
         var nodes = xmlDoc.rootElement()!["//div[@class=\"appinfo\"]"]
         for node in nodes {
@@ -255,7 +255,7 @@ class AppShopper: GScrape {
     
     override func refresh() {
         var apps = [GItem]()
-        let url = NSURL(string: "http://appshopper.com/mac/all/\(pageNumber)")
+        let url = NSURL(string: "http://appshopper.com/mac/all/\(pageNumber)")!
         let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil)
         var nodes = xmlDoc.rootElement()!["//ul[@class=\"appdetails\"]/li"]
         for node in nodes {
@@ -287,7 +287,7 @@ class AppShopper: GScrape {
     }
     
     override func home(item: GItem) -> String {
-        let url = NSURL(string: "http://itunes.apple.com/app/id" + item.id.split()[0])
+        let url = NSURL(string: "http://itunes.apple.com/app/id" + item.id.split()[0])!
         let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil)
         let mainDiv = xmlDoc.rootElement()!["//div[@id=\"main\"]"][0]
         let links = mainDiv["//div[@class=\"app-links\"]/a"]
@@ -320,7 +320,7 @@ class AppShopperIOS: GScrape {
     
     override func refresh() {
         var apps = [GItem]()
-        let url = NSURL(string: "http://appshopper.com/all/\(pageNumber)")
+        let url = NSURL(string: "http://appshopper.com/all/\(pageNumber)")!
         let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil)
         var nodes = xmlDoc.rootElement()!["//ul[@class=\"appdetails\"]/li"]
         for node in nodes {
@@ -352,7 +352,7 @@ class AppShopperIOS: GScrape {
     }
     
     override func home(item: GItem) -> String {
-        let url = NSURL(string: "http://itunes.apple.com/app/id" + item.id.split()[0])
+        let url = NSURL(string: "http://itunes.apple.com/app/id" + item.id.split()[0])!
         let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil)
         let mainDiv = xmlDoc.rootElement()!["//div[@id=\"main\"]"][0]
         let links = mainDiv["//div[@class=\"app-links\"]/a"]
