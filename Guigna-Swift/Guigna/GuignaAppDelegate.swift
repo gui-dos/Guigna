@@ -239,13 +239,13 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         
         if fileManager.fileExistsAtPath(portPath) || fileManager.fileExistsAtPath("\(APPDIR)/MacPorts/PortIndex") {
             if defaults["MacPortsStatus"] == nil {
-                defaults["MacPortsStatus"] = GState.On.toRaw()
+                defaults["MacPortsStatus"] = GState.On.rawValue
             }
             if defaults["MacPortsParsePortIndex"] == nil {
                 defaults["MacPortsParsePortIndex"] = true
             }
         }
-        if defaults["MacPortsStatus"] != nil && defaults["MacPortsStatus"] == GState.On.toRaw() {
+        if defaults["MacPortsStatus"] != nil && defaults["MacPortsStatus"] == GState.On.rawValue {
             var macports = MacPorts(agent: agent)
             if !fileManager.fileExistsAtPath(portPath) {
                 macports.mode = GMode.Online  // FIXME: the compiler requires expilicit enum the first time it is seen
@@ -261,10 +261,10 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         
         if fileManager.fileExistsAtPath(brewPath) {
             if defaults["HomebrewStatus"] == nil {
-                defaults["HomebrewStatus"] = GState.On.toRaw()
+                defaults["HomebrewStatus"] = GState.On.rawValue
             }
         }
-        if defaults["HomebrewStatus"] != nil && defaults["HomebrewStatus"] == GState.On.toRaw() {
+        if defaults["HomebrewStatus"] != nil && defaults["HomebrewStatus"] == GState.On.rawValue {
             if fileManager.fileExistsAtPath(brewPath) { // TODO: online mode
                 var homebrew = Homebrew(agent: agent)
                 systems.append(homebrew)
@@ -283,10 +283,10 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         
         if fileManager.fileExistsAtPath("/sw/bin/fink") {
             if defaults["FinkStatus"] == nil {
-                defaults["FinkStatus"] = GState.On.toRaw()
+                defaults["FinkStatus"] = GState.On.rawValue
             }
         }
-        if defaults["FinkStatus"] != nil && defaults["FinkStatus"] == GState.On.toRaw() {
+        if defaults["FinkStatus"] != nil && defaults["FinkStatus"] == GState.On.rawValue {
             var fink = Fink(agent: agent)
             if !fileManager.fileExistsAtPath("/sw/bin/fink") {
                 fink.mode = .Online
@@ -297,11 +297,11 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         // TODO: Index user defaults
         if fileManager.fileExistsAtPath("/usr/pkg/sbin/pkg_info") || fileManager.fileExistsAtPath("\(APPDIR)/pkgsrc/INDEX") {
             if defaults["pkgsrcStatus"] == nil {
-                defaults["pkgsrcStatus"] = GState.On.toRaw()
+                defaults["pkgsrcStatus"] = GState.On.rawValue
                 defaults["pkgsrcCVS"] = true
             }
         }
-        if defaults["pkgsrcStatus"] != nil && defaults["pkgsrcStatus"] == GState.On.toRaw() {
+        if defaults["pkgsrcStatus"] != nil && defaults["pkgsrcStatus"] == GState.On.rawValue {
             var pkgsrc = Pkgsrc(agent: agent)
             if !fileManager.fileExistsAtPath("/usr/pkg/sbin/pkg_info") {
                 pkgsrc.mode = .Online
@@ -311,10 +311,10 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         
         if fileManager.fileExistsAtPath("\(APPDIR)/FreeBSD/INDEX") {
             if defaults["FreeBSDStatus"] == nil {
-                defaults["FreeBSDStatus"] = GState.On.toRaw()
+                defaults["FreeBSDStatus"] = GState.On.rawValue
             }
         }
-        if defaults["FreeBSDStatus"] != nil && defaults["FreeBSDStatus"] == GState.On.toRaw() {
+        if defaults["FreeBSDStatus"] != nil && defaults["FreeBSDStatus"] == GState.On.rawValue {
             var freebsd = FreeBSD(agent: agent)
             freebsd.mode = .Online
             systems.append(freebsd)
@@ -322,10 +322,10 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         
         if fileManager.fileExistsAtPath("/usr/local/bin/rudix") {
             if defaults["RudixStatus"] == nil {
-                defaults["RudixStatus"] = GState.On.toRaw()
+                defaults["RudixStatus"] = GState.On.rawValue
             }
         }
-        if defaults["RudixStatus"] != nil && defaults["RudixStatus"] == GState.On.toRaw() {
+        if defaults["RudixStatus"] != nil && defaults["RudixStatus"] == GState.On.rawValue {
             var rudix = Rudix(agent: agent)
             if !fileManager.fileExistsAtPath("/usr/local/bin/rudix") {
                 rudix.mode = .Online
@@ -334,9 +334,9 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
         
         if defaults["iTunesStatus"] == nil {
-            defaults["iTunesStatus"] = GState.On.toRaw()
+            defaults["iTunesStatus"] = GState.On.rawValue
         }
-        if defaults["iTunesStatus"] != nil && defaults["iTunesStatus"] == GState.On.toRaw() {
+        if defaults["iTunesStatus"] != nil && defaults["iTunesStatus"] == GState.On.rawValue {
             var itunes = ITunes(agent: agent)
             systems.append(itunes)
         }
@@ -463,7 +463,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 var markName: String
                 for item in markedItems {
                     mark = item.mark
-                    markName = markNames[Int(mark.toRaw())]
+                    markName = markNames[Int(mark.rawValue)]
                     
                     // TODO verify command did really complete
                     
@@ -741,7 +741,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     if src == "installed" {
                         if first {
                             status("Verifying installed packages...")
-                            itemsController.filterPredicate = NSPredicate(format: "statusValue == \(GStatus.UpToDate.toRaw())")
+                            itemsController.filterPredicate = NSPredicate(format: "statusValue == \(GStatus.UpToDate.rawValue)")
                             itemsTable.display()
                         }
                         packages = system.installed()
@@ -749,7 +749,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     } else if src == "outdated" {
                         if first {
                             status("Verifying outdated packages...")
-                            itemsController.filterPredicate = NSPredicate(format: "statusValue == \(GStatus.Outdated.toRaw())")
+                            itemsController.filterPredicate = NSPredicate(format: "statusValue == \(GStatus.Outdated.rawValue)")
                             itemsTable.display()
                         }
                         packages = system.outdated()
@@ -757,7 +757,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     } else if src == "inactive" {
                         if first {
                             status("Verifying inactive packages...")
-                            itemsController.filterPredicate = NSPredicate(format: "statusValue == \(GStatus.Inactive.toRaw())")
+                            itemsController.filterPredicate = NSPredicate(format: "statusValue == \(GStatus.Inactive.rawValue)")
                             itemsTable.display()
                         }
                         packages = system.inactive()
@@ -767,7 +767,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                         var st: GStatus = (src == "updated") ? .Updated : .New
                         if first {
                             status("Verifying \(src) packages...")
-                            itemsController.filterPredicate = NSPredicate(format: "statusValue == \(st.toRaw())")
+                            itemsController.filterPredicate = NSPredicate(format: "statusValue == \(st.rawValue)")
                             itemsTable.display()
                             packages = (itemsController.arrangedObjects as NSArray).mutableCopy() as [GPackage]
                         }
@@ -1518,7 +1518,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             var hidesOthers = false
             for item in systemsDict[system.name]! as [GPackage] {
                 mark = item.mark
-                markName = markNames[Int(mark.toRaw())]
+                markName = markNames[Int(mark.rawValue)]
                 command = nil
                 hidesOthers = false
                 

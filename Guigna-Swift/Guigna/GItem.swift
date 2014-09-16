@@ -37,10 +37,10 @@ class GItem: NSObject {
     }
     var statusValue: NSNumber {
         get {
-            return NSNumber(integer: self.status.toRaw())
+            return NSNumber(integer: self.status.rawValue)
         }
         set {
-            status = GStatus.fromRaw(newValue.integerValue)!
+            status = GStatus(rawValue: newValue.integerValue)!
         }
     }
     
@@ -54,10 +54,10 @@ class GItem: NSObject {
     }
     var markValue: NSNumber {
         get {
-            return NSNumber(integer: self.mark.toRaw())
+            return NSNumber(integer: self.mark.rawValue)
         }
         set {
-            mark = GMark.fromRaw(newValue.integerValue)!
+            mark = GMark(rawValue: newValue.integerValue)!
         }
     }
     
@@ -149,7 +149,7 @@ class GStatusTransformer: NSValueTransformer {
         if value == nil {
             return nil
         }
-        let status = GStatus.fromRaw(value!.integerValue)!
+        let status = GStatus(rawValue: value!.integerValue)!
         switch status {
         case .Inactive:
             return NSImage(named: NSImageNameStatusNone)
@@ -185,7 +185,7 @@ class GMarkTransformer: NSValueTransformer {
         if value == nil {
             return nil
         }
-        let mark = GMark.fromRaw(value!.integerValue)!
+        let mark = GMark(rawValue: value!.integerValue)!
         switch mark {
         case .Install:
             return NSImage(named: NSImageNameAddTemplate)
