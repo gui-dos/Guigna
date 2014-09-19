@@ -1072,7 +1072,7 @@ class GuignaAppDelegate
         status "Executing '#{cmd}'..."
         cmd = "export HOME=~ ; #{cmd}"
         output = `/bin/bash -l -c "#{cmd}"`
-        status "OK."
+        status "OK." if self.ready
         log output
       end
     end

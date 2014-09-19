@@ -1187,7 +1187,9 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 cmd = cmd.stringByReplacingOccurrencesOfString(" ", withString: "__")
                 cmd = "/bin/bash -l -c \(cmd)"
                 output = agent.output(cmd)
-                status("OK.")
+                if self.ready {
+                    status("OK.")
+                }
                 log(output)
             }
         }

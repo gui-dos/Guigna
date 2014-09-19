@@ -1148,7 +1148,8 @@
             [self status:[NSString stringWithFormat:@"Executing '%@'...", cmd]];
             cmd = [NSString stringWithFormat:@"/bin/bash -l -c %@", [cmd stringByReplacingOccurrencesOfString:@" " withString:@"__"]];
             output = [agent outputForCommand:cmd];
-            [self status:@"OK."];
+            if (self.ready)
+                [self status:@"OK."];
             [self log:output];
         }
     }
