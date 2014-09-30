@@ -411,10 +411,10 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     
     func outlineView(outlineView: NSOutlineView!, viewForTableColumn tableColumn: NSTableColumn!, item: AnyObject!) -> NSView! {
         var source = item.representedObject as GSource
-        if !((item.parentNode as NSTreeNode).representedObject is GSource) {
+        if !(item.parentNode!!.representedObject is GSource) {
             return outlineView.makeViewWithIdentifier("HeaderCell", owner:self) as NSTableCellView
         } else {
-            if source.categories == nil && ((item.parentNode as NSTreeNode).representedObject is GSystem) {
+            if source.categories == nil && (item.parentNode!!.representedObject is GSystem) {
                 return outlineView.makeViewWithIdentifier("LeafCell", owner:self) as NSTableCellView
             } else {
                 return outlineView.makeViewWithIdentifier("DataCell", owner:self) as NSTableCellView
@@ -1102,7 +1102,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
     }
     
-    override func controlTextDidBeginEditing(aNotification: NSNotification!) {
+    override func controlTextDidBeginEditing(aNotification: NSNotification) {
     }
     
     func textViewDidChangeSelection(aNotification: NSNotification!) {
@@ -1353,7 +1353,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     }
     
     @IBAction func showMarkMenu(sender: AnyObject) {
-        NSMenu.popUpContextMenu(markMenu, withEvent: NSApp.currentEvent, forView: itemsTable)
+        NSMenu.popUpContextMenu(markMenu, withEvent: NSApp.currentEvent!!, forView: itemsTable)
     }
     
     @IBAction func mark(sender: NSMenuItem) {
@@ -1893,7 +1893,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     
     
     @IBAction func toolsAction(sender: AnyObject) {
-        NSMenu.popUpContextMenu(toolsMenu, withEvent: NSApp.currentEvent, forView: itemsTable)
+        NSMenu.popUpContextMenu(toolsMenu, withEvent: NSApp.currentEvent!!, forView: itemsTable)
     }
     
     @IBAction func tools(sender: NSMenuItem) {
