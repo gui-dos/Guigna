@@ -864,7 +864,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     }
     
     @IBAction func switchSegment(sender: NSSegmentedControl) {
-        selectedSegment = sender.labelForSegment(sender.selectedSegment)
+        selectedSegment = sender.labelForSegment(sender.selectedSegment)!
         let selectedItems = itemsController.selectedObjects
         var item: GItem? = nil
         if selectedItems.count > 0 {
@@ -901,7 +901,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             selectedSegment = "Shell"
         } else {
             shellDisclosure.state = NSOffState
-            selectedSegment = segmentedControl.labelForSegment(segmentedControl.selectedSegment)
+            selectedSegment = segmentedControl.labelForSegment(segmentedControl.selectedSegment)!
         }
         clearButton.hidden = (selectedSegment != "Shell")
         screenshotsButton.hidden = (!(item?.source is GScrape) || selectedSegment != "Home")
@@ -1708,7 +1708,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         self.ready = false
         // optionsPanel.display()
         if sender is NSSegmentedControl {
-            let theme = (sender as NSSegmentedControl).labelForSegment((sender as NSSegmentedControl).selectedSegment)
+            let theme = (sender as NSSegmentedControl).labelForSegment((sender as NSSegmentedControl).selectedSegment)!
             applyTheme(theme)
             
         } else {
@@ -1806,7 +1806,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                             itemsController.removeObjects(items.filter { $0.system.name == title })
                             allPackages = allPackages.filter { $0.system.name != title }
                             for pkg in source.items as [GPackage] {
-                                packagesIndex.removeValueForKey(pkg.key())
+                                packagesIndex.removeValueForKey(pkg.key)
                             }
                             source.items.removeAll()
                             systemsMutableArray.removeObject(source)
