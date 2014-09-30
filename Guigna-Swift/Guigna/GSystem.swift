@@ -2,7 +2,7 @@ import Foundation
 
 class GSystem: GSource {
     var prefix: String
-    final var index: [String: GPackage] // declare final to work around the copy of the dictionary
+    var index: [String: GPackage]
     
     override init(name: String, agent: GAgent!) {
         prefix = ""

@@ -48,15 +48,15 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     @IBOutlet var sourcesController: NSTreeController!
     @IBOutlet var itemsController: NSArrayController!
     
-    final var sources = [GSource]()
-    final var systems = [GSystem]()
-    final var scrapes = [GScrape]()
-    final var repos   = [GRepo]()
+    var sources = [GSource]()
+    var systems = [GSystem]()
+    var scrapes = [GScrape]()
+    var repos   = [GRepo]()
     
-    final var items = [GItem]()
-    final var allPackages = [GPackage]()
-    final var packagesIndex = [String: GPackage](minimumCapacity: 150000)
-    final var markedItems = [GItem]()
+    var items = [GItem]()
+    var allPackages = [GPackage]()
+    var packagesIndex = [String: GPackage](minimumCapacity: 150000)
+    var markedItems = [GItem]()
     var marksCount = 0
     var selectedSegment = "Info"
     var previousSegment = 0

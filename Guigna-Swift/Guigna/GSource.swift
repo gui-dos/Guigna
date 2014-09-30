@@ -16,8 +16,8 @@ enum GMode: Int {
 class GSource: NSObject {
     
     var name: String
-    final var categories: [AnyObject]?
-    final var items: [GItem]
+    var categories: [AnyObject]?
+    var items: [GItem]
     var agent: GAgent!
     var mode: GMode
     var status: GState
