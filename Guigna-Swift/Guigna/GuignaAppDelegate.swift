@@ -99,7 +99,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         } else {
             statusItem.title = "😺"
         }
-        statusMenu.itemAtIndex(0).title = msg
+        statusMenu.itemAtIndex(0)?.title = msg
         statusItem.toolTip = msg
     }
     
@@ -159,12 +159,12 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             }
             menu.delegate = self
         }
-        itemsTable.headerView.menu = columnsMenu
-        var viewMenu = NSApplication.sharedApplication().mainMenu.itemWithTitle("View")
-        viewMenu.submenu.addItem(NSMenuItem.separatorItem())
+        itemsTable.headerView!.menu = columnsMenu
+        var viewMenu = NSApplication.sharedApplication().mainMenu!.itemWithTitle("View")!
+        viewMenu.submenu!.addItem(NSMenuItem.separatorItem())
         var columnsMenuItem = NSMenuItem(title: "Columns", action: nil, keyEquivalent: "")
         columnsMenuItem.submenu = viewColumnsMenu
-        viewMenu.submenu.addItem(columnsMenuItem)
+        viewMenu.submenu!.addItem(columnsMenuItem)
         
         agent.appDelegate = self
         
@@ -1281,7 +1281,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             if title == "Mark" { // TODO: Disable marks based on status
                 tableProgressIndicator.startAnimation(self)
                 status("Analyzing selected items...")
-                var installMenu = menu.itemWithTitle("Install")
+                var installMenu = menu.itemWithTitle("Install")!
                 var markedOptions = []
                 for item in selectedItems {
                     if item.system == nil {
@@ -1311,14 +1311,14 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                             options.unionSet(NSSet(array: currentOptions))
                             for option in options.allObjects as [String] {
                                 if option == availableOption {
-                                    optionsMenu.itemWithTitle(availableOption).state = NSOnState
+                                    optionsMenu.itemWithTitle(availableOption)?.state = NSOnState
                                 }
                             }
                         }
                         installMenu.submenu = optionsMenu
                     } else {
                         if installMenu.hasSubmenu {
-                            installMenu.submenu.removeAllItems()
+                            installMenu.submenu!.removeAllItems()
                             installMenu.submenu = nil
                         }
                     }
@@ -1478,7 +1478,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
         applyButton.enabled = false
         stopButton.enabled = true
-        itemsController.setSelectedObjects(nil)
+        itemsController.setSelectedObjects([])
         segmentedControl.selectedSegment = -1
         selectedSegment = "Shell"
         updateTabView(nil)
@@ -1636,7 +1636,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             firstWindow.setValue(lastTab, forKey: "currentTab")
         }
         firstWindow = (browser.valueForKey("windows") as [NSObject])[0]
-        firstWindow.valueForKey("document").setValue(NSURL(string: url)!, forKey: "URL")
+        firstWindow.valueForKey("document")!.setValue(NSURL(string: url)!, forKey: "URL")
     }
     
     func raiseShell(sender: AnyObject) {
