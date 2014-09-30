@@ -112,12 +112,12 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     
     func log(text: String) {
         let attributedString = NSAttributedString(string: text, attributes: [NSFontAttributeName: NSFont(name: "Andale Mono", size:11.0)!, NSForegroundColorAttributeName: logTextColor])
-        let storage = logText.textStorage
+        let storage = logText.textStorage!
         storage.beginEditing()
         storage.appendAttributedString(attributedString)
         storage.endEditing()
         logText.display()
-        logText.scrollRangeToVisible(NSMakeRange(logText.string.length, 0))
+        logText.scrollRangeToVisible(NSMakeRange(logText.string!.length, 0))
         tabView.display()
     }
     
@@ -1107,7 +1107,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     
     func textViewDidChangeSelection(aNotification: NSNotification!) {
         let selectedRange = infoText.selectedRange as NSRange
-        let storageString = infoText.textStorage.string as NSString
+        let storageString = infoText.textStorage!.string as NSString
         let line = storageString.substringWithRange(storageString.paragraphRangeForRange(selectedRange))
         
         if selectedSegment == "Contents" {
