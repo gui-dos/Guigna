@@ -74,7 +74,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     
     var shellColumns: Int {
         get {
-            let attrs = [NSFontAttributeName: NSFont(name: "Andale Mono", size: 11.0)]
+            let attrs = [NSFontAttributeName: NSFont(name: "Andale Mono", size: 11.0)!]
             let charWidth = ("MMM".sizeWithAttributes(attrs).width - "M".sizeWithAttributes(attrs).width) / 2.0
             let columns = Int(round((infoText.frame.size.width - 16.0) / charWidth + 0.5))
             return columns
@@ -111,7 +111,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     }
     
     func log(text: String) {
-        let attributedString = NSAttributedString(string: text, attributes: [NSFontAttributeName: NSFont(name: "Andale Mono", size:11.0), NSForegroundColorAttributeName: logTextColor])
+        let attributedString = NSAttributedString(string: text, attributes: [NSFontAttributeName: NSFont(name: "Andale Mono", size:11.0)!, NSForegroundColorAttributeName: logTextColor])
         let storage = logText.textStorage
         storage.beginEditing()
         storage.appendAttributedString(attributedString)
