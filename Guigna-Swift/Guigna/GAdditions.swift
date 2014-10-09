@@ -4,7 +4,7 @@ import WebKit
 protocol GAppDelegate {
     var defaults: NSUserDefaultsController! { get set }
     func log(text: String)
-    // var allPackages: [GPackage] { get set } // to avoid in Swift since in returns a copy
+    // var allPackages: [GPackage] { get set } // to avoid in Swift since it returns a copy
     func addItem(item: GItem) // to add an inactive package without requiring a copy of allPackages
     func removeItem(item: GItem) // TODO
     func removeItems(excludeElement: GItem -> Bool) // to remove inactive packages from allPackages in Swift
@@ -13,13 +13,7 @@ protocol GAppDelegate {
 
 extension Array {
     
-    func join() -> String {
-        // return " ".join(self) // doesn't compile anymore with B6
-        return self._bridgeToObjectiveC().componentsJoinedByString(" ")
-
-    }
-    
-    func join(separator: String) -> String {
+    func join(_ separator: String = " ") -> String {
         // return separator.join(self) // doesn't compile anymore with B6
         return self._bridgeToObjectiveC().componentsJoinedByString(separator)
 
@@ -30,21 +24,11 @@ extension Array {
 
 extension String {
     
-    //    var length: Int {
-    //    get {
-    //        return (self as NSString).length
-    //    }
-    //    }
-    
     var length: Int {
         get {
             return countElements(self)
         }
     }
-    
-    //    func index(string: String) -> Int {
-    //        return (self as NSString).rangeOfString(string).location
-    //    }
     
     func index(string: String) -> Int {
         if let range = self.rangeOfString(string) {
@@ -54,10 +38,6 @@ extension String {
         }
     }
     
-    //    func rindex(string: String) -> Int {
-    //        return (self as NSString).rangeOfString(string, options: .BackwardsSearch).location
-    //    }
-    
     func rindex(string: String) -> Int {
         if let range = self.rangeOfString(string, options: .BackwardsSearch) {
             return distance(startIndex, range.startIndex)
@@ -65,10 +45,6 @@ extension String {
             return NSNotFound
         }
     }
-    
-    //    func contains(string: String) -> Bool {
-    //        return (self as NSString).containsString(string)
-    //    }
     
     func contains(string: String) -> Bool {
         if let range = self.rangeOfString(string) {
@@ -87,23 +63,10 @@ extension String {
             return self[rangeStartIndex..<advance(rangeStartIndex, range.endIndex - range.startIndex)]
     }
     
-    //    func substring(location: Int, _ length: Int) -> String {
-    //        return (self as NSString).substringWithRange(NSMakeRange(location, length))
-    //    }
-    
     func substring(location: Int, _ length: Int) -> String {
         let locationIndex = advance(startIndex, location)
         return self[locationIndex..<advance(locationIndex, length)]
     }
-    
-    //    func substringFromIndex(index: Int) -> String {
-    //        return (self as NSString).substringFromIndex(index)
-    //    }
-    //
-    //    func substringToIndex(index: Int) -> String {
-    //        return (self as NSString).substringToIndex(index)
-    //    }
-    
     
     func substringFromIndex(index: Int) -> String {
         return self[advance(startIndex, index)..<endIndex]
@@ -113,11 +76,7 @@ extension String {
         return self[startIndex..<advance(startIndex, index)]
     }
     
-    func split() -> Array<String> {
-        return self.componentsSeparatedByString(" ")
-    }
-    
-    func split(delimiter: String) -> Array<String> {
+    func split(_ delimiter: String = " ") -> [String] {
         return self.componentsSeparatedByString(delimiter)
     }
     
@@ -166,6 +125,7 @@ extension NSUserDefaultsController {
         }
     }
 }
+
 
 extension WebView {
     
