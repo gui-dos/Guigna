@@ -122,7 +122,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     }
     
     
-    func applicationDidFinishLaunching(aNotification: NSNotification?) {
+    func applicationDidFinishLaunching(aNotification: NSNotification) {
         
         tableProgressIndicator.startAnimation(self)
         
@@ -384,32 +384,32 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         self.options(self)
     }
     
-    func applicationDidBecomeActive(aNotification: NSNotification!) {
+    func applicationDidBecomeActive(aNotification: NSNotification) {
         if shellWindow != nil && (self.shellWindow.valueForKey("name") as NSString).containsString("sudo") {
             raiseShell(self)
         }
     }
     
-    func applicationShouldTerminateAfterLastWindowClosed(theApp: NSApplication!) -> Bool {
+    func applicationShouldTerminateAfterLastWindowClosed(theApp: NSApplication) -> Bool {
         return true
     }
     
-    func windowWillClose(notification: NSNotification!) {
+    func windowWillClose(notification: NSNotification) {
         if self.ready {
             system("osascript -e 'tell application \"Terminal\" to close (windows whose name contains \"Guigna \")'")
         }
     }
     
-    func splitView(splitView: NSSplitView!, shouldAdjustSizeOfSubview subview: NSView!) -> Bool {
+    func splitView(splitView: NSSplitView, shouldAdjustSizeOfSubview subview: NSView) -> Bool {
         return !subview.isEqualTo(splitView.subviews[0])
     }
     
-    func outlineView(outlineView: NSOutlineView!, isGroupItem item: AnyObject!) -> Bool {
+    func outlineView(outlineView: NSOutlineView, isGroupItem item: AnyObject) -> Bool {
         var source = item.representedObject as GSource
         return source.categories != nil && !(source is GSystem)
     }
     
-    func outlineView(outlineView: NSOutlineView!, viewForTableColumn tableColumn: NSTableColumn!, item: AnyObject!) -> NSView! {
+    func outlineView(outlineView: NSOutlineView, viewForTableColumn tableColumn: NSTableColumn?, item: AnyObject) -> NSView? {
         var source = item.representedObject as GSource
         if !(item.parentNode!!.representedObject is GSource) {
             return outlineView.makeViewWithIdentifier("HeaderCell", owner:self) as NSTableCellView
@@ -422,12 +422,12 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
     }
     
-    func outlineView(outlineView: NSOutlineView!, shouldShowOutlineCellForItem item: AnyObject!) -> Bool {
+    func outlineView(outlineView: NSOutlineView, shouldShowOutlineCellForItem item: AnyObject) -> Bool {
         return (item.representedObject as GSource) is GSystem
     }
     
     
-    func application(sender: NSApplication!, openFile filename: String!) -> Bool {
+    func application(sender: NSApplication, openFile filename: String) -> Bool {
         status("Ready.")
         var history = shell.valueForKey("history") as String
         if adminPassword != nil {
@@ -696,7 +696,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
     }
     
-    func outlineViewSelectionDidChange(notification: NSNotification!) {
+    func outlineViewSelectionDidChange(notification: NSNotification) {
         sourcesSelectionDidChange(notification)
     }
     
@@ -842,7 +842,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
     }
     
-    func tableViewSelectionDidChange(notification: NSNotification!) {
+    func tableViewSelectionDidChange(notification: NSNotification) {
         let selectedItems = itemsController.selectedObjects
         var item: GItem! = nil
         if selectedItems.count > 0 {
@@ -1105,7 +1105,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     override func controlTextDidBeginEditing(aNotification: NSNotification) {
     }
     
-    func textViewDidChangeSelection(aNotification: NSNotification!) {
+    func textViewDidChangeSelection(aNotification: NSNotification) {
         let selectedRange = infoText.selectedRange as NSRange
         let storageString = infoText.textStorage!.string as NSString
         let line = storageString.substringWithRange(storageString.paragraphRangeForRange(selectedRange))
