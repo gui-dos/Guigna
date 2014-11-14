@@ -12,8 +12,8 @@ at the same time.
 
 Guigna tries to abstract several package managers by creating generalized classes
 (GSystem and GPackage) while keeping a minimalist approach and using screen
-scraping. The implementations in Objective-C, Ruby and Swift are being kept in
-sync.
+scraping. The original implementations in Objective-C and MacRuby/RubyMotion are
+being ported to Swift.
 
 Guigna doesn't hide the complexity of compiling open source software: it launches
 the shell commands in a Terminal window you can monitor and interrupt. When
@@ -129,8 +129,6 @@ Some advice and warnings:
       
     Inactive packages are not indexed and are inserted also directly in
     the appDelegate's allPackages array.
-
-    Ruby versions use underscores instead of camel case.
 
 ```
 --
