@@ -224,7 +224,7 @@
                 homebrew.prefix = [[brewPath stringByDeletingLastPathComponent] stringByDeletingLastPathComponent];
                 homebrew.cmd = brewPath;
             }
-            if ([fileManager fileExistsAtPath:[NSString stringWithFormat:@"%@/bin/brew-cask.rb", homebrew.prefix]]) {
+            if ([fileManager fileExistsAtPath:[NSString stringWithFormat:@"%@/bin/brew-cask", homebrew.prefix]]) {
                 GSystem *homebrewcasks = [[GHomebrewCasks alloc] initWithAgent:self.agent];
                 [systems addObject:homebrewcasks];
                 homebrewcasks.prefix = homebrew.prefix;

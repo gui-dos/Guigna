@@ -14,7 +14,7 @@ class Homebrew < GSystem
   end
   
   def casks?
-    File.exist?("#{prefix}/bin/brew-cask.rb")
+    File.exist?("#{prefix}/bin/brew-cask")
   end
   
   def list

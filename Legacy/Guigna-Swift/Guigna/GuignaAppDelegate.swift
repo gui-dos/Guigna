@@ -272,7 +272,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     homebrew.prefix = brewPath.stringByDeletingLastPathComponent.stringByDeletingLastPathComponent
                     homebrew.cmd = brewPath
                 }
-                if fileManager.fileExistsAtPath("\(homebrew.prefix)/bin/brew-cask.rb") {
+                if fileManager.fileExistsAtPath("\(homebrew.prefix)/bin/brew-cask") {
                     var homebrewcasks = HomebrewCasks(agent: agent)
                     systems.append(homebrewcasks)
                     homebrewcasks.prefix = homebrew.prefix
