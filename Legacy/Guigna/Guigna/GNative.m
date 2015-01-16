@@ -16,19 +16,22 @@
 - (void) refresh {
     NSMutableArray *pkgs = [NSMutableArray array];
     NSString *url = @"https://docs.google.com/spreadsheet/ccc?key=0AryutUy3rKnHdHp3MFdabGh6aFVnYnpnUi1mY2E2N0E";
-    NSArray *nodes = [self.agent nodesForURL:url XPath:@"//table[@id=\"tblMain\"]//tr"];
+    NSArray *nodes = [self.agent nodesForURL:url XPath:@"//table[@class=\"waffle\"]//tr"];
+    NSCharacterSet *whitespaceCharacterSet = [NSCharacterSet whitespaceCharacterSet];
     for (id node in nodes) {
-        if ([node[@"@class"] is:@"rShim"])
+        NSArray *columns = node[@"td[@dir=\"ltr\"]"];
+        if ([columns count] == 0)
             continue;
-        NSArray *columns = node[@"td"];
-        NSString *name = [columns[1] stringValue];
-        NSString *version = [columns[2] stringValue];
-        NSString *homepage = [columns[4] stringValue];
-        NSString *URL = [columns[5] stringValue];
+        NSString *name = [[columns[0] stringValue] stringByTrimmingCharactersInSet:whitespaceCharacterSet];
+        if ([name is:@"Name"])
+            continue;
+        NSString *version = [[columns[1] stringValue] stringByTrimmingCharactersInSet:whitespaceCharacterSet];
+        NSString *homepage = [[columns[3] stringValue] stringByTrimmingCharactersInSet:whitespaceCharacterSet];
+        NSString *URL = [[columns[4] stringValue] stringByTrimmingCharactersInSet:whitespaceCharacterSet];
         GItem *pkg = [[GItem alloc] initWithName:name
-                                          version:version
-                                           source:self
-                                           status:GAvailableStatus];
+                                         version:version
+                                          source:self
+                                          status:GAvailableStatus];
         pkg.homepage = homepage;
         pkg.description = URL;
         pkg.URL = URL;
