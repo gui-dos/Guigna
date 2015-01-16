@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		C5181D5E1946190F00B1E6E7 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = C5181D5C1946190F00B1E6E7 /* Credits.rtf */; };
-		C51ED05C19458CB0000B582A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51ED05B19458CB0000B582A /* main.swift */; };
 		C51ED05E19458CB0000B582A /* GuignaAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51ED05D19458CB0000B582A /* GuignaAppDelegate.swift */; };
 		C51ED06319458CB0000B582A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C51ED06219458CB0000B582A /* Images.xcassets */; };
 		C51ED06619458CB0000B582A /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = C51ED06419458CB0000B582A /* MainMenu.xib */; };
@@ -78,7 +77,6 @@
 		C5181D5D1946190F00B1E6E7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Base; path = Base.lproj/Credits.rtf; sourceTree = "<group>"; };
 		C51ED05619458CB0000B582A /* Guigna.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Guigna.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C51ED05A19458CB0000B582A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C51ED05B19458CB0000B582A /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		C51ED05D19458CB0000B582A /* GuignaAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuignaAppDelegate.swift; sourceTree = "<group>"; };
 		C51ED06219458CB0000B582A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		C51ED06519458CB0000B582A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -205,7 +203,6 @@
 			isa = PBXGroup;
 			children = (
 				C51ED05A19458CB0000B582A /* Info.plist */,
-				C51ED05B19458CB0000B582A /* main.swift */,
 				C5181D5C1946190F00B1E6E7 /* Credits.rtf */,
 				C5A121571945E45200A351A8 /* Safari.h */,
 				C5A121581945E45200A351A8 /* Terminal.h */,
@@ -430,7 +427,6 @@
 				C56062DA198D0704001F0F93 /* Rudix.swift in Sources */,
 				C554334C1972EE060080B0BD /* Fink.swift in Sources */,
 				C5AD0FB6196287360001FB53 /* GPackage.swift in Sources */,
-				C51ED05C19458CB0000B582A /* main.swift in Sources */,
 				C562EF901993BA16001309A9 /* ITunes.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

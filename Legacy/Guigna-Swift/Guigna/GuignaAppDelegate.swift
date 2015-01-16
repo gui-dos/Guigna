@@ -2,6 +2,7 @@ import Cocoa
 import WebKit
 import ScriptingBridge
 
+@NSApplicationMain
 class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDelegate, NSOutlineViewDelegate, NSOutlineViewDataSource, NSTableViewDelegate, NSTableViewDataSource, NSTextViewDelegate {
     
     var agent: GAgent = GAgent()
