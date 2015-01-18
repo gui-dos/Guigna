@@ -159,7 +159,7 @@ class HomebrewCasks: GSystem {
             }
         } else {
             if !self.isHidden && (item as GPackage).repo == nil {
-                return output("/bin/sh -c export__PATH=\(prefix)/bin:$PATH__;__\(escapedCmd)__info__\(item.name)").split("\n")[1]
+                return output("/bin/sh -c export__PATH=\(prefix)/bin:$PATH__;__\(escapedCmd)__info__\(item.name)").split("\n")[2]
             }
         }
         return log(item)

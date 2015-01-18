@@ -133,7 +133,7 @@
             }
         }
     } else if (!self.isHidden && ((GPackage *)item).repo == nil)
-        return [[self outputFor:@"/bin/sh -c export__PATH=%@/bin:$PATH__;__%@__info__%@", self.prefix, [self.cmd stringByReplacingOccurrencesOfString:@" " withString:@"__"], item.name] split:@"\n"][1];
+        return [[self outputFor:@"/bin/sh -c export__PATH=%@/bin:$PATH__;__%@__info__%@", self.prefix, [self.cmd stringByReplacingOccurrencesOfString:@" " withString:@"__"], item.name] split:@"\n"][2];
     return [self log:item];
 }
 
