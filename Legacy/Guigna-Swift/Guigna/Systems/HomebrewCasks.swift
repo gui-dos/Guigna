@@ -26,6 +26,14 @@ class HomebrewCasks: GSystem {
             var name = components[0].lastPathComponent
             name = name.substringToIndex(name.length - 4)
             var version = components.last!
+            if !(version.hasPrefix("'") || version.hasPrefix(":")) {
+                let prev = components[components.count - 2]
+                if prev.hasPrefix("'") {
+                    version = "\(prev) \(version)"
+                } else {
+                    continue
+                }
+            }
             let offset = version.hasPrefix(":") ? 1 : 2
             version = version.substring(1, version.length - offset)
             var pkg = GPackage(name: name, version: version, system: self, status: .Available)

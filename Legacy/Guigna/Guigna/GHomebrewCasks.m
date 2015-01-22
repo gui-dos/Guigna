@@ -29,6 +29,13 @@
         NSString *name = [components[0] lastPathComponent];
         name = [name substringToIndex:[name length] -4];
         NSString *version = [components lastObject];
+        if (!([version hasPrefix:@"'"] || [version hasPrefix:@":"])) {
+            NSString *prev = components[components.count - 2];
+            if ([prev hasPrefix:@"'"])
+                version = [NSString stringWithFormat:@"%@ %@", prev, version];
+            else
+                continue;
+        }
         int offset = [version hasPrefix:@":"] ? 1 : 2;
         version = [version substringWithRange:NSMakeRange(1, [version length] - offset)];
         GPackage *pkg = [[GPackage alloc] initWithName:name
