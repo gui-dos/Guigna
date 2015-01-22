@@ -133,7 +133,7 @@ class PyPI: GScrape {
                 let link = rowData[1]["a"][0].href
                 let splits = link.split("/")
                 let name = splits[splits.count - 2]
-                let version = splits[splits.count - 1]
+                let version = splits.last!
                 let description = rowData[2].stringValue!
                 var egg = GItem(name: name, version: version, source: self, status: .Available)
                 egg.description = description

@@ -74,7 +74,7 @@ class Homebrew: GSystem {
             }
             components.removeAtIndex(0)
             let versionCount = components.count
-            let version = components[components.count - 1]
+            let version = components.last!
             var pkg: GPackage! = self[name]
             var latestVersion: String = (pkg == nil) ? "" : pkg.version
             if versionCount > 1 {

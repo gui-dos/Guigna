@@ -24,7 +24,7 @@ class MacPorts: GSystem {
                 components = components[1].split()
                 let version = components[0]
                 // let revision = "..."
-                let categories = components[components.count - 1].split("/")[0]
+                let categories = components.last!.split("/")[0]
                 var pkg = GPackage(name: name, version: version, system: self, status: .Available)
                 pkg.categories = categories
                 items.append(pkg)
@@ -201,7 +201,7 @@ class MacPorts: GSystem {
         for line in outputLines {
             let components = line.split(" < ")[0].split()
             let name = components[0]
-            let version = components[components.count-1]
+            let version = components.last!
             var pkg = self[name]
             var latestVersion: String = (pkg == nil) ? "" : pkg.version
             if pkg == nil {
