@@ -19,7 +19,7 @@
 
 - (NSArray *)list {
     
-    NSMutableArray *output = [NSMutableArray arrayWithArray:[[self outputFor:@"/bin/sh -c /usr/bin/grep__\"version__'\"__-r__/%@/Library/Taps/caskroom/homebrew-cask/Casks", self.prefix] split:@"\n"]];
+    NSMutableArray *output = [NSMutableArray arrayWithArray:[[self outputFor:@"/bin/sh -c /usr/bin/grep__\"version__\"__-r__/%@/Library/Taps/caskroom/homebrew-cask/Casks", self.prefix] split:@"\n"]];
     [output removeLastObject];
     [self.index removeAllObjects];
     [self.items removeAllObjects];
@@ -29,7 +29,8 @@
         NSString *name = [components[0] lastPathComponent];
         name = [name substringToIndex:[name length] -4];
         NSString *version = [components lastObject];
-        version = [version substringWithRange:NSMakeRange(1, [version length]-2)];
+        int offset = [version hasPrefix:@":"] ? 1 : 2;
+        version = [version substringWithRange:NSMakeRange(1, [version length] - offset)];
         GPackage *pkg = [[GPackage alloc] initWithName:name
                                                version:version
                                                 system:self
@@ -43,6 +44,21 @@
         }
         [self.items addObject:pkg];
         self[name] = pkg;
+    }
+    output = [NSMutableArray arrayWithArray:[[self outputFor:@"/bin/sh -c /usr/bin/grep__\"license__\"__-r__/%@/Library/Taps/caskroom/homebrew-cask/Casks", self.prefix] split:@"\n"]];
+    [output removeLastObject];
+    for (NSString *line in output) {
+        NSArray *components = [[line stringByTrimmingCharactersInSet:whitespaceCharacterSet] split];
+        NSString *name = [components[0] lastPathComponent];
+        name = [name substringToIndex:[name length] -4];
+        GPackage *pkg = self[name];
+        if (pkg != nil) {
+            NSString *license = [components lastObject];
+            if ([license hasPrefix:@":"]) {
+                license = [license substringWithRange:NSMakeRange(1, [license length] - 1)];
+                pkg.license = license;
+            }
+        }
     }
     // TODO
     // output = [NSMutableArray arrayWithArray:[[self outputFor:@"%@ search \"\"", self.cmd] componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];

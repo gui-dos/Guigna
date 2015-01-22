@@ -18,7 +18,7 @@ class HomebrewCasks: GSystem {
         index.removeAll(keepCapacity: true)
         items.removeAll(keepCapacity: true)
         
-        var outputLines = output("/bin/sh -c /usr/bin/grep__\"version__'\"__-r__/\(prefix)/Library/Taps/caskroom/homebrew-cask/Casks").split("\n")
+        var outputLines = output("/bin/sh -c /usr/bin/grep__\"version__\"__-r__/\(prefix)/Library/Taps/caskroom/homebrew-cask/Casks").split("\n")
         outputLines.removeLast()
         let whitespaceCharacterSet = NSCharacterSet.whitespaceCharacterSet()
         for line in outputLines {
@@ -26,7 +26,8 @@ class HomebrewCasks: GSystem {
             var name = components[0].lastPathComponent
             name = name.substringToIndex(name.length - 4)
             var version = components[components.count - 1]
-            version = version.substring(1, version.length - 2)
+            let offset = version.hasPrefix(":") ? 1 : 2
+            version = version.substring(1, version.length - offset)
             var pkg = GPackage(name: name, version: version, system: self, status: .Available)
             // avoid duplicate entries (i.e. aquamacs, opensesame)
             if self[pkg.name] != nil {
@@ -47,6 +48,20 @@ class HomebrewCasks: GSystem {
             }
             items.append(pkg)
             self[name] = pkg
+        }
+        outputLines = output("/bin/sh -c /usr/bin/grep__\"license__\"__-r__/\(prefix)/Library/Taps/caskroom/homebrew-cask/Casks").split("\n")
+        outputLines.removeLast()
+        for line in outputLines {
+            let components = line.stringByTrimmingCharactersInSet(whitespaceCharacterSet).split()
+            var name = components[0].lastPathComponent
+            name = name.substringToIndex(name.length - 4)
+            if let pkg = self[name] {
+                var license = components.last!
+                if license.hasPrefix(":") {
+                    license = license.substring(1, license.length - 1)
+                    pkg.license = license
+                }
+            }
         }
         self.installed() // update status
         return items as [GPackage]
