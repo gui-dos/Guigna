@@ -277,7 +277,7 @@
 }
 
 - (NSString *)cleanCmd:(GPackage *)pkg {
-    return [NSString stringWithFormat:@"%@ cleanup --force %@ &>/dev/null ; rm -f /Library/Caches/Homebrew/%@-%@*bottle*", self.cmd, pkg.name, pkg.name, pkg.version];
+    return [NSString stringWithFormat:@"%@ cleanup --force %@ &>/dev/null ; rm -f /Library/Caches/Homebrew/%@-%@*bottle*", self.cmd, pkg.name, pkg.name, pkg.installed];
 }
 
 - (NSString *)updateCmd {
