@@ -915,7 +915,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             if item != nil {
                 if selectedSegment == "Log" {
                     if item.source.name == "MacPorts" && item.categories == nil {
-                        page = packagesIndex[(item as GPackage).key]!.log
+                        page = packagesIndex[(item as! GPackage).key]!.log
                     } else {
                         page = item.log
                     }
@@ -976,7 +976,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                         if contents == "" || contents.hasSuffix("not installed.\n") {
                             info("[Contents not available]")
                         } else {
-                            info("[Click on a path to open in Finder]\n\(contents)\nUninstall command:\n\((item as GPackage).uninstallCmd)")
+                            info("[Click on a path to open in Finder]\n\(contents)\nUninstall command:\n\((item as! GPackage).uninstallCmd)")
                         }
                         
                     } else if selectedSegment == "Spec" {
@@ -1289,20 +1289,20 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                         continue
                     }
                     var availableOptions = [String]()
-                    if let itemAvailableOptions = item.system.options(item as GPackage) {
+                    if let itemAvailableOptions = item.system.options(item as! GPackage) {
                         availableOptions += itemAvailableOptions.split()
                     }
                     var markedOptions = [String]()
-                    if let itemMarkedOptions = (item as GPackage).markedOptions {
+                    if let itemMarkedOptions = (item as! GPackage).markedOptions {
                         markedOptions += itemMarkedOptions.split()
                     }
                     var currentOptions = [String]()
-                    if let itemOptions = (item as GPackage).options {
+                    if let itemOptions = (item as! GPackage).options {
                         currentOptions += itemOptions.split()
                     }
                     if markedOptions.count == 0 && currentOptions.count > 0 {
                         markedOptions += currentOptions
-                        (item as GPackage).markedOptions = markedOptions.join()
+                        (item as! GPackage).markedOptions = markedOptions.join()
                     }
                     if availableOptions.count > 0 && availableOptions[0] != "" {
                         var optionsMenu = NSMenu(title: "Options")
@@ -1398,13 +1398,13 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             } else if title == "Unmark" {
                 mark = .NoMark
                 if item is GPackage {
-                    (item as GPackage).markedOptions = nil
-                    (packagesIndex[(item as GPackage).key]! as GPackage).markedOptions = nil
+                    (item as! GPackage).markedOptions = nil
+                    (packagesIndex[(item as! GPackage).key]! as! GPackage).markedOptions = nil
                 }
             } else { // variant/option submenu selected
                 var markedOptions = [String]()
-                if (item as GPackage).markedOptions != nil {
-                    markedOptions += (item as GPackage).markedOptions.split()
+                if (item as! GPackage).markedOptions != nil {
+                    markedOptions += (item as! GPackage).markedOptions.split()
                 }
                 if sender.state == NSOffState {
                     markedOptions.append(title)
@@ -1415,8 +1415,8 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 if markedOptions.count > 0 {
                     options = markedOptions.join()
                 }
-                (item as GPackage).markedOptions = options
-                (packagesIndex[(item as GPackage).key]! as GPackage).markedOptions = options
+                (item as! GPackage).markedOptions = options
+                (packagesIndex[(item as! GPackage).key]! as! GPackage).markedOptions = options
                 mark = .Install
             }
             
@@ -1434,9 +1434,9 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             if item.status == .Inactive {
                 package = allPackages.filter { $0.name == item.name && $0.installed != nil && $0.installed == item.installed }[0]
             } else {
-                package = packagesIndex[(item as GPackage).key]!
+                package = packagesIndex[(item as! GPackage).key]!
                 package.version = item.version
-                package.options = (item as GPackage).options
+                package.options = (item as! GPackage).options
             }
             package.mark = mark
         }
@@ -1961,7 +1961,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     // GAppDelegate protocol
     
     func addItem(item: GItem) {
-        allPackages.append(item as GPackage)
+        allPackages.append(item as! GPackage)
     }
     
     func removeItem(item: GItem) {

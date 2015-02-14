@@ -181,7 +181,7 @@ class HomebrewCasks: GSystem {
                 }
             }
         } else {
-            if !self.isHidden && (item as GPackage).repo == nil {
+            if !self.isHidden && (item as! GPackage).repo == nil {
                 return output("/bin/sh -c export__PATH=\(prefix)/bin:$PATH__;__\(escapedCmd)__info__\(item.name)").split("\n")[2]
             }
         }
@@ -191,10 +191,10 @@ class HomebrewCasks: GSystem {
     override func log(item: GItem!) -> String {
         if item != nil {
             var path = ""
-            if (item as GPackage).repo == nil {
+            if (item as! GPackage).repo == nil {
                 path = "caskroom/homebrew-cask/commits/master/Casks"
                 //            } else {
-                //                let tokens = (item as GPackage).repo!.split("/")
+                //                let tokens = (item as! GPackage).repo!.split("/")
                 //                let user = tokens[0]
                 //                path = "\(user)/homebrew-\(tokens[1])/commits/master"
             }

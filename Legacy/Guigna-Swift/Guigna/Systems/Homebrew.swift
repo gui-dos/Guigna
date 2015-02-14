@@ -180,7 +180,7 @@ class Homebrew: GSystem {
                 }
             }
         } else {
-            if !self.isHidden && (item as GPackage).repo == nil {
+            if !self.isHidden && (item as! GPackage).repo == nil {
                 return output("\(cmd) info \(item.name)").split("\n")[1]
             }
         }
@@ -190,10 +190,10 @@ class Homebrew: GSystem {
     override func log(item: GItem!) -> String {
         if item != nil {
             var path: String
-            if (item as GPackage).repo == nil {
+            if (item as! GPackage).repo == nil {
                 path = "Homebrew/homebrew/commits/master/Library/Formula"
             } else {
-                let tokens = (item as GPackage).repo!.split("/")
+                let tokens = (item as! GPackage).repo!.split("/")
                 let user = tokens[0]
                 path = "\(user)/homebrew-\(tokens[1])/commits/master"
             }
