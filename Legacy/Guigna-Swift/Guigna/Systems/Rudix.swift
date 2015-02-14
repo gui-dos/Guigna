@@ -24,7 +24,7 @@ class Rudix: GSystem {
         
         var manifest = ""
         if mode == GMode.Online {
-            manifest = NSString(contentsOfURL: NSURL(string: "http://rudix.org/download/2014/10.9/00MANIFEST.txt")!, encoding: NSUTF8StringEncoding, error: nil) ?? ""
+            manifest = String(contentsOfURL: NSURL(string: "http://rudix.org/download/2014/10.9/00MANIFEST.txt")!, encoding: NSUTF8StringEncoding, error: nil) ?? ""
         } else {
             var command = "\(cmd) search"
             var osxVersion = Rudix.clampedOSVersion()
@@ -139,7 +139,7 @@ class Rudix: GSystem {
     }
     
     override func cat(item: GItem) -> String {
-        return NSString(contentsOfURL: NSURL(string: "https://raw.githubusercontent.com/rudix-mac/rudix/master/Ports/\(item.name)/Makefile")!, encoding: NSUTF8StringEncoding, error: nil) ?? ""
+        return String(contentsOfURL: NSURL(string: "https://raw.githubusercontent.com/rudix-mac/rudix/master/Ports/\(item.name)/Makefile")!, encoding: NSUTF8StringEncoding, error: nil) ?? ""
     }
     
     

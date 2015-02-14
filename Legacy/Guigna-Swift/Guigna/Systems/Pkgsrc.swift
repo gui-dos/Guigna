@@ -157,9 +157,9 @@ class Pkgsrc: GSystem {
             return output("\(cmd) \(item.name)")
         } else {
             if item.id != nil {
-                return NSString(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.id)/DESCR")!, encoding: NSUTF8StringEncoding, error: nil) ?? ""
+                return String(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.id)/DESCR")!, encoding: NSUTF8StringEncoding, error: nil) ?? ""
             } else { // TODO lowercase (i.e. Hermes -> hermes)
-                return NSString(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories)/\(item.name)/DESCR")!, encoding: NSUTF8StringEncoding, error: nil) ?? ""
+                return String(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories)/\(item.name)/DESCR")!, encoding: NSUTF8StringEncoding, error: nil) ?? ""
             }
         }
     }
@@ -191,9 +191,9 @@ class Pkgsrc: GSystem {
             return output("\(cmd) -L \(item.name)").split("Files:\n")[1]
         } else {
             if item.id != nil {
-                return NSString(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.id)/PLIST")!, encoding: NSUTF8StringEncoding, error: nil) ?? ""
+                return String(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.id)/PLIST")!, encoding: NSUTF8StringEncoding, error: nil) ?? ""
             } else { // TODO lowercase (i.e. Hermes -> hermes)
-                return NSString(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories)/\(item.name)/PLIST")!, encoding: NSUTF8StringEncoding, error: nil) ?? ""
+                return String(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories)/\(item.name)/PLIST")!, encoding: NSUTF8StringEncoding, error: nil) ?? ""
             }
         }
     }
@@ -204,9 +204,9 @@ class Pkgsrc: GSystem {
             item.id = filtered[0].id
         }
         if item.id != nil {
-            return NSString(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.id)/Makefile")!, encoding: NSUTF8StringEncoding, error: nil) ?? ""
+            return String(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.id)/Makefile")!, encoding: NSUTF8StringEncoding, error: nil) ?? ""
         } else { // TODO lowercase (i.e. Hermes -> hermes)
-            return NSString(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories)/\(item.name)/Makefile")!, encoding: NSUTF8StringEncoding, error: nil) ?? ""
+            return String(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories)/\(item.name)/Makefile")!, encoding: NSUTF8StringEncoding, error: nil) ?? ""
         }
     }
     
