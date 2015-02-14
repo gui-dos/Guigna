@@ -32,12 +32,12 @@ class MacPorts: GSystem {
             }
             
         } else {
-            var portIndex = "" as NSString
+            var portIndex = ""
             if mode == GMode.Online {  // FIXME: the compiler requires expilicit enum the first time it is seen
                 // TODO: fetch PortIndex
-                portIndex = NSString(contentsOfFile: "~/Library/Application Support/Guigna/MacPorts/PortIndex".stringByExpandingTildeInPath, encoding: NSUTF8StringEncoding, error: nil) ?? ""
+                portIndex = String(contentsOfFile: "~/Library/Application Support/Guigna/MacPorts/PortIndex".stringByExpandingTildeInPath, encoding: NSUTF8StringEncoding, error: nil) ?? ""
             } else {
-                portIndex = NSString(contentsOfFile: "\(prefix)/var/macports/sources/rsync.macports.org/release/tarballs/ports/PortIndex", encoding: NSUTF8StringEncoding, error: nil) ?? ""
+                portIndex = String(contentsOfFile: "\(prefix)/var/macports/sources/rsync.macports.org/release/tarballs/ports/PortIndex", encoding: NSUTF8StringEncoding, error: nil) ?? ""
             }
             let s =  NSScanner(string: portIndex)
             s.charactersToBeSkipped = NSCharacterSet(charactersInString: "")

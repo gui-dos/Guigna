@@ -25,7 +25,7 @@ class Pkgsrc: GSystem {
         
         let indexPath = "~/Library/Application Support/Guigna/pkgsrc/INDEX".stringByExpandingTildeInPath
         if NSFileManager.defaultManager().fileExistsAtPath(indexPath) {
-            var lines = (NSString(contentsOfFile: indexPath, encoding: NSUTF8StringEncoding, error: nil) as String).split("\n")
+            var lines = String(contentsOfFile: indexPath, encoding: NSUTF8StringEncoding, error: nil)!.split("\n")
             for line in lines {
                 let components = line.split("|")
                 var name = components[0]
