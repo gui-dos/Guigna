@@ -152,7 +152,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         var columnsMenu     = NSMenu(title: "ItemsColumnsMenu")
         var viewColumnsMenu = NSMenu(title: "ItemsColumnsMenu")
         for menu in [columnsMenu, viewColumnsMenu] {
-            for column in itemsTable.tableColumns as [NSTableColumn] {
+            for column in itemsTable.tableColumns as! [NSTableColumn] {
                 var menuItem = NSMenuItem(title: column.headerCell.stringValue, action: "toggleTableColumn:", keyEquivalent: "")
                 menuItem.target = self
                 menuItem.representedObject = column
@@ -413,12 +413,12 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     func outlineView(outlineView: NSOutlineView, viewForTableColumn tableColumn: NSTableColumn?, item: AnyObject) -> NSView? {
         var source = item.representedObject as GSource
         if !(item.parentNode!!.representedObject is GSource) {
-            return outlineView.makeViewWithIdentifier("HeaderCell", owner:self) as NSTableCellView
+            return outlineView.makeViewWithIdentifier("HeaderCell", owner:self) as! NSTableCellView
         } else {
             if source.categories == nil && (item.parentNode!!.representedObject is GSystem) {
-                return outlineView.makeViewWithIdentifier("LeafCell", owner:self) as NSTableCellView
+                return outlineView.makeViewWithIdentifier("LeafCell", owner:self) as! NSTableCellView
             } else {
-                return outlineView.makeViewWithIdentifier("DataCell", owner:self) as NSTableCellView
+                return outlineView.makeViewWithIdentifier("DataCell", owner:self) as! NSTableCellView
             }
         }
     }
@@ -860,7 +860,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     }
     
     func toggleTableColumn(sender: NSMenuItem) {
-        let column = sender.representedObject as NSTableColumn
+        let column = sender.representedObject as! NSTableColumn
         column.hidden = !column.hidden
     }
     
@@ -1266,8 +1266,8 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         let title = menu.title
         
         if title == "ItemsColumnsMenu" {
-            for menuItem in menu.itemArray as [NSMenuItem] {
-                let column = menuItem.representedObject as NSTableColumn
+            for menuItem in menu.itemArray as! [NSMenuItem] {
+                let column = menuItem.representedObject as! NSTableColumn
                 menuItem.state = column.hidden ? NSOffState : NSOnState
             }
         } else {
@@ -1709,13 +1709,13 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         self.ready = false
         // optionsPanel.display()
         if sender is NSSegmentedControl {
-            let theme = (sender as NSSegmentedControl).labelForSegment((sender as NSSegmentedControl).selectedSegment)!
+            let theme = (sender as! NSSegmentedControl).labelForSegment((sender as! NSSegmentedControl).selectedSegment)!
             applyTheme(theme)
             
         } else {
             if sender is NSButton {
-                let title = (sender as NSButton).title
-                let state = (sender as NSButton).state
+                let title = (sender as! NSButton).title
+                let state = (sender as! NSButton).state
                 var source: GSystem!
                 var system: GSystem!
                 var command = "command"
@@ -1832,17 +1832,17 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             tableTextColor = NSColor.greenColor()
             itemsTable.gridColor = NSColor.greenColor()
             itemsTable.gridStyleMask = .DashedHorizontalGridLineMask
-            (sourcesOutline.superview!.superview! as NSScrollView).borderType = .LineBorder
+            (sourcesOutline.superview!.superview! as! NSScrollView).borderType = .LineBorder
             sourcesOutline.backgroundColor = NSColor.blackColor()
             segmentedControl.segmentStyle = .SmallSquare
             commandsPopUp.bezelStyle = .SmallSquareBezelStyle
-            (infoText.superview!.superview! as NSScrollView).borderType = .LineBorder
+            (infoText.superview!.superview! as! NSScrollView).borderType = .LineBorder
             infoText.backgroundColor = NSColor.blackColor()
             infoText.textColor = NSColor.greenColor()
             var cyanLinkAttribute = NSMutableDictionary(dictionary: linkTextAttributes)
             cyanLinkAttribute[NSForegroundColorAttributeName] = NSColor.cyanColor()
             infoText.linkTextAttributes = cyanLinkAttribute
-            (logText.superview!.superview! as NSScrollView).borderType = .LineBorder
+            (logText.superview!.superview! as! NSScrollView).borderType = .LineBorder
             logText.backgroundColor = NSColor.blueColor()
             logText.textColor = NSColor.whiteColor()
             logTextColor = NSColor.whiteColor()
@@ -1867,15 +1867,15 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             tableTextColor = NSColor.blackColor()
             itemsTable.gridStyleMask = .GridNone
             itemsTable.gridColor = NSColor.gridColor()
-            (sourcesOutline.superview!.superview! as NSScrollView).borderType = .GrooveBorder
+            (sourcesOutline.superview!.superview! as! NSScrollView).borderType = .GrooveBorder
             sourcesOutline.backgroundColor = sourceListBackgroundColor
             segmentedControl.segmentStyle = .Rounded
             commandsPopUp.bezelStyle = .RoundRectBezelStyle // TODO: Round in Mavericks
-            (infoText.superview!.superview! as NSScrollView).borderType = .GrooveBorder
+            (infoText.superview!.superview! as! NSScrollView).borderType = .GrooveBorder
             infoText.backgroundColor = NSColor(calibratedRed: 0.82290249429999995, green: 0.97448979589999996, blue: 0.67131519269999995, alpha: 1.0) // light green
             infoText.textColor = NSColor.blackColor()
             infoText.linkTextAttributes = linkTextAttributes
-            (logText.superview!.superview! as NSScrollView).borderType = .GrooveBorder
+            (logText.superview!.superview! as! NSScrollView).borderType = .GrooveBorder
             logText.backgroundColor = NSColor(calibratedRed: 1.0, green: 1.0, blue: 0.8, alpha: 1.0) // lioght yellow
             logText.textColor = NSColor.blackColor()
             logTextColor = NSColor.blackColor()
