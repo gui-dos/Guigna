@@ -84,14 +84,14 @@ class Pkgsrc: GSystem {
             }
         }
         self.installed() // update status
-        return items as [GPackage]
+        return items as! [GPackage]
     }
     
     // TODO: outdated()
     override func installed() -> [GPackage] {
         
         if self.isHidden {
-            return items.filter { $0.status != .Available} as [GPackage]
+            return items.filter { $0.status != .Available} as! [GPackage]
         }
         var pkgs = [GPackage]()
         pkgs.reserveCapacity(50000)
@@ -101,7 +101,7 @@ class Pkgsrc: GSystem {
         }
         
         var status: GStatus
-        for pkg in items as [GPackage] {
+        for pkg in items as! [GPackage] {
             status = pkg.status
             pkg.installed = nil
             if status != .Updated && status != .New {

@@ -15,7 +15,7 @@ class MacOSX: GSystem {
         items.removeAll(keepCapacity: true)
         
         items = installed()
-        return items as [GPackage]
+        return items as! [GPackage]
     }
     
     

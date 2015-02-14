@@ -448,11 +448,11 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 }
                 // refresh statuses and versions
                 for system in affectedSystems.allObjects as [GSystem] { // Explicit GStatus otherwise does not compile
-                    for pkg in (system.items.filter { $0.status == GStatus.Inactive}) as [GPackage] {
+                    for pkg in (system.items.filter { $0.status == GStatus.Inactive}) as! [GPackage] {
                         itemsController.removeObject(pkg)
                     }
                     system.installed()
-                    for pkg in (system.items.filter { $0.status == .Inactive}) as [GPackage] {
+                    for pkg in (system.items.filter { $0.status == .Inactive}) as! [GPackage] {
                         let predicate = itemsController.filterPredicate
                         itemsController.addObject(pkg)
                         itemsController.filterPredicate = predicate
@@ -536,7 +536,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 self.itemsTable.display()
             }
             if packagesIndex.count > 0 && !(systemName == "Mac OS X" || systemName == "FreeBSD" || systemName == "iTunes") {
-                for package in system.items as [GPackage] {
+                for package in system.items as! [GPackage] {
                     if package.status == .Inactive {
                         continue
                     }
@@ -613,7 +613,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         
         for system in systems {
             // avoid adding duplicates of inactive packages already added by system.list
-            allPackages += system.items.filter { $0.status != .Inactive} as [GPackage]
+            allPackages += system.items.filter { $0.status != .Inactive} as! [GPackage]
         }
         
         packagesIndex = newIndex
@@ -770,7 +770,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                             status("Verifying \(src) packages...")
                             itemsController.filterPredicate = NSPredicate(format: "statusValue == \(st.rawValue)")
                             itemsTable.display()
-                            packages = (itemsController.arrangedObjects as NSArray).mutableCopy() as [GPackage]
+                            packages = (itemsController.arrangedObjects as NSArray).mutableCopy() as! [GPackage]
                         }
                         
                     } else if src.hasPrefix("marked") {
@@ -779,17 +779,17 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                             status("Verifying marked packages...")
                             itemsController.filterPredicate = NSPredicate(format: "markValue != 0")
                             itemsTable.display()
-                            packages = (itemsController.arrangedObjects as NSArray).mutableCopy() as [GPackage]
+                            packages = (itemsController.arrangedObjects as NSArray).mutableCopy() as! [GPackage]
                         }
                         
                     } else if !(src == "SYSTEMS" || src == "STATUS" || src == "") { // a category was selected
                         itemsController.filterPredicate = NSPredicate(format: "categories CONTAINS[c] '\(src)'")
-                        packages = system.items.filter { $0.categories != nil && $0.categories!.contains(src) } as [GPackage]
+                        packages = system.items.filter { $0.categories != nil && $0.categories!.contains(src) } as! [GPackage]
                         
                     } else { // a system was selected
                         itemsController.filterPredicate = nil
                         itemsTable.display()
-                        packages = system.items as [GPackage]
+                        packages = system.items as! [GPackage]
                         if first && itemsController.selectedObjects.count == 0 {
                             if sourcesController.selectedObjects.count == 1  {
                                 if sourcesController.selectedObjects[0] is GSystem {
@@ -1485,7 +1485,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         updateTabView(nil)
         var tasks = [String]()
         var markedSystems = NSMutableSet()
-        for item in markedItems as [GPackage] {
+        for item in markedItems as! [GPackage] {
             markedSystems.addObject(item.system)
         }
         
@@ -1494,7 +1494,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         for system in markedSystems.allObjects as [GSystem] {
             systemsDict[system.name] = [GPackage]()
         }
-        for item in markedItems as [GPackage] {
+        for item in markedItems as! [GPackage] {
             systemsDict[item.system.name]?.append(item)
         }
         
@@ -1519,7 +1519,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             var systemCommands = [String]()
             var command: String!
             var hidesOthers = false
-            for item in systemsDict[system.name]! as [GPackage] {
+            for item in systemsDict[system.name]! as! [GPackage] {
                 mark = item.mark
                 markName = markNames[Int(mark.rawValue)]
                 command = nil
@@ -1779,7 +1779,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                         sourcesSelectionDidChange(systemsMutableArray[systemsCount])
                         itemsController.addObjects(system.list())
                         itemsTable.display()
-                        allPackages += system.items as [GPackage]
+                        allPackages += system.items as! [GPackage]
                         for (key, value) in system.index {
                             packagesIndex[key] = value
                         }
@@ -1806,7 +1806,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                         if status == GState.On {
                             itemsController.removeObjects(items.filter { $0.system.name == title })
                             allPackages = allPackages.filter { $0.system.name != title }
-                            for pkg in source.items as [GPackage] {
+                            for pkg in source.items as! [GPackage] {
                                 packagesIndex.removeValueForKey(pkg.key)
                             }
                             source.items.removeAll()

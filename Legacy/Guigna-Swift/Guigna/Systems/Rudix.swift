@@ -62,14 +62,14 @@ class Rudix: GSystem {
             self[name] = pkg
         }
         self.installed() // update status
-        return items as [GPackage]
+        return items as! [GPackage]
     }
     
     
     override func installed() -> [GPackage] {
         
         if self.isHidden {
-            return items.filter { $0.status != .Available} as [GPackage]
+            return items.filter { $0.status != .Available} as! [GPackage]
         }
         
         var pkgs = [GPackage]()
@@ -82,7 +82,7 @@ class Rudix: GSystem {
         var outputLines = output("\(cmd)").split("\n")
         outputLines.removeLast()
         var status: GStatus
-        for pkg in items as [GPackage] {
+        for pkg in items as! [GPackage] {
             status = pkg.status
             pkg.installed = nil
             if status != .Updated && status != .New {

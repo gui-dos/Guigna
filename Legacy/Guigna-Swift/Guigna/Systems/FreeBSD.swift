@@ -62,7 +62,7 @@ class FreeBSD: GSystem {
             }
         }
         // self.installed() // update status
-        return items as [GPackage]
+        return items as! [GPackage]
     }
     
     

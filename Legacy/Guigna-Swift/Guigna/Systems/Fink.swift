@@ -60,14 +60,14 @@ class Fink: GSystem {
             }
         }
         self.installed() // update status
-        return items as [GPackage]
+        return items as! [GPackage]
     }
     
     
     override func installed() -> [GPackage] {
         
         if self.isHidden {
-            return items.filter { $0.status != .Available} as [GPackage]
+            return items.filter { $0.status != .Available} as! [GPackage]
         }
         var pkgs = [GPackage]()
         pkgs.reserveCapacity(50000)
@@ -77,7 +77,7 @@ class Fink: GSystem {
         }
         
         var status: GStatus
-        for pkg in items as [GPackage] {
+        for pkg in items as! [GPackage] {
             status = pkg.status
             pkg.installed = nil
             if status != .Updated && status != .New { // TODO: !pkg.description.hasPrefix("[virtual")
@@ -110,7 +110,7 @@ class Fink: GSystem {
     override func outdated() -> [GPackage] {
         
         if self.isHidden {
-            return items.filter { $0.status == .Outdated} as [GPackage]
+            return items.filter { $0.status == .Outdated} as! [GPackage]
         }
         var pkgs = [GPackage]()
         pkgs.reserveCapacity(50000)

@@ -32,14 +32,14 @@ class Homebrew: GSystem {
         }
         // TODO HomebrewMainTaps
         self.installed() // update status
-        return items as [GPackage]
+        return items as! [GPackage]
     }
     
     
     override func installed() -> [GPackage] {
         
         if self.isHidden {
-            return items.filter { $0.status != .Available} as [GPackage]
+            return items.filter { $0.status != .Available} as! [GPackage]
         }
         
         var pkgs = [GPackage]()
@@ -58,7 +58,7 @@ class Homebrew: GSystem {
             self.agent.appDelegate!.removeItems({ $0.status == .Inactive && $0.system === self}) // TODO: ugly
         }
         var status: GStatus
-        for pkg in items as [GPackage] {
+        for pkg in items as! [GPackage] {
             status = pkg.status
             pkg.installed = nil
             if status != .Updated && status != .New {
@@ -104,7 +104,7 @@ class Homebrew: GSystem {
     override func outdated() -> [GPackage] {
         
         if self.isHidden {
-            return items.filter { $0.status == .Outdated} as [GPackage]
+            return items.filter { $0.status == .Outdated} as! [GPackage]
         }
         
         var pkgs = [GPackage]()
@@ -142,7 +142,7 @@ class Homebrew: GSystem {
     override func inactive() -> [GPackage] {
         
         if self.isHidden {
-            return items.filter { $0.status == .Inactive} as [GPackage]
+            return items.filter { $0.status == .Inactive} as! [GPackage]
         }
         var pkgs = [GPackage]()
         pkgs.reserveCapacity(50000)
