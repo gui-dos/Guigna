@@ -91,9 +91,9 @@ class MacOSX: GSystem {
         if item.categories == "storeagent" || item.categories == "storedownloadd" {
             let url = "http://itunes.apple.com/lookup?bundleId=\(item.id)"
             let data = NSData(contentsOfURL: NSURL(string: url)!) ?? NSData()
-            let results = ((NSJSONSerialization.JSONObjectWithData(data, options: nil, error: nil) as NSDictionary)["results"]! as NSArray)
+            let results = ((NSJSONSerialization.JSONObjectWithData(data, options: nil, error: nil) as! NSDictionary)["results"]! as! NSArray)
             if results.count > 0 {
-                let pkgId = (results[0] as NSDictionary)["trackId"]!.stringValue!
+                let pkgId = (results[0] as! NSDictionary)["trackId"]!.stringValue!
                 let url = NSURL(string: "http://itunes.apple.com/app/id\(pkgId)")!
                 if let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil) {
                     let mainDiv = xmlDoc.rootElement()!["//div[@id=\"main\"]"][0]
@@ -117,9 +117,9 @@ class MacOSX: GSystem {
             if item.categories == "storeagent" || item.categories == "storedownloadd" {
                 let url = "http://itunes.apple.com/lookup?bundleId=\(item.id)"
                 let data = NSData(contentsOfURL: NSURL(string: url)!) ?? NSData()
-                let results = ((NSJSONSerialization.JSONObjectWithData(data, options: nil, error: nil) as NSDictionary)["results"]! as NSArray)
+                let results = ((NSJSONSerialization.JSONObjectWithData(data, options: nil, error: nil) as! NSDictionary)["results"]! as! NSArray)
                 if results.count > 0 {
-                    let pkgId = (results[0] as NSDictionary)["trackId"]!.stringValue!
+                    let pkgId = (results[0] as! NSDictionary)["trackId"]!.stringValue!
                     page = "http://itunes.apple.com/app/id" + pkgId
                 }
             }
@@ -130,7 +130,7 @@ class MacOSX: GSystem {
     override func contents(item: GItem) -> String {
         var contents = ""
         for pkgId in item.id.split() {
-            let plist = output("\(cmd) --pkg-info-plist \(pkgId)").propertyList() as NSDictionary
+            let plist = output("\(cmd) --pkg-info-plist \(pkgId)").propertyList() as! NSDictionary
             var files = output("\(cmd) --files \(pkgId)").split("\n")
             files.removeLast()
             for file in files {
@@ -153,7 +153,7 @@ class MacOSX: GSystem {
         var dirsToDelete = [String]()
         var isDir: ObjCBool = true
         for pkgId in pkg.id.split() {
-            let plist = output("\(cmd) --pkg-info-plist \(pkgId)").propertyList() as NSDictionary
+            let plist = output("\(cmd) --pkg-info-plist \(pkgId)").propertyList() as! NSDictionary
             var dirs = output("\(cmd) --only-dirs --files \(pkgId)").split("\n")
             dirs.removeLast()
             for dir in dirs {
