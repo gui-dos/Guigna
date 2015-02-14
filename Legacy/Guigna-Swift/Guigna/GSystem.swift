@@ -47,13 +47,13 @@ class GSystem: GSource {
     }
     
     func categoriesList() -> [String] {
-        var categories = NSMutableSet()
+        var categories = Set<String>()
         for item in self.items {
             if let cats = item.categories {
-                categories.addObjectsFromArray(cats.split())
+                categories.union(cats.split())
             }
         }
-        var categoriesArray = categories.allObjects as [String]
+        var categoriesArray = Array(categories)
         categoriesArray.sort { $0 < $1 }
         return categoriesArray
     }
