@@ -86,7 +86,7 @@ extension String {
 extension NSXMLNode {
     
     func nodesForXPath(xpath: String) -> [NSXMLNode] { // FIXME: doesn't work with GAgent childnodes
-        return self.nodesForXPath(xpath, error: nil) as [NSXMLNode]
+        return self.nodesForXPath(xpath, error: nil) as! [NSXMLNode]
     }
     
     subscript(xpath: String) -> [NSXMLNode] {
@@ -96,7 +96,7 @@ extension NSXMLNode {
     }
     
     func attribute(name: String) -> String! {
-        if let attribute = (self as NSXMLElement).attributeForName(name) {
+        if let attribute = (self as! NSXMLElement).attributeForName(name) {
             return attribute.stringValue!
         } else {
             return nil
@@ -105,7 +105,7 @@ extension NSXMLNode {
     
     var href: String {
         get {
-            return (self as NSXMLElement).attributeForName("href")!.stringValue!
+            return (self as! NSXMLElement).attributeForName("href")!.stringValue!
         }
     }
 }
@@ -114,7 +114,7 @@ extension NSXMLNode {
 extension NSUserDefaultsController {
     subscript(key: String) -> NSObject! {
         get {
-            if let value = self.values.valueForKey(key) as NSObject! {
+            if let value = self.values.valueForKey(key) as! NSObject! {
                 return value
             } else {
                 return nil
