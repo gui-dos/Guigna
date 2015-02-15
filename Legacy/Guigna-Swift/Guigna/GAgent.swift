@@ -38,7 +38,7 @@ class GAgent: NSObject {
         // Uncomment to debug:
         // NSData *errorData = [[errorPipe fileHandleForReading] readDataToEndOfFile];
         // NSString __autoreleasing *errorOutput = [[NSString alloc] initWithData:errorData encoding:NSUTF8StringEncoding];
-        return output
+        return output as! String
     }
     
     
