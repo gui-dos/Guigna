@@ -63,29 +63,29 @@ class MacPorts: GSystem {
                     s.scanUpToString(" ", intoString: &key)
                     s.scanString(" ", intoString: nil)
                     s.scanUpToCharactersFromSet(endsCharacterSet, intoString: &str)
-                    value.setString(str!)
+                    value.setString(str! as! String)
                     var range = value.rangeOfString("{")
                     while range.location != NSNotFound {
                         value.replaceCharactersInRange(range, withString: "")
                         if s.scanUpToString("}", intoString: &str) {
-                            value.appendString(str!)
+                            value.appendString(str! as! String)
                         }
                         s.scanString("}", intoString: nil)
                         range = value.rangeOfString("{")
                     }
                     switch key! {
                     case "version":
-                        version = value
+                        version = value as String
                     case "revision":
-                        revision = value
+                        revision = value as String
                     case "categories":
-                        categories = value
+                        categories = value as String
                     case "description":
-                        description = value
+                        description = value as String
                     case "homepage":
-                        homepage = value
+                        homepage = value as String
                     case "license":
-                        license = value
+                        license = value as String
                     default:
                         break
                     }
@@ -94,7 +94,7 @@ class MacPorts: GSystem {
                     }
                     s.scanString(" ", intoString: nil)
                 }
-                var pkg = GPackage(name: name!, version: "\(version!)_\(revision!)", system: self, status: .Available)
+                var pkg = GPackage(name: name! as! String, version: "\(version!)_\(revision!)", system: self, status: .Available)
                 pkg.categories = categories!
                 pkg.description = description!
                 pkg.license = license!
@@ -102,7 +102,7 @@ class MacPorts: GSystem {
                 //    pkg.homepage = homepage;
                 // }
                 items.append(pkg)
-                self[name!] = pkg
+                self[name! as! String] = pkg
             }
         }
         self.installed() // update status
