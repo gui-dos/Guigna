@@ -38,8 +38,8 @@ class ITunes: GSystem {
                     escapedIpa = ipa.stringByReplacingOccurrencesOfString(" ", withString: "\\__")
                     plist = output("/bin/sh -c /usr/bin/unzip__-p__\(escapedIpa)__iTunesMetadata.plist__|__plutil__-convert__xml1__-o__-__-")
                 }
-                let metadata = plist.propertyList() as NSDictionary
-                let name = metadata["itemName"]! as String
+                let metadata = plist.propertyList() as! NSDictionary
+                let name = metadata["itemName"]! as! String
                 let pkg = GPackage(name: name, version: "", system: self, status: .UpToDate)
                 pkg.id = filename.substringToIndex(filename.length - 4)
                 pkg.installed = version
@@ -67,8 +67,8 @@ class ITunes: GSystem {
             escapedIpa = ipa.stringByReplacingOccurrencesOfString(" ", withString: "\\__")
             plist = output("/bin/sh -c /usr/bin/unzip__-p__\(escapedIpa)__iTunesMetadata.plist__|__plutil__-convert__xml1__-o__-__-")
         }
-        let metadata = plist.propertyList() as NSDictionary
-        let itemId: Int = metadata["itemId"]! as Int
+        let metadata = plist.propertyList() as! NSDictionary
+        let itemId: Int = metadata["itemId"]! as! Int
         let url = NSURL(string: "http://itunes.apple.com/app/id\(itemId)")!
         if let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil) {
             let mainDiv = xmlDoc.rootElement()!["//div[@id=\"main\"]"][0]
@@ -97,8 +97,8 @@ class ITunes: GSystem {
                 escapedIpa = ipa.stringByReplacingOccurrencesOfString(" ", withString: "\\__")
                 plist = output("/bin/sh -c /usr/bin/unzip__-p__\(escapedIpa)__iTunesMetadata.plist__|__plutil__-convert__xml1__-o__-__-")
             }
-            let metadata = plist.propertyList() as NSDictionary
-            let itemId: Int = metadata["itemId"]! as Int
+            let metadata = plist.propertyList() as! NSDictionary
+            let itemId: Int = metadata["itemId"]! as! Int
             return "http://itunes.apple.com/app/id\(itemId)"
         }
     }
@@ -117,7 +117,7 @@ class ITunes: GSystem {
             escapedIpa = ipa.stringByReplacingOccurrencesOfString(" ", withString: "\\__")
             plist = output("/bin/sh -c /usr/bin/unzip__-p__\(escapedIpa)__iTunesMetadata.plist__|__plutil__-convert__xml1__-o__-__-")
         }
-        let metadata = plist.propertyList() as NSDictionary
+        let metadata = plist.propertyList() as! NSDictionary
         return metadata.description as String
     }
     
