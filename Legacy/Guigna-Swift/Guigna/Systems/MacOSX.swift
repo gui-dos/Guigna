@@ -27,11 +27,11 @@ class MacOSX: GSystem {
         var pkgIds = output("/usr/sbin/pkgutil --pkgs").split("\n")
         pkgIds.removeLast()
         
-        let history = (NSArray(contentsOfFile: "/Library/Receipts/InstallHistory.plist") ?? [] as Array).reverse()
+        let history = ((NSArray(contentsOfFile: "/Library/Receipts/InstallHistory.plist") as? [AnyObject]) ?? []).reverse()
         var keepPkg: Bool
-        for dict in history as [NSDictionary] {
+        for dict in history as! [NSDictionary] {
             keepPkg = false
-            var ids = dict["packageIdentifiers"]! as [String]
+            var ids = dict["packageIdentifiers"]! as! [String]
             for pkgId in ids {
                 if let idx = find(pkgIds, pkgId) {
                     keepPkg = true
@@ -41,13 +41,13 @@ class MacOSX: GSystem {
             if !keepPkg {
                 continue
             }
-            let name = dict["displayName"]! as String
-            var version = dict["displayVersion"]! as String
-            var category = dict["processName"]! as String
+            let name = dict["displayName"]! as! String
+            var version = dict["displayVersion"]! as! String
+            var category = dict["processName"]! as! String
             category = category.stringByReplacingOccurrencesOfString(" ", withString: "").lowercaseString
             if category == "installer" {
-                let plist = output("/usr/sbin/pkgutil --pkg-info-plist \(ids[0])").propertyList() as NSDictionary
-                version = plist["pkg-version"]! as String
+                let plist = output("/usr/sbin/pkgutil --pkg-info-plist \(ids[0])").propertyList() as! NSDictionary
+                version = plist["pkg-version"]! as! String
             }
             var pkg = GPackage(name: name, version: "", system: self, status: .UpToDate)
             pkg.id = ids.join()
