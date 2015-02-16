@@ -540,7 +540,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     if package.status == .Inactive {
                         continue
                     }
-                    previousPackage = packagesIndex[package.key]
+                    previousPackage = packagesIndex[package.key()]
                     // TODO: keep mark
                     if previousPackage == nil {
                         package.status = .New
@@ -915,7 +915,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             if item != nil {
                 if selectedSegment == "Log" {
                     if item.source.name == "MacPorts" && item.categories == nil {
-                        page = packagesIndex[(item as! GPackage).key]!.log
+                        page = packagesIndex[(item as! GPackage).key()]!.log
                     } else {
                         page = item.log
                     }
@@ -1399,7 +1399,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 mark = .NoMark
                 if item is GPackage {
                     (item as! GPackage).markedOptions = nil
-                    packagesIndex[(item as! GPackage).key]!.markedOptions = nil
+                    packagesIndex[(item as! GPackage).key()]!.markedOptions = nil
                 }
             } else { // variant/option submenu selected
                 var markedOptions = [String]()
@@ -1416,7 +1416,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     options = markedOptions.join()
                 }
                 (item as! GPackage).markedOptions = options
-                packagesIndex[(item as! GPackage).key]!.markedOptions = options
+                packagesIndex[(item as! GPackage).key()]!.markedOptions = options
                 mark = .Install
             }
             
@@ -1434,7 +1434,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             if item.status == .Inactive {
                 package = allPackages.filter { $0.name == item.name && $0.installed != nil && $0.installed == item.installed }[0]
             } else {
-                package = packagesIndex[(item as! GPackage).key]!
+                package = packagesIndex[(item as! GPackage).key()]!
                 package.version = item.version
                 package.options = (item as! GPackage).options
             }
@@ -1807,7 +1807,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                             itemsController.removeObjects(items.filter { $0.system.name == title })
                             allPackages = allPackages.filter { $0.system.name != title }
                             for pkg in source.items as! [GPackage] {
-                                packagesIndex.removeValueForKey(pkg.key)
+                                packagesIndex.removeValueForKey(pkg.key())
                             }
                             source.items.removeAll()
                             systemsMutableArray.removeObject(source)

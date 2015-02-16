@@ -47,7 +47,7 @@ class ITunes: GSystem {
                 pkgs.append(pkg)
             }
             //    for pkg in installed() {
-            //        index[pkg.key].status = pkg.status
+            //        index[pkg.key()].status = pkg.status
             //    }
         }
         return pkgs

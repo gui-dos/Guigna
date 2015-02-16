@@ -11,10 +11,8 @@ class GPackage: GItem {
         self.system = system
     }
     
-    var key: String  {
-        get {
-            return self.system.key(package: self)
-        }
+    override func key() -> String  {
+        return self.system.key(package: self)
     }
     
     var installCmd: String {
