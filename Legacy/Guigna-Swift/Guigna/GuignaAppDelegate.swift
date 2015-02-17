@@ -66,7 +66,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     dynamic var tableFont: NSFont!
     dynamic var tableTextColor: NSColor!
     dynamic var logTextColor: NSColor!
-    dynamic var linkTextAttributes: NSDictionary!
+    dynamic var linkTextAttributes: [NSObject : AnyObject]!
     dynamic var sourceListBackgroundColor: NSColor!
     
     dynamic var adminPassword: String?
@@ -1839,7 +1839,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             (infoText.superview!.superview! as! NSScrollView).borderType = .LineBorder
             infoText.backgroundColor = NSColor.blackColor()
             infoText.textColor = NSColor.greenColor()
-            var cyanLinkAttribute = NSMutableDictionary(dictionary: linkTextAttributes)
+            var cyanLinkAttribute = linkTextAttributes
             cyanLinkAttribute[NSForegroundColorAttributeName] = NSColor.cyanColor()
             infoText.linkTextAttributes = cyanLinkAttribute
             (logText.superview!.superview! as! NSScrollView).borderType = .LineBorder
