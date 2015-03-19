@@ -71,6 +71,15 @@ class HomebrewCasks: GSystem {
                 }
             }
         }
+        outputLines = output("/bin/sh -c /usr/bin/grep__\"name__'\"__-r__/\(prefix)/Library/Taps/caskroom/homebrew-cask/Casks").split("\n")
+        outputLines.removeLast()
+        for line in outputLines {
+            let components = line.stringByTrimmingCharactersInSet(whitespaceCharacterSet).split(".rb:  name '")
+            var name = components[0].lastPathComponent
+            if let pkg = self[name] {
+                pkg.description = dropLast(components.last!)
+            }
+        }
         self.installed() // update status
         return items as! [GPackage]
     }
