@@ -1309,7 +1309,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                         for availableOption in availableOptions {
                             optionsMenu.addItemWithTitle(availableOption, action: "mark:", keyEquivalent: "")
                             var options = Set(markedOptions)
-                            options.union(currentOptions)
+                            options.unionInPlace(currentOptions)
                             for option in options {
                                 if option == availableOption {
                                     optionsMenu.itemWithTitle(availableOption)?.state = NSOnState

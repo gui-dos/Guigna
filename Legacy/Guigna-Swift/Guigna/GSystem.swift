@@ -50,7 +50,7 @@ class GSystem: GSource {
         var categories = Set<String>()
         for item in self.items {
             if let cats = item.categories {
-                categories.union(cats.split())
+                categories.unionInPlace(cats.split())
             }
         }
         var categoriesArray = Array(categories)
