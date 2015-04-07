@@ -29,16 +29,8 @@ repositories.
 
 ## Feedback
 
-Guigna is at a very early stage of development but it is quite stable
-for a try (some preliminary builds are available from
-[Dropbox](https://www.dropbox.com/sh/ld19r8vp9avr32p/eV6au9iQK3)).
-
-The project is tested only for the latest versions of Xcode, OS X
-Mavericks and RubyMotion. It doesn't use the more advanced idioms
-and tools available in such environments but I think it is progressing
-quite well since it was started as a single script for personal use
-while I was reading a couple of books on MacRuby and testing the
-Nokogiri gem...
+Guigna is at a very early stage of development and it is tested only for the
+latest versions of Yosemite, Xcode and Swift betas.
 
 Some advice and warnings:
 
