@@ -67,6 +67,19 @@
             }
         }
     }
+    
+    output = [NSMutableArray arrayWithArray:[[self outputFor:@"/bin/sh -c /usr/bin/grep__\"name__'\"__-r__/%@/Library/Taps/caskroom/homebrew-cask/Casks", self.prefix] split:@"\n"]];
+    [output removeLastObject];
+    for (NSString *line in output) {
+        NSArray *components = [[line stringByTrimmingCharactersInSet:whitespaceCharacterSet] split:@".rb:  name '"];
+        NSString *name = [components[0] lastPathComponent];
+        GPackage *pkg = self[name];
+        if (pkg != nil) {
+            NSString *description = [components lastObject];
+            description = [description substringToIndex:[description length] - 1];
+            pkg.description = description;
+        }
+    }
     // TODO
     // output = [NSMutableArray arrayWithArray:[[self outputFor:@"%@ search \"\"", self.cmd] componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
     [self installed]; // update status
