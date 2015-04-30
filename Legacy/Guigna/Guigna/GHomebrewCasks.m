@@ -234,7 +234,7 @@
 }
 
 - (NSString *) uninstallCmd:(GPackage *)pkg {
-    return [NSString stringWithFormat:@"%@ uninstall %@", self.cmd, pkg.name];
+    return [NSString stringWithFormat:@"%@ zap %@", self.cmd, pkg.name];
 }
 
 // FIXME: not possible currently

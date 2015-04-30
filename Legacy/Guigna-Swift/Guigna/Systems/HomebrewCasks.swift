@@ -252,7 +252,7 @@ class HomebrewCasks: GSystem {
     
     
     override func uninstallCmd(pkg: GPackage) -> String {
-        return "\(cmd) uninstall \(pkg.name)"
+        return "\(cmd) zap \(pkg.name)"
     }
     
     // FIXME: not possible currently
