@@ -473,8 +473,15 @@
                 } else if (mark == GFetchMark) {
                     self.marksCount--;
                 }
-                [self log:[NSString stringWithFormat:@"😺 %@ %@ %@: DONE\n", markName, item.system.name, item.name]];
-                item.mark = GNoMark;
+                GSystem *itemSystem = item.system;
+                NSString *systemName = itemSystem.name;
+                [self log:[NSString stringWithFormat:@"😺 %@ %@ %@: DONE\n", markName, systemName, item.name]];
+                if (mark == GUninstallMark && ([systemName is:@"Mac OS X"] || [systemName is:@"iTunes"])) {
+                    [itemsController removeObject:item];
+                    [itemSystem.items removeObject:item];
+                } else {
+                    item.mark = GNoMark;
+                }
                 [itemsTable reloadData];
             }
             [self updateMarkedSource];
@@ -1365,8 +1372,9 @@
                 marksCount++;
         }
         item.mark = mark;
+        NSString *systemName = item.system.name;
         GPackage *package;
-        if (item.status == GInactiveStatus) {
+        if (item.status == GInactiveStatus || [systemName is:@"Mac OS X"] || [systemName is:@"iTunes"]) {
             package = [allPackages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"name == %@ && installed == %@", item.name, item.installed]][0];
         } else {
             package = (GPackage *)packagesIndex[[(GPackage *)item key]];

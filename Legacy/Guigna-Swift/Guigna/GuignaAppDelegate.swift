@@ -484,8 +484,15 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                         marksCount--
                     }
                     
-                    log("😺 \(markName) \(item.system.name) \(item.name): DONE\n")
-                    item.mark = .NoMark
+                    let itemSystem = item.system
+                    let systemName = itemSystem.name
+                    log("😺 \(markName) \(systemName) \(item.name): DONE\n")
+                    if mark == .Uninstall && (systemName == "Mac OS X" || systemName == "iTunes") {
+                        itemsController.removeObject(item)
+                        itemSystem.mutableArrayValueForKey("items").removeObject(item)
+                    } else {
+                        item.mark = .NoMark
+                    }
                     itemsTable.reloadData()
                 }
                 self.updateMarkedSource()
@@ -1262,6 +1269,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
     }
     
+    
     func menuNeedsUpdate(menu: NSMenu) {
         let title = menu.title
         
@@ -1429,9 +1437,12 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     marksCount++
                 }
             }
+            
             item.mark = mark
-            var package: GPackage
-            if item.status == .Inactive {
+            let systemName = item.system.name
+            var package: GPackage!
+            
+            if item.status == .Inactive || systemName == "Mac OS X" || systemName == "iTunes" {
                 package = allPackages.filter { $0.name == item.name && $0.installed != nil && $0.installed == item.installed }[0]
             } else {
                 package = packagesIndex[(item as! GPackage).key()]!

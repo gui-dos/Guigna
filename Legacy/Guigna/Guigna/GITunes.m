@@ -141,5 +141,8 @@
     return [super availableCommands];
 }
 
+- (NSString *) uninstallCmd:(GPackage *)pkg {
+    return [NSString stringWithFormat:@"rm -r '%@'", [[NSString stringWithFormat:@"~/Music/iTunes/iTunes Media/Mobile Applications/%@.ipa", pkg.ID] stringByExpandingTildeInPath]];
+}
 
 @end
