@@ -15,7 +15,7 @@
 
 - (void) refresh {
     NSMutableArray *pkgs = [NSMutableArray array];
-    NSString *url = @"https://docs.google.com/spreadsheet/ccc?key=0AryutUy3rKnHdHp3MFdabGh6aFVnYnpnUi1mY2E2N0E";
+    NSString *url = @"https://docs.google.com/spreadsheets/d/1HOslVAaEwrcd7hmu6rWzd7jayMUT-nzaL9YL8llE35Q";
     NSArray *nodes = [self.agent nodesForURL:url XPath:@"//table[@class=\"waffle\"]//tr"];
     NSCharacterSet *whitespaceCharacterSet = [NSCharacterSet whitespaceCharacterSet];
     for (id node in nodes) {
