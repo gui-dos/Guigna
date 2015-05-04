@@ -214,19 +214,24 @@ class MacUpdate: GScrape {
     
     override func refresh() {
         var apps = [GItem]()
-        let url = NSURL(string: "https://www.macupdate.com/apps/page/\(pageNumber - 1)")!
+        let url = NSURL(string: "https://www.macupdate.com/page/\(pageNumber - 1)")!
         if let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil) {
-            var nodes = xmlDoc.rootElement()!["//div[@class=\"appinfo\"]"]
+            var nodes = xmlDoc.rootElement()!["//tr[starts-with(@class,\"app_tr_row\")]"]
             for node in nodes {
-                var name = node["a"][0].stringValue!
+                var name = node[".//a"][0].stringValue!
                 let idx = name.rindex(" ")
                 var version = ""
                 if idx != NSNotFound {
                     version = name.substringFromIndex(idx + 1)
                     name = name.substringToIndex(idx)
                 }
-                let description = node["span"][0].stringValue!.substringFromIndex(2)
-                let id = node["a"][0].href.split("/")[3]
+                var description = node[".//span"][0].stringValue!
+                var price = node[".//span[contains(@class,\"appprice\")]"][0].stringValue!
+                if price != "Free" {
+                    price = "$\(price)"
+                }
+                description += " - \(price)"
+                let id = node[".//a"][0].href.split("/")[3]
                 let app = GItem(name: name, version: version, source: self, status: .Available)
                 app.id = id
                 app.description = description

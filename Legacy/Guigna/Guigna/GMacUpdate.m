@@ -16,18 +16,23 @@
 
 - (void)refresh {
     NSMutableArray *entries = [NSMutableArray array];
-    NSString *url = [NSString stringWithFormat:@"https://www.macupdate.com/apps/page/%ld", self.pageNumber - 1];
-    NSArray *nodes = [self.agent nodesForURL:url XPath:@"//div[@class=\"appinfo\"]"];
+    NSString *url = [NSString stringWithFormat:@"https://www.macupdate.com/page/%ld", self.pageNumber - 1];
+    NSArray *nodes = [self.agent nodesForURL:url XPath:@"//tr[starts-with(@class,\"app_tr_row\")]"];
     for (id node in nodes) {
-        NSString *name = [node[@"a"][0] stringValue];
+        NSString *name = [node[@".//a"][0] stringValue];
         NSUInteger idx = [name rindex:@" "];
         NSString *version = @"";
         if (idx != NSNotFound) {
             version = [name substringFromIndex:idx + 1];
             name = [name substringToIndex:idx];
         }
-        NSString *description = [[node[@"span"][0] stringValue] substringFromIndex:2];
-        NSString *ID = [[node[@"a"][0] href] split:@"/"][3];
+        NSString *description = [node[@".//span"][0] stringValue];
+        NSString *price = [node[@".//span[contains(@class,\"appprice\")]"][0] stringValue];
+        if (![price is:@"Free"]) {
+            price = [NSString stringWithFormat:@"$%@", price];
+        }
+        description = [description stringByAppendingFormat:@" - %@", price];
+        NSString *ID = [[node[@".//a"][0] href] split:@"/"][3];
         // NSString *category =
         GItem *entry = [[GItem alloc] initWithName:name
                                            version:version
