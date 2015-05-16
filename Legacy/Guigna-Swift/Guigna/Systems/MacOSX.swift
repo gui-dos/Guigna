@@ -46,8 +46,11 @@ class MacOSX: GSystem {
             var category = dict["processName"]! as! String
             category = category.stringByReplacingOccurrencesOfString(" ", withString: "").lowercaseString
             if category == "installer" {
-                let plist = output("/usr/sbin/pkgutil --pkg-info-plist \(ids[0])").propertyList() as! NSDictionary
-                version = plist["pkg-version"]! as! String
+                let infoOutput = output("/usr/sbin/pkgutil --pkg-info-plist \(ids[0])")
+                if infoOutput != "" {
+                    let plist = infoOutput.propertyList() as! NSDictionary
+                    version = plist["pkg-version"]! as! String
+                }
             }
             var pkg = GPackage(name: name, version: "", system: self, status: .UpToDate)
             pkg.id = ids.join()
@@ -130,7 +133,11 @@ class MacOSX: GSystem {
     override func contents(item: GItem) -> String {
         var contents = ""
         for pkgId in item.id.split() {
-            let plist = output("\(cmd) --pkg-info-plist \(pkgId)").propertyList() as! NSDictionary
+            let infoOutput = output("\(cmd) --pkg-info-plist \(pkgId)")
+            if infoOutput == "" {
+                continue
+            }
+            let plist = infoOutput.propertyList() as! NSDictionary
             var files = output("\(cmd) --files \(pkgId)").split("\n")
             files.removeLast()
             for file in files {
@@ -153,7 +160,11 @@ class MacOSX: GSystem {
         var dirsToDelete = [String]()
         var isDir: ObjCBool = true
         for pkgId in pkg.id.split() {
-            let plist = output("\(cmd) --pkg-info-plist \(pkgId)").propertyList() as! NSDictionary
+            let infoOutput = output("\(cmd) --pkg-info-plist \(pkgId)")
+            if infoOutput == "" {
+                continue
+            }
+            let plist = infoOutput.propertyList() as! NSDictionary
             var dirs = output("\(cmd) --only-dirs --files \(pkgId)").split("\n")
             dirs.removeLast()
             for dir in dirs {

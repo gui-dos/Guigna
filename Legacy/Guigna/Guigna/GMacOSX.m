@@ -47,7 +47,10 @@
         NSString *version = dict[@"displayVersion"];
         NSString *category = [[dict[@"processName"] stringByReplacingOccurrencesOfString:@" " withString:@""] lowercaseString];
         if ([category is:@"installer"]) {
-            version = [[self outputFor: @"/usr/sbin/pkgutil --pkg-info-plist %@", ids[0]] propertyList][@"pkg-version"];
+            NSString *output = [self outputFor: @"/usr/sbin/pkgutil --pkg-info-plist %@", ids[0]];
+            if (![output is:@""]) {
+                version = [output propertyList][@"pkg-version"];
+            }
         }
         GPackage *pkg = [[GPackage alloc] initWithName:name
                                                version:nil
@@ -140,7 +143,10 @@
 - (NSString *)contents:(GItem *)item {
     NSMutableString *contents = [NSMutableString string];
     for (NSString *pkgID in [item.ID split]) {
-        NSDictionary *plist = [[self outputFor:@"%@ --pkg-info-plist %@", self.cmd, pkgID] propertyList];
+        NSString *output = [self outputFor:@"%@ --pkg-info-plist %@", self.cmd, pkgID];
+        if ([output is:@""])
+            continue;
+        NSDictionary *plist = [output propertyList];
         NSMutableArray *files = [NSMutableArray arrayWithArray:[[self outputFor:@"%@ --files %@", self.cmd, pkgID] split:@"\n"]];
         [files removeLastObject];
         for (NSString *file in files) {
@@ -168,7 +174,10 @@
     NSMutableArray *dirsToDelete = [NSMutableArray array];
     BOOL isDir;
     for (NSString *pkgID in [pkg.ID split]) {
-        NSDictionary *plist = [[self outputFor:@"%@ --pkg-info-plist %@", self.cmd, pkgID] propertyList];
+        NSString *output = [self outputFor:@"%@ --pkg-info-plist %@", self.cmd, pkgID];
+        if ([output is:@""])
+            continue;
+        NSDictionary *plist = [output propertyList];
         NSMutableArray *dirs = [NSMutableArray arrayWithArray:[[self outputFor:@"%@ --only-dirs --files %@", self.cmd, pkgID] split:@"\n"]];
         [dirs removeLastObject];
         for (NSString *dir in dirs) {
@@ -197,7 +206,7 @@
         [commands addObject:[NSString stringWithFormat:@"sudo %@ --forget %@", self.cmd, pkgID]];
     }
     return [commands join:@" ; "];
-	
+    
     // TODO: disable Launchd daemons, clean Application Support, Caches, Preferences
     // SEE: https://github.com/caskroom/homebrew-cask/blob/master/lib/cask/artifact/pkg.rb
 }
