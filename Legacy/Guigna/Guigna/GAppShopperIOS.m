@@ -18,9 +18,10 @@
     NSString *url = [NSString stringWithFormat:@"http://appshopper.com/all/%ld", self.pageNumber];
     NSArray *nodes =[self.agent nodesForURL:url XPath:@"//div[@data-appid]"];
     NSCharacterSet *whitespaceCharacterSet = [NSCharacterSet whitespaceCharacterSet];
+    NSCharacterSet *whitespaceAndNewlineCharacterSet = [NSCharacterSet whitespaceAndNewlineCharacterSet];
     for (id node in nodes) {
         NSString *name = [node[@".//h2"][0] stringValue];
-        name = [name stringByTrimmingCharactersInSet:whitespaceCharacterSet];
+        name = [name stringByTrimmingCharactersInSet:whitespaceAndNewlineCharacterSet];
         NSString *version = [node[@".//span[starts-with(@class,\"version\")]"][0] stringValue];
         version = [version substringFromIndex:2]; // trim "V "
         NSString *ID = node[@"@data-appid"];

@@ -267,13 +267,14 @@ class AppShopper: GScrape {
         var apps = [GItem]()
         let url = NSURL(string: "http://appshopper.com/mac/all/\(pageNumber)")!
         let whitespaceCharacterSet = NSCharacterSet.whitespaceCharacterSet()
+        let whitespaceAndNewlineCharacterSet = NSCharacterSet.whitespaceAndNewlineCharacterSet()
         if let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil) {
             var nodes = xmlDoc.rootElement()!["//div[@data-appid]"]
             for node in nodes {
-                let name = node[".//h2"][0].stringValue!.stringByTrimmingCharactersInSet(whitespaceCharacterSet)
+                let name = node[".//h2"][0].stringValue!.stringByTrimmingCharactersInSet(whitespaceAndNewlineCharacterSet)
                 var version = node[".//span[starts-with(@class,\"version\")]"][0].stringValue!
                 version = version.substringFromIndex(2) // trim "V "
-                var id = node.attribute("@data-appid")
+                var id = node.attribute("data-appid")
                 let nick = node["a"][0].href.lastPathComponent
                 id = "\(id) \(nick)"
                 var category = node[".//h5/span"][0].stringValue!
@@ -331,13 +332,14 @@ class AppShopperIOS: GScrape {
         var apps = [GItem]()
         let url = NSURL(string: "http://appshopper.com/all/\(pageNumber)")!
         let whitespaceCharacterSet = NSCharacterSet.whitespaceCharacterSet()
+        let whitespaceAndNewlineCharacterSet = NSCharacterSet.whitespaceAndNewlineCharacterSet()
         if let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil) {
             var nodes = xmlDoc.rootElement()!["//div[@data-appid]"]
             for node in nodes {
-                let name = node[".//h2"][0].stringValue!.stringByTrimmingCharactersInSet(whitespaceCharacterSet)
+                let name = node[".//h2"][0].stringValue!.stringByTrimmingCharactersInSet(whitespaceAndNewlineCharacterSet)
                 var version = node[".//span[starts-with(@class,\"version\")]"][0].stringValue!
                 version = version.substringFromIndex(2) // trim "V "
-                var id = node.attribute("@data-appid")
+                var id = node.attribute("data-appid")
                 let nick = node["a"][0].href.lastPathComponent
                 id = "\(id) \(nick)"
                 var category = node[".//h5/span"][0].stringValue!
