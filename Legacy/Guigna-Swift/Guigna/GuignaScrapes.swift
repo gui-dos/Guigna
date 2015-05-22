@@ -266,31 +266,26 @@ class AppShopper: GScrape {
     override func refresh() {
         var apps = [GItem]()
         let url = NSURL(string: "http://appshopper.com/mac/all/\(pageNumber)")!
+        let whitespaceCharacterSet = NSCharacterSet.whitespaceCharacterSet()
         if let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil) {
-            var nodes = xmlDoc.rootElement()!["//ul[@class=\"appdetails\"]/li"]
+            var nodes = xmlDoc.rootElement()!["//div[@data-appid]"]
             for node in nodes {
-                let name = node["h3/a"][0].stringValue!
-                var version = node[".//dd"][2].stringValue!
-                version = version.substringToIndex(version.length - 1)  // trim final \n
-                var id = node["@id"][0].stringValue!.substringFromIndex(4)
+                let name = node[".//h2"][0].stringValue!.stringByTrimmingCharactersInSet(whitespaceCharacterSet)
+                var version = node[".//span[starts-with(@class,\"version\")]"][0].stringValue!
+                version = version.substringFromIndex(2) // trim "V "
+                var id = node.attribute("@data-appid")
                 let nick = node["a"][0].href.lastPathComponent
-                id += " \(nick)"
-                var category = node["div[@class=\"category\"]"][0].stringValue!
-                category = category.substringToIndex(category.length - 1) // trim final \n
-                let type = node["@class"][0].stringValue!
+                id = "\(id) \(nick)"
+                var category = node[".//h5/span"][0].stringValue!
+                let type = node[".//span[starts-with(@class,\"change\")]"][0].stringValue!
+                let desc = node[".//p[@class=\"description\"]"][0].stringValue!
                 var price = node[".//div[@class=\"price\"]"][0].children![0].stringValue!
-                let cents = node[".//div[@class=\"price\"]"][0].children![1].stringValue!
-                if price == "" {
-                    price = cents
-                } else if !cents.hasPrefix("Buy") {
-                    price = "\(price).\(cents)"
-                }
                 // TODO:NSXML UTF8 encoding
-                var fixedPrice = price.stringByReplacingOccurrencesOfString("â‚¬", withString: "€")
+                var fixedPrice = price.stringByTrimmingCharactersInSet(whitespaceCharacterSet).stringByReplacingOccurrencesOfString("â‚¬", withString: "€")
                 var app = GItem(name: name, version: version, source: self, status: .Available)
                 app.id = id
                 app.categories = category
-                app.description = "\(type) \(fixedPrice)"
+                app.description = "\(type) \(fixedPrice) - \(desc)"
                 apps.append(app)
             }
         }
@@ -335,31 +330,26 @@ class AppShopperIOS: GScrape {
     override func refresh() {
         var apps = [GItem]()
         let url = NSURL(string: "http://appshopper.com/all/\(pageNumber)")!
+        let whitespaceCharacterSet = NSCharacterSet.whitespaceCharacterSet()
         if let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil) {
-            var nodes = xmlDoc.rootElement()!["//ul[@class=\"appdetails\"]/li"]
+            var nodes = xmlDoc.rootElement()!["//div[@data-appid]"]
             for node in nodes {
-                let name = node["h3/a"][0].stringValue!
-                var version = node[".//dd"][2].stringValue!
-                version = version.substringToIndex(version.length - 1)  // trim final \n
-                var id = node["@id"][0].stringValue!.substringFromIndex(4)
+                let name = node[".//h2"][0].stringValue!.stringByTrimmingCharactersInSet(whitespaceCharacterSet)
+                var version = node[".//span[starts-with(@class,\"version\")]"][0].stringValue!
+                version = version.substringFromIndex(2) // trim "V "
+                var id = node.attribute("@data-appid")
                 let nick = node["a"][0].href.lastPathComponent
-                id += " \(nick)"
-                var category = node["div[@class=\"category\"]"][0].stringValue!
-                category = category.substringToIndex(category.length - 1) // trim final \n
-                let type = node["@class"][0].stringValue!
+                id = "\(id) \(nick)"
+                var category = node[".//h5/span"][0].stringValue!
+                let type = node[".//span[starts-with(@class,\"change\")]"][0].stringValue!
+                let desc = node[".//p[@class=\"description\"]"][0].stringValue!
                 var price = node[".//div[@class=\"price\"]"][0].children![0].stringValue!
-                let cents = node[".//div[@class=\"price\"]"][0].children![1].stringValue!
-                if price == "" {
-                    price = cents
-                } else if !cents.hasPrefix("Buy") {
-                    price = "\(price).\(cents)"
-                }
                 // TODO:NSXML UTF8 encoding
-                var fixedPrice = price.stringByReplacingOccurrencesOfString("â‚¬", withString: "€")
+                var fixedPrice = price.stringByTrimmingCharactersInSet(whitespaceCharacterSet).stringByReplacingOccurrencesOfString("â‚¬", withString: "€")
                 var app = GItem(name: name, version: version, source: self, status: .Available)
                 app.id = id
                 app.categories = category
-                app.description = "\(type) \(fixedPrice)"
+                app.description = "\(type) \(fixedPrice) - \(desc)"
                 apps.append(app)
             }
         }

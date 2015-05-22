@@ -16,33 +16,30 @@
 - (void)refresh {
     NSMutableArray *apps = [NSMutableArray array];
     NSString *url = [NSString stringWithFormat:@"http://appshopper.com/mac/all/%ld", self.pageNumber];
-    NSArray *nodes =[self.agent nodesForURL:url XPath:@"//ul[@class=\"appdetails\"]/li"];
+    NSArray *nodes =[self.agent nodesForURL:url XPath:@"//div[@data-appid]"];
+    NSCharacterSet *whitespaceCharacterSet = [NSCharacterSet whitespaceCharacterSet];
     for (id node in nodes) {
-        NSString *name = [node[@"h3/a"][0] stringValue];
-        NSString *version = [node[@".//dd"][2] stringValue];
-        version = [version substringToIndex:[version length]-1]; // trim final \n
-        NSString *ID = [node[@"@id"] substringFromIndex:4];
+        NSString *name = [node[@".//h2"][0] stringValue];
+        name = [name stringByTrimmingCharactersInSet:whitespaceCharacterSet];
+        NSString *version = [node[@".//span[starts-with(@class,\"version\")]"][0] stringValue];
+        version = [version substringFromIndex:2]; // trim "V "
+        NSString *ID = node[@"@data-appid"];
         NSString *nick = [[node[@"a"][0] href] lastPathComponent];
         ID = [ID stringByAppendingFormat:@" %@", nick];
-        NSString *category = [node[@"div[@class=\"category\"]"][0] stringValue];
-        category = [category substringToIndex:[category length]-1]; // trim final \n
-        NSString *type = node[@"@class"];
+        NSString *category = [node[@".//h5/span"][0]stringValue];
+        NSString *type = [node[@".//span[starts-with(@class,\"change\")]"][0] stringValue];
+        NSString *desc = [node[@".//p[@class=\"description\"]"][0]stringValue];
         NSString *price = [[node[@".//div[@class=\"price\"]"][0] children][0] stringValue];
-        NSString *cents = [[node[@".//div[@class=\"price\"]"][0] children][1] stringValue];
-        if ([price is:@""])
-            price = cents;
-        else if ( ![cents hasPrefix:@"Buy"])
-            price = [NSString stringWithFormat:@"%@.%@", price, cents];
         // TODO:NSXML UTF8 encoding
-        NSMutableString *fixedPrice = [price mutableCopy];
+        NSMutableString *fixedPrice = [[price stringByTrimmingCharactersInSet:whitespaceCharacterSet] mutableCopy];
         [fixedPrice replaceOccurrencesOfString:@"â‚¬" withString:@"€" options:0 range:NSMakeRange(0, [fixedPrice length])];
         GItem *app = [[GItem alloc] initWithName:name
-                                          version:version
-                                           source:self
-                                           status:GAvailableStatus];
+                                         version:version
+                                          source:self
+                                          status:GAvailableStatus];
         app.ID = ID;
         app.categories = category;
-        app.description = [NSString stringWithFormat:@"%@ %@", type, fixedPrice];
+        app.description = [NSString stringWithFormat:@"%@ %@ - %@", type, fixedPrice, desc];
         [apps addObject:app];
     }
     self.items = apps;
