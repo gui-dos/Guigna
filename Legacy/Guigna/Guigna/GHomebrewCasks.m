@@ -239,7 +239,7 @@
 
 // FIXME: not possible currently
 - (NSString *) upgradeCmd:(GPackage *)pkg {
-    return [NSString stringWithFormat:@"%@ uninstall %@ ; %@ install %@", self.cmd, pkg.name, self.cmd, pkg.name ];
+    return [NSString stringWithFormat:@"%@ zap %@ ; %@ install %@", self.cmd, pkg.name, self.cmd, pkg.name ];
     
 }
 

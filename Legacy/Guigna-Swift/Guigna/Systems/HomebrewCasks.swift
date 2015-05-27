@@ -257,7 +257,7 @@ class HomebrewCasks: GSystem {
     
     // FIXME: not possible currently
     override func upgradeCmd(pkg: GPackage) -> String {
-        return "\(cmd) uninstall \(pkg.name) ; \(cmd) install \(pkg.name)"
+        return "\(cmd) zap \(pkg.name) ; \(cmd) install \(pkg.name)"
     }
     
     override func cleanCmd(pkg: GPackage) -> String {
