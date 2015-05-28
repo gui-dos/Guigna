@@ -237,7 +237,7 @@
     return [NSString stringWithFormat:@"%@ zap %@", self.cmd, pkg.name];
 }
 
-// FIXME: not possible currently
+// TODO: uninstall only, don't zap settings
 - (NSString *) upgradeCmd:(GPackage *)pkg {
     return [NSString stringWithFormat:@"%@ zap %@ ; %@ install %@", self.cmd, pkg.name, self.cmd, pkg.name ];
     

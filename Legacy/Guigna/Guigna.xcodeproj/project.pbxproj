@@ -33,6 +33,8 @@
 		C532A6FC14BA51CB0070DB02 /* source-freecode.tiff in Resources */ = {isa = PBXBuildFile; fileRef = C532A6FB14BA51CB0070DB02 /* source-freecode.tiff */; };
 		C5391B2B18B345D70022C37F /* GHomebrewCasks.m in Sources */ = {isa = PBXBuildFile; fileRef = C5391B2A18B345D70022C37F /* GHomebrewCasks.m */; };
 		C540E8F318F2C76600B5149F /* status-marked.tiff in Resources */ = {isa = PBXBuildFile; fileRef = C540E8F218F2C76600B5149F /* status-marked.tiff */; };
+		C5471C271B174E56006460E4 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = C5471C261B174E56006460E4 /* README.md */; };
+		C5471C291B174E61006460E4 /* TODO.txt in Resources */ = {isa = PBXBuildFile; fileRef = C5471C281B174E61006460E4 /* TODO.txt */; };
 		C55C199F1955941C00F6A931 /* GAgent.m in Sources */ = {isa = PBXBuildFile; fileRef = C55C199E1955941C00F6A931 /* GAgent.m */; };
 		C56062D8198CCF83001F0F93 /* GLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = C56062D7198CCF83001F0F93 /* GLibrary.m */; };
 		C5657D3114BC9A4500B6D621 /* system-macosx.tiff in Resources */ = {isa = PBXBuildFile; fileRef = C5657D3014BC9A4500B6D621 /* system-macosx.tiff */; };
@@ -79,8 +81,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		C502344C1978FC9A00544901 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
-		C502344D1978FC9A00544901 /* TODO.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = TODO.txt; path = ../TODO.txt; sourceTree = "<group>"; };
 		C515C6D71477942100B526BD /* Guigna.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Guigna.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C515C6DB1477942100B526BD /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		C515C6DE1477942100B526BD /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -116,6 +116,8 @@
 		C5391B2918B345D70022C37F /* GHomebrewCasks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GHomebrewCasks.h; sourceTree = "<group>"; };
 		C5391B2A18B345D70022C37F /* GHomebrewCasks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GHomebrewCasks.m; sourceTree = "<group>"; };
 		C540E8F218F2C76600B5149F /* status-marked.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "status-marked.tiff"; sourceTree = "<group>"; };
+		C5471C261B174E56006460E4 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
+		C5471C281B174E61006460E4 /* TODO.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = TODO.txt; path = ../../TODO.txt; sourceTree = "<group>"; };
 		C55C199D1955941C00F6A931 /* GAgent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GAgent.h; sourceTree = "<group>"; };
 		C55C199E1955941C00F6A931 /* GAgent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GAgent.m; sourceTree = "<group>"; };
 		C56062D6198CCF83001F0F93 /* GLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLibrary.h; sourceTree = "<group>"; };
@@ -208,8 +210,8 @@
 		C515C6CC1477942100B526BD = {
 			isa = PBXGroup;
 			children = (
-				C502344C1978FC9A00544901 /* README.md */,
-				C502344D1978FC9A00544901 /* TODO.txt */,
+				C5471C261B174E56006460E4 /* README.md */,
+				C5471C281B174E61006460E4 /* TODO.txt */,
 				C515C6E11477942100B526BD /* Guigna */,
 				C515C6DA1477942100B526BD /* Frameworks */,
 				C515C6D81477942100B526BD /* Products */,
@@ -467,6 +469,7 @@
 				C51C1B3C14CEBA6D00EC7D47 /* system-rudix.tiff in Resources */,
 				C51C1B3F14CF195100EC7D47 /* source-native.tiff in Resources */,
 				C5F3427915022D2200D7AFA7 /* system-gentoo.tiff in Resources */,
+				C5471C291B174E61006460E4 /* TODO.txt in Resources */,
 				C5D4DBAD150376C0000AA96F /* system-gtkosx.tiff in Resources */,
 				C59EE97A16104CD200CFF7FE /* source-cocoapods.tiff in Resources */,
 				C59EE97D16104D5200CFF7FE /* GCocoaPods.h in Resources */,
@@ -514,6 +517,7 @@
 				C584457C14F7EC1500834EEA /* GGtkOSX.m in Sources */,
 				C5F3427D15022D9800D7AFA7 /* GGentoo.m in Sources */,
 				C59EE97F16104D7A00CFF7FE /* GCocoaPods.m in Sources */,
+				C5471C271B174E56006460E4 /* README.md in Sources */,
 				C5F6DFD516E80F5000275647 /* GPyPI.m in Sources */,
 				C5F6DFD616E80F5000275647 /* GRubyGems.m in Sources */,
 				C5FD168C17159378004A3549 /* GAdditions.m in Sources */,

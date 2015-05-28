@@ -255,7 +255,7 @@ class HomebrewCasks: GSystem {
         return "\(cmd) zap \(pkg.name)"
     }
     
-    // FIXME: not possible currently
+    // TODO: uninstall only, don't zap settings
     override func upgradeCmd(pkg: GPackage) -> String {
         return "\(cmd) zap \(pkg.name) ; \(cmd) install \(pkg.name)"
     }
