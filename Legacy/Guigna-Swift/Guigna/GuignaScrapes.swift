@@ -88,14 +88,14 @@ class Freecode: GScrape {
             if let xmlDoc = NSXMLDocument(XMLString: page, options: Int(NSXMLDocumentTidyHTML), error: nil) {
                 var nodes = xmlDoc.rootElement()![".//div[starts-with(@class, 'project')]"]
                 for node in nodes {
-                    let titleNodes =  node["h3/a/node()"]
+                    let titleNodes = node["h3/a/node()"]
                     let name = titleNodes[0].stringValue!
                     let version = titleNodes[2].stringValue!
                     let id = node["h3/a"][0].href.lastPathComponent
                     let home = node[".//a[@itemprop='url']"][0].href
                     let description = node[".//p[@itemprop='featureList']"][0].stringValue!
                     let tagNodes = node[".//p[@itemprop='keywords']/a"]
-                    var tags: Array = tagNodes.map {$0.stringValue!}
+                    var tags = tagNodes.map {$0.stringValue!}
                     let proj = GItem(name: name, version: version, source: self, status: .Available)
                     proj.id = id
                     proj.license = tags[0]
