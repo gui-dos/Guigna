@@ -113,6 +113,8 @@ class GSourceTransformer: NSValueTransformer {
             return NSImage(named: "source-native.tiff")
         case "Pkgsrc.se":
             return NSImage(named: "source-pkgsrc.se.tiff")
+        case "Freecode":
+            return NSImage(named: "source-freecode.tiff")
         case "Debian":
             return NSImage(named: "source-debian.tiff")
         case "PyPI":

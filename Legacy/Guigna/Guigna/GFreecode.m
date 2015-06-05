@@ -13,22 +13,24 @@
     return self;
 }
 
-// TODO: 
+// TODO:
 
 - (void)refresh {
     NSMutableArray *projs = [NSMutableArray array];
     NSString *url = [NSString stringWithFormat:@"http://freecode.club/index?n=%ld", self.pageNumber];
     // Don't use agent.nodesForUrl since NSXMLDocumentTidyHTML strips <article>
-    NSXMLDocument *xmlDoc = [[NSXMLDocument alloc] initWithContentsOfURL:[NSURL URLWithString:url] options:NSXMLDocumentTidyXML error:nil];
-    NSArray *nodes = [[xmlDoc rootElement] nodesForXPath:@"//article" error:nil];
+    NSMutableString *page = [NSMutableString stringWithContentsOfURL:[NSURL URLWithString:url] encoding:NSUTF8StringEncoding error:nil];
+    [page replaceOccurrencesOfString:@"article" withString:@"div" options:0 range:NSMakeRange(0, [page length])];
+    NSXMLDocument *xmlDoc = [[NSXMLDocument alloc] initWithXMLString:page options:NSXMLDocumentTidyHTML error:nil];
+    NSArray *nodes = [[xmlDoc rootElement] nodesForXPath:@".//div[@class='project']" error:nil];
     for (id node in nodes) {
         NSArray *titleNodes = node[@"h3/a/node()"];
         NSString *name = [titleNodes[0] stringValue];
-        NSString *version = [titleNodes[1] stringValue];
+        NSString *version = [titleNodes[2] stringValue];
         NSString *ID = [[node[@"h3/a"][0] href] lastPathComponent];
         NSString *homepage = [node[@".//a[@itemprop='url']"][0] href];
         NSString *description = [node[@".//p[@itemprop='featureList']"][0] stringValue];
-        NSArray *tagNodes = node[@".//p[@itemprop='keywords']/img/a"];
+        NSArray *tagNodes = node[@".//p[@itemprop='keywords']/a"];
         NSMutableArray *tags = [NSMutableArray array];
         for (id node in tagNodes) {
             [tags addObject:[node stringValue]];

@@ -70,6 +70,56 @@ class PkgsrcSE: GScrape {
 }
 
 
+class Freecode: GScrape {
+    
+    init(agent: GAgent) {
+        super.init(name: "Freecode", agent: agent)
+        homepage = "http://www.freecode.club/"
+        itemsPerPage = 40
+        cmd = "freecode"
+    }
+    
+    override func refresh() {
+        var projs = [GItem]()
+        let url = NSURL(string: "http://freecode.club/index?n=\(pageNumber)")!
+        // Don't use agent.nodesForUrl since NSXMLDocumentTidyHTML strips <article>
+        if var page = String(contentsOfURL: url, encoding: NSUTF8StringEncoding, error: nil) {
+            page = page.stringByReplacingOccurrencesOfString("article", withString: "div")
+            if let xmlDoc = NSXMLDocument(XMLString: page, options: Int(NSXMLDocumentTidyHTML), error: nil) {
+                var nodes = xmlDoc.rootElement()![".//div[@class='project']"]
+                for node in nodes {
+                    let titleNodes =  node["h3/a/node()"]
+                    let name = titleNodes[0].stringValue!
+                    let version = titleNodes[2].stringValue!
+                    let id = node["h3/a"][0].href.lastPathComponent
+                    let home = node[".//a[@itemprop='url']"][0].href
+                    let description = node[".//p[@itemprop='featureList']"][0].stringValue!
+                    let tagNodes = node[".//p[@itemprop='keywords']/a"]
+                    var tags: Array = tagNodes.map {$0.stringValue!}
+                    let proj = GItem(name: name, version: version, source: self, status: .Available)
+                    proj.id = id
+                    proj.license = tags[0]
+                    tags.removeAtIndex(0)
+                    proj.categories = tags.join()
+                    proj.description = description
+                    proj.homepage = home
+                    projs.append(proj)
+                }
+            }
+        }
+        items = projs
+    }
+    
+    override func home(item: GItem) -> String {
+        return item.homepage
+    }
+    
+    override func log(item: GItem) -> String {
+        return "http://freecode.club/projects/\(item.id)"
+    }
+}
+
+
 class Debian: GScrape {
     
     init(agent: GAgent) {

@@ -353,7 +353,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
         
         repos   += [Native(agent: agent)]
-        scrapes += [PkgsrcSE(agent: agent), Debian(agent: agent), PyPI(agent: agent), RubyGems(agent: agent), MacUpdate(agent: agent), AppShopper(agent: agent), AppShopperIOS(agent: agent)]
+        scrapes += [PkgsrcSE(agent: agent), Freecode(agent: agent), Debian(agent: agent), PyPI(agent: agent), RubyGems(agent: agent), MacUpdate(agent: agent), AppShopper(agent: agent), AppShopperIOS(agent: agent)]
         
         var source1 = GSource(name: "SYSTEMS")
         source1.categories = systems
