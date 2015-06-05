@@ -6,8 +6,8 @@
 - (instancetype)initWithAgent:(GAgent *)agent {
     self = [super initWithName:@"Freecode" agent:agent];
     if (self) {
-        self.homepage = @"http://freecode.com/";
-        self.itemsPerPage = 25;
+        self.homepage = @"http://freecode.club/";
+        self.itemsPerPage = 40;
         self.cmd = @"freecode";
     }
     return self;
@@ -17,37 +17,31 @@
 
 - (void)refresh {
     NSMutableArray *projs = [NSMutableArray array];
-    NSString *url = [NSString stringWithFormat:@"http://freecode.com/?page=%ld", self.pageNumber];
-    NSArray *nodes = [self.agent nodesForURL:url XPath:@"//div[contains(@class,\"release\")]"];
+    NSString *url = [NSString stringWithFormat:@"http://freecode.club/index?n=%ld", self.pageNumber];
+    // Don't use agent.nodesForUrl since NSXMLDocumentTidyHTML strips <article>
+    NSXMLDocument *xmlDoc = [[NSXMLDocument alloc] initWithContentsOfURL:[NSURL URLWithString:url] options:NSXMLDocumentTidyXML error:nil];
+    NSArray *nodes = [[xmlDoc rootElement] nodesForXPath:@"//article" error:nil];
     for (id node in nodes) {
-        NSString *name = [[node[@"h2/a"] lastObject] stringValue];
-        NSUInteger idx = [name rindex:@" "];
-        NSString *version = [name substringFromIndex:idx + 1];
-        name = [name substringToIndex:idx];
-        NSString *ID = [[[node[@"h2/a"] lastObject] href] lastPathComponent];
-        NSArray *moreinfo = node[@"h2//a[contains(@class,\"moreinfo\")]"];
-        NSString *homepage;
-        if ([moreinfo count] == 0)
-            homepage = self.homepage;
-        else {
-            homepage = moreinfo[0][@"@title"];
-            NSUInteger idx = [homepage rindex:@" "];
-            homepage = [homepage substringFromIndex:idx + 1];
-            if (![homepage hasPrefix:@"http://"])
-                homepage = [@"http://" stringByAppendingString:homepage]; 
-        }
-        NSArray *taglist = node[@"ul/li"];
+        NSArray *titleNodes = node[@"h3/a/node()"];
+        NSString *name = [titleNodes[0] stringValue];
+        NSString *version = [titleNodes[1] stringValue];
+        NSString *ID = [[node[@"h3/a"][0] href] lastPathComponent];
+        NSString *homepage = [node[@".//a[@itemprop='url']"][0] href];
+        NSString *description = [node[@".//p[@itemprop='featureList']"][0] stringValue];
+        NSArray *tagNodes = node[@".//p[@itemprop='keywords']/img/a"];
         NSMutableArray *tags = [NSMutableArray array];
-        for (id node in taglist) {
+        for (id node in tagNodes) {
             [tags addObject:[node stringValue]];
         }
-        // NSString *category = 
         GItem *proj = [[GItem alloc] initWithName:name
                                           version:version
                                            source:self
                                            status:GAvailableStatus];
         proj.ID = ID;
-        proj.description = [tags join];
+        proj.license = tags[0];
+        [tags removeObjectAtIndex:0];
+        proj.categories = [tags join];
+        proj.description = description;
         proj.homepage = homepage;
         [projs addObject:proj];
     }
@@ -60,7 +54,7 @@
 }
 
 - (NSString *)log:(GItem *)item {
-    return [NSString stringWithFormat:@"http://freecode.com/projects/%@", item.ID];
+    return [NSString stringWithFormat:@"http://freecode.club/projects/%@", item.ID];
 }
 
 @end
