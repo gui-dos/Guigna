@@ -86,7 +86,7 @@ class Freecode: GScrape {
         if var page = String(contentsOfURL: url, encoding: NSUTF8StringEncoding, error: nil) {
             page = page.stringByReplacingOccurrencesOfString("article", withString: "div")
             if let xmlDoc = NSXMLDocument(XMLString: page, options: Int(NSXMLDocumentTidyHTML), error: nil) {
-                var nodes = xmlDoc.rootElement()![".//div[@class='project']"]
+                var nodes = xmlDoc.rootElement()![".//div[starts-with(@class, 'project')]"]
                 for node in nodes {
                     let titleNodes =  node["h3/a/node()"]
                     let name = titleNodes[0].stringValue!

@@ -22,7 +22,7 @@
     NSMutableString *page = [NSMutableString stringWithContentsOfURL:[NSURL URLWithString:url] encoding:NSUTF8StringEncoding error:nil];
     [page replaceOccurrencesOfString:@"article" withString:@"div" options:0 range:NSMakeRange(0, [page length])];
     NSXMLDocument *xmlDoc = [[NSXMLDocument alloc] initWithXMLString:page options:NSXMLDocumentTidyHTML error:nil];
-    NSArray *nodes = [[xmlDoc rootElement] nodesForXPath:@".//div[@class='project']" error:nil];
+    NSArray *nodes = [[xmlDoc rootElement] nodesForXPath:@".//div[starts-with(@class,'project')]" error:nil];
     for (id node in nodes) {
         NSArray *titleNodes = node[@"h3/a/node()"];
         NSString *name = [titleNodes[0] stringValue];
