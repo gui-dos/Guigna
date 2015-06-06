@@ -29,8 +29,11 @@
         NSXMLElement *descriptionNode = [[[NSXMLDocument alloc] initWithXMLString:htmlDescription options:NSXMLDocumentTidyHTML error:nil] rootElement];
         NSString *description = [descriptionNode[@".//p"][1] stringValue];
         // TODO: extract version
-        NSString *version = @"";
-        NSString *link = [node[@"link"][0] stringValue];
+        NSString *license = [descriptionNode[@".//li[starts-with(.,'License:')]"][0] stringValue];
+        license = [license substringFromIndex: 9];
+        NSString *version = [descriptionNode[@".//li[starts-with(.,'Latest version:')]"][0] stringValue];
+        version = [version substringFromIndex: 15];
+        NSString *home = [descriptionNode[@".//li[starts-with(.,'Homepage:')]/a"][0] href];
         NSString *date = [node[@"pubDate"][0] stringValue];
         date = [date substringWithRange:NSMakeRange(4,12)];
         GItem *pod = [[GItem alloc] initWithName:name
@@ -38,7 +41,8 @@
                                           source:self
                                           status:GAvailableStatus];
         pod.description = description;
-        pod.homepage = link;
+        pod.homepage = home;
+        pod.license = license;
         [pods addObject:pod];
     }
     self.items = pods;
