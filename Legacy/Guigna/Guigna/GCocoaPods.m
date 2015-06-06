@@ -19,23 +19,19 @@
 
 - (void)refresh {
     NSMutableArray *pods = [NSMutableArray array];
-    NSString *url = @"http://feeds.cocoapods.org/new-pods.rss";
-    NSArray *nodes = [self.agent nodesForURL:url XPath:@"//item"];
-    NSString *name;
-    NSString *version = @"";
-    NSString *link;
-    NSString *date;
-    NSString *description;
+    NSString *url = @"https://feeds.cocoapods.org/new-pods.rss";
+    // TODO: agent.nodesForUrl options: NSXMLDocumentTidyXML
+    NSXMLDocument *xmlDoc = [[NSXMLDocument alloc] initWithContentsOfURL:[NSURL URLWithString:url] options:NSXMLDocumentTidyXML error:nil];
+    NSArray *nodes = [[xmlDoc rootElement] nodesForXPath:@"//item" error:nil];
     for (id node in nodes) {
-        name = [node[@"title"][0] stringValue];
-        description = [node[@"description"][0] stringValue];
-        NSUInteger idx = [description index:@"</p>"];
-        description = [description substringToIndex:idx];
-        while ([description hasPrefix:@"<p>"]) {
-            description = [description substringFromIndex:3];
-        }
-        link = [node[@"link"][0] stringValue];
-        date = [node[@"pubDate"][0] stringValue];
+        NSString *name = [node[@"title"][0] stringValue];
+        NSString *htmlDescription = [node[@"description"][0] stringValue];
+        NSXMLElement *descriptionNode = [[[NSXMLDocument alloc] initWithXMLString:htmlDescription options:NSXMLDocumentTidyHTML error:nil] rootElement];
+        NSString *description = [descriptionNode[@".//p"][1] stringValue];
+        // TODO: extract version
+        NSString *version = @"";
+        NSString *link = [node[@"link"][0] stringValue];
+        NSString *date = [node[@"pubDate"][0] stringValue];
         date = [date substringWithRange:NSMakeRange(4,12)];
         GItem *pod = [[GItem alloc] initWithName:name
                                          version:version
@@ -98,7 +94,7 @@
  return self.items;
  }
  
-
+ 
  
  // TODO
  - (NSString *)info:(GItem *)item {
@@ -115,7 +111,7 @@
  } else {
  return @"http://github.com/CocoaPods/Specs/commits";
  }
-
+ 
  
  - (NSString *)contents:(GItem *)item {
  return [self outputFor:@"%@ search --stats --no-color %@", self.cmd, item.name];
