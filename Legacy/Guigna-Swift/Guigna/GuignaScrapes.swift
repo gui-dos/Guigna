@@ -277,13 +277,14 @@ class MacUpdate: GScrape {
                 }
                 var description = node[".//span"][0].stringValue!
                 var price = node[".//span[contains(@class,\"appprice\")]"][0].stringValue!
-                if price != "Free" {
-                    price = "$\(price)"
-                }
-                description += " - \(price)"
                 let id = node[".//a"][0].href.split("/")[3]
                 let app = GItem(name: name, version: version, source: self, status: .Available)
                 app.id = id
+                if price != "Free" {
+                    description += " - $\(price)"
+                } else {
+                    app.license = "Free"
+                }
                 app.description = description
                 apps.append(app)
             }

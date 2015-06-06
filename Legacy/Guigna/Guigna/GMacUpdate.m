@@ -28,10 +28,6 @@
         }
         NSString *description = [node[@".//span"][0] stringValue];
         NSString *price = [node[@".//span[contains(@class,\"appprice\")]"][0] stringValue];
-        if (![price is:@"Free"]) {
-            price = [NSString stringWithFormat:@"$%@", price];
-        }
-        description = [description stringByAppendingFormat:@" - %@", price];
         NSString *ID = [[node[@".//a"][0] href] split:@"/"][3];
         // NSString *category =
         GItem *entry = [[GItem alloc] initWithName:name
@@ -40,6 +36,11 @@
                                             status:GAvailableStatus];
         entry.ID = ID;
         // item.categories = category;
+        if (![price is:@"Free"]) {
+            description = [description stringByAppendingFormat:@" - $%@", price];
+        } else {
+            entry.license = @"Free";
+        }
         entry.description = description;
         [entries addObject:entry];
     }
