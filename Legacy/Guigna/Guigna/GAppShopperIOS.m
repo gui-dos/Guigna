@@ -29,18 +29,24 @@
         ID = [ID stringByAppendingFormat:@" %@", nick];
         NSString *category = [node[@".//h5/span"][0]stringValue];
         NSString *type = [node[@".//span[starts-with(@class,\"change\")]"][0] stringValue];
-        NSString *desc = [node[@".//p[@class=\"description\"]"][0]stringValue];
+        NSString *description = [node[@".//p[@class=\"description\"]"][0]stringValue];
         NSString *price = [[node[@".//div[@class=\"price\"]"][0] children][0] stringValue];
         // TODO:NSXML UTF8 encoding
-        NSMutableString *fixedPrice = [[price stringByTrimmingCharactersInSet:whitespaceCharacterSet] mutableCopy];
-        [fixedPrice replaceOccurrencesOfString:@"â‚¬" withString:@"€" options:0 range:NSMakeRange(0, [fixedPrice length])];
+        NSMutableString *localPrice = [[price stringByTrimmingCharactersInSet:whitespaceCharacterSet] mutableCopy];
+        [localPrice replaceOccurrencesOfString:@"â‚¬" withString:@"€" options:0 range:NSMakeRange(0, [localPrice length])];
         GItem *app = [[GItem alloc] initWithName:name
                                          version:version
                                           source:self
                                           status:GAvailableStatus];
         app.ID = ID;
         app.categories = category;
-        app.description = [NSString stringWithFormat:@"%@ %@ - %@", type, fixedPrice, desc];
+        if (![localPrice is:@"Free"]) {
+            description = [NSString stringWithFormat:@"%@ %@ - %@", type, localPrice, description];
+        } else {
+            description = [NSString stringWithFormat:@"%@ - %@", type, description];
+            app.license = @"Free";
+        }
+        app.description = description;
         [apps addObject:app];
     }
     self.items = apps;

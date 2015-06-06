@@ -330,14 +330,20 @@ class AppShopper: GScrape {
                 id = "\(id) \(nick)"
                 var category = node[".//h5/span"][0].stringValue!
                 let type = node[".//span[starts-with(@class,\"change\")]"][0].stringValue!
-                let desc = node[".//p[@class=\"description\"]"][0].stringValue!
+                var description = node[".//p[@class=\"description\"]"][0].stringValue!
                 var price = node[".//div[@class=\"price\"]"][0].children![0].stringValue!
                 // TODO:NSXML UTF8 encoding
-                var fixedPrice = price.stringByTrimmingCharactersInSet(whitespaceCharacterSet).stringByReplacingOccurrencesOfString("â‚¬", withString: "€")
+                var localPrice = price.stringByTrimmingCharactersInSet(whitespaceCharacterSet).stringByReplacingOccurrencesOfString("â‚¬", withString: "€")
                 var app = GItem(name: name, version: version, source: self, status: .Available)
                 app.id = id
                 app.categories = category
-                app.description = "\(type) \(fixedPrice) - \(desc)"
+                if localPrice != "Free" {
+                    description = "\(type) \(localPrice) - \(description)"
+                } else {
+                    description = "\(type) - \(description)"
+                    app.license = "Free"
+                }
+                app.description = description
                 apps.append(app)
             }
         }
@@ -395,14 +401,20 @@ class AppShopperIOS: GScrape {
                 id = "\(id) \(nick)"
                 var category = node[".//h5/span"][0].stringValue!
                 let type = node[".//span[starts-with(@class,\"change\")]"][0].stringValue!
-                let desc = node[".//p[@class=\"description\"]"][0].stringValue!
+                var description = node[".//p[@class=\"description\"]"][0].stringValue!
                 var price = node[".//div[@class=\"price\"]"][0].children![0].stringValue!
                 // TODO:NSXML UTF8 encoding
-                var fixedPrice = price.stringByTrimmingCharactersInSet(whitespaceCharacterSet).stringByReplacingOccurrencesOfString("â‚¬", withString: "€")
+                var localPrice = price.stringByTrimmingCharactersInSet(whitespaceCharacterSet).stringByReplacingOccurrencesOfString("â‚¬", withString: "€")
                 var app = GItem(name: name, version: version, source: self, status: .Available)
                 app.id = id
                 app.categories = category
-                app.description = "\(type) \(fixedPrice) - \(desc)"
+                if localPrice != "Free" {
+                    description = "\(type) \(localPrice) - \(description)"
+                } else {
+                    description = "\(type) - \(description)"
+                    app.license = "Free"
+                }
+                app.description = description
                 apps.append(app)
             }
         }
