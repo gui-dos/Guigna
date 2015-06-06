@@ -55,7 +55,7 @@
 
 - (NSString *)log:(GItem *)item {
     if (item != nil ) {
-        return [NSString stringWithFormat:@"http://github.com/CocoaPods/Specs/tree/master/%@", item.name];
+        return [NSString stringWithFormat:@"http://github.com/CocoaPods/Specs/tree/master/Specs/%@", item.name];
     } else {
         return @"http://github.com/CocoaPods/Specs/commits";
     }
