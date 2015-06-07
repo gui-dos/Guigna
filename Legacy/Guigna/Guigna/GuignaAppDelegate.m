@@ -1643,64 +1643,83 @@
         GSystem *system = nil;
         NSString *command;
         NSInteger status = GOffState;
+        
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        NSMutableArray *addedSystems = [NSMutableArray array];
+        
         if (state == NSOnState) {
             [self optionsStatus:[NSString stringWithFormat: @"Adding %@...", title]];
             
             if ([title is:@"Homebrew"]) {
                 command = @"/usr/local/bin/brew";
-                if ([[NSFileManager defaultManager] fileExistsAtPath:command])
+                if ([fileManager fileExistsAtPath:command]) {
                     system = [[GHomebrew alloc] initWithAgent:self.agent];
+                    [addedSystems addObject:system];
+                    if ([fileManager fileExistsAtPath:[command stringByAppendingString:@"-cask"]]) {
+                        system = [[GHomebrewCasks alloc] initWithAgent:self.agent];
+                        [addedSystems addObject:system];
+                    }
+                }
                 
             } else if ([title is:@"MacPorts"]) {
                 command = @"/opt/local/bin/port";
                 system = [[GMacPorts alloc] initWithAgent:self.agent];
-                if (![[NSFileManager defaultManager] fileExistsAtPath:command]) {
+                if (![fileManager fileExistsAtPath:command]) {
                     [self execute:@"cd ~/Library/Application\\ Support/Guigna/Macports ; /usr/bin/rsync -rtzv rsync://rsync.macports.org/release/tarballs/PortIndex_darwin_12_i386/PortIndex PortIndex"];
                     system.mode = GOnlineMode;
                 }
+                [addedSystems addObject:system];
                 
             } else if ([title is:@"Fink"]) {
                 command = @"/sw/bin/fink";
                 system = [[GFink alloc] initWithAgent:self.agent];
-                system.mode = ([[NSFileManager defaultManager] fileExistsAtPath:command]) ? GOfflineMode : GOnlineMode;
+                system.mode = ([fileManager fileExistsAtPath:command]) ? GOfflineMode : GOnlineMode;
+                [addedSystems addObject:system];
                 
             } else if ([title is:@"pkgsrc"]) {
                 command = @"/usr/pkg/sbin/pkg_info";
                 system = [[GPkgsrc alloc] initWithAgent:self.agent];
-                system.mode = ([[NSFileManager defaultManager] fileExistsAtPath:command]) ? GOfflineMode : GOnlineMode;
+                system.mode = ([fileManager fileExistsAtPath:command]) ? GOfflineMode : GOnlineMode;
+                [addedSystems addObject:system];
                 
             } else if ([title is:@"FreeBSD"]) {
                 system = [[GFreeBSD alloc] initWithAgent:self.agent];
                 system.mode = GOnlineMode;
+                [addedSystems addObject:system];
                 
             } else if ([title is:@"Rudix"]) {
                 command = @"/usr/local/bin/rudix";
                 system = [[GRudix alloc] initWithAgent:self.agent];
-                system.mode = ([[NSFileManager defaultManager] fileExistsAtPath:command]) ? GOfflineMode : GOnlineMode;
+                system.mode = ([fileManager fileExistsAtPath:command]) ? GOfflineMode : GOnlineMode;
+                [addedSystems addObject:system];
                 
             } else if ([title is:@"iTunes"]) {
                 system = [[GITunes alloc] initWithAgent:self.agent];
+                [addedSystems addObject:system];
+                
             }
             
-            if (system != nil) {
-                [systems addObject:system];
-                source = system;
-                NSInteger systemsCount = [[[sourcesController content][0] valueForKey:@"categories"] count];
-                [[[sourcesController content][0] mutableArrayValueForKey:@"categories"] addObject:source];
-                // selecting the new system avoids memory peak > 1.5 GB:
-                [sourcesController setSelectionIndexPath:[[NSIndexPath indexPathWithIndex:0] indexPathByAddingIndex:systemsCount]];
-                [sourcesOutline reloadData];
-                [sourcesOutline display];
-                [self sourcesSelectionDidChange:[[sourcesController content][0] mutableArrayValueForKey:@"categories"][systemsCount]];
-                [itemsController addObjects:[system list]];
-                [itemsTable display];
-                [allPackages addObjectsFromArray:system.items];
-                [packagesIndex addEntriesFromDictionary:system.index];
-                // duplicate code from reloalAllPackages
-                source.categories = [NSMutableArray array];
-                NSMutableArray *cats = [source mutableArrayValueForKey:@"categories"];
-                for (NSString *category in [system categoriesList]) {
-                    [cats addObject:[[GSource alloc] initWithName:category]];
+            if ([addedSystems count] > 0) {
+                for (GSystem *system in addedSystems) {
+                    [systems addObject:system];
+                    source = system;
+                    NSInteger systemsCount = [[[sourcesController content][0] valueForKey:@"categories"] count];
+                    [[[sourcesController content][0] mutableArrayValueForKey:@"categories"] addObject:source];
+                    // selecting the new system avoids memory peak > 1.5 GB:
+                    [sourcesController setSelectionIndexPath:[[NSIndexPath indexPathWithIndex:0] indexPathByAddingIndex:systemsCount]];
+                    [sourcesOutline reloadData];
+                    [sourcesOutline display];
+                    [self sourcesSelectionDidChange:[[sourcesController content][0] mutableArrayValueForKey:@"categories"][systemsCount]];
+                    [itemsController addObjects:[system list]];
+                    [itemsTable display];
+                    [allPackages addObjectsFromArray:system.items];
+                    [packagesIndex addEntriesFromDictionary:system.index];
+                    // duplicate code from reloalAllPackages
+                    source.categories = [NSMutableArray array];
+                    NSMutableArray *cats = [source mutableArrayValueForKey:@"categories"];
+                    for (NSString *category in [system categoriesList]) {
+                        [cats addObject:[[GSource alloc] initWithName:category]];
+                    }
                 }
                 [sourcesOutline reloadData];
                 [sourcesOutline display];
@@ -1712,19 +1731,20 @@
             
         } else {
             [self optionsStatus:[NSString stringWithFormat: @"Removing %@...", title]];
-            NSArray *filtered = [[[sourcesController content][0] categories]filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"name == %@", title]];
+            NSArray *filtered = [[[sourcesController content][0] categories]filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"name BEGINSWITH %@", title]];
             if ([filtered count] > 0) {
-                source = filtered[0];
-                status = source.status;
-                if (status == GOnState) {
-                    [itemsController removeObjects:[items filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"system.name == %@", title]]];
-                    [allPackages filterUsingPredicate:[NSPredicate predicateWithFormat:@"system.name != %@", title]];
-                    for (GPackage *pkg in source.items) {
-                        [packagesIndex removeObjectForKey:[pkg key]];
+                for (GSource *source in filtered) {
+                    status = source.status;
+                    if (status == GOnState) {
+                        [itemsController removeObjects:[items filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"system.name == %@", source.name]]];
+                        [allPackages filterUsingPredicate:[NSPredicate predicateWithFormat:@"system.name != %@", source.name]];
+                        for (GPackage *pkg in source.items) {
+                            [packagesIndex removeObjectForKey:[pkg key]];
+                        }
+                        [source.items removeAllObjects];
+                        [[[sourcesController content][0] mutableArrayValueForKey:@"categories"] removeObject:source];
+                        [systems removeObject:source];
                     }
-                    [source.items removeAllObjects];
-                    [[[sourcesController content][0] mutableArrayValueForKey:@"categories"] removeObject:source];
-                    [systems removeObject:source];
                 }
             }
             [self optionsStatus:@"OK."];

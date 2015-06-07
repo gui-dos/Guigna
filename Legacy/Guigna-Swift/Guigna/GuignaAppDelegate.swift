@@ -1729,7 +1729,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 let state = (sender as! NSButton).state
                 var source: GSystem!
                 var system: GSystem!
-                var command = "command"
+                var command = ""
                 var status: GState = .Off
                 
                 var sourcesContent = self.sourcesController.content as! NSArray
@@ -1737,68 +1737,84 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 var systemsArray = systemsSource.categories! as! [GSource]
                 var systemsMutableArray = systemsSource.mutableArrayValueForKey("categories")
                 
+                var fileManager = NSFileManager.defaultManager()
+                var addedSystems = [GSystem]()
+                
                 if state == NSOnState {
                     optionsStatus("Adding \(title)...")
                     
                     if title == "Homebrew" {
                         command = "/usr/local/bin/brew"
-                        if NSFileManager.defaultManager().fileExistsAtPath(command) {
+                        if fileManager.fileExistsAtPath(command) {
                             system = Homebrew(agent: agent)
+                            addedSystems.append(system)
+                            if fileManager.fileExistsAtPath("\(command)-cask") {
+                                system = HomebrewCasks(agent: agent)
+                                addedSystems.append(system)
+                            }
                         }
                         
                     } else if title == "MacPorts" {
                         command = "/opt/local/bin/port"
                         system = MacPorts(agent: agent)
-                        if !(NSFileManager.defaultManager().fileExistsAtPath(command)) {
+                        if !(fileManager.fileExistsAtPath(command)) {
                             execute("cd ~/Library/Application\\ Support/Guigna/Macports ; /usr/bin/rsync -rtzv rsync://rsync.macports.org/release/tarballs/PortIndex_darwin_12_i386/PortIndex PortIndex")
                             system.mode = .Online
                         }
+                        addedSystems.append(system)
                         
                     } else if title == "Fink" {
                         command = "/sw/bin/fink"
                         system = Fink(agent: agent)
-                        system.mode = (NSFileManager.defaultManager().fileExistsAtPath(command)) ? .Offline : .Online
+                        system.mode = (fileManager.fileExistsAtPath(command)) ? .Offline : .Online
+                        addedSystems.append(system)
                         
                     } else if title == "pkgsrc" {
                         command = "/usr/pkg/sbin/pkg_info"
                         system = Pkgsrc(agent: agent)
-                        system.mode = (NSFileManager.defaultManager().fileExistsAtPath(command)) ? .Offline : .Online
+                        system.mode = (fileManager.fileExistsAtPath(command)) ? .Offline : .Online
+                        addedSystems.append(system)
                         
                     } else if title == "FreeBSD" {
                         system = FreeBSD(agent: agent)
                         system.mode = .Online
+                        addedSystems.append(system)
                         
                         
                     } else if title == "Rudix" {
                         command = "/usr/local/bin/rudix"
                         system = Rudix(agent: agent)
-                        system.mode = (NSFileManager.defaultManager().fileExistsAtPath(command)) ? .Offline : .Online
+                        system.mode = (fileManager.fileExistsAtPath(command)) ? .Offline : .Online
+                        addedSystems.append(system)
                         
                     } else if title == "iTunes" {
                         system = ITunes(agent: agent)
+                        addedSystems.append(system)
                     }
                     
-                    if system != nil {
-                        systems.append(system)
-                        source = system
-                        let systemsCount = systemsArray.count
-                        systemsMutableArray.addObject(source)
-                        // selecting the new system avoids memory peak > 1.5 GB:
-                        sourcesController.setSelectionIndexPath(NSIndexPath(index: 0).indexPathByAddingIndex(systemsCount))
-                        sourcesOutline.reloadData()
-                        sourcesOutline.display()
-                        sourcesSelectionDidChange(systemsMutableArray[systemsCount])
-                        itemsController.addObjects(system.list())
-                        itemsTable.display()
-                        allPackages += system.items as! [GPackage]
-                        for (key, value) in system.index {
-                            packagesIndex[key] = value
-                        }
-                        // duplicate code from reloalAllPackages
-                        source.categories = []
-                        var categories = source.mutableArrayValueForKey("categories")
-                        for category in source.categoriesList() {
-                            categories.addObject(GSource(name: category))
+                    if addedSystems.count > 0 {
+                        for system in addedSystems {
+                            systems.append(system)
+                            source = system
+                            let systemsCount = systemsArray.count
+                            systemsMutableArray.addObject(source)
+                            // selecting the new system avoids memory peak > 1.5 GB:
+                            sourcesController.setSelectionIndexPath(NSIndexPath(index: 0).indexPathByAddingIndex(systemsCount))
+                            sourcesOutline.reloadData()
+                            sourcesOutline.display()
+                            sourcesSelectionDidChange(systemsMutableArray[systemsCount])
+                            itemsController.addObjects(system.list())
+                            itemsTable.display()
+                            allPackages += system.items as! [GPackage]
+                            for (key, value) in system.index {
+                                packagesIndex[key] = value
+                            }
+                            // duplicate code from reloalAllPackages
+                            source.categories = []
+                            var categories = source.mutableArrayValueForKey("categories")
+                            for category in source.categoriesList() {
+                                categories.addObject(GSource(name: category))
+                            }
                         }
                         sourcesOutline.reloadData()
                         sourcesOutline.display()
@@ -1810,19 +1826,20 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     
                 } else {
                     optionsStatus("Removing \(title)...")
-                    let filtered = systemsArray.filter { $0.name == title }
+                    let filtered = systemsArray.filter { $0.name.hasPrefix(title) } // remove both Homebrew and Homebrew Casks
                     if filtered.count > 0 {
-                        source = filtered[0] as! GSystem
-                        status = source.status
-                        if status == GState.On {
-                            itemsController.removeObjects(items.filter { $0.system.name == title })
-                            allPackages = allPackages.filter { $0.system.name != title }
-                            for pkg in source.items as! [GPackage] {
-                                packagesIndex.removeValueForKey(pkg.key())
+                        for source in filtered as! [GSystem] {
+                            status = source.status
+                            if status == GState.On {
+                                itemsController.removeObjects(items.filter { $0.system.name == source.name })
+                                allPackages = allPackages.filter { $0.system.name != source.name }
+                                for pkg in source.items as! [GPackage] {
+                                    packagesIndex.removeValueForKey(pkg.key())
+                                }
+                                source.items.removeAll()
+                                systemsSource.mutableArrayValueForKey("categories").removeObject(source)
+                                systems.removeAtIndex(find(systems, source)!)
                             }
-                            source.items.removeAll()
-                            systemsMutableArray.removeObject(source)
-                            systems.removeAtIndex(find(systems, source)!)
                         }
                     }
                     optionsStatus("OK.")
