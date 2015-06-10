@@ -628,7 +628,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         marksCount = 0
         
         dispatch_sync(dispatch_get_main_queue()) {
-            self.itemsController.sortDescriptors = [NSSortDescriptor(key: "statusValue", ascending: false)]
+            self.itemsController.sortDescriptors = [NSSortDescriptor(key: "status", ascending: false)]
             self.updateMarkedSource()
             self.tableProgressIndicator.stopAnimation(self)
             self.applyButton.enabled = false
@@ -749,7 +749,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     if src == "installed" {
                         if first {
                             status("Verifying installed packages...")
-                            itemsController.filterPredicate = NSPredicate(format: "statusValue == \(GStatus.UpToDate.rawValue)")
+                            itemsController.filterPredicate = NSPredicate(format: "status == \(GStatus.UpToDate.rawValue)")
                             itemsTable.display()
                         }
                         packages = system.installed()
@@ -757,7 +757,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     } else if src == "outdated" {
                         if first {
                             status("Verifying outdated packages...")
-                            itemsController.filterPredicate = NSPredicate(format: "statusValue == \(GStatus.Outdated.rawValue)")
+                            itemsController.filterPredicate = NSPredicate(format: "status == \(GStatus.Outdated.rawValue)")
                             itemsTable.display()
                         }
                         packages = system.outdated()
@@ -765,7 +765,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     } else if src == "inactive" {
                         if first {
                             status("Verifying inactive packages...")
-                            itemsController.filterPredicate = NSPredicate(format: "statusValue == \(GStatus.Inactive.rawValue)")
+                            itemsController.filterPredicate = NSPredicate(format: "status == \(GStatus.Inactive.rawValue)")
                             itemsTable.display()
                         }
                         packages = system.inactive()
@@ -775,7 +775,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                         var st: GStatus = (src == "updated") ? .Updated : .New
                         if first {
                             status("Verifying \(src) packages...")
-                            itemsController.filterPredicate = NSPredicate(format: "statusValue == \(st.rawValue)")
+                            itemsController.filterPredicate = NSPredicate(format: "status == \(st.rawValue)")
                             itemsTable.display()
                             packages = (itemsController.arrangedObjects as! NSArray).mutableCopy() as! [GPackage]
                         }
@@ -784,7 +784,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                         src = src.split()[0]
                         if first {
                             status("Verifying marked packages...")
-                            itemsController.filterPredicate = NSPredicate(format: "markValue != 0")
+                            itemsController.filterPredicate = NSPredicate(format: "mark != 0")
                             itemsTable.display()
                             packages = (itemsController.arrangedObjects as! NSArray).mutableCopy() as! [GPackage]
                         }
@@ -842,7 +842,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         searchField.performClick(self)
         
         if selectedSystems.count > 0 {
-            itemsController.sortDescriptors = [NSSortDescriptor(key: "statusValue", ascending: false)]
+            itemsController.sortDescriptors = [NSSortDescriptor(key: "status", ascending: false)]
         }
         tableProgressIndicator.stopAnimation(self)
         if self.ready && !(statusField.stringValue.hasPrefix("Executing") || statusField.stringValue.hasPrefix("Loading")) {
@@ -1818,7 +1818,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                         }
                         sourcesOutline.reloadData()
                         sourcesOutline.display()
-                        itemsController.sortDescriptors = [NSSortDescriptor(key: "statusValue", ascending: false)]
+                        itemsController.sortDescriptors = [NSSortDescriptor(key: "status", ascending: false)]
                         optionsStatus("OK.")
                     } else {
                         optionsStatus("\(title)'s \(command) not detected.")

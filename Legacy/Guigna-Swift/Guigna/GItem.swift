@@ -1,6 +1,6 @@
 import Foundation
 
-enum GStatus: Int {
+@objc enum GStatus: Int {
     case Available = 0
     case Inactive
     case UpToDate
@@ -10,7 +10,7 @@ enum GStatus: Int {
     case Broken
 }
 
-enum GMark: Int {
+@objc enum GMark: Int {
     case NoMark = 0
     case Install
     case Uninstall
@@ -23,46 +23,15 @@ enum GMark: Int {
 
 class GItem: NSObject {
     var name: String
-    var version: String
+    dynamic var version: String
     weak var source: GSource!
     weak var system: GSystem!
     
-    var status: GStatus {
-        willSet(newValue) {
-            self.willChangeValueForKey("statusValue")
-        }
-        didSet(newValue) {
-            self.didChangeValueForKey("statusValue")
-        }
-    }
-    var statusValue: NSNumber {
-        get {
-            return NSNumber(integer: self.status.rawValue)
-        }
-        set {
-            status = GStatus(rawValue: newValue.integerValue)!
-        }
-    }
-    
-    var mark: GMark {
-        willSet(newValue) {
-            self.willChangeValueForKey("markValue")
-        }
-        didSet(newValue) {
-            self.didChangeValueForKey("markValue")
-        }
-    }
-    var markValue: NSNumber {
-        get {
-            return NSNumber(integer: self.mark.rawValue)
-        }
-        set {
-            mark = GMark(rawValue: newValue.integerValue)!
-        }
-    }
-    
-    var installed: String!
-    var categories: String?
+    dynamic var status: GStatus
+    dynamic var mark: GMark
+    dynamic var installed: String!
+    dynamic var categories: String?
+    dynamic var license: String?
     var _description: String?
     override var description: String {
         get {
@@ -78,7 +47,6 @@ class GItem: NSObject {
     var homepage: String!
     var screenshots: String!
     var URL: String!
-    var license: String?
     var id: String!
     
     init(name: String, version: String, source: GSource, status: GStatus) {

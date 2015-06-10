@@ -191,7 +191,7 @@
                                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                     </tableHeaderCell>
                                                                     <imageCell key="dataCell" controlSize="small" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="637"/>
-                                                                    <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="statusValue" ascending="NO"/>
+                                                                    <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="status" ascending="NO"/>
                                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                     <prototypeCellViews>
                                                                         <tableCellView id="1518">
@@ -203,7 +203,7 @@
                                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                     <imageCell key="cell" controlSize="small" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="status-updated" id="1522"/>
                                                                                     <connections>
-                                                                                        <binding destination="1518" name="value" keyPath="objectValue.statusValue" id="CR6-rw-cuC">
+                                                                                        <binding destination="1518" name="value" keyPath="objectValue.status" id="CR6-rw-cuC">
                                                                                             <dictionary key="options">
                                                                                                 <bool key="NSConditionallySetsEnabled" value="NO"/>
                                                                                                 <string key="NSValueTransformerName">GStatusTransformer</string>
@@ -225,7 +225,7 @@
                                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                     </tableHeaderCell>
                                                                     <imageCell key="dataCell" controlSize="small" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="740"/>
-                                                                    <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="markValue" ascending="NO"/>
+                                                                    <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="mark" ascending="NO"/>
                                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                     <prototypeCellViews>
                                                                         <tableCellView id="1511">
@@ -237,7 +237,7 @@
                                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                     <imageCell key="cell" controlSize="small" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSAddTemplate" id="1515"/>
                                                                                     <connections>
-                                                                                        <binding destination="1511" name="value" keyPath="objectValue.markValue" id="5D7-oL-RRB">
+                                                                                        <binding destination="1511" name="value" keyPath="objectValue.mark" id="5D7-oL-RRB">
                                                                                             <dictionary key="options">
                                                                                                 <bool key="NSConditionallySetsEnabled" value="NO"/>
                                                                                                 <string key="NSValueTransformerName">GMarkTransformer</string>
@@ -1402,8 +1402,8 @@
                 <string>version</string>
                 <string>description</string>
                 <string>source</string>
-                <string>statusValue</string>
-                <string>markValue</string>
+                <string>status</string>
+                <string>mark</string>
                 <string>installed</string>
                 <string>categories</string>
                 <string>license</string>
