@@ -28,7 +28,7 @@ class Rudix: GSystem {
             manifest = String(contentsOfURL: NSURL(string: "http://rudix.org/download/2014/10.9/00MANIFEST.txt")!, encoding: NSUTF8StringEncoding, error: nil) ?? ""
         } else {
             var command = "\(cmd) search"
-            var osxVersion = Rudix.clampedOSVersion()
+            let osxVersion = Rudix.clampedOSVersion()
             if G.OSVersion() != osxVersion {
                 command = "/bin/sh -c export__OSX_VERSION=\(osxVersion)__;__\(cmd)__search"
                 manifest = output(command)
@@ -94,7 +94,7 @@ class Rudix: GSystem {
         for line in outputLines {
             let name = line.substringFromIndex(line.rindex(".") + 1)
             var pkg: GPackage! = self[name]
-            var latestVersion: String = (pkg == nil) ? "" : pkg.version
+            let latestVersion: String = (pkg == nil) ? "" : pkg.version
             if pkg == nil {
                 pkg = GPackage(name: name, version: latestVersion, system: self, status: .UpToDate)
                 self[name] = pkg

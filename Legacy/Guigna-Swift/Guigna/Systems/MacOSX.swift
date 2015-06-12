@@ -69,14 +69,14 @@ class MacOSX: GSystem {
     
     
     override func outdated() -> [GPackage] {
-        var pkgs = [GPackage]()
+        let pkgs = [GPackage]()
         // TODO: sudo /usr/sbin/softwareupdate --list
         return pkgs
     }
     
     
     override func inactive() -> [GPackage] {
-        var pkgs = [GPackage]()
+        let pkgs = [GPackage]()
         return pkgs
     }
     

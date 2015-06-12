@@ -102,7 +102,7 @@ class ITunes: GSystem {
     
     override func contents(item: GItem) -> String {
         let ipa = "~/Music/iTunes/iTunes Media/Mobile Applications/\(item.id).ipa".stringByExpandingTildeInPath
-        var escapedIpa = ipa.stringByReplacingOccurrencesOfString(" ", withString: "__")
+        let escapedIpa = ipa.stringByReplacingOccurrencesOfString(" ", withString: "__")
         return output("/usr/bin/zipinfo -1 \(escapedIpa)")
     }
     

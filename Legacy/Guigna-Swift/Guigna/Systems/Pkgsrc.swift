@@ -26,7 +26,7 @@ class Pkgsrc: GSystem {
         
         let indexPath = "~/Library/Application Support/Guigna/pkgsrc/INDEX".stringByExpandingTildeInPath
         if NSFileManager.defaultManager().fileExistsAtPath(indexPath) {
-            var lines = String(contentsOfFile: indexPath, encoding: NSUTF8StringEncoding, error: nil)!.split("\n")
+            let lines = String(contentsOfFile: indexPath, encoding: NSUTF8StringEncoding, error: nil)!.split("\n")
             for line in lines {
                 let components = line.split("|")
                 var name = components[0]
@@ -128,7 +128,7 @@ class Pkgsrc: GSystem {
             name = id.substringFromIndex(idx + 1)
             status = .UpToDate
             var pkg: GPackage! = self[id]
-            var latestVersion: String = (pkg == nil) ? "" : pkg.version
+            let latestVersion: String = (pkg == nil) ? "" : pkg.version
             if pkg == nil {
                 pkg = GPackage(name: name, version: latestVersion, system: self, status: status)
                 self[id] = pkg

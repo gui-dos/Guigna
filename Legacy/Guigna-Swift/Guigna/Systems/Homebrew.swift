@@ -53,7 +53,7 @@ class Homebrew: GSystem {
         var outputLines = output("\(cmd) list --versions").split("\n")
         outputLines.removeLast()
         let itemsCount = items.count
-        var notInactiveItems = items.filter { $0.status != .Inactive}
+        let notInactiveItems = items.filter { $0.status != .Inactive}
         if itemsCount != notInactiveItems.count {
             items = notInactiveItems
             self.agent.appDelegate!.removeItems({ $0.status == .Inactive && $0.system === self}) // TODO: ugly
@@ -77,10 +77,10 @@ class Homebrew: GSystem {
             let versionCount = components.count
             let version = components.last!
             var pkg: GPackage! = self[name]
-            var latestVersion: String = (pkg == nil) ? "" : pkg.version
+            let latestVersion: String = (pkg == nil) ? "" : pkg.version
             if versionCount > 1 {
                 for var i = 0 ; i < versionCount - 1 ; i++ {
-                    var inactivePkg = GPackage(name: name, version: latestVersion, system: self, status: .Inactive)
+                    let inactivePkg = GPackage(name: name, version: latestVersion, system: self, status: .Inactive)
                     inactivePkg.installed = components[i]
                     items.append(inactivePkg)
                     self.agent.appDelegate!.addItem(inactivePkg) // TODO: ugly
@@ -124,7 +124,7 @@ class Homebrew: GSystem {
                 return pkgs
             }
             var pkg = self[name]
-            var latestVersion: String = (pkg == nil) ? "" : pkg.version
+            let latestVersion: String = (pkg == nil) ? "" : pkg.version
             // let version = components[1] // TODO: strangely, output contains only name
             let version = (pkg == nil) ? "..." : pkg.installed
             if pkg == nil {
@@ -234,7 +234,7 @@ class Homebrew: GSystem {
     
     override func options(pkg: GPackage) -> String! {
         var options: String! = nil
-        var outputLines = output("\(cmd) options \(pkg.name)").split("\n")
+        let outputLines = output("\(cmd) options \(pkg.name)").split("\n")
         if outputLines.count > 1  {
             let optionLines = outputLines.filter { $0.hasPrefix("--") }
             options = optionLines.join().stringByReplacingOccurrencesOfString("--", withString: "")

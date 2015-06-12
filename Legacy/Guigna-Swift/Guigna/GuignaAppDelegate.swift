@@ -406,12 +406,12 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     }
     
     func outlineView(outlineView: NSOutlineView, isGroupItem item: AnyObject) -> Bool {
-        var source = item.representedObject as! GSource
+        let source = item.representedObject as! GSource
         return source.categories != nil && !(source is GSystem)
     }
     
     func outlineView(outlineView: NSOutlineView, viewForTableColumn tableColumn: NSTableColumn?, item: AnyObject) -> NSView? {
-        var source = item.representedObject as! GSource
+        let source = item.representedObject as! GSource
         if !(item.parentNode!!.representedObject is GSource) {
             return outlineView.makeViewWithIdentifier("HeaderCell", owner:self) as! NSTableCellView
         } else {
@@ -442,7 +442,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         if filename == "\(APPDIR)/output" {
             status("Analyzing committed changes...")
             if markedItems.count > 0 {
-                var affectedSystems = NSMutableSet()
+                let affectedSystems = NSMutableSet()
                 for item in markedItems {
                     affectedSystems.addObject(item.system)
                 }
@@ -497,7 +497,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 }
                 self.updateMarkedSource()
                 if (self.terminal.valueForKey("frontmost") as! NSObject) == false {
-                    var notification = NSUserNotification()
+                    let notification = NSUserNotification()
                     notification.title = "Ready.";
                     // notification.subtitle = @"%ld changes applied";
                     notification.informativeText = "The changes to the marked packages have been applied."
@@ -508,7 +508,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             status("Shell: OK.")
             
         } else if filename == "\(APPDIR)/sync" {
-            var queue = dispatch_queue_create("name.Guigna", DISPATCH_QUEUE_CONCURRENT)
+            let queue = dispatch_queue_create("name.Guigna", DISPATCH_QUEUE_CONCURRENT)
             dispatch_async(queue) {
                 self.reloadAllPackages()
             }
@@ -533,7 +533,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         var newIndex = [String: GPackage](minimumCapacity: 150000)
         
         for system in systems {
-            var systemName = system.name
+            let systemName = system.name
             dispatch_sync(dispatch_get_main_queue()) {
                 self.status("Indexing \(systemName)...")
             }
@@ -567,10 +567,10 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             dispatch_sync(dispatch_get_main_queue()) {
                 self.sourcesOutline.setDelegate(nil)
                 var name: String
-                var sourcesContent = self.sourcesController.content as! NSArray
-                var statusSource = sourcesContent[2] as! GSource
-                var statuses = statusSource.categories! as! [GSource]
-                var statusesMutableArray = statusSource.mutableArrayValueForKey("categories")
+                let sourcesContent = self.sourcesController.content as! NSArray
+                let statusSource = sourcesContent[2] as! GSource
+                let statuses = statusSource.categories! as! [GSource]
+                let statusesMutableArray = statusSource.mutableArrayValueForKey("categories")
                 var currentUpdated = statuses.filter { $0.name.hasPrefix("updated") }
                 if currentUpdated.count > 0 && updated == 0 {
                     statusesMutableArray.removeObject(currentUpdated[0])
@@ -607,7 +607,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 self.status("Indexing categories...")
                 for system in (((self.sourcesController.content as! NSArray)[0] as! GSource).categories as! [GSystem]) {
                     system.categories = []
-                    var categories = system.mutableArrayValueForKey("categories")
+                    let categories = system.mutableArrayValueForKey("categories")
                     for category in system.categoriesList() {
                         categories.addObject(GSource(name: category))
                     }
@@ -658,7 +658,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             if system.name == "Homebrew Casks" {
                 continue
             }
-            var updateCmd = system.updateCmd
+            let updateCmd = system.updateCmd
             if updateCmd == nil {
                 systemsToList.append(system)
             } else if updateCmd.hasPrefix("sudo") {
@@ -677,7 +677,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         if systemsToUpdate.count + systemsToList.count > 0 {
             segmentedControl.selectedSegment = -1
             updateTabView(nil)
-            var queue = dispatch_queue_create("name.Guigna", DISPATCH_QUEUE_CONCURRENT)
+            let queue = dispatch_queue_create("name.Guigna", DISPATCH_QUEUE_CONCURRENT)
             for system in systemsToList {
                 status("Syncing \(system.name)...")
                 dispatch_async(queue) {
@@ -1092,7 +1092,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     
     @IBAction func moreScrapes(sender: AnyObject) {
         tableProgressIndicator.startAnimation(self)
-        var scrape = sourcesController.selectedObjects[0] as! GScrape
+        let scrape = sourcesController.selectedObjects[0] as! GScrape
         scrape.pageNumber += 1
         updateScrape(scrape)
         itemsController.rearrangeObjects()
@@ -1156,7 +1156,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             item = selectedItems[0] as? GItem
         }
         var output = ""
-        var input: String! = cmdline.stringValue
+        let input: String! = cmdline.stringValue
         if input == nil {
             return
         }
@@ -1256,7 +1256,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     }
     
     func executeAsRoot(cmd: String) {
-        var command = "osascript -e 'do shell script \"\(cmd)\" with administrator privileges'"
+        let command = "osascript -e 'do shell script \"\(cmd)\" with administrator privileges'"
         system(command)
     }
     
@@ -1279,7 +1279,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 menuItem.state = column.hidden ? NSOffState : NSOnState
             }
         } else {
-            var selectedObjects = itemsController.selectedObjects as NSArray
+            let selectedObjects = itemsController.selectedObjects as NSArray
             var selectedItems = selectedObjects.copy() as! [GItem]
             let clickedRow = itemsTable.clickedRow
             if clickedRow != -1 {
@@ -1290,7 +1290,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             if title == "Mark" { // TODO: Disable marks based on status
                 tableProgressIndicator.startAnimation(self)
                 status("Analyzing selected items...")
-                var installMenu = menu.itemWithTitle("Install")!
+                let installMenu = menu.itemWithTitle("Install")!
                 var markedOptions = []
                 for item in selectedItems {
                     if item.system == nil {
@@ -1313,7 +1313,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                         (item as! GPackage).markedOptions = markedOptions.join()
                     }
                     if availableOptions.count > 0 && availableOptions[0] != "" {
-                        var optionsMenu = NSMenu(title: "Options")
+                        let optionsMenu = NSMenu(title: "Options")
                         for availableOption in availableOptions {
                             optionsMenu.addItemWithTitle(availableOption, action: "mark:", keyEquivalent: "")
                             var options = Set(markedOptions)
@@ -1456,10 +1456,10 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     
     func updateMarkedSource() {
         sourcesOutline.setDelegate(nil)
-        var sourcesContent = sourcesController.content as! NSArray
-        var statusSource = sourcesContent[2] as! GSource
-        var statuses = statusSource.categories! as! [GSource]
-        var statusesMutableArray = statusSource.mutableArrayValueForKey("categories")
+        let sourcesContent = sourcesController.content as! NSArray
+        let statusSource = sourcesContent[2] as! GSource
+        let statuses = statusSource.categories! as! [GSource]
+        let statusesMutableArray = statusSource.mutableArrayValueForKey("categories")
         var currentMarked = statuses.filter { $0.name.hasPrefix("marked") }
         if currentMarked.count > 0 && marksCount == 0 {
             statusesMutableArray.removeObject(currentMarked[0])
@@ -1467,7 +1467,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         if marksCount > 0 {
             let name = "marked (\(marksCount))"
             if currentMarked.count == 0 {
-                var markedSource = GSource(name: name)
+                let markedSource = GSource(name: name)
                 statusesMutableArray.addObject(markedSource)
             } else {
                 (currentMarked[0] as GSource).name = name
@@ -1634,7 +1634,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             }
         }
         browser.activate()
-        var windows = browser.valueForKey("windows") as! NSMutableArray
+        let windows = browser.valueForKey("windows") as! NSMutableArray
         var firstWindow = windows[0] as! NSObject
         if windows.count == 0 {
             let documentClass: NSObject.Type = browser.classForScriptingClass("document") as! NSObject.Type
@@ -1644,7 +1644,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             let tabClass: NSObject.Type = browser.classForScriptingClass("tab") as! NSObject.Type
             tabs.addObject(tabClass())
             tabs = firstWindow.valueForKey("tabs") as! NSMutableArray
-            var lastTab = tabs.objectAtIndex(tabs.count-1) as! NSObject
+            let lastTab = tabs.objectAtIndex(tabs.count-1) as! NSObject
             firstWindow.setValue(lastTab, forKey: "currentTab")
         }
         firstWindow = (browser.valueForKey("windows") as! [NSObject])[0]
@@ -1732,12 +1732,12 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 var command = ""
                 var status: GState = .Off
                 
-                var sourcesContent = self.sourcesController.content as! NSArray
-                var systemsSource = sourcesContent[0] as! GSource
-                var systemsArray = systemsSource.categories! as! [GSource]
-                var systemsMutableArray = systemsSource.mutableArrayValueForKey("categories")
+                let sourcesContent = self.sourcesController.content as! NSArray
+                let systemsSource = sourcesContent[0] as! GSource
+                let systemsArray = systemsSource.categories! as! [GSource]
+                let systemsMutableArray = systemsSource.mutableArrayValueForKey("categories")
                 
-                var fileManager = NSFileManager.defaultManager()
+                let fileManager = NSFileManager.defaultManager()
                 var addedSystems = [GSystem]()
                 
                 if state == NSOnState {
@@ -1811,7 +1811,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                             }
                             // duplicate code from reloalAllPackages
                             source.categories = []
-                            var categories = source.mutableArrayValueForKey("categories")
+                            let categories = source.mutableArrayValueForKey("categories")
                             for category in source.categoriesList() {
                                 categories.addObject(GSource(name: category))
                             }

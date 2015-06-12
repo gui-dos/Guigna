@@ -7,7 +7,7 @@ class GAgent: NSObject {
     
     func output(command: String) -> String {
         
-        var task = NSTask()
+        let task = NSTask()
         let tokens = command.componentsSeparatedByString(" ")
         let command = tokens[0]
         var args: [String] = []

@@ -76,7 +76,7 @@ class HomebrewCasks: GSystem {
         outputLines.removeLast()
         for line in outputLines {
             let components = line.stringByTrimmingCharactersInSet(whitespaceCharacterSet).split(".rb:  name '")
-            var name = components[0].lastPathComponent
+            let name = components[0].lastPathComponent
             if let pkg = self[name] {
                 pkg.description = dropLast(components.last!)
             }
@@ -124,7 +124,7 @@ class HomebrewCasks: GSystem {
             // TODO: manage multiple versions
             version = version.stringByReplacingOccurrencesOfString("\n", withString: ", ")
             var pkg: GPackage! = self[name]
-            var latestVersion: String! = (pkg == nil) ? "" : pkg.version
+            let latestVersion: String! = (pkg == nil) ? "" : pkg.version
             if pkg == nil {
                 pkg = GPackage(name: name, version: latestVersion, system: self, status: .UpToDate)
                 self[name] = pkg

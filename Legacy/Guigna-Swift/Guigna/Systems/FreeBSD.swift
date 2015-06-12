@@ -21,7 +21,7 @@ class FreeBSD: GSystem {
             for line in lines {
                 let components = line.split("|")
                 var name = components[0]
-                var idx = name.rindex("-")
+                let idx = name.rindex("-")
                 if idx == NSNotFound {
                     continue
                 }
@@ -47,12 +47,12 @@ class FreeBSD: GSystem {
                 var i = 0
                 for node in names {
                     var name = node.stringValue!
-                    var idx = name.rindex("-")
+                    let idx = name.rindex("-")
                     let version = name.substringFromIndex(idx + 1)
                     name = name.substringToIndex(idx)
                     var category = node.href
                     category = category.substringToIndex(category.index(".html"))
-                    var description = descriptions[i].stringValue!
+                    let description = descriptions[i].stringValue!
                     let pkg = GPackage(name: name, version: version, system: self, status: .Available)
                     pkg.categories = category
                     pkg.description = description

@@ -139,7 +139,7 @@ extension WebView {
     }
     
     override public func magnifyWithEvent(event: NSEvent) {
-        var multiplier: CFloat = self.textSizeMultiplier * CFloat(event.magnification + 1.0)
+        let multiplier: CFloat = self.textSizeMultiplier * CFloat(event.magnification + 1.0)
         self.textSizeMultiplier = multiplier
     }
     

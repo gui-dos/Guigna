@@ -50,7 +50,7 @@ class PkgsrcSE: GScrape {
                 var description = comments[i].stringValue!
                 description = description.substringToIndex(description.index("\n"))
                 description = description.substringFromIndex(description.index(": ") + 2)
-                var entry = GItem(name: name, version: version, source: self, status: .Available)
+                let entry = GItem(name: name, version: version, source: self, status: .Available)
                 entry.id = id
                 entry.description = description
                 entry.categories = category
@@ -139,7 +139,7 @@ class Debian: GScrape {
                 let components = link.split()
                 let name = components[1]
                 let version = components[2]
-                var pkg = GItem(name: name, version: version, source: self, status: .Available)
+                let pkg = GItem(name: name, version: version, source: self, status: .Available)
                 pkgs.append(pkg)
             }
         }
@@ -185,7 +185,7 @@ class PyPI: GScrape {
                 let name = splits[splits.count - 2]
                 let version = splits.last!
                 let description = rowData[2].stringValue!
-                var egg = GItem(name: name, version: version, source: self, status: .Available)
+                let egg = GItem(name: name, version: version, source: self, status: .Available)
                 egg.description = description
                 eggs.append(egg)
             }
@@ -225,7 +225,7 @@ class RubyGems: GScrape {
                 let spans = node[".//span"]
                 let date = spans[0].stringValue!
                 let info = spans[1].stringValue!
-                var gem = GItem(name: name, version: version, source: self, status: .Available)
+                let gem = GItem(name: name, version: version, source: self, status: .Available)
                 gem.description = info
                 gems.append(gem)
             }
@@ -235,7 +235,7 @@ class RubyGems: GScrape {
     
     override func home(item: GItem) -> String {
         var page = log(item)
-        var links = agent.nodes(URL:page, XPath:"//div[@class=\"links\"]/a")
+        let links = agent.nodes(URL:page, XPath:"//div[@class=\"links\"]/a")
         if links.count > 0 {
             for link in links {
                 if link.stringValue! == "Homepage" {
@@ -276,7 +276,7 @@ class MacUpdate: GScrape {
                     name = name.substringToIndex(idx)
                 }
                 var description = node[".//span"][0].stringValue!
-                var price = node[".//span[contains(@class,\"appprice\")]"][0].stringValue!
+                let price = node[".//span[contains(@class,\"appprice\")]"][0].stringValue!
                 let id = node[".//a"][0].href.split("/")[3]
                 let app = GItem(name: name, version: version, source: self, status: .Available)
                 app.id = id
@@ -328,13 +328,13 @@ class AppShopper: GScrape {
                 var id = node.attribute("data-appid")
                 let nick = node["a"][0].href.lastPathComponent
                 id = "\(id) \(nick)"
-                var category = node[".//h5/span"][0].stringValue!
+                let category = node[".//h5/span"][0].stringValue!
                 let type = node[".//span[starts-with(@class,\"change\")]"][0].stringValue!
                 var description = node[".//p[@class=\"description\"]"][0].stringValue!
-                var price = node[".//div[@class=\"price\"]"][0].children![0].stringValue!
+                let price = node[".//div[@class=\"price\"]"][0].children![0].stringValue!
                 // TODO:NSXML UTF8 encoding
-                var localPrice = price.stringByTrimmingCharactersInSet(whitespaceCharacterSet).stringByReplacingOccurrencesOfString("â‚¬", withString: "€")
-                var app = GItem(name: name, version: version, source: self, status: .Available)
+                let localPrice = price.stringByTrimmingCharactersInSet(whitespaceCharacterSet).stringByReplacingOccurrencesOfString("â‚¬", withString: "€")
+                let app = GItem(name: name, version: version, source: self, status: .Available)
                 app.id = id
                 app.categories = category
                 if localPrice != "Free" {
@@ -399,13 +399,13 @@ class AppShopperIOS: GScrape {
                 var id = node.attribute("data-appid")
                 let nick = node["a"][0].href.lastPathComponent
                 id = "\(id) \(nick)"
-                var category = node[".//h5/span"][0].stringValue!
+                let category = node[".//h5/span"][0].stringValue!
                 let type = node[".//span[starts-with(@class,\"change\")]"][0].stringValue!
                 var description = node[".//p[@class=\"description\"]"][0].stringValue!
-                var price = node[".//div[@class=\"price\"]"][0].children![0].stringValue!
+                let price = node[".//div[@class=\"price\"]"][0].children![0].stringValue!
                 // TODO:NSXML UTF8 encoding
-                var localPrice = price.stringByTrimmingCharactersInSet(whitespaceCharacterSet).stringByReplacingOccurrencesOfString("â‚¬", withString: "€")
-                var app = GItem(name: name, version: version, source: self, status: .Available)
+                let localPrice = price.stringByTrimmingCharactersInSet(whitespaceCharacterSet).stringByReplacingOccurrencesOfString("â‚¬", withString: "€")
+                let app = GItem(name: name, version: version, source: self, status: .Available)
                 app.id = id
                 app.categories = category
                 if localPrice != "Free" {

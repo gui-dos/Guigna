@@ -26,7 +26,7 @@ class MacPorts: GSystem {
                 let version = components[0]
                 // let revision = "..."
                 let categories = components.last!.split("/")[0]
-                var pkg = GPackage(name: name, version: version, system: self, status: .Available)
+                let pkg = GPackage(name: name, version: version, system: self, status: .Available)
                 pkg.categories = categories
                 items.append(pkg)
                 self[name] = pkg
@@ -42,12 +42,12 @@ class MacPorts: GSystem {
             }
             let s =  NSScanner(string: portIndex)
             s.charactersToBeSkipped = NSCharacterSet(charactersInString: "")
-            var endsCharacterSet = NSMutableCharacterSet.whitespaceAndNewlineCharacterSet()
+            let endsCharacterSet = NSMutableCharacterSet.whitespaceAndNewlineCharacterSet()
             endsCharacterSet.addCharactersInString("}")
             var str: NSString? = nil
             var name: NSString? = nil
             var key: NSString? = nil
-            var value: NSMutableString = ""
+            let value: NSMutableString = ""
             var version: String?
             var revision: String?
             var categories: String?
@@ -127,7 +127,7 @@ class MacPorts: GSystem {
         outputLines.removeLast()
         outputLines.removeAtIndex(0)
         let itemsCount = items.count
-        var notInactiveItems = items.filter { $0.status != .Inactive}
+        let notInactiveItems = items.filter { $0.status != .Inactive}
         if itemsCount != notInactiveItems.count {
             items = notInactiveItems
             self.agent.appDelegate!.removeItems({ $0.status == .Inactive && $0.system === self}) // TODO: ugly
@@ -144,7 +144,7 @@ class MacPorts: GSystem {
         let whitespaceCharacterSet = NSCharacterSet.whitespaceCharacterSet()
         for line in outputLines {
             var components = line.stringByTrimmingCharactersInSet(whitespaceCharacterSet).split()
-            var name = components[0]
+            let name = components[0]
             var version = components[1].substringFromIndex(1)
             var variants: String! = nil
             let idx = version.index("+")
@@ -158,7 +158,7 @@ class MacPorts: GSystem {
             }
             status = components.count == 2 ? .Inactive : .UpToDate
             var pkg: GPackage! = self[name]
-            var latestVersion: String = (pkg == nil) ? "" : pkg.version
+            let latestVersion: String = (pkg == nil) ? "" : pkg.version
             if status == .Inactive {
                 pkg = nil
             }
@@ -204,7 +204,7 @@ class MacPorts: GSystem {
             let name = components[0]
             let version = components.last!
             var pkg = self[name]
-            var latestVersion: String = (pkg == nil) ? "" : pkg.version
+            let latestVersion: String = (pkg == nil) ? "" : pkg.version
             if pkg == nil {
                 pkg = GPackage(name: name, version: latestVersion, system: self, status: .Outdated)
                 self[name] = pkg
@@ -319,7 +319,7 @@ class MacPorts: GSystem {
     
     override func options(pkg: GPackage) -> String! {
         var variants: String! = nil
-        var infoOutput = output("\(cmd) info --variants \(pkg.name)").stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+        let infoOutput = output("\(cmd) info --variants \(pkg.name)").stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
         if infoOutput.length > 10  {
             variants = infoOutput.substringFromIndex(10).split(", ").join()
         }
