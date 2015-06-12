@@ -42,8 +42,8 @@ class GSource: NSObject {
         return "\(item.name) - \(item.version)\n\(self.home(item))"
     }
     
-    func home(item: GItem!) -> String {
-        if item?.homepage != nil {
+    func home(item: GItem) -> String {
+        if item.homepage != nil {
             return item.homepage
         } else {
             return homepage
@@ -54,21 +54,21 @@ class GSource: NSObject {
         return home(item)
     }
     
-    func contents(item: GItem!) -> String {
+    func contents(item: GItem) -> String {
         return ""
     }
     
-    func cat(item: GItem!) -> String {
+    func cat(item: GItem) -> String {
         return "[Not Available]"
     }
     
     
-    func deps(item: GItem!) -> String {
+    func deps(item: GItem) -> String {
         return ""
     }
     
     
-    func dependents(item: GItem!) -> String {
+    func dependents(item: GItem) -> String {
         return ""
     }
     
