@@ -292,8 +292,9 @@ class Homebrew: GSystem {
     
     class var setupCmd: String! {
         get {
-            return "ruby -e \"$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)\" ; /usr/local/bin/brew update"
-        }
+            return "ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)\" ; /usr/local/bin/brew update"
+        
+		}
     }
     
     class var removeCmd: String! {
