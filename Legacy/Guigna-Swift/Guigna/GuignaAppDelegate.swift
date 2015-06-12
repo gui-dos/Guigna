@@ -1148,6 +1148,19 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
     }
     
+    func textView(textView: NSTextView, clickedOnLink link: AnyObject, atIndex charIndex: Int) -> Bool {
+        let url = link as! NSURL
+        let urlString = url.absoluteString!
+        if urlString.hasPrefix("http") {
+            cmdline.stringValue = urlString
+            segmentedControl.selectedSegment = 1
+            selectedSegment = "Home"
+            updateTabView(nil)
+            return true
+        } else {
+            return false
+        }
+    }
     
     @IBAction func executeCmdLine(sender: AnyObject) {
         let selectedItems = itemsController.selectedObjects

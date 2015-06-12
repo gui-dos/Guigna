@@ -1114,6 +1114,21 @@
 }
 
 
+- (BOOL)textView:(NSTextView *)textView clickedOnLink:(id)link atIndex:(NSUInteger)charIndex {
+    NSURL *url = (NSURL *)link;
+    NSString *urlString = [url absoluteString];
+    if ([urlString hasPrefix:@"http"]) {
+        cmdline.stringValue = urlString;
+        [segmentedControl setSelectedSegment:1];
+        selectedSegment = @"Home";
+        [self updateTabView:nil];
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
 - (IBAction)executeCmdLine:(id)sender {
     NSArray *selectedItems = [itemsController selectedObjects];
     GItem *item = nil;
