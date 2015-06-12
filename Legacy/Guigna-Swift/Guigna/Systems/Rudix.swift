@@ -6,6 +6,7 @@ class Rudix: GSystem {
         super.init(name: "Rudix", agent: agent)
         prefix = "/usr/local"
         homepage = "http://rudix.org/"
+        logpage = "https://github.com/rudix-mac/rudix/commits"
         cmd = "\(prefix)/bin/rudix"
     }
     
@@ -122,12 +123,8 @@ class Rudix: GSystem {
     }
     
     
-    override func log(item: GItem!) -> String {
-        if item != nil {
-            return "https://github.com/rudix-mac/rudix/commits/master/Ports/\(item.name)"
-        } else {
-            return "https://github.com/rudix-mac/rudix/commits"
-        }
+    override func log(item: GItem) -> String {
+        return "https://github.com/rudix-mac/rudix/commits/master/Ports/\(item.name)"
     }
     
     override func contents(item: GItem) -> String {

@@ -6,6 +6,7 @@ class Homebrew: GSystem {
         super.init(name: "Homebrew", agent: agent)
         prefix = "/usr/local"
         homepage = "http://brew.sh/"
+        logpage = "http://github.com/Homebrew/homebrew/commits"
         cmd = "\(prefix)/bin/brew"
     }
     
@@ -187,20 +188,16 @@ class Homebrew: GSystem {
         return log(item)
     }
     
-    override func log(item: GItem!) -> String {
-        if item != nil {
-            var path: String
-            if (item as! GPackage).repo == nil {
-                path = "Homebrew/homebrew/commits/master/Library/Formula"
-            } else {
-                let tokens = (item as! GPackage).repo!.split("/")
-                let user = tokens[0]
-                path = "\(user)/homebrew-\(tokens[1])/commits/master"
-            }
-            return "http://github.com/\(path)/\(item.name).rb"
+    override func log(item: GItem) -> String {
+        var path: String
+        if (item as! GPackage).repo == nil {
+            path = "Homebrew/homebrew/commits/master/Library/Formula"
         } else {
-            return "http://github.com/Homebrew/homebrew/commits"
+            let tokens = (item as! GPackage).repo!.split("/")
+            let user = tokens[0]
+            path = "\(user)/homebrew-\(tokens[1])/commits/master"
         }
+        return "http://github.com/\(path)/\(item.name).rb"
     }
     
     override func contents(item: GItem) -> String {

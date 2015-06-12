@@ -14,6 +14,7 @@
     self = [super initWithName:@"FreeBSD" agent:agent];
     if (self) {
         self.homepage = @"http://www.freebsd.org/ports/";
+        self.logpage = @"http://www.freshports.org";
         self.cmd = [NSString stringWithFormat:@"%@freebsd", self.prefix];
     }
     return self;
@@ -110,11 +111,8 @@
 
 // TODO:
 - (NSString *)log:(GItem *)item {
-    if (item != nil) {
-        NSString *category = [item.categories split][0];
-        return [NSString stringWithFormat:@"http://www.freshports.org/%@/%@", category, item.name];
-    } else
-        return @"http://www.freshports.org";
+    NSString *category = [item.categories split][0];
+    return [NSString stringWithFormat:@"http://www.freshports.org/%@/%@", category, item.name];
 }
 
 - (NSString *)contents:(GItem *)item {

@@ -12,6 +12,7 @@
     self = [super initWithName:@"iTunes" agent:agent];
     if (self) {
         self.homepage = @"https://itunes.apple.com/genre/ios/id36?mt=8";
+        self.logpage = @"https://itunes.apple.com/genre/ios/id36?mt=8";
         self.cmd = @"/Applications/iTunes.app/Contents/MacOS/iTunes";
     }
     return self;
@@ -108,17 +109,13 @@
 }
 
 - (NSString *)log:(GItem *)item {
-    if (item == nil ) {
-        return self.homepage;
-    } else {
-        NSString *ipa = [[NSString stringWithFormat:@"~/Music/iTunes/iTunes Media/Mobile Applications/%@.ipa", item.ID] stringByExpandingTildeInPath];
-        NSString *plist = [self outputFor:@"/usr/bin/unzip -p %@ iTunesMetadata.plist", [ipa stringByReplacingOccurrencesOfString:@" " withString:@"__"]];
-        if (plist == nil) // binary plist
-            plist = [self outputFor:@"/bin/sh -c /usr/bin/unzip__-p__%@__iTunesMetadata.plist__|__plutil__-convert__xml1__-o__-__-", [ipa stringByReplacingOccurrencesOfString:@" " withString:@"\\__"]];
-        NSDictionary *metadata = [plist propertyList];
-        NSNumber *itemId = metadata[@"itemId"];
-        return [NSString stringWithFormat:@"http://itunes.apple.com/app/id%@", itemId];
-    }
+    NSString *ipa = [[NSString stringWithFormat:@"~/Music/iTunes/iTunes Media/Mobile Applications/%@.ipa", item.ID] stringByExpandingTildeInPath];
+    NSString *plist = [self outputFor:@"/usr/bin/unzip -p %@ iTunesMetadata.plist", [ipa stringByReplacingOccurrencesOfString:@" " withString:@"__"]];
+    if (plist == nil) // binary plist
+        plist = [self outputFor:@"/bin/sh -c /usr/bin/unzip__-p__%@__iTunesMetadata.plist__|__plutil__-convert__xml1__-o__-__-", [ipa stringByReplacingOccurrencesOfString:@" " withString:@"\\__"]];
+    NSDictionary *metadata = [plist propertyList];
+    NSNumber *itemId = metadata[@"itemId"];
+    return [NSString stringWithFormat:@"http://itunes.apple.com/app/id%@", itemId];
 }
 
 - (NSString *)contents:(GItem *)item {

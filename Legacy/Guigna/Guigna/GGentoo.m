@@ -12,6 +12,7 @@
     self = [super initWithName:@"Gentoo" agent:agent];
     if (self) {
         self.homepage = @"http://www.gentoo.org/proj/en/gentoo-alt/prefix/";
+        self.logpage = @"http://packages.gentoo.org/arch/x64-macos?arches=all";
         self.cmd = [NSString stringWithFormat:@"%@/bin/emerge", self.prefix];
     }
     return self;

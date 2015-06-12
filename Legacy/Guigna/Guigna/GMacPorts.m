@@ -12,6 +12,7 @@
     self = [super initWithName:@"MacPorts" agent:agent];
     if (self) {
         self.homepage = @"http://www.macports.org";
+        self.logpage = @"http://trac.macports.org/timeline";
         self.cmd = [NSString stringWithFormat:@"%@/bin/port", self.prefix];
     }
     return self;
@@ -269,12 +270,8 @@
 }
 
 - (NSString *)log:(GItem *)item {
-    if (item != nil ) {
-        NSString *category = [item.categories split][0];
-        return [NSString stringWithFormat:@"http://trac.macports.org/log/trunk/dports/%@/%@/Portfile", category, item.name];
-    } else {
-        return @"http://trac.macports.org/timeline";
-    }
+    NSString *category = [item.categories split][0];
+    return [NSString stringWithFormat:@"http://trac.macports.org/log/trunk/dports/%@/%@/Portfile", category, item.name];
 }
 
 - (NSString *)contents:(GItem *)item {

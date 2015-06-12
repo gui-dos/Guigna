@@ -12,6 +12,7 @@
     self = [super initWithName:@"Homebrew Casks" agent:agent];
     if (self) {
         self.homepage = @"http://caskroom.io";
+        self.logpage = @"http://github.com/caskroom/homebrew-cask/commits";
         self.cmd = [NSString stringWithFormat:@"%@/bin/brew cask", self.prefix];
     }
     return self;

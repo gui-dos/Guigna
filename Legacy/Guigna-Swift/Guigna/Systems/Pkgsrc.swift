@@ -6,6 +6,7 @@ class Pkgsrc: GSystem {
         super.init(name: "pkgsrc", agent: agent)
         prefix = "/usr/pkg"
         homepage = "http://www.pkgsrc.org"
+        logpage = "http://www.netbsd.org/changes/pkg-changes.html"
         cmd = "\(prefix)/sbin/pkg_info"
     }
     
@@ -174,15 +175,11 @@ class Pkgsrc: GSystem {
         }
     }
     
-    override func log(item: GItem!) -> String {
-        if item != nil  {
-            if item.id != nil {
-                return "http://cvsweb.NetBSD.org/bsdweb.cgi/pkgsrc/\(item.id)/"
-            } else {
-                return "http://cvsweb.NetBSD.org/bsdweb.cgi/pkgsrc/\(item.categories)/\(item.name)/"
-            }
+    override func log(item: GItem) -> String {
+        if item.id != nil {
+            return "http://cvsweb.NetBSD.org/bsdweb.cgi/pkgsrc/\(item.id)/"
         } else {
-            return "http://www.netbsd.org/changes/pkg-changes.html"
+            return "http://cvsweb.NetBSD.org/bsdweb.cgi/pkgsrc/\(item.categories)/\(item.name)/"
         }
     }
     

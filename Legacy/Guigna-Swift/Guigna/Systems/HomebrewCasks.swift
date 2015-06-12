@@ -10,6 +10,7 @@ class HomebrewCasks: GSystem {
         super.init(name: "Homebrew Casks", agent: agent)
         prefix = "/usr/local"
         homepage = "http://caskroom.io"
+        logpage = "http://github.com/caskroom/homebrew-cask/commits"
         cmd = "\(prefix)/bin/brew cask"
     }
     
@@ -197,20 +198,16 @@ class HomebrewCasks: GSystem {
         return log(item)
     }
     
-    override func log(item: GItem!) -> String {
-        if item != nil {
-            var path = ""
-            if (item as! GPackage).repo == nil {
-                path = "caskroom/homebrew-cask/commits/master/Casks"
-                //            } else {
-                //                let tokens = (item as! GPackage).repo!.split("/")
-                //                let user = tokens[0]
-                //                path = "\(user)/homebrew-\(tokens[1])/commits/master"
-            }
-            return "http://github.com/\(path)/\(item.name).rb"
-        } else {
-            return "http://github.com/caskroom/homebrew-cask/commits"
+    override func log(item: GItem) -> String {
+        var path = ""
+        if (item as! GPackage).repo == nil {
+            path = "caskroom/homebrew-cask/commits/master/Casks"
+            //            } else {
+            //                let tokens = (item as! GPackage).repo!.split("/")
+            //                let user = tokens[0]
+            //                path = "\(user)/homebrew-\(tokens[1])/commits/master"
         }
+        return "http://github.com/\(path)/\(item.name).rb"
     }
     
     override func contents(item: GItem) -> String {

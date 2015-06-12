@@ -13,6 +13,7 @@
     self = [super initWithName:@"pkgsrc" agent:agent];
     if (self) {
         self.homepage = @"http://www.pkgsrc.org";
+        self.logpage = @"http://www.netbsd.org/changes/pkg-changes.html";
         self.cmd = [NSString stringWithFormat:@"%@/sbin/pkg_info", self.prefix];
     }
     return self;
@@ -175,14 +176,10 @@
 }
 
 - (NSString *)log:(GItem *)item {
-    if (item != nil ) {
         if (item.ID != nil)
             return [NSString stringWithFormat:@"http://cvsweb.NetBSD.org/bsdweb.cgi/pkgsrc/%@/", item.ID];
         else
             return [NSString stringWithFormat:@"http://cvsweb.NetBSD.org/bsdweb.cgi/pkgsrc/%@/%@/", item.categories, item.name];
-    } else {
-        return @"http://www.netbsd.org/changes/pkg-changes.html";
-    }
 }
 
 

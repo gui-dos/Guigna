@@ -12,6 +12,7 @@
     self = [super initWithName:@"Mac OS X" agent:agent];
     if (self) {
         self.homepage = @"http://support.apple.com/downloads/";
+        self.logpage = @"http://support.apple.com/downloads/";
         self.cmd = [NSString stringWithFormat:@"%@/pkgutil", self.prefix];
     }
     return self;
@@ -125,16 +126,14 @@
 }
 
 - (NSString *)log:(GItem *)item {
-    NSString *page = @"http://support.apple.com/downloads/";
-    if (item != nil ) {
-        if ([item.categories is:@"storeagent"] || [item.categories is:@"storedownloadd"]) {
-            NSString *url = [NSString stringWithFormat:@"http://itunes.apple.com/lookup?bundleId=%@", item.ID];
-            NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
-            NSArray *results = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil][@"results"];
-            if ([results count] > 0) {
-                NSString *pkgID = [results[0][@"trackId"] stringValue];
-                page = [@"http://itunes.apple.com/app/id" stringByAppendingString:pkgID];
-            }
+    NSString *page = self.logpage;
+    if ([item.categories is:@"storeagent"] || [item.categories is:@"storedownloadd"]) {
+        NSString *url = [NSString stringWithFormat:@"http://itunes.apple.com/lookup?bundleId=%@", item.ID];
+        NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
+        NSArray *results = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil][@"results"];
+        if ([results count] > 0) {
+            NSString *pkgID = [results[0][@"trackId"] stringValue];
+            page = [@"http://itunes.apple.com/app/id" stringByAppendingString:pkgID];
         }
     }
     return page;

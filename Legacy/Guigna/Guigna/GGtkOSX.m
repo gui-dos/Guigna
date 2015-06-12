@@ -12,6 +12,7 @@
     self = [super initWithName:@"Gtk-OSX" agent:agent];
     if (self) {
         self.homepage = @"http://live.gnome.org/GTK%2B/OSX";
+        self.logpage = @"http://live.gnome.org/GTK%2B/OSX";
         self.cmd = [NSString stringWithFormat:@"%@/bin/jhbuild", self.prefix];
     }
     return self;

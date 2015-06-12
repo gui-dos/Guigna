@@ -942,7 +942,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 }
                 if sourcesController.selectedObjects.count == 1 {
                     if sourcesController.selectedObjects[0] is GSystem {
-                        page = (sourcesController.selectedObjects[0] as! GSystem).log(nil)
+                        page = (sourcesController.selectedObjects[0] as! GSystem).logpage
                     }
                 }
             }

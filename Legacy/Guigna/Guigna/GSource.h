@@ -24,6 +24,7 @@ typedef NS_ENUM(NSInteger, GMode) {
 @property(assign) GState status;
 @property(assign) GMode mode;
 @property(strong) NSString *homepage;
+@property(strong) NSString *logpage;
 @property(strong) GAgent *agent;
 @property(strong) NSString *cmd;
 

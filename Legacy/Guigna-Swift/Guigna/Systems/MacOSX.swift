@@ -6,6 +6,7 @@ class MacOSX: GSystem {
         super.init(name: "Mac OS X", agent: agent)
         prefix = "" // TODO
         homepage = "http://support.apple.com/downloads/"
+        logpage = "http://support.apple.com/downloads/"
         cmd = "/usr/sbin/pkgutil"
     }
     
@@ -114,17 +115,15 @@ class MacOSX: GSystem {
         return homepage
     }
     
-    override func log(item: GItem!) -> String {
-        var page = "http://support.apple.com/downloads/"
-        if item != nil {
-            if item.categories == "storeagent" || item.categories == "storedownloadd" {
-                let url = "http://itunes.apple.com/lookup?bundleId=\(item.id)"
-                let data = NSData(contentsOfURL: NSURL(string: url)!) ?? NSData()
-                let results = ((NSJSONSerialization.JSONObjectWithData(data, options: nil, error: nil) as! NSDictionary)["results"]! as! NSArray)
-                if results.count > 0 {
-                    let pkgId = (results[0] as! NSDictionary)["trackId"]!.stringValue!
-                    page = "http://itunes.apple.com/app/id" + pkgId
-                }
+    override func log(item: GItem) -> String {
+        var page = self.logpage
+        if item.categories == "storeagent" || item.categories == "storedownloadd" {
+            let url = "http://itunes.apple.com/lookup?bundleId=\(item.id)"
+            let data = NSData(contentsOfURL: NSURL(string: url)!) ?? NSData()
+            let results = ((NSJSONSerialization.JSONObjectWithData(data, options: nil, error: nil) as! NSDictionary)["results"]! as! NSArray)
+            if results.count > 0 {
+                let pkgId = (results[0] as! NSDictionary)["trackId"]!.stringValue!
+                page = "http://itunes.apple.com/app/id" + pkgId
             }
         }
         return page

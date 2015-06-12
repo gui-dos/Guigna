@@ -909,7 +909,7 @@
                 page = @"http://github.com/gui-dos/Guigna/";
             if ([[sourcesController selectedObjects] count] == 1 ) {
                 if ([[sourcesController selectedObjects][0] isKindOfClass:[GSystem class]]) {
-                    page = [(GSystem *)[sourcesController selectedObjects][0] log:nil];
+                    page = [(GSystem *)[sourcesController selectedObjects][0] logpage];
                 }
             }
         }

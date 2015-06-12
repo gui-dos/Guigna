@@ -6,6 +6,7 @@ class FreeBSD: GSystem {
         super.init(name: "FreeBSD", agent: agent)
         prefix = ""
         homepage = "http://www.freebsd.org/ports/"
+        logpage = "http://www.freshports.org"
         cmd = "\(prefix)freebsd"
     }
     
@@ -98,13 +99,9 @@ class FreeBSD: GSystem {
         return self.log(item) // TODO
     }
     
-    override func log(item: GItem!) -> String {
-        if item != nil  {
-            let category = item.categories!.split()[0]
-            return "http://www.freshports.org/\(category)/\(item.name)"
-        } else {
-            return "http://www.freshports.org"
-        }
+    override func log(item: GItem) -> String {
+        let category = item.categories!.split()[0]
+        return "http://www.freshports.org/\(category)/\(item.name)"
     }
     
     override func contents(item: GItem) -> String {

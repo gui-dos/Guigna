@@ -22,6 +22,7 @@ class GSource: NSObject {
     var mode: GMode
     var status: GState
     var homepage: String!
+    var logpage: String!
     var cmd: String!
     
     init(name: String, agent: GAgent?) {
@@ -49,7 +50,7 @@ class GSource: NSObject {
         }
     }
     
-    func log(item: GItem!) -> String {
+    func log(item: GItem) -> String {
         return home(item)
     }
     

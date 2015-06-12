@@ -6,6 +6,8 @@ class Fink: GSystem {
         super.init(name: "Fink", agent: agent)
         prefix = "/sw"
         homepage = "http://www.finkproject.org"
+        logpage = "http://www.finkproject.org/package-updates.php"
+        // @"http://github.com/fink/fink/commits/master"
         cmd = "\(prefix)/bin/fink"
     }
     
@@ -171,13 +173,9 @@ class Fink: GSystem {
         }
     }
     
-    override func log(item: GItem!) -> String {
-        if item != nil {
-            return "http://pdb.finkproject.org/pdb/package.php/\(item.name)"
-        } else {
-            return "http://www.finkproject.org/package-updates.php"
-            // @"http://github.com/fink/fink/commits/master"
-        }
+    override func log(item: GItem) -> String {
+        return "http://pdb.finkproject.org/pdb/package.php/\(item.name)"
+        // @"http://github.com/fink/fink/commits/master"
     }
     
     override func contents(item: GItem) -> String {

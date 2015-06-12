@@ -12,6 +12,7 @@
     self = [super initWithName:@"Homebrew" agent:agent];
     if (self) {
         self.homepage = @"http://brew.sh/";
+        self.logpage = @"http://github.com/Homebrew/homebrew/commits";
         self.cmd = [NSString stringWithFormat:@"%@/bin/brew", self.prefix];
     }
     return self;
@@ -192,21 +193,18 @@
 }
 
 - (NSString *)log:(GItem *)item {
-    if (item != nil ) {
-        NSString *path;
-        if (((GPackage *)item).repo == nil)
-            path = @"Homebrew/homebrew/commits/master/Library/Formula";
-        else {
-            NSArray *tokens = [((GPackage *)item).repo split:@"/"];
-            NSString *user = tokens[0];
-            path = [NSString stringWithFormat:@"%@/homebrew-%@/commits/master", user, tokens[1]];
-            if ([user is:@"josegonzalez"])
-                path = [path stringByAppendingString:@"/Formula"];
-        }
-        return [NSString stringWithFormat:@"http://github.com/%@/%@.rb", path, item.name];
-    } else {
-        return @"http://github.com/Homebrew/homebrew/commits";
+    NSString *path;
+    if (((GPackage *)item).repo == nil)
+        path = @"Homebrew/homebrew/commits/master/Library/Formula";
+    else {
+        NSArray *tokens = [((GPackage *)item).repo split:@"/"];
+        NSString *user = tokens[0];
+        path = [NSString stringWithFormat:@"%@/homebrew-%@/commits/master", user, tokens[1]];
+        if ([user is:@"josegonzalez"])
+            path = [path stringByAppendingString:@"/Formula"];
     }
+    return [NSString stringWithFormat:@"http://github.com/%@/%@.rb", path, item.name];
+    
 }
 
 - (NSString *)contents:(GItem *)item {

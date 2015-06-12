@@ -6,6 +6,7 @@ class MacPorts: GSystem {
         super.init(name: "MacPorts", agent: agent)
         prefix = "/opt/local"
         homepage = "http://www.macports.org"
+        logpage = "http://trac.macports.org/timeline"
         cmd = "\(prefix)/bin/port"
     }
     
@@ -278,13 +279,9 @@ class MacPorts: GSystem {
         return url.substringToIndex(url.length - 1)
     }
     
-    override func log(item: GItem!) -> String {
-        if item != nil {
-            let category = item.categories!.split()[0]
-            return "http://trac.macports.org/log/trunk/dports/\(category)/\(item.name)/Portfile"
-        } else {
-            return "http://trac.macports.org/timeline"
-        }
+    override func log(item: GItem) -> String {
+        let category = item.categories!.split()[0]
+        return "http://trac.macports.org/log/trunk/dports/\(category)/\(item.name)/Portfile"
     }
     
     override func contents(item: GItem) -> String {

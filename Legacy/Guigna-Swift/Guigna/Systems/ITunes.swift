@@ -6,6 +6,7 @@ class ITunes: GSystem {
         super.init(name: "iTunes", agent: agent)
         prefix = "" // TODO
         homepage = "https://itunes.apple.com/genre/ios/id36?mt=8"
+        logpage = "https://itunes.apple.com/genre/ios/id36?mt=8"
         cmd = "/Applications/iTunes.app/Contents/MacOS/iTunes"
     }
     
@@ -86,21 +87,17 @@ class ITunes: GSystem {
         }
     }
     
-    override func log(item: GItem!) -> String {
-        if item == nil {
-            return self.homepage
-        } else {
-            let ipa = "~/Music/iTunes/iTunes Media/Mobile Applications/\(item.id).ipa".stringByExpandingTildeInPath
-            var escapedIpa = ipa.stringByReplacingOccurrencesOfString(" ", withString: "__")
-            var plist = output("/usr/bin/unzip -p \(escapedIpa) iTunesMetadata.plist")
-            if  plist == "" { // binary plist
-                escapedIpa = ipa.stringByReplacingOccurrencesOfString(" ", withString: "\\__")
-                plist = output("/bin/sh -c /usr/bin/unzip__-p__\(escapedIpa)__iTunesMetadata.plist__|__plutil__-convert__xml1__-o__-__-")
-            }
-            let metadata = plist.propertyList() as! NSDictionary
-            let itemId: Int = metadata["itemId"]! as! Int
-            return "http://itunes.apple.com/app/id\(itemId)"
+    override func log(item: GItem) -> String {
+        let ipa = "~/Music/iTunes/iTunes Media/Mobile Applications/\(item.id).ipa".stringByExpandingTildeInPath
+        var escapedIpa = ipa.stringByReplacingOccurrencesOfString(" ", withString: "__")
+        var plist = output("/usr/bin/unzip -p \(escapedIpa) iTunesMetadata.plist")
+        if  plist == "" { // binary plist
+            escapedIpa = ipa.stringByReplacingOccurrencesOfString(" ", withString: "\\__")
+            plist = output("/bin/sh -c /usr/bin/unzip__-p__\(escapedIpa)__iTunesMetadata.plist__|__plutil__-convert__xml1__-o__-__-")
         }
+        let metadata = plist.propertyList() as! NSDictionary
+        let itemId: Int = metadata["itemId"]! as! Int
+        return "http://itunes.apple.com/app/id\(itemId)"
     }
     
     override func contents(item: GItem) -> String {

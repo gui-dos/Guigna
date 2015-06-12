@@ -12,6 +12,7 @@
     self = [super initWithName:@"Rudix" agent:agent];
     if (self) {
         self.homepage = @"http://rudix.org/";
+        self.logpage = @"https://github.com/rudix-mac/rudix/commits";
         self.cmd = [NSString stringWithFormat:@"%@/bin/rudix", self.prefix];
     }
     return self;
@@ -118,11 +119,7 @@
 }
 
 - (NSString *)log:(GItem *)item {
-    if (item != nil ) {
-        return [NSString stringWithFormat:@"https://github.com/rudix-mac/rudix/commits/master/Ports/%@", item.name];
-    } else {
-        return @"https://github.com/rudix-mac/rudix/commits";
-    }
+    return [NSString stringWithFormat:@"https://github.com/rudix-mac/rudix/commits/master/Ports/%@", item.name];
 }
 
 - (NSString *)contents:(GItem *)item {

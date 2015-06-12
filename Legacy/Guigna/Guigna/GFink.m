@@ -13,6 +13,8 @@
     self = [super initWithName:@"Fink" agent:agent];
     if (self) {
         self.homepage = @"http://www.finkproject.org";
+        self.logpage = @"http://www.finkproject.org/package-updates.php";
+        // @"http://github.com/fink/fink/commits/master"
         self.cmd = [NSString stringWithFormat:@"%@/bin/fink", self.prefix];
     }
     return self;
@@ -173,11 +175,7 @@
 }
 
 - (NSString *)log:(GItem *)item {
-    if (item != nil)
-        return [NSString stringWithFormat: @"http://pdb.finkproject.org/pdb/package.php/%@", item.name];
-    else
-        return @"http://www.finkproject.org/package-updates.php";
-    // @"http://github.com/fink/fink/commits/master"
+    return [NSString stringWithFormat: @"http://pdb.finkproject.org/pdb/package.php/%@", item.name];
 }
 
 - (NSString *)contents:(GItem *)item {
