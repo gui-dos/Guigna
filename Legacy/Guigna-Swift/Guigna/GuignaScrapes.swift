@@ -90,7 +90,10 @@ class Freecode: GScrape {
                 for node in nodes {
                     let titleNodes = node["h3/a/node()"]
                     let name = titleNodes[0].stringValue!
-                    let version = titleNodes[2].stringValue!
+                    var version = ""
+                    if titleNodes.count > 2 {
+                        version = titleNodes[2].stringValue!
+                    }
                     let id = node["h3/a"][0].href.lastPathComponent
                     let home = node[".//a[@itemprop='url']"][0].href
                     let description = node[".//p[@itemprop='featureList']"][0].stringValue!

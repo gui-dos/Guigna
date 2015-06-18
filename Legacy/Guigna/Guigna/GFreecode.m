@@ -26,7 +26,9 @@
     for (id node in nodes) {
         NSArray *titleNodes = node[@"h3/a/node()"];
         NSString *name = [titleNodes[0] stringValue];
-        NSString *version = [titleNodes[2] stringValue];
+        NSString *version = @"";
+        if ([titleNodes count] > 2)
+            version = [titleNodes[2] stringValue];
         NSString *ID = [[node[@"h3/a"][0] href] lastPathComponent];
         NSString *homepage = [node[@".//a[@itemprop='url']"][0] href];
         NSString *description = [node[@".//p[@itemprop='featureList']"][0] stringValue];
