@@ -122,6 +122,8 @@ class GSourceTransformer: NSValueTransformer {
             return NSImage(named: "source-pypi.tiff")
         case "RubyGems":
             return NSImage(named: "source-rubygems.tiff")
+        case "CocoaPods":
+            return NSImage(named: "source-cocoapods.tiff")
         case "MacUpdate":
             return NSImage(named: "source-macupdate.tiff")
         case "AppShopper":

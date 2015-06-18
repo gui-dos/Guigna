@@ -164,6 +164,52 @@ class Debian: GScrape {
 }
 
 
+class CocoaPods: GScrape {
+    
+    init(agent: GAgent) {
+        super.init(name: "CocoaPods", agent: agent)
+        homepage = "http://www.cocoapods.org"
+        itemsPerPage = 25
+        cmd = "pod"
+    }
+    
+    override func refresh() {
+        var pods = [GItem]()
+        let url = NSURL(string: "https://feeds.cocoapods.org/new-pods.rss")!
+        if let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyXML), error: nil) {
+            var nodes = xmlDoc.rootElement()!["//item"]
+            for node in nodes {
+                let name = node["title"][0].stringValue!
+                let htmlDescription = node["description"][0].stringValue!
+                let descriptionNode = NSXMLDocument(XMLString: htmlDescription, options: Int(NSXMLDocumentTidyHTML), error: nil)!.rootElement()!
+                let description = descriptionNode[".//p"][1].stringValue!
+                var license = descriptionNode[".//li[starts-with(.,'License:')]"][0].stringValue!
+                license = license.substringFromIndex(9)
+                var version = descriptionNode[".//li[starts-with(.,'Latest version:')]"][0].stringValue!
+                version = version.substringFromIndex(15)
+                var home = descriptionNode[".//li[starts-with(.,'Homepage:')]/a"][0].stringValue!
+                var date = node["pubDate"][0].stringValue!
+                date = date.substring(4, 12)
+                let pod = GItem(name: name, version: version, source: self, status: .Available)
+                pod.description = description
+                pod.homepage = home
+                pod.license = license
+                pods.append(pod)
+            }
+        }
+        items = pods
+    }
+    
+    override func home(item: GItem) -> String {
+        return item.homepage
+    }
+    
+    override func log(item: GItem) -> String {
+        return "http://github.com/CocoaPods/Specs/tree/master/Specs/\(item.name)"
+    }
+}
+
+
 class PyPI: GScrape {
     
     init(agent: GAgent) {

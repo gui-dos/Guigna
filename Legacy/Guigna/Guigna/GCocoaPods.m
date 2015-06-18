@@ -28,14 +28,13 @@
         NSString *htmlDescription = [node[@"description"][0] stringValue];
         NSXMLElement *descriptionNode = [[[NSXMLDocument alloc] initWithXMLString:htmlDescription options:NSXMLDocumentTidyHTML error:nil] rootElement];
         NSString *description = [descriptionNode[@".//p"][1] stringValue];
-        // TODO: extract version
         NSString *license = [descriptionNode[@".//li[starts-with(.,'License:')]"][0] stringValue];
         license = [license substringFromIndex: 9];
         NSString *version = [descriptionNode[@".//li[starts-with(.,'Latest version:')]"][0] stringValue];
         version = [version substringFromIndex: 15];
         NSString *home = [descriptionNode[@".//li[starts-with(.,'Homepage:')]/a"][0] href];
         NSString *date = [node[@"pubDate"][0] stringValue];
-        date = [date substringWithRange:NSMakeRange(4,12)];
+        date = [date substringWithRange:NSMakeRange(4, 12)];
         GItem *pod = [[GItem alloc] initWithName:name
                                          version:version
                                           source:self
@@ -54,11 +53,7 @@
 
 
 - (NSString *)log:(GItem *)item {
-    if (item != nil ) {
-        return [NSString stringWithFormat:@"http://github.com/CocoaPods/Specs/tree/master/Specs/%@", item.name];
-    } else {
-        return @"http://github.com/CocoaPods/Specs/commits";
-    }
+    return [NSString stringWithFormat:@"http://github.com/CocoaPods/Specs/tree/master/Specs/%@", item.name];
 }
 
 /*
