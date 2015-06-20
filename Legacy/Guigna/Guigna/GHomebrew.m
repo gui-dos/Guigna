@@ -180,18 +180,24 @@
 }
 
 - (NSString *)home:(GItem *)item {
+    NSString *page;
     if (self.isHidden) {
-        NSString *homepage;
         for (NSString *line in [[self cat:item] split:@"\n"]) {
             NSUInteger idx = [line index:@"homepage"];
             if (idx != NSNotFound) {
-                homepage = [[line substringFromIndex:idx + 8] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-                if ([homepage contains:@"http"])
-                    return [homepage stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"'\""]];
+                page = [[line substringFromIndex:idx + 8] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+                if ([page contains:@"http"])
+                    return [page stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"'\""]];
             }
         }
-    } else if (!self.isHidden && ((GPackage *)item).repo == nil)
-        return [[self outputFor:@"%@ info %@", self.cmd, item.name] split:@"\n"][2];
+    } else if (!self.isHidden && ((GPackage *)item).repo == nil) {
+        NSArray *outputLines = [[self outputFor:@"%@ info %@", self.cmd, item.name] split:@"\n"];
+        page = outputLines[2];
+        if (![page hasPrefix:@"http"]) {  // desc line is missing
+            page = outputLines[1];
+        }
+        return page;
+    }
     return [self log:item];
 }
 

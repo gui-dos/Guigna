@@ -15,7 +15,7 @@ TODO
 * Swift:
     - complete port of inactive packages management
 * Make use of Storyboards and ViewControllers
-* Preload a cached index to spped up startup
+* Preload a cached index to speed up startup
 * Core Data, predicate editor
 * GTasks, Stop button, exception handling
 * Alternative use of PrivilegedHelperTools and XPC

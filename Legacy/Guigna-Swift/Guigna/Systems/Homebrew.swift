@@ -173,20 +173,25 @@ class Homebrew: GSystem {
     }
     
     override func home(item: GItem) -> String {
+        var page = ""
         if self.isHidden {
-            var homepage = ""
             for line in cat(item).split("\n") {
                 let idx = line.index("homepage")
                 if idx != NSNotFound {
-                    homepage = line.substringFromIndex(idx + 8).stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
-                    if homepage.contains("http") {
-                        return homepage.stringByTrimmingCharactersInSet(NSCharacterSet(charactersInString: "'\""))
+                    page = line.substringFromIndex(idx + 8).stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+                    if page.contains("http") {
+                        return page.stringByTrimmingCharactersInSet(NSCharacterSet(charactersInString: "'\""))
                     }
                 }
             }
         } else {
             if !self.isHidden && (item as! GPackage).repo == nil {
-                return output("\(cmd) info \(item.name)").split("\n")[2]
+                let outputLines = output("\(cmd) info \(item.name)").split("\n")
+                page = outputLines[2]
+                if !page.hasPrefix("http") { // desc line is missign
+                    page = outputLines[1]
+                }
+                return page
             }
         }
         return log(item)
