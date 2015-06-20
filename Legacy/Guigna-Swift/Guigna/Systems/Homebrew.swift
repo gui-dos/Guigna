@@ -17,16 +17,20 @@ class Homebrew: GSystem {
         
         // /usr/bin/ruby -C /usr/local/Library/Homebrew -I. -e "require 'global'; require 'formula'; Formula.each {|f| puts \"#{f.name} #{f.pkg_version}\"}"
         
-        var outputLines = output("/usr/bin/ruby -C \(prefix)/Library/Homebrew -I. -e require__'global';require__'formula';__Formula.each__{|f|__puts__\"#{f.name}__#{f.pkg_version}__#{f.bottle}\"}").split("\n")
+        var outputLines = output("/usr/bin/ruby -C \(prefix)/Library/Homebrew -I. -e require__'global';require__'formula';__Formula.each__{|f|__puts__\"#{f.name}|#{f.pkg_version}|#{f.bottle}|#{f.desc}\"}").split("\n")
         outputLines.removeLast()
         for line in outputLines {
-            let components = line.split()
+            let components = line.split("|")
             let name = components[0]
             let version = components[1]
             let bottle = components[2]
+            var desc = components[3]
             let pkg = GPackage(name: name, version: version, system: self, status: .Available)
             if bottle != "" {
-                pkg.description = "Bottle"
+                desc = "🍶\(desc)"
+            }
+            if desc != "" {
+                pkg.description = desc
             }
             items.append(pkg)
             self[name] = pkg
@@ -182,7 +186,7 @@ class Homebrew: GSystem {
             }
         } else {
             if !self.isHidden && (item as! GPackage).repo == nil {
-                return output("\(cmd) info \(item.name)").split("\n")[1]
+                return output("\(cmd) info \(item.name)").split("\n")[2]
             }
         }
         return log(item)
@@ -293,8 +297,8 @@ class Homebrew: GSystem {
     class var setupCmd: String! {
         get {
             return "ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)\" ; /usr/local/bin/brew update"
-        
-		}
+            
+        }
     }
     
     class var removeCmd: String! {

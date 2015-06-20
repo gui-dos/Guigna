@@ -15,8 +15,10 @@ TODO
 * Swift:
     - complete port of inactive packages management
 * Make use of Storyboards and ViewControllers
+* Preload a cached index to spped up startup
 * Core Data, predicate editor
 * GTasks, Stop button, exception handling
+* Alternative use of PrivilegedHelperTools and XPC
 * Async URL fetches, download manager
 * mdfind 'kMDItemContentType==com.apple.application-bundle'
 * Manage --force flags
@@ -35,7 +37,7 @@ TODO
 * Monitor displaying background tasks
 * Launch/Run action, detecting binaries
 * Scriptability
-* launchd and preferences/plists editor
+* Editor for launchd and preferences plists
 * GPython and GRuby systems
 * JPortsGUI good ideas:
     Sort MacPorts by date
@@ -43,7 +45,7 @@ TODO
     Get favicon.ico
 * Progress indicator in the dock tile
 * Back/Forward buttons for WebView
-* GSystem.search() using cmd's output'
+* GSystem.search() using cmd's output
 * Dependencies analysis (MacPorts -y, Homebrew "missing")
 * Adding marks and pins while browsing scrapes
 * Option not to hide prefixes
@@ -53,6 +55,7 @@ TODO
 * Freecode log->home
 * http://opensourcemac.org, http://www.freesmug.org/
 * http://packages.gentoo.org/arch/x64-macos?arches=prefix
+* Formula/Portfile editor
 * npm, CPAN
 * GNOME and MAMP server presets
 

@@ -24,18 +24,21 @@
     
     // /usr/bin/ruby -C /usr/local/Library/Homebrew -I. -e "require 'global'; require 'formula'; Formula.each {|f| puts \"#{f.name} #{f.pkg_version}\"}"
     
-    NSMutableArray *output = [NSMutableArray arrayWithArray:[[self outputFor:@"/usr/bin/ruby -C %@/Library/Homebrew -I. -e require__'global';require__'formula';__Formula.each__{|f|__puts__\"#{f.name}__#{f.pkg_version}__#{f.bottle}\"}", self.prefix] split:@"\n"]];
+    NSMutableArray *output = [NSMutableArray arrayWithArray:[[self outputFor:@"/usr/bin/ruby -C %@/Library/Homebrew -I. -e require__'global';require__'formula';__Formula.each__{|f|__puts__\"#{f.name}|#{f.pkg_version}|#{f.bottle}|#{f.desc}\"}", self.prefix] split:@"\n"]];
     [output removeLastObject];
     for (NSString *line in output) {
-        NSArray *components = [line split];
+        NSArray *components = [line split:@"|"];
         NSString *name = components[0];
         NSString *bottle = components[2];
+        NSString *desc = components[3];
         GPackage *pkg = [[GPackage alloc] initWithName:name
                                                version:components[1]
                                                 system:self
                                                 status:GAvailableStatus];
         if (![bottle is:@""])
-            pkg.description = @"Bottle";
+            desc = [@"🍶" stringByAppendingString:desc];
+        if (![desc is:@""])
+            pkg.description = desc;
         [self.items addObject:pkg];
         self[name] = pkg;
     }
@@ -188,7 +191,7 @@
             }
         }
     } else if (!self.isHidden && ((GPackage *)item).repo == nil)
-        return [[self outputFor:@"%@ info %@", self.cmd, item.name] split:@"\n"][1];
+        return [[self outputFor:@"%@ info %@", self.cmd, item.name] split:@"\n"][2];
     return [self log:item];
 }
 
