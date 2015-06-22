@@ -983,8 +983,8 @@
             
         } else if ([selectedSegment is:@"Shell"]) {
             [tabView selectTabViewItemWithIdentifier:@"log"];
-            [tabView display];
         }
+        [tabView display];
     }
 }
 

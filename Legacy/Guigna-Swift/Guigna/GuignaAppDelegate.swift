@@ -1014,8 +1014,8 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 }
             } else if selectedSegment == "Shell" {
                 tabView.selectTabViewItemWithIdentifier("log")
-                tabView.display()
             }
+            tabView.display()
         }
     }
     
