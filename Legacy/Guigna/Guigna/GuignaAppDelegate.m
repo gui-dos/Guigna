@@ -919,9 +919,15 @@
                 [htmlString appendFormat:@"<img src=\"%@\" border=\"1\">", url];
             }
             [htmlString appendString:@"</body></html>"];
+            [self updateCmdLine:[NSString stringWithFormat:@"screenshots of %@", item.name]];
             [[webView mainFrame] loadHTMLString:htmlString baseURL:nil];
-        } else if (![page is:[webView mainFrameURL]])
-            [webView setMainFrameURL:page];
+        } else {
+            if (![page is:[webView mainFrameURL]]) {
+                [webView setMainFrameURL:page];
+            } else {
+                [self updateCmdLine:page];
+            }
+        }
         
     } else {
         if (item != nil) {
@@ -1000,9 +1006,12 @@
 
 
 - (void)webView:(WebView *)sender didStartProvisionalLoadForFrame:(WebFrame *)frame {
-    [self updateCmdLine:[@"Loading " stringByAppendingFormat:@"%@...", [webView mainFrameURL]]];
+    NSString *url = [webView mainFrameURL];
+    if ([url hasPrefix:@"about:"])
+        url = [cmdline stringValue];
+    [self updateCmdLine:[@"Loading " stringByAppendingFormat:@"%@...", url]];
     if (self.ready && ![[statusField stringValue] hasPrefix:@"Executing"])
-        [self status:[@"Loading " stringByAppendingFormat:@"%@...", [webView mainFrameURL]]];
+        [self status:[@"Loading " stringByAppendingFormat:@"%@...", url]];
 }
 
 - (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame {
@@ -1030,7 +1039,8 @@
     [segmentedControl setSelectedSegment:1];
     selectedSegment = @"Home";
     [tabView display];
-    [self status:[@"Scraping " stringByAppendingFormat:@"%@...", scrape.name]];
+    if (self.ready && ![[statusField stringValue] hasPrefix:@"Executing"])
+        [self status:[@"Scraping " stringByAppendingFormat:@"%@...", scrape.name]];
     NSInteger scrapesCount = [defaults[@"ScrapesCount"] integerValue];
     NSInteger pagesToScrape = ceil(scrapesCount / 1.0 / scrape.itemsPerPage);
     for (int i = 1; i <= pagesToScrape; i++) {

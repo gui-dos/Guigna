@@ -952,9 +952,14 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     htmlString += "<img src=\"\(url)\" border=\"1\">"
                 }
                 htmlString += "</body></html>"
+                updateCmdLine("screenshots of \(item.name)")
                 webView.mainFrame.loadHTMLString(htmlString, baseURL: nil)
-            } else if page != webView.mainFrameURL {
-                webView.mainFrameURL = page
+            } else {
+                if page != webView.mainFrameURL {
+                    webView.mainFrameURL = page
+                } else {
+                    updateCmdLine(page)
+                }
             }
         } else {
             if item != nil {
@@ -1030,9 +1035,13 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     
     
     override func webView(sender: WebView, didStartProvisionalLoadForFrame: WebFrame) {
-        updateCmdLine("Loading \(webView.mainFrameURL)...")
+        var url = webView.mainFrameURL
+        if url.hasPrefix("about:") {
+            url = cmdline.stringValue
+        }
+        updateCmdLine("Loading \(url)...")
         if self.ready && !statusField.stringValue.hasPrefix("Executing") {
-            status("Loading \(webView.mainFrameURL)...")
+            status("Loading \(url)...")
         }
     }
     
@@ -1064,7 +1073,9 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         segmentedControl.selectedSegment = 1
         selectedSegment = "Home"
         tabView.display()
-        status("Scraping \(scrape.name)...")
+        if self.ready && !statusField.stringValue.hasPrefix("Executing") {
+            status("Scraping \(scrape.name)...")
+        }
         let scrapesCount: Int = (defaults["ScrapesCount"] as! NSNumber).integerValue
         let pagesToScrape = Int(ceil(Double(scrapesCount) / Double(scrape.itemsPerPage)))
         for var i = 1; i <= pagesToScrape; ++i {
