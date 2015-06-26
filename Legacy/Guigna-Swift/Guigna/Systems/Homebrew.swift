@@ -134,9 +134,12 @@ class Homebrew: GSystem {
         outputLines.removeLast()
         for line in outputLines {
             let components = line.split()
-            let name = components[0]
+            var name = components[0]
             if name == "Error:" {
                 return pkgs
+            }
+            if name.contains("/") {
+                name = name.lastPathComponent
             }
             var pkg = self[name]
             let latestVersion: String = (pkg == nil) ? "" : pkg.version

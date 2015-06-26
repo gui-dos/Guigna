@@ -152,6 +152,8 @@
         NSString *name = components[0];
         if ([name is:@"Error:"])
             return pkgs;
+        if ([name contains:@"/"])
+            name = [name lastPathComponent];
         GPackage *pkg = self[name];
         NSString *latestVersion = (pkg == nil) ? nil : [pkg.version copy];
         // NSString *version = components[1]; // TODO: strangely, output contains only name
