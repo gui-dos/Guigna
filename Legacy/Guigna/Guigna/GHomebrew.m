@@ -24,21 +24,33 @@
     
     // /usr/bin/ruby -C /usr/local/Library/Homebrew -I. -e "require 'global'; require 'formula'; Formula.each {|f| puts \"#{f.name} #{f.pkg_version}\"}"
     
-    NSMutableArray *output = [NSMutableArray arrayWithArray:[[self outputFor:@"/usr/bin/ruby -C %@/Library/Homebrew -I. -e require__'global';require__'formula';__Formula.each__{|f|__puts__\"#{f.name}|#{f.pkg_version}|#{f.bottle}|#{f.desc}\"}", self.prefix] split:@"\n"]];
+    NSMutableArray *output = [NSMutableArray arrayWithArray:[[self outputFor:@"/usr/bin/ruby -C %@/Library/Homebrew -I. -e require__'global';require__'formula';__Formula.each__{|f|__puts__\"#{f.full_name}|#{f.pkg_version}|#{f.bottle}|#{f.desc}\"}", self.prefix] split:@"\n"]];
     [output removeLastObject];
     for (NSString *line in output) {
         NSArray *components = [line split:@"|"];
-        NSString *name = components[0];
+        NSString *fullName = components[0];
+        NSMutableArray *nameComponents = [NSMutableArray arrayWithArray:[fullName split:@"/"]];
+        NSString *name = [nameComponents lastObject];
+        [nameComponents removeLastObject];
+        NSString *repo = nil;
+        if ([nameComponents count] > 0) {
+            repo = [nameComponents join:@"/"];
+        }
+        NSString *version = components[1];
         NSString *bottle = components[2];
         NSString *desc = components[3];
         GPackage *pkg = [[GPackage alloc] initWithName:name
-                                               version:components[1]
+                                               version:version
                                                 system:self
                                                 status:GAvailableStatus];
         if (![bottle is:@""])
             desc = [@"🍶" stringByAppendingString:desc];
         if (![desc is:@""])
             pkg.description = desc;
+        if (repo != nil) {
+            pkg.categories = [repo lastPathComponent];
+            pkg.repo = repo;
+        }
         [self.items addObject:pkg];
         self[name] = pkg;
     }
@@ -190,7 +202,7 @@
                     return [page stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"'\""]];
             }
         }
-    } else if (!self.isHidden && ((GPackage *)item).repo == nil) {
+    } else {
         NSArray *outputLines = [[self outputFor:@"%@ info %@", self.cmd, item.name] split:@"\n"];
         page = outputLines[2];
         if (![page hasPrefix:@"http"]) {  // desc line is missing
@@ -209,8 +221,9 @@
         NSArray *tokens = [((GPackage *)item).repo split:@"/"];
         NSString *user = tokens[0];
         path = [NSString stringWithFormat:@"%@/homebrew-%@/commits/master", user, tokens[1]];
-        if ([user is:@"josegonzalez"])
+        if ([[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@/Library/Taps/%@/homebrew-%@/Formula", self.prefix, user, tokens[1]]]) {
             path = [path stringByAppendingString:@"/Formula"];
+        }
     }
     return [NSString stringWithFormat:@"http://github.com/%@/%@.rb", path, item.name];
     

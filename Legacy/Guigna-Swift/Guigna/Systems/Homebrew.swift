@@ -17,11 +17,18 @@ class Homebrew: GSystem {
         
         // /usr/bin/ruby -C /usr/local/Library/Homebrew -I. -e "require 'global'; require 'formula'; Formula.each {|f| puts \"#{f.name} #{f.pkg_version}\"}"
         
-        var outputLines = output("/usr/bin/ruby -C \(prefix)/Library/Homebrew -I. -e require__'global';require__'formula';__Formula.each__{|f|__puts__\"#{f.name}|#{f.pkg_version}|#{f.bottle}|#{f.desc}\"}").split("\n")
+        var outputLines = output("/usr/bin/ruby -C \(prefix)/Library/Homebrew -I. -e require__'global';require__'formula';__Formula.each__{|f|__puts__\"#{f.full_name}|#{f.pkg_version}|#{f.bottle}|#{f.desc}\"}").split("\n")
         outputLines.removeLast()
         for line in outputLines {
             let components = line.split("|")
-            let name = components[0]
+            let fullName = components[0]
+            var nameComponents = fullName.split("/")
+            let name = nameComponents.last!
+            nameComponents.removeLast()
+            var repo: String! = nil
+            if nameComponents.count > 0 {
+                repo = nameComponents.join("/")
+            }
             let version = components[1]
             let bottle = components[2]
             var desc = components[3]
@@ -31,6 +38,10 @@ class Homebrew: GSystem {
             }
             if desc != "" {
                 pkg.description = desc
+            }
+            if repo != nil {
+                pkg.categories = repo.lastPathComponent
+                pkg.repo = repo
             }
             items.append(pkg)
             self[name] = pkg
@@ -185,14 +196,12 @@ class Homebrew: GSystem {
                 }
             }
         } else {
-            if !self.isHidden && (item as! GPackage).repo == nil {
-                let outputLines = output("\(cmd) info \(item.name)").split("\n")
-                page = outputLines[2]
-                if !page.hasPrefix("http") { // desc line is missign
-                    page = outputLines[1]
-                }
-                return page
+            let outputLines = output("\(cmd) info \(item.name)").split("\n")
+            page = outputLines[2]
+            if !page.hasPrefix("http") { // desc line is missign
+                page = outputLines[1]
             }
+            return page
         }
         return log(item)
     }
@@ -205,6 +214,9 @@ class Homebrew: GSystem {
             let tokens = (item as! GPackage).repo!.split("/")
             let user = tokens[0]
             path = "\(user)/homebrew-\(tokens[1])/commits/master"
+            if NSFileManager.defaultManager().fileExistsAtPath("\(prefix)/Library/Taps/\(user)/homebrew-\(tokens[1])/Formula") {
+                path += "/Formula"
+            }
         }
         return "http://github.com/\(path)/\(item.name).rb"
     }
