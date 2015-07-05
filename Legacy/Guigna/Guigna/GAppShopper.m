@@ -74,8 +74,8 @@
 
 - (NSString *)log:(GItem *)item {
     NSString *name = [item.ID split][1];
-    NSString *category = [[item.categories stringByReplacingOccurrencesOfString:@" " withString:@"-"] lowercaseString];
-    category = [[category stringByReplacingOccurrencesOfString:@"-&-" withString:@"-"] lowercaseString]; // fix Healthcare & Fitness
+    NSString *category = [[item.categories replace:@" " with:@"-"] lowercaseString];
+    category = [[category replace:@"-&-" with:@"-"] lowercaseString]; // fix Healthcare & Fitness
     return [NSString stringWithFormat:@"http://www.appshopper.com/mac/%@/%@", category, name];
 }
 

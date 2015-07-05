@@ -162,7 +162,7 @@
             version = [version substringToIndex:idx];
         }
         if (variants != nil)
-            version = [NSString stringWithFormat:@"%@ +%@", version, [variants stringByReplacingOccurrencesOfString:@" " withString:@"+"]];
+            version = [NSString stringWithFormat:@"%@ +%@", version, [variants replace:@" " with:@"+"]];
         status = [components count] == 2 ? GInactiveStatus : GUpToDateStatus;
         GPackage *pkg = self[name];
         NSString *latestVersion = (pkg == nil) ? nil : [pkg.version copy];
@@ -243,7 +243,7 @@
         NSString *stringValue;
         for (id key in keys) {
             stringValue = [key stringValue];
-            info = [info stringByReplacingOccurrencesOfString:stringValue withString:[NSString stringWithFormat:@"\n\n%@\n", stringValue]];
+            info = [info replace:stringValue with:[NSString stringWithFormat:@"\n\n%@\n", stringValue]];
         }
         return info;
     }
@@ -335,7 +335,7 @@
     if (variants == nil)
         variants = @"";
     else
-        variants = [@"+" stringByAppendingString:[variants stringByReplacingOccurrencesOfString:@" " withString:@"+"]];
+        variants = [@"+" stringByAppendingString:[variants replace:@" " with:@"+"]];
     return [NSString stringWithFormat:@"sudo %@ install %@ %@", self.cmd, pkg.name, variants];
 }
 

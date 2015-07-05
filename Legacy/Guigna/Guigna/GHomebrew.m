@@ -265,7 +265,7 @@
     NSMutableArray *output = [NSMutableArray arrayWithArray:[[self outputFor:[NSString stringWithFormat:@"%@ options %@", self.cmd, pkg.name]] split:@"\n"]];
     if ([output count] > 1 ) {
         NSArray * optionLines = [output filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF BEGINSWITH '--'"]];
-        options = [[optionLines join] stringByReplacingOccurrencesOfString:@"--" withString:@""];
+        options = [[optionLines join] replace:@"--" with:@""];
     }
     return options;
 }
@@ -281,7 +281,7 @@
     if (options == nil)
         options = @"";
     else
-        options = [@"--" stringByAppendingString:[options stringByReplacingOccurrencesOfString:@" " withString:@" --"]];
+        options = [@"--" stringByAppendingString:[options replace:@" " with:@" --"]];
     
     return [NSString stringWithFormat:@"%@ install %@ %@", self.cmd, options, pkg.name];
 }

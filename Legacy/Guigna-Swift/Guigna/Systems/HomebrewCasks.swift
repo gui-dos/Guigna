@@ -100,7 +100,7 @@ class HomebrewCasks: GSystem {
             return pkgs
         }
         
-        let escapedCmd = cmd.stringByReplacingOccurrencesOfString(" ", withString: "__")
+        let escapedCmd = cmd.replace(" ", "__")
         var outputLines = output("/bin/sh -c export__PATH=\(prefix)/bin:$PATH__;__\(escapedCmd)__list__2>/dev/null").split("\n")
         outputLines.removeLast()
         var status: GStatus
@@ -122,7 +122,7 @@ class HomebrewCasks: GSystem {
             }
             var version = output("/bin/ls /opt/homebrew-cask/Caskroom/\(name)").stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
             // TODO: manage multiple versions
-            version = version.stringByReplacingOccurrencesOfString("\n", withString: ", ")
+            version = version.replace("\n", ", ")
             var pkg: GPackage! = self[name]
             let latestVersion: String! = (pkg == nil) ? "" : pkg.version
             if pkg == nil {
@@ -169,7 +169,7 @@ class HomebrewCasks: GSystem {
     
     
     override func info(item: GItem) -> String {
-        let escapedCmd = cmd.stringByReplacingOccurrencesOfString(" ", withString: "__")
+        let escapedCmd = cmd.replace(" ", "__")
         if !self.isHidden {
             return output("/bin/sh -c export__PATH=\(prefix)/bin:$PATH__;__\(escapedCmd)__info__\(item.name)")
         } else {
@@ -178,7 +178,7 @@ class HomebrewCasks: GSystem {
     }
     
     override func home(item: GItem) -> String {
-        let escapedCmd = cmd.stringByReplacingOccurrencesOfString(" ", withString: "__")
+        let escapedCmd = cmd.replace(" ", "__")
         if self.isHidden {
             var homepage = ""
             for line in cat(item).split("\n") {
@@ -211,7 +211,7 @@ class HomebrewCasks: GSystem {
     }
     
     override func contents(item: GItem) -> String {
-        let escapedCmd = cmd.stringByReplacingOccurrencesOfString(" ", withString: "__")
+        let escapedCmd = cmd.replace(" ", "__")
         if !self.isHidden {
             return output("/bin/sh -c export__PATH=\(prefix)/bin:$PATH__;__\(escapedCmd)__list__\(item.name)")
         } else {
@@ -220,7 +220,7 @@ class HomebrewCasks: GSystem {
     }
     
     override func cat(item: GItem) -> String {
-        let escapedCmd = cmd.stringByReplacingOccurrencesOfString(" ", withString: "__")
+        let escapedCmd = cmd.replace(" ", "__")
         if !self.isHidden {
             return output("/bin/sh -c export__PATH=\(prefix)/bin:$PATH__;__\(escapedCmd)__cat__\(item.name)")
         } else {
@@ -242,7 +242,7 @@ class HomebrewCasks: GSystem {
         if options == nil {
             options = ""
         } else {
-            options = "--" + options.stringByReplacingOccurrencesOfString(" ", withString: " --")
+            options = "--" + options.replace(" ", " --")
         }
         return "\(cmd) install \(options) \(pkg.name)"
     }

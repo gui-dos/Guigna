@@ -111,7 +111,7 @@ class GSystem: GSource {
     }
     
     func verbosifiedCmd(command: String) -> String {
-        return command.stringByReplacingOccurrencesOfString("\(cmd)", withString: "\(cmd) -d")
+        return command.replace("\(cmd)", "\(cmd) -d")
     }
     
     func output(command: String) -> String! {

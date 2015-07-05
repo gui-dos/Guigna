@@ -143,7 +143,7 @@
 }
 
 - (NSString *)verbosifiedCmd:(NSString *)cmd {
-    return [cmd stringByReplacingOccurrencesOfString:self.cmd withString:[NSString stringWithFormat:@"%@ -d", self.cmd]];
+    return [cmd replace:self.cmd with:[NSString stringWithFormat:@"%@ -d", self.cmd]];
 }
 
 @end

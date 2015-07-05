@@ -33,10 +33,10 @@ class ITunes: GSystem {
                     continue
                 }
                 let version = filename.substring(idx + 1, filename.length - idx - 5)
-                var escapedIpa = ipa.stringByReplacingOccurrencesOfString(" ", withString: "__")
+                var escapedIpa = ipa.replace(" ", "__")
                 var plist = output("/usr/bin/unzip -p \(escapedIpa) iTunesMetadata.plist")
                 if  plist == "" { // binary plist
-                    escapedIpa = ipa.stringByReplacingOccurrencesOfString(" ", withString: "\\__")
+                    escapedIpa = ipa.replace(" ", "\\__")
                     plist = output("/bin/sh -c /usr/bin/unzip__-p__\(escapedIpa)__iTunesMetadata.plist__|__plutil__-convert__xml1__-o__-__-")
                 }
                 let metadata = plist.propertyList() as! NSDictionary
@@ -62,10 +62,10 @@ class ITunes: GSystem {
     override func home(item: GItem) -> String {
         var homepage = self.homepage
         let ipa = "~/Music/iTunes/iTunes Media/Mobile Applications/\(item.id).ipa".stringByExpandingTildeInPath
-        var escapedIpa = ipa.stringByReplacingOccurrencesOfString(" ", withString: "__")
+        var escapedIpa = ipa.replace(" ", "__")
         var plist = output("/usr/bin/unzip -p \(escapedIpa) iTunesMetadata.plist")
         if  plist == "" { // binary plist
-            escapedIpa = ipa.stringByReplacingOccurrencesOfString(" ", withString: "\\__")
+            escapedIpa = ipa.replace(" ", "\\__")
             plist = output("/bin/sh -c /usr/bin/unzip__-p__\(escapedIpa)__iTunesMetadata.plist__|__plutil__-convert__xml1__-o__-__-")
         }
         let metadata = plist.propertyList() as! NSDictionary
@@ -89,10 +89,10 @@ class ITunes: GSystem {
     
     override func log(item: GItem) -> String {
         let ipa = "~/Music/iTunes/iTunes Media/Mobile Applications/\(item.id).ipa".stringByExpandingTildeInPath
-        var escapedIpa = ipa.stringByReplacingOccurrencesOfString(" ", withString: "__")
+        var escapedIpa = ipa.replace(" ", "__")
         var plist = output("/usr/bin/unzip -p \(escapedIpa) iTunesMetadata.plist")
         if  plist == "" { // binary plist
-            escapedIpa = ipa.stringByReplacingOccurrencesOfString(" ", withString: "\\__")
+            escapedIpa = ipa.replace(" ", "\\__")
             plist = output("/bin/sh -c /usr/bin/unzip__-p__\(escapedIpa)__iTunesMetadata.plist__|__plutil__-convert__xml1__-o__-__-")
         }
         let metadata = plist.propertyList() as! NSDictionary
@@ -102,16 +102,16 @@ class ITunes: GSystem {
     
     override func contents(item: GItem) -> String {
         let ipa = "~/Music/iTunes/iTunes Media/Mobile Applications/\(item.id).ipa".stringByExpandingTildeInPath
-        let escapedIpa = ipa.stringByReplacingOccurrencesOfString(" ", withString: "__")
+        let escapedIpa = ipa.replace(" ", "__")
         return output("/usr/bin/zipinfo -1 \(escapedIpa)")
     }
     
     override func cat(item: GItem) -> String {
         let ipa = "~/Music/iTunes/iTunes Media/Mobile Applications/\(item.id).ipa".stringByExpandingTildeInPath
-        var escapedIpa = ipa.stringByReplacingOccurrencesOfString(" ", withString: "__")
+        var escapedIpa = ipa.replace(" ", "__")
         var plist = output("/usr/bin/unzip -p \(escapedIpa) iTunesMetadata.plist")
         if  plist == "" { // binary plist
-            escapedIpa = ipa.stringByReplacingOccurrencesOfString(" ", withString: "\\__")
+            escapedIpa = ipa.replace(" ", "\\__")
             plist = output("/bin/sh -c /usr/bin/unzip__-p__\(escapedIpa)__iTunesMetadata.plist__|__plutil__-convert__xml1__-o__-__-")
         }
         let metadata = plist.propertyList() as! NSDictionary

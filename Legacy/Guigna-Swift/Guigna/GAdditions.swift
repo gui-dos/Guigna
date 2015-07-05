@@ -80,6 +80,10 @@ extension String {
         return self.componentsSeparatedByString(delimiter)
     }
     
+    func replace(string: String, _ replacement: String) -> String {
+        return self.stringByReplacingOccurrencesOfString(string, withString: replacement)
+    }
+    
 }
 
 

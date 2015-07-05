@@ -38,9 +38,9 @@
         if (idx == NSNotFound)
             continue;
         NSString *version = [filename substringWithRange:NSMakeRange(idx + 1, [filename length] - idx - 5)];
-        NSString *plist = [self outputFor:@"/usr/bin/unzip -p %@ iTunesMetadata.plist", [ipa stringByReplacingOccurrencesOfString:@" " withString:@"__"]];
+        NSString *plist = [self outputFor:@"/usr/bin/unzip -p %@ iTunesMetadata.plist", [ipa replace:@" " with:@"__"]];
         if (plist == nil) // binary plist
-            plist = [self outputFor:@"/bin/sh -c /usr/bin/unzip__-p__%@__iTunesMetadata.plist__|__plutil__-convert__xml1__-o__-__-", [ipa stringByReplacingOccurrencesOfString:@" " withString:@"\\__"]];
+            plist = [self outputFor:@"/bin/sh -c /usr/bin/unzip__-p__%@__iTunesMetadata.plist__|__plutil__-convert__xml1__-o__-__-", [ipa replace:@" " with:@"\\__"]];
         NSDictionary *metadata = [plist propertyList];
         NSString *name = metadata[@"itemName"];
         GPackage *pkg = [[GPackage alloc] initWithName:name
@@ -83,9 +83,9 @@
 - (NSString *)home:(GItem *)item {
     NSString *homepage = self.homepage;
     NSString *ipa = [[NSString stringWithFormat:@"~/Music/iTunes/iTunes Media/Mobile Applications/%@.ipa", item.ID] stringByExpandingTildeInPath];
-    NSString *plist = [self outputFor:@"/usr/bin/unzip -p %@ iTunesMetadata.plist", [ipa stringByReplacingOccurrencesOfString:@" " withString:@"__"]];
+    NSString *plist = [self outputFor:@"/usr/bin/unzip -p %@ iTunesMetadata.plist", [ipa replace:@" " with:@"__"]];
     if (plist == nil) // binary plist
-        plist = [self outputFor:@"/bin/sh -c /usr/bin/unzip__-p__%@__iTunesMetadata.plist__|__plutil__-convert__xml1__-o__-__-", [ipa stringByReplacingOccurrencesOfString:@" " withString:@"\\__"]];
+        plist = [self outputFor:@"/bin/sh -c /usr/bin/unzip__-p__%@__iTunesMetadata.plist__|__plutil__-convert__xml1__-o__-__-", [ipa replace:@" " with:@"\\__"]];
     NSDictionary *metadata = [plist propertyList];
     NSNumber *itemId = metadata[@"itemId"];
     id mainDiv =[self.agent nodesForURL:[NSString stringWithFormat:@"http://itunes.apple.com/app/id%@",itemId] XPath:@"//div[@id=\"main\"]"][0];
@@ -110,25 +110,25 @@
 
 - (NSString *)log:(GItem *)item {
     NSString *ipa = [[NSString stringWithFormat:@"~/Music/iTunes/iTunes Media/Mobile Applications/%@.ipa", item.ID] stringByExpandingTildeInPath];
-    NSString *plist = [self outputFor:@"/usr/bin/unzip -p %@ iTunesMetadata.plist", [ipa stringByReplacingOccurrencesOfString:@" " withString:@"__"]];
+    NSString *plist = [self outputFor:@"/usr/bin/unzip -p %@ iTunesMetadata.plist", [ipa replace:@" " with:@"__"]];
     if (plist == nil) // binary plist
-        plist = [self outputFor:@"/bin/sh -c /usr/bin/unzip__-p__%@__iTunesMetadata.plist__|__plutil__-convert__xml1__-o__-__-", [ipa stringByReplacingOccurrencesOfString:@" " withString:@"\\__"]];
+        plist = [self outputFor:@"/bin/sh -c /usr/bin/unzip__-p__%@__iTunesMetadata.plist__|__plutil__-convert__xml1__-o__-__-", [ipa replace:@" " with:@"\\__"]];
     NSDictionary *metadata = [plist propertyList];
     NSNumber *itemId = metadata[@"itemId"];
     return [NSString stringWithFormat:@"http://itunes.apple.com/app/id%@", itemId];
 }
 
 - (NSString *)contents:(GItem *)item {
-    NSString *ipa = [[[NSString stringWithFormat:@"~/Music/iTunes/iTunes Media/Mobile Applications/%@.ipa", item.ID] stringByExpandingTildeInPath] stringByReplacingOccurrencesOfString:@" " withString:@"__"];
+    NSString *ipa = [[[NSString stringWithFormat:@"~/Music/iTunes/iTunes Media/Mobile Applications/%@.ipa", item.ID] stringByExpandingTildeInPath] replace:@" " with:@"__"];
     NSString *output = [self outputFor:@"/usr/bin/zipinfo -1 %@", ipa];
     return output;
 }
 
 - (NSString *)cat:(GItem *)item {
     NSString *ipa = [[NSString stringWithFormat:@"~/Music/iTunes/iTunes Media/Mobile Applications/%@.ipa", item.ID] stringByExpandingTildeInPath];
-    NSString *plist = [self outputFor:@"/usr/bin/unzip -p %@ iTunesMetadata.plist", [ipa stringByReplacingOccurrencesOfString:@" " withString:@"__"]];
+    NSString *plist = [self outputFor:@"/usr/bin/unzip -p %@ iTunesMetadata.plist", [ipa replace:@" " with:@"__"]];
     if (plist == nil) // binary plist
-        plist = [self outputFor:@"/bin/sh -c /usr/bin/unzip__-p__%@__iTunesMetadata.plist__|__plutil__-convert__xml1__-o__-__-", [ipa stringByReplacingOccurrencesOfString:@" " withString:@"\\__"]];
+        plist = [self outputFor:@"/bin/sh -c /usr/bin/unzip__-p__%@__iTunesMetadata.plist__|__plutil__-convert__xml1__-o__-__-", [ipa replace:@" " with:@"\\__"]];
     NSDictionary *metadata = [plist propertyList];
     return [metadata description];
 }

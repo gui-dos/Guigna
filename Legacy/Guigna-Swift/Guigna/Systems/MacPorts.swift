@@ -153,7 +153,7 @@ class MacPorts: GSystem {
                 version = version.substringToIndex(idx)
             }
             if variants != nil {
-                variants = variants.stringByReplacingOccurrencesOfString(" ", withString: "+")
+                variants = variants.replace(" ", "+")
                 version = "\(version) \(variants)"
             }
             status = components.count == 2 ? .Inactive : .UpToDate
@@ -250,7 +250,7 @@ class MacPorts: GSystem {
             var stringValue: String!
             for key in keys {
                 stringValue = key.stringValue!
-                info = info.stringByReplacingOccurrencesOfString(stringValue, withString: "\n\n\(stringValue)\n")
+                info = info.replace(stringValue, "\n\n\(stringValue)\n")
             }
             return info
         }
@@ -331,7 +331,7 @@ class MacPorts: GSystem {
         if variants == nil {
             variants = ""
         } else {
-            variants = "+" + variants.stringByReplacingOccurrencesOfString(" ", withString: "+")
+            variants = "+" + variants.replace(" ", "+")
         }
         return "sudo \(cmd) install \(pkg.name) \(variants)"
     }

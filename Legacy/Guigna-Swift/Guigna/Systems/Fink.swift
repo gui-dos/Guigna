@@ -248,7 +248,7 @@ class Fink: GSystem {
     }
     
     override func verbosifiedCmd(command: String) -> String  {
-        return cmd.stringByReplacingOccurrencesOfString(cmd, withString: "\(cmd) -v")
+        return cmd.replace(cmd, "\(cmd) -v")
     }
 }
 

@@ -261,7 +261,7 @@ class Homebrew: GSystem {
         let outputLines = output("\(cmd) options \(pkg.name)").split("\n")
         if outputLines.count > 1  {
             let optionLines = outputLines.filter { $0.hasPrefix("--") }
-            options = optionLines.join().stringByReplacingOccurrencesOfString("--", withString: "")
+            options = optionLines.join().replace("--", "")
         }
         return options
     }
@@ -272,7 +272,7 @@ class Homebrew: GSystem {
         if options == nil {
             options = ""
         } else {
-            options = "--" + options.stringByReplacingOccurrencesOfString(" ", withString: " --")
+            options = "--" + options.replace(" ", " --")
         }
         return "\(cmd) install \(options) \(pkg.name)"
     }

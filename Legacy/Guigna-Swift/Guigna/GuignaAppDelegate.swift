@@ -433,7 +433,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         var history = shell.valueForKey("history") as! String
         if adminPassword != nil {
             let sudoCommand = "echo \"\(adminPassword!)\" | sudo -S"
-            history = history.stringByReplacingOccurrencesOfString(sudoCommand, withString: "sudo")
+            history = history.replace(sudoCommand, "sudo")
         }
         history = history.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
         log(history + "\n")
@@ -1216,7 +1216,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 cmd = tokens.join()
                 log("😺===> \(cmd)\n")
                 status("Executing '\(cmd)'...")
-                cmd = cmd.stringByReplacingOccurrencesOfString(" ", withString: "__")
+                cmd = cmd.replace(" ", "__")
                 cmd = "/bin/bash -l -c \(cmd)"
                 output = agent.output(cmd)
                 if self.ready {
@@ -1238,7 +1238,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         if let system = item.system {
             var idx = find(system.availableCommands().map {$0[0]}, title)
             var command = system.availableCommands()[idx!][1]
-            command = command.stringByReplacingOccurrencesOfString("CMD", withString: system.cmd.lastPathComponent)
+            command = command.replace("CMD", system.cmd.lastPathComponent)
             updateCmdLine(command)
             executeCmdLine(sender)
         }
@@ -1259,7 +1259,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
         
         if adminPassword != nil {
-            command = command.stringByReplacingOccurrencesOfString("sudo", withString:"echo \"\(adminPassword!)\" | sudo -S")
+            command = command.replace("sudo", "echo \"\(adminPassword!)\" | sudo -S")
         }
         raiseShell(self)
         terminal.doScript(command, `in`:self.shell)

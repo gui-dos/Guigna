@@ -45,7 +45,7 @@ class MacOSX: GSystem {
             let name = dict["displayName"]! as! String
             var version = dict["displayVersion"]! as! String
             var category = dict["processName"]! as! String
-            category = category.stringByReplacingOccurrencesOfString(" ", withString: "").lowercaseString
+            category = category.replace(" ", "").lowercaseString
             if category == "installer" {
                 let infoOutput = output("/usr/sbin/pkgutil --pkg-info-plist \(ids[0])")
                 if infoOutput != "" {

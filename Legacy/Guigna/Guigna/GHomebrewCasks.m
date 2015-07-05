@@ -105,7 +105,7 @@
         if (status != GUpdatedStatus && status != GNewStatus)
             pkg.status = GAvailableStatus;
     }
-    NSMutableArray *output = [NSMutableArray arrayWithArray:[[self outputFor:@"/bin/sh -c export__PATH=%@/bin:$PATH__;__%@__list__2>/dev/null", self.prefix, [self.cmd stringByReplacingOccurrencesOfString:@" " withString:@"__"]] split:@"\n"]];
+    NSMutableArray *output = [NSMutableArray arrayWithArray:[[self outputFor:@"/bin/sh -c export__PATH=%@/bin:$PATH__;__%@__list__2>/dev/null", self.prefix, [self.cmd replace:@" " with:@"__"]] split:@"\n"]];
     [output removeLastObject];
     NSString *name;
     NSString *version;
@@ -115,7 +115,7 @@
             return pkgs;
         version = [[self outputFor:[NSString stringWithFormat:@"/bin/ls /opt/homebrew-cask/Caskroom/%@", name]] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         // TODO: manage multiple versions
-        version = [version stringByReplacingOccurrencesOfString:@"\n" withString:@", "];
+        version = [version replace:@"\n" with:@", "];
         GPackage *pkg = self[name];
         NSString *latestVersion = (pkg == nil) ? nil : [pkg.version copy];
         if (pkg == nil) {
@@ -153,7 +153,7 @@
 
 - (NSString *)info:(GItem *)item {
     if (!self.isHidden)
-        return [self outputFor:@"/bin/sh -c export__PATH=%@/bin:$PATH__;__%@__info__%@", self.prefix, [self.cmd stringByReplacingOccurrencesOfString:@" " withString:@"__"], item.name];
+        return [self outputFor:@"/bin/sh -c export__PATH=%@/bin:$PATH__;__%@__info__%@", self.prefix, [self.cmd replace:@" " with:@"__"], item.name];
     else
         return [super info:item];
 }
@@ -170,7 +170,7 @@
             }
         }
     } else if (!self.isHidden && ((GPackage *)item).repo == nil)
-        return [[self outputFor:@"/bin/sh -c export__PATH=%@/bin:$PATH__;__%@__info__%@", self.prefix, [self.cmd stringByReplacingOccurrencesOfString:@" " withString:@"__"], item.name] split:@"\n"][2];
+        return [[self outputFor:@"/bin/sh -c export__PATH=%@/bin:$PATH__;__%@__info__%@", self.prefix, [self.cmd replace:@" " with:@"__"], item.name] split:@"\n"][2];
     return [self log:item];
 }
 
@@ -196,16 +196,16 @@
 
 - (NSString *)contents:(GItem *)item {
     if (!self.isHidden)
-        return [self outputFor:@"/bin/sh -c export__PATH=%@/bin:$PATH__;__%@__list__%@", self.prefix, [self.cmd stringByReplacingOccurrencesOfString:@" " withString:@"__"], item.name];
+        return [self outputFor:@"/bin/sh -c export__PATH=%@/bin:$PATH__;__%@__list__%@", self.prefix, [self.cmd replace:@" " with:@"__"], item.name];
     else
         return @"";
 }
 
 - (NSString *)cat:(GItem *)item {
     if (!self.isHidden)
-        return [self outputFor:@"/bin/sh -c export__PATH=%@/bin:$PATH__;__%@__cat__%@", self.prefix, [self.cmd stringByReplacingOccurrencesOfString:@" " withString:@"__"], item.name];
+        return [self outputFor:@"/bin/sh -c export__PATH=%@/bin:$PATH__;__%@__cat__%@", self.prefix, [self.cmd replace:@" " with:@"__"], item.name];
     // Doesn't work in RubyMotion:
-    // return [self outputFor:@"/bin/sh -c export__PATH=%@/bin:$PATH__;__export__EDITOR=/bin/cat__;__%@__edit__%@", self.prefix, [self.cmd stringByReplacingOccurrencesOfString:@" " withString:@"__"], item.name];
+    // return [self outputFor:@"/bin/sh -c export__PATH=%@/bin:$PATH__;__export__EDITOR=/bin/cat__;__%@__edit__%@", self.prefix, [self.cmd replace:@" " with:@"__"], item.name];
     else
         return [NSString stringWithContentsOfFile:[NSString stringWithFormat:@"%@_off/Library/Taps/caskroom/homebrew-cask/Casks/%@.rb", self.prefix, item.name] encoding:NSUTF8StringEncoding error:nil];
 }
@@ -229,7 +229,7 @@
     if (options == nil)
         options = @"";
     else
-        options = [@"--" stringByAppendingString:[options stringByReplacingOccurrencesOfString:@" " withString:@" --"]];
+        options = [@"--" stringByAppendingString:[options replace:@" " with:@" --"]];
     
     return [NSString stringWithFormat:@"%@ install %@ %@", self.cmd, options, pkg.name];
 }

@@ -42,6 +42,10 @@
     return [self componentsSeparatedByString:delimiter];
 }
 
+- (NSString *)replace:(NSString *)string with:(NSString*)replacement {
+    return [self stringByReplacingOccurrencesOfString:string withString:replacement];
+}
+
 @end
 
 

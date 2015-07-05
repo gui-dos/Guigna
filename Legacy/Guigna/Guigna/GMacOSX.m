@@ -46,7 +46,7 @@
             continue;
         NSString *name = dict[@"displayName"];
         NSString *version = dict[@"displayVersion"];
-        NSString *category = [[dict[@"processName"] stringByReplacingOccurrencesOfString:@" " withString:@""] lowercaseString];
+        NSString *category = [[dict[@"processName"] replace:@" " with:@""] lowercaseString];
         if ([category is:@"installer"]) {
             NSString *output = [self outputFor: @"/usr/sbin/pkgutil --pkg-info-plist %@", ids[0]];
             if (![output is:@""]) {

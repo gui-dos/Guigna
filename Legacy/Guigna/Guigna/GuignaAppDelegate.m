@@ -390,7 +390,7 @@
     NSMutableString *history = [[self.shell history] mutableCopy];
     if (_adminPassword != nil) {
         NSString *sudoCommand = [NSString stringWithFormat:@"echo \"%@\" | sudo -S", _adminPassword];
-        [history setString:[history stringByReplacingOccurrencesOfString:sudoCommand withString:@"sudo"]];
+        [history setString:[history replace:sudoCommand with:@"sudo"]];
     }
     [history setString:[history stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
     [self log:history]; [self log:@"\n"];
@@ -1178,7 +1178,7 @@
             cmd = [tokens join];
             [self log:[NSString stringWithFormat:@"😺===> %@\n", cmd]];
             [self status:[NSString stringWithFormat:@"Executing '%@'...", cmd]];
-            cmd = [NSString stringWithFormat:@"/bin/bash -l -c %@", [cmd stringByReplacingOccurrencesOfString:@" " withString:@"__"]];
+            cmd = [NSString stringWithFormat:@"/bin/bash -l -c %@", [cmd replace:@" " with:@"__"]];
             output = [agent outputForCommand:cmd];
             if (self.ready)
                 [self status:@"OK."];
@@ -1203,7 +1203,7 @@
                 break;
             }
         }
-        command = [command stringByReplacingOccurrencesOfString:@"CMD" withString:[system.cmd lastPathComponent]];
+        command = [command replace:@"CMD" with:[system.cmd lastPathComponent]];
         [self updateCmdLine:command];
         [self executeCmdLine:sender];
     }
@@ -1222,7 +1222,7 @@
     else
         command = [NSString stringWithFormat:@"%@ ; guigna --baton %@", cmd, baton];
     if (_adminPassword != nil) {
-        command = [command stringByReplacingOccurrencesOfString:@"sudo" withString:[NSString stringWithFormat:@"echo \"%@\" | sudo -S", _adminPassword]];
+        command = [command replace:@"sudo" with:[NSString stringWithFormat:@"echo \"%@\" | sudo -S", _adminPassword]];
     }
     [self raiseShell:self];
     [terminal doScript:command in:self.shell];

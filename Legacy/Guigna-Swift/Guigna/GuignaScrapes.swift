@@ -84,7 +84,7 @@ class Freecode: GScrape {
         let url = NSURL(string: "http://freecode.club/index?n=\(pageNumber)")!
         // Don't use agent.nodesForUrl since NSXMLDocumentTidyHTML strips <article>
         if var page = String(contentsOfURL: url, encoding: NSUTF8StringEncoding, error: nil) {
-            page = page.stringByReplacingOccurrencesOfString("article", withString: "div")
+            page = page.replace("article", "div")
             if let xmlDoc = NSXMLDocument(XMLString: page, options: Int(NSXMLDocumentTidyHTML), error: nil) {
                 var nodes = xmlDoc.rootElement()![".//div[starts-with(@class, 'project')]"]
                 for node in nodes {
@@ -382,7 +382,7 @@ class AppShopper: GScrape {
                 var description = node[".//p[@class=\"description\"]"][0].stringValue!
                 let price = node[".//div[@class=\"price\"]"][0].children![0].stringValue!
                 // TODO:NSXML UTF8 encoding
-                let localPrice = price.stringByTrimmingCharactersInSet(whitespaceCharacterSet).stringByReplacingOccurrencesOfString("â‚¬", withString: "€")
+                let localPrice = price.stringByTrimmingCharactersInSet(whitespaceCharacterSet).replace("â‚¬", "€")
                 let app = GItem(name: name, version: version, source: self, status: .Available)
                 app.id = id
                 app.categories = category
@@ -418,8 +418,8 @@ class AppShopper: GScrape {
     
     override func log(item: GItem) -> String {
         let name = item.id.split()[1]
-        var category = item.categories!.stringByReplacingOccurrencesOfString(" ", withString: "-").lowercaseString
-        category = category.stringByReplacingOccurrencesOfString("-&-", withString: "-").lowercaseString // fix Healthcare & Fitness
+        var category = item.categories!.replace(" ", "-").lowercaseString
+        category = category.replace("-&-", "-").lowercaseString // fix Healthcare & Fitness
         return "http://www.appshopper.com/mac/\(category)/\(name)"
     }
 }
@@ -453,7 +453,7 @@ class AppShopperIOS: GScrape {
                 var description = node[".//p[@class=\"description\"]"][0].stringValue!
                 let price = node[".//div[@class=\"price\"]"][0].children![0].stringValue!
                 // TODO:NSXML UTF8 encoding
-                let localPrice = price.stringByTrimmingCharactersInSet(whitespaceCharacterSet).stringByReplacingOccurrencesOfString("â‚¬", withString: "€")
+                let localPrice = price.stringByTrimmingCharactersInSet(whitespaceCharacterSet).replace("â‚¬", "€")
                 let app = GItem(name: name, version: version, source: self, status: .Available)
                 app.id = id
                 app.categories = category
@@ -489,8 +489,8 @@ class AppShopperIOS: GScrape {
     
     override func log(item: GItem) -> String {
         let name = item.id.split()[1]
-        var category = item.categories!.stringByReplacingOccurrencesOfString(" ", withString: "-").lowercaseString
-        category = category.stringByReplacingOccurrencesOfString("-&-", withString: "-").lowercaseString // fix Healthcare & Fitness
+        var category = item.categories!.replace(" ", "-").lowercaseString
+        category = category.replace("-&-", "-").lowercaseString // fix Healthcare & Fitness
         return "http://www.appshopper.com/\(category)/\(name)"
     }
 }

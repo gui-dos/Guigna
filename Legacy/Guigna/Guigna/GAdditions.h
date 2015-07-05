@@ -22,6 +22,7 @@
 - (NSUInteger)rindex:(NSString *)string;
 - (NSArray *)split;
 - (NSArray *)split:(NSString *)delimiter;
+- (NSString *)replace:(NSString *)string with:(NSString*)replacement;
 @end
 
 @interface NSXMLNode (GAdditions)
