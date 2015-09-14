@@ -154,7 +154,7 @@ class MacPorts: GSystem {
             }
             if variants != nil {
                 variants = variants.replace(" ", "+")
-                version = "\(version) \(variants)"
+                version = "\(version) +\(variants)"
             }
             status = components.count == 2 ? .Inactive : .UpToDate
             var pkg: GPackage! = self[name]
