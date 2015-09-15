@@ -333,6 +333,8 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             }
             systems.append(rudix)
         }
+		
+		systems.append(MacOSX(agent: agent))
         
         if defaults["iTunesStatus"] == nil {
             defaults["iTunesStatus"] = GState.On.rawValue
@@ -341,8 +343,6 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             var itunes = ITunes(agent: agent)
             systems.append(itunes)
         }
-        
-        systems.append(MacOSX(agent: agent))
         
         if defaults["DebugMode"] == nil {
             defaults["DebugMode"] = false
