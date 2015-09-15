@@ -1034,7 +1034,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     }
     
     
-    override func webView(sender: WebView, didStartProvisionalLoadForFrame: WebFrame) {
+    func webView(sender: WebView, didStartProvisionalLoadForFrame: WebFrame) {
         var url = webView.mainFrameURL
         if url.hasPrefix("about:") {
             url = cmdline.stringValue
@@ -1045,7 +1045,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
     }
     
-    override func webView(sender: WebView, didFinishLoadForFrame: WebFrame) {
+    func webView(sender: WebView, didFinishLoadForFrame: WebFrame) {
         let cmdlineString = cmdline.stringValue
         if cmdlineString.hasPrefix("Loading") {
             updateCmdLine(cmdlineString.substring(8, cmdlineString.length - 11))
@@ -1057,7 +1057,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
     }
     
-    override func webView(sender: WebView, didFailProvisionalLoadWithError: NSError, forFrame: WebFrame) {
+    func webView(sender: WebView, didFailProvisionalLoadWithError: NSError, forFrame: WebFrame) {
         let cmdlineString = cmdline.stringValue
         if cmdlineString.hasPrefix("Loading") {
             updateCmdLine("Failed: \(cmdlineString.substring(8, cmdlineString.length - 11))")

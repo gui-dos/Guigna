@@ -11,7 +11,7 @@ class GPackage: GItem {
         self.system = system
     }
     
-    override func key() -> String  {
+    func key() -> String  {
         return self.system.key(package: self)
     }
     
