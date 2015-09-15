@@ -66,7 +66,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     dynamic var tableFont: NSFont!
     dynamic var tableTextColor: NSColor!
     dynamic var logTextColor: NSColor!
-    dynamic var linkTextAttributes: [NSObject : AnyObject]!
+    dynamic var linkTextAttributes: [String : AnyObject]!
     dynamic var sourceListBackgroundColor: NSColor!
     
     dynamic var adminPassword: String?
