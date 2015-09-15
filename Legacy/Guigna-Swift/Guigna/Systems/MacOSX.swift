@@ -140,7 +140,7 @@ class MacOSX: GSystem {
             var files = output("\(cmd) --files \(pkgId)").split("\n")
             files.removeLast()
             for file in files {
-                contents += NSString.pathWithComponents([plist["volume"]!, plist["install-location"]!, file])
+                contents += NSString.pathWithComponents([plist["volume"] as! String, plist["install-location"] as! String, file])
                 contents += ("\n")
             }
         }
@@ -167,7 +167,7 @@ class MacOSX: GSystem {
             var dirs = output("\(cmd) --only-dirs --files \(pkgId)").split("\n")
             dirs.removeLast()
             for dir in dirs {
-                let dirPath = NSString.pathWithComponents([plist["volume"]!, plist["install-location"]!, dir])
+                let dirPath = NSString.pathWithComponents([plist["volume"] as! String, plist["install-location"] as! String, dir])
                 let fileAttributes = (try! fileManager.attributesOfItemAtPath(dirPath)) as NSDictionary
                 if (!(Int(fileAttributes.fileOwnerAccountID()!) == 0) && !dirPath.hasPrefix("/usr/local"))
                     || dirPath.contains(pkg.name)
@@ -182,7 +182,7 @@ class MacOSX: GSystem {
             var files = output("\(cmd) --files \(pkgId)").split("\n") // links are not detected with --only-files
             files.removeLast()
             for file in files {
-                let filePath = NSString.pathWithComponents([plist["volume"]!, plist["install-location"]!, file])
+                let filePath = NSString.pathWithComponents([plist["volume"] as! String, plist["install-location"] as! String, file])
                 if !(fileManager.fileExistsAtPath(filePath, isDirectory: &isDir) && isDir) {
                     if (dirsToDelete.filter { filePath.contains($0) }).count == 0 {
                         commands.append("sudo rm \"\(filePath)\"")
