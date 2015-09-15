@@ -522,7 +522,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         dispatch_sync(dispatch_get_main_queue()) {
             self.itemsController.filterPredicate = nil
             self.itemsController.removeObjectsAtArrangedObjectIndexes(NSIndexSet(indexesInRange: NSMakeRange(0, self.itemsController.arrangedObjects.count)))
-            self.itemsController.sortDescriptors = nil
+            self.itemsController.sortDescriptors = []
             self.tableProgressIndicator.startAnimation(self)
         }
         var updated = 0
@@ -730,7 +730,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         let filter = searchField.stringValue
         itemsController.filterPredicate = nil
         itemsController.removeObjectsAtArrangedObjectIndexes(NSIndexSet(indexesInRange: NSMakeRange(0, itemsController.arrangedObjects.count)))
-        itemsController.sortDescriptors = nil
+        itemsController.sortDescriptors = []
         var first = true
         for source in selectedSources {
             src = source.name
@@ -810,7 +810,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     if first {
                         itemsController.filterPredicate = nil
                         itemsController.removeObjectsAtArrangedObjectIndexes(NSIndexSet(indexesInRange: NSMakeRange(0, itemsController.arrangedObjects.count)))
-                        itemsController.sortDescriptors = nil
+                        itemsController.sortDescriptors = []
                         first = false
                     }
                     

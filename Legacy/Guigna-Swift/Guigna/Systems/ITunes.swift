@@ -25,7 +25,7 @@ class ITunes: GSystem {
         var pkgs = [GPackage]()
         pkgs.reserveCapacity(1000)
         let fileManager = NSFileManager.defaultManager()
-        if let contents = (try? fileManager.contentsOfDirectoryAtPath(("~/Music/iTunes/iTunes Media/Mobile Applications" as NSString).stringByExpandingTildeInPath)) as? [String] {
+        if let contents = (try? fileManager.contentsOfDirectoryAtPath(("~/Music/iTunes/iTunes Media/Mobile Applications" as NSString).stringByExpandingTildeInPath)) {
             for filename in contents {
                 let ipa = ("~/Music/iTunes/iTunes Media/Mobile Applications/\(filename)" as NSString).stringByExpandingTildeInPath
                 let idx = filename.rindex(" ")
