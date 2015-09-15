@@ -89,13 +89,9 @@ extension String {
 
 extension NSXMLNode {
     
-    func nodesForXPath(xpath: String) -> [NSXMLNode] { // FIXME: doesn't work with GAgent childnodes
-        return (try! self.nodesForXPath(xpath)) as! [NSXMLNode]
-    }
-    
     subscript(xpath: String) -> [NSXMLNode] {
         get {
-            return self.nodesForXPath(xpath)
+            return try! self.nodesForXPath(xpath)
         }
     }
     

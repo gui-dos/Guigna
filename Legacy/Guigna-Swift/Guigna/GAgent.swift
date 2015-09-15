@@ -64,7 +64,7 @@ class GAgent: NSObject {
         var nodes = [NSXMLNode]()
         do {
             let doc = try NSXMLDocument(data: data, options: Int(NSXMLDocumentTidyHTML))
-            nodes = doc.rootElement()!.nodesForXPath(xpath)
+            nodes = try doc.rootElement()!.nodesForXPath(xpath)
         } catch var error1 as NSError {
             error = error1
         }
