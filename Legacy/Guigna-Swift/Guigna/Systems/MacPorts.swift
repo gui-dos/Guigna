@@ -36,9 +36,9 @@ class MacPorts: GSystem {
             var portIndex = ""
             if mode == GMode.Online {  // FIXME: the compiler requires expilicit enum the first time it is seen
                 // TODO: fetch PortIndex
-                portIndex = String(contentsOfFile: "~/Library/Application Support/Guigna/MacPorts/PortIndex".stringByExpandingTildeInPath, encoding: NSUTF8StringEncoding, error: nil) ?? ""
+                portIndex = (try? String(contentsOfFile: ("~/Library/Application Support/Guigna/MacPorts/PortIndex" as NSString).stringByExpandingTildeInPath, encoding: NSUTF8StringEncoding)) ?? ""
             } else {
-                portIndex = String(contentsOfFile: "\(prefix)/var/macports/sources/rsync.macports.org/release/tarballs/ports/PortIndex", encoding: NSUTF8StringEncoding, error: nil) ?? ""
+                portIndex = (try? String(contentsOfFile: "\(prefix)/var/macports/sources/rsync.macports.org/release/tarballs/ports/PortIndex", encoding: NSUTF8StringEncoding)) ?? ""
             }
             let s =  NSScanner(string: portIndex)
             s.charactersToBeSkipped = NSCharacterSet(charactersInString: "")
@@ -64,12 +64,12 @@ class MacPorts: GSystem {
                     s.scanUpToString(" ", intoString: &key)
                     s.scanString(" ", intoString: nil)
                     s.scanUpToCharactersFromSet(endsCharacterSet, intoString: &str)
-                    value.setString(str! as! String)
+                    value.setString(str! as String)
                     var range = value.rangeOfString("{")
                     while range.location != NSNotFound {
                         value.replaceCharactersInRange(range, withString: "")
                         if s.scanUpToString("}", intoString: &str) {
-                            value.appendString(str! as! String)
+                            value.appendString(str! as String)
                         }
                         s.scanString("}", intoString: nil)
                         range = value.rangeOfString("{")
@@ -95,7 +95,7 @@ class MacPorts: GSystem {
                     }
                     s.scanString(" ", intoString: nil)
                 }
-                var pkg = GPackage(name: name! as! String, version: "\(version!)_\(revision!)", system: self, status: .Available)
+                let pkg = GPackage(name: name! as String, version: "\(version!)_\(revision!)", system: self, status: .Available)
                 pkg.categories = categories!
                 pkg.description = description!
                 pkg.license = license!
@@ -103,7 +103,7 @@ class MacPorts: GSystem {
                 //    pkg.homepage = homepage;
                 // }
                 items.append(pkg)
-                self[name! as! String] = pkg
+                self[name! as String] = pkg
             }
         }
         self.installed() // update status
@@ -293,7 +293,7 @@ class MacPorts: GSystem {
     
     override func cat(item: GItem) -> String {
         if self.isHidden || mode == .Online {
-            return String(contentsOfURL: NSURL(string: "http://trac.macports.org/browser/trunk/dports/\(item.categories!.split()[0])/\(item.name)/Portfile?format=txt")!, encoding: NSUTF8StringEncoding, error:nil) ?? ""
+            return (try? String(contentsOfURL: NSURL(string: "http://trac.macports.org/browser/trunk/dports/\(item.categories!.split()[0])/\(item.name)/Portfile?format=txt")!, encoding: NSUTF8StringEncoding)) ?? ""
         }
         return output("\(cmd) cat \(item.name)")
     }

@@ -24,7 +24,7 @@ class HomebrewCasks: GSystem {
         let whitespaceCharacterSet = NSCharacterSet.whitespaceCharacterSet()
         for line in outputLines {
             let components = line.stringByTrimmingCharactersInSet(whitespaceCharacterSet).split()
-            var name = components[0].lastPathComponent
+            var name = (components[0] as NSString).lastPathComponent
             name = name.substringToIndex(name.length - 4)
             var version = components.last!
             if !(version.hasPrefix("'") || version.hasPrefix(":")) {
@@ -42,7 +42,7 @@ class HomebrewCasks: GSystem {
             if self[pkg.name] != nil {
                 let prevPackage = self[pkg.name]
                 var found: Int?
-                for (i, pkg) in enumerate(items) {
+                for (i, pkg) in items.enumerate() {
                     if pkg.name == name {
                         found = i
                         break
@@ -62,7 +62,7 @@ class HomebrewCasks: GSystem {
         outputLines.removeLast()
         for line in outputLines {
             let components = line.stringByTrimmingCharactersInSet(whitespaceCharacterSet).split()
-            var name = components[0].lastPathComponent
+            var name = (components[0] as NSString).lastPathComponent
             name = name.substringToIndex(name.length - 4)
             if let pkg = self[name] {
                 var license = components.last!
@@ -76,9 +76,9 @@ class HomebrewCasks: GSystem {
         outputLines.removeLast()
         for line in outputLines {
             let components = line.stringByTrimmingCharactersInSet(whitespaceCharacterSet).split(".rb:  name '")
-            let name = components[0].lastPathComponent
+            let name = (components[0] as NSString).lastPathComponent
             if let pkg = self[name] {
-                pkg.description = dropLast(components.last!)
+                pkg.description = String((components.last!).characters.dropLast())
             }
         }
         self.installed() // update status
@@ -224,7 +224,7 @@ class HomebrewCasks: GSystem {
         if !self.isHidden {
             return output("/bin/sh -c export__PATH=\(prefix)/bin:$PATH__;__\(escapedCmd)__cat__\(item.name)")
         } else {
-            return String(contentsOfFile: "\(prefix)_off/Library/Taps/caskroom/homebrew-cask/Casks/\(item.name).rb", encoding: NSUTF8StringEncoding, error: nil) ?? ""
+            return (try? String(contentsOfFile: "\(prefix)_off/Library/Taps/caskroom/homebrew-cask/Casks/\(item.name).rb", encoding: NSUTF8StringEncoding)) ?? ""
         }
     }
     

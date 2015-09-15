@@ -54,7 +54,7 @@ class GSystem: GSource {
             }
         }
         var categoriesArray = Array(categories)
-        categoriesArray.sort { $0 < $1 }
+        categoriesArray.sortInPlace { $0 < $1 }
         return categoriesArray
     }
     

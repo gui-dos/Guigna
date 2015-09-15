@@ -25,7 +25,7 @@ class PkgsrcSE: GScrape {
     override func refresh() {
         var entries = [GItem]()
         let url = NSURL(string: "http://pkgsrc.se/?page=\(pageNumber)")!
-        if let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil) {
+        if let xmlDoc = try? NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML)) {
             let mainDiv = xmlDoc.rootElement()!["//div[@id=\"main\"]"][0]
             var dates = mainDiv["h3"]
             var names = mainDiv["b"]
@@ -34,7 +34,7 @@ class PkgsrcSE: GScrape {
             var comments = mainDiv["div"]
             comments.removeAtIndex(0)
             comments.removeAtIndex(0)
-            for (i, node) in enumerate(names) {
+            for (i, node) in names.enumerate() {
                 let id = node["a"][0].stringValue!
                 var idx = id.rindex("/")
                 let name = id.substringFromIndex(idx + 1)
@@ -83,10 +83,10 @@ class Freecode: GScrape {
         var projs = [GItem]()
         let url = NSURL(string: "http://freecode.club/index?n=\(pageNumber)")!
         // Don't use agent.nodesForUrl since NSXMLDocumentTidyHTML strips <article>
-        if var page = String(contentsOfURL: url, encoding: NSUTF8StringEncoding, error: nil) {
+        if var page = try? String(contentsOfURL: url, encoding: NSUTF8StringEncoding) {
             page = page.replace("article", "div")
-            if let xmlDoc = NSXMLDocument(XMLString: page, options: Int(NSXMLDocumentTidyHTML), error: nil) {
-                var nodes = xmlDoc.rootElement()![".//div[starts-with(@class, 'project')]"]
+            if let xmlDoc = try? NSXMLDocument(XMLString: page, options: Int(NSXMLDocumentTidyHTML)) {
+                let nodes = xmlDoc.rootElement()![".//div[starts-with(@class, 'project')]"]
                 for node in nodes {
                     let titleNodes = node["h3/a/node()"]
                     let name = titleNodes[0].stringValue!
@@ -94,7 +94,7 @@ class Freecode: GScrape {
                     if titleNodes.count > 2 {
                         version = titleNodes[2].stringValue!
                     }
-                    let id = node["h3/a"][0].href.lastPathComponent
+                    let id = (node["h3/a"][0].href as NSString).lastPathComponent
                     let home = node[".//a[@itemprop='url']"][0].href
                     let description = node[".//p[@itemprop='featureList']"][0].stringValue!
                     let tagNodes = node[".//p[@itemprop='keywords']/a"]
@@ -135,8 +135,8 @@ class Debian: GScrape {
     override func refresh() {
         var pkgs = [GItem]()
         let url = NSURL(string: "http://news.gmane.org/group/gmane.linux.debian.devel.changes.unstable/last=")!
-        if let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil) {
-            var nodes = xmlDoc.rootElement()!["//table[@class=\"threads\"]//table/tr"]
+        if let xmlDoc = try? NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML)) {
+            let nodes = xmlDoc.rootElement()!["//table[@class=\"threads\"]//table/tr"]
             for node in nodes {
                 let link = node[".//a"][0].stringValue!
                 let components = link.split()
@@ -176,18 +176,18 @@ class CocoaPods: GScrape {
     override func refresh() {
         var pods = [GItem]()
         let url = NSURL(string: "https://feeds.cocoapods.org/new-pods.rss")!
-        if let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyXML), error: nil) {
-            var nodes = xmlDoc.rootElement()!["//item"]
+        if let xmlDoc = try? NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyXML)) {
+            let nodes = xmlDoc.rootElement()!["//item"]
             for node in nodes {
                 let name = node["title"][0].stringValue!
                 let htmlDescription = node["description"][0].stringValue!
-                let descriptionNode = NSXMLDocument(XMLString: htmlDescription, options: Int(NSXMLDocumentTidyHTML), error: nil)!.rootElement()!
+                let descriptionNode = (try! NSXMLDocument(XMLString: htmlDescription, options: Int(NSXMLDocumentTidyHTML))).rootElement()!
                 let description = descriptionNode[".//p"][1].stringValue!
                 var license = descriptionNode[".//li[starts-with(.,'License:')]"][0].stringValue!
                 license = license.substringFromIndex(9)
                 var version = descriptionNode[".//li[starts-with(.,'Latest version:')]"][0].stringValue!
                 version = version.substringFromIndex(15)
-                var home = descriptionNode[".//li[starts-with(.,'Homepage:')]/a"][0].stringValue!
+                let home = descriptionNode[".//li[starts-with(.,'Homepage:')]/a"][0].stringValue!
                 var date = node["pubDate"][0].stringValue!
                 date = date.substring(4, 12)
                 let pod = GItem(name: name, version: version, source: self, status: .Available)
@@ -222,7 +222,7 @@ class PyPI: GScrape {
     override func refresh() {
         var eggs = [GItem]()
         let url = NSURL(string: homepage)!
-        if let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil) {
+        if let xmlDoc = try? NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML)) {
             var nodes = xmlDoc.rootElement()!["//table[@class=\"list\"]//tr"]
             nodes.removeAtIndex(0)
             nodes.removeLast()
@@ -265,7 +265,7 @@ class RubyGems: GScrape {
     override func refresh() {
         var gems = [GItem]()
         let url = NSURL(string: "http://m.rubygems.org/")!
-        if let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil) {
+        if let xmlDoc = try? NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML)) {
             let nodes = xmlDoc.rootElement()!["//li"]
             for node in nodes {
                 let components = node.stringValue!.split()
@@ -314,8 +314,8 @@ class MacUpdate: GScrape {
     override func refresh() {
         var apps = [GItem]()
         let url = NSURL(string: "https://www.macupdate.com/page/\(pageNumber - 1)")!
-        if let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil) {
-            var nodes = xmlDoc.rootElement()!["//tr[starts-with(@class,\"app_tr_row\")]"]
+        if let xmlDoc = try? NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML)) {
+            let nodes = xmlDoc.rootElement()!["//tr[starts-with(@class,\"app_tr_row\")]"]
             for node in nodes {
                 var name = node[".//a"][0].stringValue!
                 let idx = name.rindex(" ")
@@ -368,14 +368,14 @@ class AppShopper: GScrape {
         let url = NSURL(string: "http://appshopper.com/mac/all/\(pageNumber)")!
         let whitespaceCharacterSet = NSCharacterSet.whitespaceCharacterSet()
         let whitespaceAndNewlineCharacterSet = NSCharacterSet.whitespaceAndNewlineCharacterSet()
-        if let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil) {
-            var nodes = xmlDoc.rootElement()!["//div[@data-appid]"]
+        if let xmlDoc = try? NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML)) {
+            let nodes = xmlDoc.rootElement()!["//div[@data-appid]"]
             for node in nodes {
                 let name = node[".//h2"][0].stringValue!.stringByTrimmingCharactersInSet(whitespaceAndNewlineCharacterSet)
                 var version = node[".//span[starts-with(@class,\"version\")]"][0].stringValue!
                 version = version.substringFromIndex(2) // trim "V "
                 var id = node.attribute("data-appid")
-                let nick = node["a"][0].href.lastPathComponent
+                let nick = (node["a"][0].href as NSString).lastPathComponent
                 id = "\(id) \(nick)"
                 let category = node[".//h5/span"][0].stringValue!
                 let type = node[".//span[starts-with(@class,\"change\")]"][0].stringValue!
@@ -401,11 +401,11 @@ class AppShopper: GScrape {
     
     override func home(item: GItem) -> String {
         let url = NSURL(string: "http://itunes.apple.com/app/id" + item.id.split()[0])!
-        if let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil) {
+        if let xmlDoc = try? NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML)) {
             let mainDiv = xmlDoc.rootElement()!["//div[@id=\"main\"]"][0]
             let links = mainDiv["//div[@class=\"app-links\"]/a"]
             let screenshotsImgs = mainDiv["//div[contains(@class, \"screenshots\")]//img"]
-            item.screenshots = " ".join(screenshotsImgs.map {$0.attribute("src")})
+            item.screenshots = screenshotsImgs.map {$0.attribute("src")}.joinWithSeparator(" ")
             var homepage = links[0].href
             if homepage == "http://" {
                 homepage = links[1].href
@@ -439,14 +439,14 @@ class AppShopperIOS: GScrape {
         let url = NSURL(string: "http://appshopper.com/all/\(pageNumber)")!
         let whitespaceCharacterSet = NSCharacterSet.whitespaceCharacterSet()
         let whitespaceAndNewlineCharacterSet = NSCharacterSet.whitespaceAndNewlineCharacterSet()
-        if let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil) {
-            var nodes = xmlDoc.rootElement()!["//div[@data-appid]"]
+        if let xmlDoc = try? NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML)) {
+            let nodes = xmlDoc.rootElement()!["//div[@data-appid]"]
             for node in nodes {
                 let name = node[".//h2"][0].stringValue!.stringByTrimmingCharactersInSet(whitespaceAndNewlineCharacterSet)
                 var version = node[".//span[starts-with(@class,\"version\")]"][0].stringValue!
                 version = version.substringFromIndex(2) // trim "V "
                 var id = node.attribute("data-appid")
-                let nick = node["a"][0].href.lastPathComponent
+                let nick = (node["a"][0].href as NSString).lastPathComponent
                 id = "\(id) \(nick)"
                 let category = node[".//h5/span"][0].stringValue!
                 let type = node[".//span[starts-with(@class,\"change\")]"][0].stringValue!
@@ -472,11 +472,11 @@ class AppShopperIOS: GScrape {
     
     override func home(item: GItem) -> String {
         let url = NSURL(string: "http://itunes.apple.com/app/id" + item.id.split()[0])!
-        if let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil) {
+        if let xmlDoc = try? NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML)) {
             let mainDiv = xmlDoc.rootElement()!["//div[@id=\"main\"]"][0]
             let links = mainDiv["//div[@class=\"app-links\"]/a"]
             let screenshotsImgs = mainDiv["//div[contains(@class, \"screenshots\")]//img"]
-            item.screenshots = " ".join(screenshotsImgs.map {$0.attribute("src")})
+            item.screenshots = screenshotsImgs.map {$0.attribute("src")}.joinWithSeparator(" ")
             var homepage = links[0].href
             if homepage == "http://" {
                 homepage = links[1].href

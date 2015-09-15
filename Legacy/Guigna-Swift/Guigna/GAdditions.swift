@@ -26,13 +26,13 @@ extension String {
     
     var length: Int {
         get {
-            return count(self)
+            return self.characters.count
         }
     }
     
     func index(string: String) -> Int {
         if let range = self.rangeOfString(string) {
-            return distance(startIndex, range.startIndex)
+            return startIndex.distanceTo(range.startIndex)
         } else {
             return NSNotFound
         }
@@ -40,7 +40,7 @@ extension String {
     
     func rindex(string: String) -> Int {
         if let range = self.rangeOfString(string, options: .BackwardsSearch) {
-            return distance(startIndex, range.startIndex)
+            return startIndex.distanceTo(range.startIndex)
         } else {
             return NSNotFound
         }
@@ -55,25 +55,25 @@ extension String {
     }
     
     subscript(index: Int) -> Character {
-        return self[advance(startIndex, index)]
+        return self[startIndex.advancedBy(index)]
     }
     
     subscript(range: Range<Int>) -> String {
-        let rangeStartIndex = advance(startIndex, range.startIndex)
-            return self[rangeStartIndex..<advance(rangeStartIndex, range.endIndex - range.startIndex)]
+        let rangeStartIndex = startIndex.advancedBy(range.startIndex)
+            return self[rangeStartIndex..<rangeStartIndex.advancedBy(range.endIndex - range.startIndex)]
     }
     
     func substring(location: Int, _ length: Int) -> String {
-        let locationIndex = advance(startIndex, location)
-        return self[locationIndex..<advance(locationIndex, length)]
+        let locationIndex = startIndex.advancedBy(location)
+        return self[locationIndex..<locationIndex.advancedBy(length)]
     }
     
     func substringFromIndex(index: Int) -> String {
-        return self[advance(startIndex, index)..<endIndex]
+        return self[startIndex.advancedBy(index)..<endIndex]
     }
     
     func substringToIndex(index: Int) -> String {
-        return self[startIndex..<advance(startIndex, index)]
+        return self[startIndex..<startIndex.advancedBy(index)]
     }
     
     func split(_ delimiter: String = " ") -> [String] {
@@ -90,7 +90,7 @@ extension String {
 extension NSXMLNode {
     
     func nodesForXPath(xpath: String) -> [NSXMLNode] { // FIXME: doesn't work with GAgent childnodes
-        return self.nodesForXPath(xpath, error: nil) as! [NSXMLNode]
+        return (try! self.nodesForXPath(xpath)) as! [NSXMLNode]
     }
     
     subscript(xpath: String) -> [NSXMLNode] {

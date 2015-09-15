@@ -28,13 +28,13 @@ class MacOSX: GSystem {
         var pkgIds = output("/usr/sbin/pkgutil --pkgs").split("\n")
         pkgIds.removeLast()
         
-        let history = ((NSArray(contentsOfFile: "/Library/Receipts/InstallHistory.plist") as? [AnyObject]) ?? []).reverse()
+        let history = Array(((NSArray(contentsOfFile: "/Library/Receipts/InstallHistory.plist") as? [AnyObject]) ?? []).reverse())
         var keepPkg: Bool
         for dict in history as! [NSDictionary] {
             keepPkg = false
             var ids = dict["packageIdentifiers"]! as! [String]
             for pkgId in ids {
-                if let idx = find(pkgIds, pkgId) {
+                if let idx = pkgIds.indexOf(pkgId) {
                     keepPkg = true
                     pkgIds.removeAtIndex(idx)
                 }
@@ -53,7 +53,7 @@ class MacOSX: GSystem {
                     version = plist["pkg-version"]! as! String
                 }
             }
-            var pkg = GPackage(name: name, version: "", system: self, status: .UpToDate)
+            let pkg = GPackage(name: name, version: "", system: self, status: .UpToDate)
             pkg.id = ids.join()
             pkg.categories = category
             pkg.description = pkg.id
@@ -95,11 +95,11 @@ class MacOSX: GSystem {
         if item.categories == "storeagent" || item.categories == "storedownloadd" {
             let url = "http://itunes.apple.com/lookup?bundleId=\(item.id)"
             let data = NSData(contentsOfURL: NSURL(string: url)!) ?? NSData()
-            let results = ((NSJSONSerialization.JSONObjectWithData(data, options: nil, error: nil) as! NSDictionary)["results"]! as! NSArray)
+            let results = (((try! NSJSONSerialization.JSONObjectWithData(data, options: [])) as! NSDictionary)["results"]! as! NSArray)
             if results.count > 0 {
                 let pkgId = (results[0] as! NSDictionary)["trackId"]!.stringValue!
                 let url = NSURL(string: "http://itunes.apple.com/app/id\(pkgId)")!
-                if let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil) {
+                if let xmlDoc = try? NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML)) {
                     let mainDiv = xmlDoc.rootElement()!["//div[@id=\"main\"]"][0]
                     let links = mainDiv["//div[@class=\"app-links\"]/a"]
                     // TODO: get screenshots via JSON
@@ -120,7 +120,7 @@ class MacOSX: GSystem {
         if item.categories == "storeagent" || item.categories == "storedownloadd" {
             let url = "http://itunes.apple.com/lookup?bundleId=\(item.id)"
             let data = NSData(contentsOfURL: NSURL(string: url)!) ?? NSData()
-            let results = ((NSJSONSerialization.JSONObjectWithData(data, options: nil, error: nil) as! NSDictionary)["results"]! as! NSArray)
+            let results = (((try! NSJSONSerialization.JSONObjectWithData(data, options: [])) as! NSDictionary)["results"]! as! NSArray)
             if results.count > 0 {
                 let pkgId = (results[0] as! NSDictionary)["trackId"]!.stringValue!
                 page = "http://itunes.apple.com/app/id" + pkgId
@@ -168,7 +168,7 @@ class MacOSX: GSystem {
             dirs.removeLast()
             for dir in dirs {
                 let dirPath = NSString.pathWithComponents([plist["volume"]!, plist["install-location"]!, dir])
-                let fileAttributes = fileManager.attributesOfItemAtPath(dirPath, error: nil)! as NSDictionary
+                let fileAttributes = (try! fileManager.attributesOfItemAtPath(dirPath)) as NSDictionary
                 if (!(Int(fileAttributes.fileOwnerAccountID()!) == 0) && !dirPath.hasPrefix("/usr/local"))
                     || dirPath.contains(pkg.name)
                     || dirPath.contains(".")

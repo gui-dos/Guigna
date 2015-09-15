@@ -25,9 +25,9 @@ class ITunes: GSystem {
         var pkgs = [GPackage]()
         pkgs.reserveCapacity(1000)
         let fileManager = NSFileManager.defaultManager()
-        if let contents = fileManager.contentsOfDirectoryAtPath("~/Music/iTunes/iTunes Media/Mobile Applications".stringByExpandingTildeInPath, error: nil) as? [String] {
+        if let contents = (try? fileManager.contentsOfDirectoryAtPath(("~/Music/iTunes/iTunes Media/Mobile Applications" as NSString).stringByExpandingTildeInPath)) as? [String] {
             for filename in contents {
-                let ipa = "~/Music/iTunes/iTunes Media/Mobile Applications/\(filename)".stringByExpandingTildeInPath
+                let ipa = ("~/Music/iTunes/iTunes Media/Mobile Applications/\(filename)" as NSString).stringByExpandingTildeInPath
                 let idx = filename.rindex(" ")
                 if idx == NSNotFound {
                     continue
@@ -61,7 +61,7 @@ class ITunes: GSystem {
     
     override func home(item: GItem) -> String {
         var homepage = self.homepage
-        let ipa = "~/Music/iTunes/iTunes Media/Mobile Applications/\(item.id).ipa".stringByExpandingTildeInPath
+        let ipa = ("~/Music/iTunes/iTunes Media/Mobile Applications/\(item.id).ipa" as NSString).stringByExpandingTildeInPath
         var escapedIpa = ipa.replace(" ", "__")
         var plist = output("/usr/bin/unzip -p \(escapedIpa) iTunesMetadata.plist")
         if  plist == "" { // binary plist
@@ -71,7 +71,7 @@ class ITunes: GSystem {
         let metadata = plist.propertyList() as! NSDictionary
         let itemId: Int = metadata["itemId"]! as! Int
         let url = NSURL(string: "http://itunes.apple.com/app/id\(itemId)")!
-        if let xmlDoc = NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML), error: nil) {
+        if let xmlDoc = try? NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML)) {
             let mainDiv = xmlDoc.rootElement()!["//div[@id=\"main\"]"][0]
             let links = mainDiv["//div[@class=\"app-links\"]/a"]
             // TODO: get screenshots via JSON
@@ -88,7 +88,7 @@ class ITunes: GSystem {
     }
     
     override func log(item: GItem) -> String {
-        let ipa = "~/Music/iTunes/iTunes Media/Mobile Applications/\(item.id).ipa".stringByExpandingTildeInPath
+        let ipa = ("~/Music/iTunes/iTunes Media/Mobile Applications/\(item.id).ipa" as NSString).stringByExpandingTildeInPath
         var escapedIpa = ipa.replace(" ", "__")
         var plist = output("/usr/bin/unzip -p \(escapedIpa) iTunesMetadata.plist")
         if  plist == "" { // binary plist
@@ -101,13 +101,13 @@ class ITunes: GSystem {
     }
     
     override func contents(item: GItem) -> String {
-        let ipa = "~/Music/iTunes/iTunes Media/Mobile Applications/\(item.id).ipa".stringByExpandingTildeInPath
+        let ipa = ("~/Music/iTunes/iTunes Media/Mobile Applications/\(item.id).ipa" as NSString).stringByExpandingTildeInPath
         let escapedIpa = ipa.replace(" ", "__")
         return output("/usr/bin/zipinfo -1 \(escapedIpa)")
     }
     
     override func cat(item: GItem) -> String {
-        let ipa = "~/Music/iTunes/iTunes Media/Mobile Applications/\(item.id).ipa".stringByExpandingTildeInPath
+        let ipa = ("~/Music/iTunes/iTunes Media/Mobile Applications/\(item.id).ipa" as NSString).stringByExpandingTildeInPath
         var escapedIpa = ipa.replace(" ", "__")
         var plist = output("/usr/bin/unzip -p \(escapedIpa) iTunesMetadata.plist")
         if  plist == "" { // binary plist
@@ -119,7 +119,7 @@ class ITunes: GSystem {
     }
     
     override func uninstallCmd(pkg: GPackage) -> String {
-        return "rm -r '" + "~/Music/iTunes/iTunes Media/Mobile Applications/\(pkg.id).ipa".stringByExpandingTildeInPath + "'"
+        return "rm -r '" + ("~/Music/iTunes/iTunes Media/Mobile Applications/\(pkg.id).ipa" as NSString).stringByExpandingTildeInPath + "'"
     }
     
     

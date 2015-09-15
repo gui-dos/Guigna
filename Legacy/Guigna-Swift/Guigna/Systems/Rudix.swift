@@ -25,7 +25,7 @@ class Rudix: GSystem {
         
         var manifest = ""
         if mode == GMode.Online {
-            manifest = String(contentsOfURL: NSURL(string: "http://rudix.org/download/2014/10.9/00MANIFEST.txt")!, encoding: NSUTF8StringEncoding, error: nil) ?? ""
+            manifest = (try? String(contentsOfURL: NSURL(string: "http://rudix.org/download/2014/10.9/00MANIFEST.txt")!, encoding: NSUTF8StringEncoding)) ?? ""
         } else {
             var command = "\(cmd) search"
             let osxVersion = Rudix.clampedOSVersion()
@@ -49,7 +49,7 @@ class Rudix: GSystem {
             if self[pkg.name] != nil {
                 let prevPackage = self[pkg.name]
                 var found: Int?
-                for (i, pkg) in enumerate(items) {
+                for (i, pkg) in items.enumerate() {
                     if pkg.name == name {
                         found = i
                         break
@@ -136,7 +136,7 @@ class Rudix: GSystem {
     }
     
     override func cat(item: GItem) -> String {
-        return String(contentsOfURL: NSURL(string: "https://raw.githubusercontent.com/rudix-mac/rudix/master/Ports/\(item.name)/Makefile")!, encoding: NSUTF8StringEncoding, error: nil) ?? ""
+        return (try? String(contentsOfURL: NSURL(string: "https://raw.githubusercontent.com/rudix-mac/rudix/master/Ports/\(item.name)/Makefile")!, encoding: NSUTF8StringEncoding)) ?? ""
     }
     
     

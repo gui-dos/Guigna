@@ -38,21 +38,35 @@ class GAgent: NSObject {
         // Uncomment to debug:
         // NSData *errorData = [[errorPipe fileHandleForReading] readDataToEndOfFile];
         // NSString __autoreleasing *errorOutput = [[NSString alloc] initWithData:errorData encoding:NSUTF8StringEncoding];
-        return output as! String
+        return output as String
     }
     
     
     func nodes(URL url: String, XPath xpath: String) -> [NSXMLNode] {
         // FIXME: doesn't allow xpath on childnodes
         var error: NSError? = nil
-        var page: NSMutableString? = NSMutableString(contentsOfURL: NSURL(string: url)!, encoding: NSUTF8StringEncoding, error: &error)
+        var page: NSMutableString?
+        do {
+            page = try NSMutableString(contentsOfURL: NSURL(string: url)!, encoding: NSUTF8StringEncoding)
+        } catch var error1 as NSError {
+            error = error1
+            page = nil
+        }
         if page == nil {
-            page = NSMutableString(contentsOfURL: NSURL(string: url)!, encoding: NSISOLatin1StringEncoding, error: &error)
+            do {
+                page = try NSMutableString(contentsOfURL: NSURL(string: url)!, encoding: NSISOLatin1StringEncoding)
+            } catch var error1 as NSError {
+                error = error1
+                page = nil
+            }
         }
         var data: NSData = page!.dataUsingEncoding(NSUTF8StringEncoding)!
         var nodes = [NSXMLNode]()
-        if let doc = NSXMLDocument(data: data, options: Int(NSXMLDocumentTidyHTML), error: &error) {
+        do {
+            let doc = try NSXMLDocument(data: data, options: Int(NSXMLDocumentTidyHTML))
             nodes = doc.rootElement()!.nodesForXPath(xpath)
+        } catch var error1 as NSError {
+            error = error1
         }
         return nodes
     }

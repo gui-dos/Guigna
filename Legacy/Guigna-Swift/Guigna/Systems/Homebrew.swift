@@ -40,7 +40,7 @@ class Homebrew: GSystem {
                 pkg.description = desc
             }
             if repo != nil {
-                pkg.categories = repo.lastPathComponent
+                pkg.categories = (repo as NSString).lastPathComponent
                 pkg.repo = repo
             }
             items.append(pkg)
@@ -139,7 +139,7 @@ class Homebrew: GSystem {
                 return pkgs
             }
             if name.contains("/") {
-                name = name.lastPathComponent
+                name = (name as NSString).lastPathComponent
             }
             var pkg = self[name]
             let latestVersion: String = (pkg == nil) ? "" : pkg.version
@@ -236,7 +236,7 @@ class Homebrew: GSystem {
         if !self.isHidden {
             return output("\(cmd) cat \(item.name)")
         } else {
-            return String(contentsOfFile: "\(prefix)_off/Library/Formula/\(item.name).rb", encoding: NSUTF8StringEncoding, error: nil) ?? ""
+            return (try? String(contentsOfFile: "\(prefix)_off/Library/Formula/\(item.name).rb", encoding: NSUTF8StringEncoding)) ?? ""
         }
     }
     
