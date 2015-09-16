@@ -510,7 +510,7 @@
         dispatch_sync(dispatch_get_main_queue(), ^{
             [itemsController setFilterPredicate:nil];
             [itemsController removeObjectsAtArrangedObjectIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [[itemsController arrangedObjects] count])]];
-            [itemsController setSortDescriptors:nil];
+            [itemsController setSortDescriptors:@[]];
             [tableProgressIndicator startAnimation:self];
         });
         NSMutableDictionary *newIndex = [NSMutableDictionary dictionary];
@@ -705,7 +705,7 @@
     NSString *filter = [searchField stringValue];
     [itemsController setFilterPredicate:nil];
     [itemsController removeObjectsAtArrangedObjectIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [[itemsController arrangedObjects] count])]];
-    [itemsController setSortDescriptors:nil];
+    [itemsController setSortDescriptors:@[]];
     BOOL first = YES;
     for (GSource *source in selectedSources) {
         src = source.name;
@@ -1439,7 +1439,7 @@
         return;
     [applyButton setEnabled:NO];
     [stopButton setEnabled:YES];
-    [itemsController setSelectedObjects:nil];
+    [itemsController setSelectedObjects:@[]];
     [segmentedControl setSelectedSegment:-1];
     selectedSegment = @"Shell";
     [self updateTabView:nil];
