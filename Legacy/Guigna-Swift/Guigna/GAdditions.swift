@@ -13,7 +13,7 @@ protocol GAppDelegate {
 
 extension Array {
     
-    func join(_ separator: String = " ") -> String {
+    func join(separator: String = " ") -> String {
         // return separator.join(self) // doesn't compile anymore with B6
         return self._bridgeToObjectiveC().componentsJoinedByString(separator)
 
@@ -76,7 +76,7 @@ extension String {
         return self[startIndex..<startIndex.advancedBy(index)]
     }
     
-    func split(_ delimiter: String = " ") -> [String] {
+    func split(delimiter: String = " ") -> [String] {
         return self.componentsSeparatedByString(delimiter)
     }
     
