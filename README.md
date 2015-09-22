@@ -30,8 +30,8 @@ repositories.
 ## Feedback
 
 Guigna is at a very early stage of development and it is tested only for the
-latest versions of Yosemite, Xcode and Swift betas. Some preliminary builds are
-available from [Dropbox](https://www.dropbox.com/sh/ld19r8vp9avr32p/eV6au9iQK3).
+latest versions of El Capitan, Xcode and Swift betas. Some preliminary builds are
+available from [Dropbox](https://www.dropbox.com/sh/y1wpmndu1vn7pqp/AABCqKxUa-_Soqf57EVzhYILa?dl=0).
 
 Some advice and warnings:
 
