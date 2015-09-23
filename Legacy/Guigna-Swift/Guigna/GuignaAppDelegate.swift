@@ -333,8 +333,8 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             }
             systems.append(rudix)
         }
-		
-		systems.append(MacOSX(agent: agent))
+        
+        systems.append(MacOSX(agent: agent))
         
         if defaults["iTunesStatus"] == nil {
             defaults["iTunesStatus"] = GState.On.rawValue
@@ -853,15 +853,19 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     func tableViewSelectionDidChange(notification: NSNotification) {
         let selectedItems = itemsController.selectedObjects
         var item: GItem! = nil
-        if selectedItems.count > 0 {
+        if selectedItems.count == 1 {
             item = selectedItems[0] as? GItem
         }
         if item == nil {
             info("[No package selected]")
         }
-        if selectedSegment == "Shell" || (selectedSegment == "Log" && cmdline.stringValue == item?.log) {
+        if selectedItems.count > 1 || selectedSegment == "Shell" || (selectedSegment == "Log" && cmdline.stringValue == item?.log) {
             segmentedControl.selectedSegment = 0
             selectedSegment = "Info"
+        }
+        if selectedItems.count > 1 {
+            let itemList = selectedItems.map {$0.name}.join("\n")
+            info("[Multiple selection]\n\n\(itemList)")
         }
         updateTabView(item)
     }
@@ -1315,44 +1319,45 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 tableProgressIndicator.startAnimation(self)
                 status("Analyzing selected items...")
                 let installMenu = menu.itemWithTitle("Install")!
-                var markedOptions = []
-                for item in selectedItems {
-                    if item.system == nil {
-                        continue
-                    }
-                    var availableOptions = [String]()
-                    if let itemAvailableOptions = item.system.options(item as! GPackage) {
-                        availableOptions += itemAvailableOptions.split()
-                    }
-                    var markedOptions = [String]()
-                    if let itemMarkedOptions = (item as! GPackage).markedOptions {
-                        markedOptions += itemMarkedOptions.split()
-                    }
-                    var currentOptions = [String]()
-                    if let itemOptions = (item as! GPackage).options {
-                        currentOptions += itemOptions.split()
-                    }
-                    if markedOptions.count == 0 && currentOptions.count > 0 {
-                        markedOptions += currentOptions
-                        (item as! GPackage).markedOptions = markedOptions.join()
-                    }
-                    if availableOptions.count > 0 && availableOptions[0] != "" {
-                        let optionsMenu = NSMenu(title: "Options")
-                        for availableOption in availableOptions {
-                            optionsMenu.addItemWithTitle(availableOption, action: "mark:", keyEquivalent: "")
-                            var options = Set(markedOptions)
-                            options.unionInPlace(currentOptions)
-                            for option in options {
-                                if option == availableOption {
-                                    optionsMenu.itemWithTitle(availableOption)?.state = NSOnState
+                if installMenu.hasSubmenu {
+                    installMenu.submenu!.removeAllItems()
+                    installMenu.submenu = nil
+                }
+                // TODO: Analyze multiple items
+                if selectedItems.count == 1 {
+                    for item in [selectedItems[0]] {
+                        if item.system == nil {
+                            continue
+                        }
+                        var availableOptions = [String]()
+                        if let itemAvailableOptions = item.system.options(item as! GPackage) {
+                            availableOptions += itemAvailableOptions.split()
+                        }
+                        var markedOptions = [String]()
+                        if let itemMarkedOptions = (item as! GPackage).markedOptions {
+                            markedOptions += itemMarkedOptions.split()
+                        }
+                        var currentOptions = [String]()
+                        if let itemOptions = (item as! GPackage).options {
+                            currentOptions += itemOptions.split()
+                        }
+                        if markedOptions.count == 0 && currentOptions.count > 0 {
+                            markedOptions += currentOptions
+                            (item as! GPackage).markedOptions = markedOptions.join()
+                        }
+                        if availableOptions.count > 0 && availableOptions[0] != "" {
+                            let optionsMenu = NSMenu(title: "Options")
+                            for availableOption in availableOptions {
+                                optionsMenu.addItemWithTitle(availableOption, action: "mark:", keyEquivalent: "")
+                                var options = Set(markedOptions)
+                                options.unionInPlace(currentOptions)
+                                for option in options {
+                                    if option == availableOption {
+                                        optionsMenu.itemWithTitle(availableOption)?.state = NSOnState
+                                    }
                                 }
                             }
-                        }
-                        installMenu.submenu = optionsMenu
-                    } else {
-                        if installMenu.hasSubmenu {
-                            installMenu.submenu!.removeAllItems()
-                            installMenu.submenu = nil
+                            installMenu.submenu = optionsMenu
                         }
                     }
                 }

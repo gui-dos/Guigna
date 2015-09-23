@@ -29,8 +29,7 @@
         [progressIndicator startAnimation:self];
         if ([statusField.stringValue hasPrefix:@"Executing"])
             msg = [NSString stringWithFormat:@"%@ %@", statusField.stringValue, msg];
-    }
-    else {
+    } else {
         [progressIndicator stopAnimation:self];
         self.ready = YES;
     }
@@ -820,13 +819,16 @@
 - (void)tableViewSelectionDidChange:(NSNotification *)table {
     NSArray *selectedItems = [itemsController selectedObjects];
     GItem *item = nil;
-    if ([selectedItems count] > 0)
+    if ([selectedItems count] == 1)
         item = selectedItems[0];
     if (item == nil)
         [self info:@"[No package selected]"];
-    if ([selectedSegment is:@"Shell"] || ([selectedSegment is:@"Log"] && [[cmdline stringValue] is:[item log]])) {
+    if ([selectedItems count] > 1 || [selectedSegment is:@"Shell"] || ([selectedSegment is:@"Log"] && [[cmdline stringValue] is:[item log]])) {
         [segmentedControl setSelectedSegment:0];
         selectedSegment = @"Info";
+    }
+    if ([selectedItems count] > 1) {
+        [self info:[NSString stringWithFormat:@"[Multiple selection]\n\n%@", [[selectedItems valueForKeyPath:@"@unionOfObjects.name"] join:@"\n"]]];
     }
     [self updateTabView:item];
 }
@@ -1270,34 +1272,36 @@
             [tableProgressIndicator startAnimation:self];
             [self status:@"Analyzing selected items..."];
             NSMenuItem *installMenu = [menu itemWithTitle:@"Install"];
+            if ([installMenu hasSubmenu]) {
+                [[installMenu submenu] removeAllItems];
+                [installMenu setSubmenu:nil];
+            }
             NSMutableArray *markedOptions;
-            for (GItem *item in selectedItems) {
-                if (item.system == nil)
-                    continue;
-                NSArray *availableOptions = [[item.system options:(GPackage *)item] split];
-                markedOptions = [[((GPackage *)item).markedOptions split] mutableCopy];
-                NSArray *currentOptions = [((GPackage *)item).options split];
-                if ([markedOptions count] == 0 && [currentOptions count] > 0) {
-                    [markedOptions addObjectsFromArray:currentOptions];
-                    ((GPackage*)item).markedOptions = [markedOptions join];
-                }
-                if ([availableOptions count] > 0 && ![availableOptions[0] is:@""]) {
-                    NSMenu *optionsMenu =[[NSMenu alloc] initWithTitle:@"Options"];
-                    for (NSString *availableOption in availableOptions)  {
-                        [optionsMenu addItemWithTitle:availableOption action:@selector(mark:) keyEquivalent:@""];
-                        NSMutableSet *options = [NSMutableSet setWithArray:markedOptions];
-                        [options unionSet:[NSSet setWithArray:currentOptions]];
-                        for (NSString *option in options) {
-                            if ([option is:availableOption]) {
-                                [[optionsMenu itemWithTitle:availableOption] setState:NSOnState];
+            // TODO: Analyze multiple items
+            if ([selectedItems count] == 1) {
+                for (GItem *item in @[selectedItems[0]]) {
+                    if (item.system == nil)
+                        continue;
+                    NSArray *availableOptions = [[item.system options:(GPackage *)item] split];
+                    markedOptions = [[((GPackage *)item).markedOptions split] mutableCopy];
+                    NSArray *currentOptions = [((GPackage *)item).options split];
+                    if ([markedOptions count] == 0 && [currentOptions count] > 0) {
+                        [markedOptions addObjectsFromArray:currentOptions];
+                        ((GPackage*)item).markedOptions = [markedOptions join];
+                    }
+                    if ([availableOptions count] > 0 && ![availableOptions[0] is:@""]) {
+                        NSMenu *optionsMenu =[[NSMenu alloc] initWithTitle:@"Options"];
+                        for (NSString *availableOption in availableOptions)  {
+                            [optionsMenu addItemWithTitle:availableOption action:@selector(mark:) keyEquivalent:@""];
+                            NSMutableSet *options = [NSMutableSet setWithArray:markedOptions];
+                            [options unionSet:[NSSet setWithArray:currentOptions]];
+                            for (NSString *option in options) {
+                                if ([option is:availableOption]) {
+                                    [[optionsMenu itemWithTitle:availableOption] setState:NSOnState];
+                                }
                             }
                         }
-                    }
-                    [installMenu setSubmenu:optionsMenu];
-                } else {
-                    if ([installMenu hasSubmenu]) {
-                        [[installMenu submenu] removeAllItems];
-                        [installMenu setSubmenu:nil];
+                        [installMenu setSubmenu:optionsMenu];
                     }
                 }
             }
