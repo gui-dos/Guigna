@@ -39,7 +39,7 @@
             continue;
         NSString *version = [filename substringWithRange:NSMakeRange(idx + 1, [filename length] - idx - 5)];
         NSString *plist = [self outputFor:@"/usr/bin/unzip -p %@ iTunesMetadata.plist", [ipa replace:@" " with:@"__"]];
-        if (plist == nil) // binary plist
+        if (plist == nil || [plist is:@""]) // binary plist
             plist = [self outputFor:@"/bin/sh -c /usr/bin/unzip__-p__%@__iTunesMetadata.plist__|__plutil__-convert__xml1__-o__-__-", [ipa replace:@" " with:@"\\__"]];
         NSDictionary *metadata = [plist propertyList];
         NSString *name = metadata[@"itemName"];
