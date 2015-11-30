@@ -583,6 +583,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "name.soranzio.guido.${PRODUCT_NAME:rfc1034identifier}-Swift";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Guigna/Guigna-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 			};
 			name = Release;
 		};
