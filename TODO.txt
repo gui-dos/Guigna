@@ -1,5 +1,8 @@
 FIXME
 
+* El Capitan:
+  - Selected sources are not highlighted until resizing the window
+  - optionsStatus() thread doesn't update the GUI
 * Swift:
   - MacPorts.list() too slow
   - Erratic visibility of enum values

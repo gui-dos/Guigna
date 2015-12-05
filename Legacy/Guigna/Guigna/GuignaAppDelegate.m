@@ -1628,15 +1628,11 @@
 
 
 - (IBAction)options:(id)sender {
-    [NSApp beginSheet:optionsPanel modalForWindow:_window modalDelegate:self didEndSelector:@selector(sheetDidEnd:returnCode:contextInfo:) contextInfo:nil];
-}
-
-- (void)sheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo {
-    [optionsPanel orderOut:self];
+    [_window beginSheet:optionsPanel completionHandler:nil];
 }
 
 - (IBAction)closeOptions:(id)sender {
-    [NSApp endSheet:optionsPanel];
+    [_window endSheet:optionsPanel];
     if (self.ready)
         [syncButton setEnabled:YES];
 }
@@ -1670,7 +1666,7 @@
         NSInteger state = [sender state];
         GSource *source = nil;
         GSystem *system = nil;
-        NSString *command;
+        NSString *command = @"command";
         NSInteger status = GOffState;
         
         NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -1678,6 +1674,7 @@
         
         if (state == NSOnState) {
             [self optionsStatus:[NSString stringWithFormat: @"Adding %@...", title]];
+            [agent outputForCommand:@"/bin/echo"]; // workaround for updating status in El Capitan
             
             if ([title is:@"Homebrew"]) {
                 command = @"/usr/local/bin/brew";
@@ -1694,7 +1691,8 @@
                 command = @"/opt/local/bin/port";
                 system = [[GMacPorts alloc] initWithAgent:self.agent];
                 if (![fileManager fileExistsAtPath:command]) {
-                    [self execute:@"cd ~/Library/Application\\ Support/Guigna/Macports ; /usr/bin/rsync -rtzv rsync://rsync.macports.org/release/tarballs/PortIndex_darwin_12_i386/PortIndex PortIndex"];
+                    NSString *escapedAppDir = [APPDIR replace:@" " with:@"__"];
+                    [agent outputForCommand:[NSString stringWithFormat:@"/usr/bin/rsync -rtzv rsync://rsync.macports.org/release/tarballs/PortIndex_darwin_12_i386/PortIndex %@/Macports/PortIndex", escapedAppDir]];
                     system.mode = GOnlineMode;
                 }
                 [addedSystems addObject:system];
@@ -1720,7 +1718,8 @@
                 command = @"/usr/local/bin/rudix";
                 system = [[GRudix alloc] initWithAgent:self.agent];
                 system.mode = ([fileManager fileExistsAtPath:command]) ? GOfflineMode : GOnlineMode;
-                [addedSystems addObject:system];
+                if (system.mode == GOfflineMode)
+                    [addedSystems addObject:system]; // FIXME: manifest is not available anymore 
                 
             } else if ([title is:@"iTunes"]) {
                 system = [[GITunes alloc] initWithAgent:self.agent];
@@ -1760,6 +1759,7 @@
             
         } else {
             [self optionsStatus:[NSString stringWithFormat: @"Removing %@...", title]];
+            [agent outputForCommand:@"/bin/echo"]; // workaround for updating status in El Capitan
             NSArray *filtered = [[[sourcesController content][0] categories]filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"name BEGINSWITH %@", title]];
             if ([filtered count] > 0) {
                 for (GSource *source in filtered) {

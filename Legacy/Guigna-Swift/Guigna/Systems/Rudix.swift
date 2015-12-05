@@ -24,7 +24,7 @@ class Rudix: GSystem {
         items.removeAll(keepCapacity: true)
         
         var manifest = ""
-        if mode == GMode.Online {
+        if mode == GMode.Online { // FIXME: manifest is not available anymore
             manifest = (try? String(contentsOfURL: NSURL(string: "http://rudix.org/download/2014/10.9/00MANIFEST.txt")!, encoding: NSUTF8StringEncoding)) ?? ""
         } else {
             var command = "\(cmd) search"
@@ -46,8 +46,7 @@ class Rudix: GSystem {
             var version = components[1]
             version += "-" + components[2].split(".")[0]
             let pkg = GPackage(name: name, version: version, system: self, status: .Available)
-            if self[pkg.name] != nil {
-                let prevPackage = self[pkg.name]
+            if self[name] != nil {
                 var found: Int?
                 for (i, pkg) in items.enumerate() {
                     if pkg.name == name {

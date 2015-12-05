@@ -1758,7 +1758,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 let state = (sender as! NSButton).state
                 var source: GSystem!
                 var system: GSystem!
-                var command = ""
+                var command = "command"
                 var status: GState = .Off
                 
                 let sourcesContent = self.sourcesController.content as! NSArray
@@ -1771,6 +1771,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 
                 if state == NSOnState {
                     optionsStatus("Adding \(title)...")
+                    agent.output("/bin/echo") // workaround for updating status in El Capitan
                     
                     if title == "Homebrew" {
                         command = "/usr/local/bin/brew"
@@ -1786,8 +1787,9 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     } else if title == "MacPorts" {
                         command = "/opt/local/bin/port"
                         system = MacPorts(agent: agent)
+                        let escapedAppDir = APPDIR.replace(" ","__")
                         if !(fileManager.fileExistsAtPath(command)) {
-                            execute("cd ~/Library/Application\\ Support/Guigna/Macports ; /usr/bin/rsync -rtzv rsync://rsync.macports.org/release/tarballs/PortIndex_darwin_12_i386/PortIndex PortIndex")
+                            agent.output("/usr/bin/rsync -rtzv rsync://rsync.macports.org/release/tarballs/PortIndex_darwin_12_i386/PortIndex \(escapedAppDir)/MacPorts/PortIndex")
                             system.mode = .Online
                         }
                         addedSystems.append(system)
@@ -1814,7 +1816,9 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                         command = "/usr/local/bin/rudix"
                         system = Rudix(agent: agent)
                         system.mode = (fileManager.fileExistsAtPath(command)) ? .Offline : .Online
-                        addedSystems.append(system)
+                        if system.mode == .Offline { // FIXME: manifest is not available anymore
+                            addedSystems.append(system)
+                        }
                         
                     } else if title == "iTunes" {
                         system = ITunes(agent: agent)
@@ -1855,6 +1859,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     
                 } else {
                     optionsStatus("Removing \(title)...")
+                    agent.output("/bin/echo") // workaround for updating status in El Capitan
                     let filtered = systemsArray.filter { $0.name.hasPrefix(title) } // remove both Homebrew and Homebrew Casks
                     if filtered.count > 0 {
                         for source in filtered as! [GSystem] {

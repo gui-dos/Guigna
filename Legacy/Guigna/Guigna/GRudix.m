@@ -31,7 +31,7 @@
     [self.index removeAllObjects];
     [self.items removeAllObjects];
     NSString *manifest;
-    if (self.mode == GOnlineMode) {
+    if (self.mode == GOnlineMode) { // FIXME: manifest is not available anymore
         manifest = [NSString stringWithContentsOfURL:[NSURL URLWithString:@"http://rudix.org/download/2014/10.9/00MANIFEST.txt"] encoding:NSUTF8StringEncoding error:nil];
     } else {
         NSString *command = [NSString stringWithFormat: @"%@ search", self.cmd];
