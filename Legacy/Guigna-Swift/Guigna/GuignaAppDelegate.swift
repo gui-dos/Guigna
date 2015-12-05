@@ -242,9 +242,9 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             if defaults["MacPortsStatus"] == nil {
                 defaults["MacPortsStatus"] = GState.On.rawValue
             }
-            if defaults["MacPortsParsePortIndex"] == nil {
-                defaults["MacPortsParsePortIndex"] = true
-            }
+        }
+        if defaults["MacPortsParsePortIndex"] == nil {
+            defaults["MacPortsParsePortIndex"] = true
         }
         if defaults["MacPortsStatus"] != nil && defaults["MacPortsStatus"] == GState.On.rawValue {
             let macports = MacPorts(agent: agent)
@@ -527,7 +527,6 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
         var updated = 0
         var `new` = 0
-        var package: GPackage
         var previousPackage: GPackage?
         
         var newIndex = [String: GPackage](minimumCapacity: 150000)
@@ -709,7 +708,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     }
     
     func sourcesSelectionDidChange(sender: AnyObject!) {
-        var selectedObjects = sourcesController.selectedObjects as NSArray
+        let selectedObjects = sourcesController.selectedObjects as NSArray
         var selectedSources = selectedObjects.copy() as! [GSource]
         tableProgressIndicator.startAnimation(self)
         let selectedNames = selectedSources.map {$0.name}
@@ -772,7 +771,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                         
                     } else if src.hasPrefix("updated") || src.hasPrefix("new") {
                         src = src.split()[0]
-                        var st: GStatus = (src == "updated") ? .Updated : .New
+                        let st: GStatus = (src == "updated") ? .Updated : .New
                         if first {
                             status("Verifying \(src) packages...")
                             itemsController.filterPredicate = NSPredicate(format: "status == \(st.rawValue)")

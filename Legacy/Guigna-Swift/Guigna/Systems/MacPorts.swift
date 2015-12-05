@@ -15,7 +15,7 @@ class MacPorts: GSystem {
         index.removeAll(keepCapacity: true)
         items.removeAll(keepCapacity: true)
         
-        if agent.appDelegate!.defaults["MacPortsParsePortIndex"] == false {
+        if agent.appDelegate!.defaults["MacPortsParsePortIndex"] == false && mode == .Offline {
             var outputLines = output("\(cmd) list").split("\n")
             outputLines.removeLast()
             let whitespaceCharacterSet = NSCharacterSet.whitespaceCharacterSet()
@@ -34,8 +34,7 @@ class MacPorts: GSystem {
             
         } else {
             var portIndex = ""
-            if mode == GMode.Online {  // FIXME: the compiler requires expilicit enum the first time it is seen
-                // TODO: fetch PortIndex
+            if mode == .Online { // TODO: fetch PortIndex
                 portIndex = (try? String(contentsOfFile: ("~/Library/Application Support/Guigna/MacPorts/PortIndex" as NSString).stringByExpandingTildeInPath, encoding: NSUTF8StringEncoding)) ?? ""
             } else {
                 portIndex = (try? String(contentsOfFile: "\(prefix)/var/macports/sources/rsync.macports.org/release/tarballs/ports/PortIndex", encoding: NSUTF8StringEncoding)) ?? ""
@@ -99,9 +98,9 @@ class MacPorts: GSystem {
                 pkg.categories = categories!
                 pkg.description = description!
                 pkg.license = license!
-                // if (self.mode == GOnlineMode) {
-                //    pkg.homepage = homepage;
-                // }
+                if self.mode == .Online {
+                    pkg.homepage = homepage
+                }
                 items.append(pkg)
                 self[name! as String] = pkg
             }

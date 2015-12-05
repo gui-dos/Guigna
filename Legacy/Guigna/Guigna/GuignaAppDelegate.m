@@ -194,9 +194,9 @@
         || [fileManager fileExistsAtPath:[NSString stringWithFormat:@"%@/MacPorts/PortIndex", self.APPDIR]]) {
         if (defaults[@"MacPortsStatus"] == nil)
             defaults[@"MacPortsStatus"] = @(GOnState);
-        if (defaults[@"MacPortsParsePortIndex"] == nil)
-            defaults[@"MacPortsParsePortIndex"] = @YES;
     }
+    if (defaults[@"MacPortsParsePortIndex"] == nil)
+        defaults[@"MacPortsParsePortIndex"] = @YES;
     if ([defaults[@"MacPortsStatus"] isEqual:@(GOnState)]) {
         GSystem *macports = [[GMacPorts alloc] initWithAgent:self.agent];
         if (![fileManager fileExistsAtPath:portPath])
