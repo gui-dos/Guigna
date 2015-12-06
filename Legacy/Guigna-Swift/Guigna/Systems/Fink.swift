@@ -16,7 +16,7 @@ class Fink: GSystem {
         index.removeAll(keepCapacity: true)
         items.removeAll(keepCapacity: true)
         
-        if mode == GMode.Online { // FIXME: the compiler requires expilicit enum the first time it is seen
+        if mode == .Online {
             let url = NSURL(string: "http://pdb.finkproject.org/pdb/browse.php")!
             if let xmlDoc = try? NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML)) {
                 let nodes = xmlDoc.rootElement()!["//tr[@class=\"package\"]"]

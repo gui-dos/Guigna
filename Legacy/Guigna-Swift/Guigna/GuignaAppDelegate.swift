@@ -249,9 +249,9 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         if defaults["MacPortsStatus"] != nil && defaults["MacPortsStatus"] == GState.On.rawValue {
             let macports = MacPorts(agent: agent)
             if !fileManager.fileExistsAtPath(portPath) {
-                macports.mode = GMode.Online  // FIXME: the compiler requires expilicit enum the first time it is seen
+                macports.mode = .Online
             }
-            if !(macports.mode == GMode.Online && !fileManager.fileExistsAtPath("\(APPDIR)/MacPorts/PortIndex")) {
+            if !(macports.mode == .Online && !fileManager.fileExistsAtPath("\(APPDIR)/MacPorts/PortIndex")) {
                 systems.append(macports)
                 if macports.cmd != portPath {
                     macports.prefix = ((portPath as NSString).stringByDeletingLastPathComponent as NSString).stringByDeletingLastPathComponent
@@ -1863,7 +1863,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     if filtered.count > 0 {
                         for source in filtered as! [GSystem] {
                             status = source.status
-                            if status == GState.On {
+                            if status == .On {
                                 itemsController.removeObjects(items.filter { $0.system.name == source.name })
                                 allPackages = allPackages.filter { $0.system.name != source.name }
                                 for pkg in source.items as! [GPackage] {

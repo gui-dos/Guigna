@@ -24,7 +24,7 @@ class Rudix: GSystem {
         items.removeAll(keepCapacity: true)
         
         var manifest = ""
-        if mode == GMode.Online { // FIXME: manifest is not available anymore
+        if mode == .Online { // FIXME: manifest is not available anymore
             manifest = (try? String(contentsOfURL: NSURL(string: "http://rudix.org/download/2014/10.9/00MANIFEST.txt")!, encoding: NSUTF8StringEncoding)) ?? ""
         } else {
             var command = "\(cmd) search"
@@ -75,7 +75,7 @@ class Rudix: GSystem {
         var pkgs = [GPackage]()
         pkgs.reserveCapacity(50000)
         
-        if mode == GMode.Online { // FIXME: the compiler requires expilicit enum the first time it is seen
+        if mode == .Online {
             return pkgs
         }
         

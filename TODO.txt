@@ -5,7 +5,6 @@ FIXME
   - optionsStatus() thread doesn't update the GUI
 * Swift:
   - MacPorts.list() too slow
-  - Erratic visibility of enum values
   - filter() for inactive packages should be called only for MacPorts and Homebrew
 * Scraping the version numbers and the descriptions from Homebrew formulae is excessively slow
 * Help doesn't always open the wiki page
