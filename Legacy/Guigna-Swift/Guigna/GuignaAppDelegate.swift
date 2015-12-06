@@ -1551,8 +1551,8 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             }
         }
         var mark: GMark
-        let markNames = ["None", "Install", "Uninstall", "Deactivate", "Upgrade", "Fetch", "Clean"]
-        var markName: String
+        // let markNames = ["None", "Install", "Uninstall", "Deactivate", "Upgrade", "Fetch", "Clean"]
+        // var markName: String
         for system in markedSystems.allObjects as! [GSystem] {
             var systemTasks = [String]()
             var systemCommands = [String]()
@@ -1560,7 +1560,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             var hidesOthers = false
             for item in systemsDict[system.name]! {
                 mark = item.mark
-                markName = markNames[Int(mark.rawValue)]
+                // markName = markNames[Int(mark.rawValue)]
                 command = nil
                 hidesOthers = false
                 

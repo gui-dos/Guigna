@@ -52,7 +52,7 @@
     // Old:
     // NSString *home = [[[[[nodes objectAtIndex:0] href] split:@"/"] objectAtIndex:3] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     // TODO: redirect
-    NSString *home = [NSString stringWithFormat:@"http://www.macupdate.com%@", [[nodes[0] href] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    NSString *home = [NSString stringWithFormat:@"http://www.macupdate.com%@", [[nodes[0] href] stringByRemovingPercentEncoding]];
     return home;
 }
 

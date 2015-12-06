@@ -228,7 +228,7 @@ class PyPI: GScrape {
             nodes.removeLast()
             for node in nodes {
                 let rowData = node["td"]
-                let date = rowData[0].stringValue!
+                // let date = rowData[0].stringValue!
                 let link = rowData[1]["a"][0].href
                 let splits = link.split("/")
                 let name = splits[splits.count - 2]
@@ -272,7 +272,7 @@ class RubyGems: GScrape {
                 let name = components[0]
                 let version = components[1]
                 let spans = node[".//span"]
-                let date = spans[0].stringValue!
+                // let date = spans[0].stringValue!
                 let info = spans[1].stringValue!
                 let gem = GItem(name: name, version: version, source: self, status: .Available)
                 gem.description = info
@@ -343,7 +343,7 @@ class MacUpdate: GScrape {
     
     override func home(item: GItem) -> String {
         let nodes = agent.nodes(URL: log(item), XPath: "//a[@target=\"devsite\"]")
-        let href = nodes[0].href.stringByReplacingPercentEscapesUsingEncoding(NSUTF8StringEncoding)
+        let href = nodes[0].href.stringByRemovingPercentEncoding
         return "http://www.macupdate.com\(href!)"
     }
     

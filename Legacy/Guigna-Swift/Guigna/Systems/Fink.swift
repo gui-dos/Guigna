@@ -126,7 +126,8 @@ class Fink: GSystem {
         for line in outputLines {
             let components = line.split("\t")
             let name = components[1]
-            let version = components[2]
+            // TODO: sync with Objective-C version
+            // let version = components[2]
             let description = components[3]
             var pkg: GPackage! = self[name]
             let latestVersion: String = (pkg == nil) ? "" : pkg.version

@@ -48,24 +48,24 @@ class GAgent: NSObject {
         var page: NSMutableString?
         do {
             page = try NSMutableString(contentsOfURL: NSURL(string: url)!, encoding: NSUTF8StringEncoding)
-        } catch var error1 as NSError {
+        } catch let error1 as NSError {
             error = error1
             page = nil
         }
         if page == nil {
             do {
                 page = try NSMutableString(contentsOfURL: NSURL(string: url)!, encoding: NSISOLatin1StringEncoding)
-            } catch var error1 as NSError {
+            } catch let error1 as NSError {
                 error = error1
                 page = nil
             }
         }
-        var data: NSData = page!.dataUsingEncoding(NSUTF8StringEncoding)!
+        let data: NSData = page!.dataUsingEncoding(NSUTF8StringEncoding)!
         var nodes = [NSXMLNode]()
         do {
             let doc = try NSXMLDocument(data: data, options: Int(NSXMLDocumentTidyHTML))
             nodes = try doc.rootElement()!.nodesForXPath(xpath)
-        } catch var error1 as NSError {
+        } catch let error1 as NSError {
             error = error1
         }
         return nodes

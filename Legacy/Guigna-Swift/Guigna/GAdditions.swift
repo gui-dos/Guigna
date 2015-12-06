@@ -16,7 +16,7 @@ extension Array {
     func join(separator: String = " ") -> String {
         // return separator.join(self) // doesn't compile anymore with B6
         return self._bridgeToObjectiveC().componentsJoinedByString(separator)
-
+        
     }
     
 }
@@ -47,11 +47,7 @@ extension String {
     }
     
     func contains(string: String) -> Bool {
-        if let range = self.rangeOfString(string) {
-            return true
-        } else {
-            return false
-        }
+        return self.rangeOfString(string) != nil ? true : false
     }
     
     subscript(index: Int) -> Character {
@@ -60,7 +56,7 @@ extension String {
     
     subscript(range: Range<Int>) -> String {
         let rangeStartIndex = startIndex.advancedBy(range.startIndex)
-            return self[rangeStartIndex..<rangeStartIndex.advancedBy(range.endIndex - range.startIndex)]
+        return self[rangeStartIndex..<rangeStartIndex.advancedBy(range.endIndex - range.startIndex)]
     }
     
     func substring(location: Int, _ length: Int) -> String {
