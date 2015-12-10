@@ -262,7 +262,7 @@
 }
 
 + (NSString *)setupCmd {
-    return [NSString stringWithFormat:@"%@/bin/brew brew tap caskroom/cask", self.prefix, self.prefix];
+    return [NSString stringWithFormat:@"%@/bin/brew brew tap caskroom/cask", self.prefix];
 }
 
 + (NSString *)removeCmd {

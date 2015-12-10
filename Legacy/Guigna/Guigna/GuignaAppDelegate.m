@@ -223,7 +223,7 @@
                 homebrew.prefix = [[brewPath stringByDeletingLastPathComponent] stringByDeletingLastPathComponent];
                 homebrew.cmd = brewPath;
             }
-            if ([fileManager fileExistsAtPath:[NSString stringWithFormat:@"%@/bin/brew-cask", homebrew.prefix]]) {
+            if ([fileManager fileExistsAtPath:[NSString stringWithFormat:@"%@/Library/Taps/caskroom/homebrew-cask/cmd/brew-cask.rb", homebrew.prefix]]) {
                 GSystem *homebrewcasks = [[GHomebrewCasks alloc] initWithAgent:self.agent];
                 [systems addObject:homebrewcasks];
                 homebrewcasks.prefix = homebrew.prefix;
@@ -1681,7 +1681,7 @@
                 if ([fileManager fileExistsAtPath:command]) {
                     system = [[GHomebrew alloc] initWithAgent:self.agent];
                     [addedSystems addObject:system];
-                    if ([fileManager fileExistsAtPath:[command stringByAppendingString:@"-cask"]]) {
+                    if ([fileManager fileExistsAtPath:@"/usr/local/Library/Taps/caskroom/homebrew-cask/cmd/brew-cask.rb"]) {
                         system = [[GHomebrewCasks alloc] initWithAgent:self.agent];
                         [addedSystems addObject:system];
                     }
