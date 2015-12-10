@@ -283,7 +283,7 @@ class HomebrewCasks: GSystem {
     
     class var setupCmd: String! {
         get {
-            return "\(prefix())/bin/brew install caskroom/cask/brew-cask ; \(prefix())/bin/brew cask list"
+            return "\(prefix())/bin/brew tap caskroom/cask"
         }
     }
     
