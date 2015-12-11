@@ -2,9 +2,10 @@ import Foundation
 
 class Rudix: GSystem {
     
+    override class var prefix: String { return "/usr/local" }
+    
     init(agent: GAgent) {
         super.init(name: "Rudix", agent: agent)
-        prefix = "/usr/local"
         homepage = "http://rudix.org/"
         logpage = "https://github.com/rudix-mac/rudix/commits"
         cmd = "\(prefix)/bin/rudix"
@@ -174,20 +175,17 @@ class Rudix: GSystem {
     }
     
     class var setupCmd: String! {
-        get {
-            var command = "curl -s https://raw.githubusercontent.com/rudix-mac/rpm/master/rudix.py | sudo python - install rudix"
-            let osxVersion = Rudix.clampedOSVersion()
-            if G.OSVersion() != osxVersion {
-                command = "curl -s https://raw.githubusercontent.com/rudix-mac/rpm/master/rudix.py | sudo OSX_VERSION=\(osxVersion) python - install rudix"
-            }
-            return command
+        var command = "curl -s https://raw.githubusercontent.com/rudix-mac/rpm/master/rudix.py | sudo python - install rudix"
+        let osxVersion = Rudix.clampedOSVersion()
+        if G.OSVersion() != osxVersion {
+            command = "curl -s https://raw.githubusercontent.com/rudix-mac/rpm/master/rudix.py | sudo OSX_VERSION=\(osxVersion) python - install rudix"
         }
+        return command
     }
     
     class var removeCmd: String! {
-        get {
-            return "sudo /usr/local/bin/rudix -R" // TODO: prefix
-        }
+        return "sudo /usr/local/bin/rudix -R" // TODO: prefix
     }
+    
 }
 

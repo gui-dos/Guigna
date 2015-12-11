@@ -2,9 +2,10 @@ import Foundation
 
 class Fink: GSystem {
     
+    override class var prefix: String { return "/sw" }
+    
     init(agent: GAgent) {
         super.init(name: "Fink", agent: agent)
-        prefix = "/sw"
         homepage = "http://www.finkproject.org"
         logpage = "http://www.finkproject.org/package-updates.php"
         // @"http://github.com/fink/fink/commits/master"
@@ -237,15 +238,11 @@ class Fink: GSystem {
     
     
     class var setupCmd: String! {
-        get {
-            return "sudo mv /usr/local /usr/local_off ; sudo mv /opt/local /opt/local_off ; sudo mv /usr/pkg /usr/pkg_off ; cd ~/Library/Application\\ Support/Guigna/Fink ; curl -L -O http://downloads.sourceforge.net/fink/fink-0.37.0.tar.gz ; tar -xvzf fink-0.37.0.tar.gz ; cd fink-0.37.0 ; sudo ./bootstrap ; /sw/bin/pathsetup.sh ; . /sw/bin/init.sh ; /sw/bin/fink selfupdate-rsync ; /sw/bin/fink index -f ; sudo mv /usr/local_off /usr/local ; sudo mv /opt/local_off /opt/local ; sudo mv /usr/pkg_off /usr/pkg"
-        }
+        return "sudo mv /usr/local /usr/local_off ; sudo mv /opt/local /opt/local_off ; sudo mv /usr/pkg /usr/pkg_off ; cd ~/Library/Application\\ Support/Guigna/Fink ; curl -L -O http://downloads.sourceforge.net/fink/fink-0.37.0.tar.gz ; tar -xvzf fink-0.37.0.tar.gz ; cd fink-0.37.0 ; sudo ./bootstrap ; /sw/bin/pathsetup.sh ; . /sw/bin/init.sh ; /sw/bin/fink selfupdate-rsync ; /sw/bin/fink index -f ; sudo mv /usr/local_off /usr/local ; sudo mv /opt/local_off /opt/local ; sudo mv /usr/pkg_off /usr/pkg"
     }
     
     class var removeCmd: String! {
-        get {
-            return "sudo rm -rf /sw"
-        }
+        return "sudo rm -rf /sw"
     }
     
     override func verbosifiedCmd(command: String) -> String  {

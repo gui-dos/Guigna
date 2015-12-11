@@ -2,9 +2,10 @@ import Foundation
 
 class ITunes: GSystem {
     
+    override class var prefix: String { return "" }
+    
     init(agent: GAgent) {
         super.init(name: "iTunes", agent: agent)
-        prefix = "" // TODO
         homepage = "https://itunes.apple.com/genre/ios/id36?mt=8"
         logpage = "https://itunes.apple.com/genre/ios/id36?mt=8"
         cmd = "/Applications/iTunes.app/Contents/MacOS/iTunes"

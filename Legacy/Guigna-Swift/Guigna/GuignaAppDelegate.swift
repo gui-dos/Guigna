@@ -222,11 +222,8 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             }
         }
         
-        // TODO: require class vars support
-        // var portPath = MacPorts.prefix + "/bin/port"
-        // var brewPath = Homebrew prefix + "/bin/brew"
-        var portPath = "/opt/local/bin/port"
-        var brewPath = "/usr/local/bin/brew"
+        var portPath = MacPorts.prefix + "/bin/port"
+        var brewPath = Homebrew.prefix + "/bin/brew"
         let paths = agent.output("/bin/bash -l -c which__port__brew").split("\n")
         for path in paths {
             if path.hasSuffix("port") {

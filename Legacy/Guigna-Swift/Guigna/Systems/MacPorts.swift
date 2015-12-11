@@ -2,9 +2,10 @@ import Foundation
 
 class MacPorts: GSystem {
     
+    override class var prefix: String { return "/opt/local"}
+    
     init(agent: GAgent) {
         super.init(name: "MacPorts", agent: agent)
-        prefix = "/opt/local"
         homepage = "http://www.macports.org"
         logpage = "http://trac.macports.org/timeline"
         cmd = "\(prefix)/bin/port"

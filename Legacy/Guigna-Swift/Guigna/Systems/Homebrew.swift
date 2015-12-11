@@ -2,9 +2,10 @@ import Foundation
 
 class Homebrew: GSystem {
     
+    override class var prefix: String { return "/usr/local"}
+    
     init(agent: GAgent) {
         super.init(name: "Homebrew", agent: agent)
-        prefix = "/usr/local"
         homepage = "http://brew.sh/"
         logpage = "http://github.com/Homebrew/homebrew/commits"
         cmd = "\(prefix)/bin/brew"
@@ -315,16 +316,11 @@ class Homebrew: GSystem {
     }
     
     class var setupCmd: String! {
-        get {
-            return "ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)\" ; /usr/local/bin/brew update"
-            
-        }
+        return "ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)\" ; /usr/local/bin/brew update"
     }
     
     class var removeCmd: String! {
-        get {
-            return "cd /usr/local ; curl -L https://raw.github.com/gist/1173223 -o uninstall_homebrew.sh; sudo sh uninstall_homebrew.sh ; rm uninstall_homebrew.sh ; sudo rm -rf /Library/Caches/Homebrew; rm -rf /usr/local/.git"
-        }
+        return "cd /usr/local ; curl -L https://raw.github.com/gist/1173223 -o uninstall_homebrew.sh; sudo sh uninstall_homebrew.sh ; rm uninstall_homebrew.sh ; sudo rm -rf /Library/Caches/Homebrew; rm -rf /usr/local/.git"
     }
     
     override func verbosifiedCmd(command: String) -> String {

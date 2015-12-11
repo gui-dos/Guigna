@@ -5,7 +5,7 @@
 @implementation GMacOSX
 
 + (NSString *)prefix {
-    return @"/usr/sbin";
+    return @"";
 }
 
 - (instancetype)initWithAgent:(GAgent *)agent {
@@ -13,7 +13,7 @@
     if (self) {
         self.homepage = @"http://support.apple.com/downloads/";
         self.logpage = @"http://support.apple.com/downloads/";
-        self.cmd = [NSString stringWithFormat:@"%@/pkgutil", self.prefix];
+        self.cmd = @"/usr/sbin/pkgutil";
     }
     return self;
 }

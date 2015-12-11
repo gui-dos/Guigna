@@ -2,9 +2,10 @@ import Foundation
 
 class MacOSX: GSystem {
     
+    override class var prefix: String { return "" }
+    
     init(agent: GAgent) {
         super.init(name: "Mac OS X", agent: agent)
-        prefix = "" // TODO
         homepage = "http://support.apple.com/downloads/"
         logpage = "http://support.apple.com/downloads/"
         cmd = "/usr/sbin/pkgutil"

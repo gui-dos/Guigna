@@ -2,9 +2,10 @@ import Foundation
 
 class FreeBSD: GSystem {
     
+    override class var prefix: String { return  "" }
+    
     init(agent: GAgent) {
         super.init(name: "FreeBSD", agent: agent)
-        prefix = ""
         homepage = "http://www.freebsd.org/ports/"
         logpage = "http://www.freshports.org"
         cmd = "\(prefix)freebsd"

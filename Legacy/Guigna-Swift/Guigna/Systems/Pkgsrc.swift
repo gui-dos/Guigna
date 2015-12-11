@@ -2,9 +2,10 @@ import Foundation
 
 class Pkgsrc: GSystem {
     
+    override class var prefix: String { return  "/usr/pkg" }
+    
     init(agent: GAgent) {
         super.init(name: "pkgsrc", agent: agent)
-        prefix = "/usr/pkg"
         homepage = "http://www.pkgsrc.org"
         logpage = "http://www.netbsd.org/changes/pkg-changes.html"
         cmd = "\(prefix)/sbin/pkg_info"
@@ -283,15 +284,11 @@ class Pkgsrc: GSystem {
     
     
     class var setupCmd: String! {
-        get {
-            return "sudo mv /usr/local /usr/local_off ; sudo mv /opt/local /opt/local_off ; sudo mv /sw /sw_off ; cd ~/Library/Application\\ Support/Guigna/pkgsrc ; curl -L -O ftp://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc.tar.gz ; sudo tar -xvzf pkgsrc.tar.gz -C /usr; cd /usr/pkgsrc/bootstrap ; sudo ./bootstrap --compiler clang; sudo mv /usr/local_off /usr/local ; sudo mv /opt/local_off /opt/local ; sudo mv /sw_off /sw"
-        }
+        return "sudo mv /usr/local /usr/local_off ; sudo mv /opt/local /opt/local_off ; sudo mv /sw /sw_off ; cd ~/Library/Application\\ Support/Guigna/pkgsrc ; curl -L -O ftp://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc.tar.gz ; sudo tar -xvzf pkgsrc.tar.gz -C /usr; cd /usr/pkgsrc/bootstrap ; sudo ./bootstrap --compiler clang; sudo mv /usr/local_off /usr/local ; sudo mv /opt/local_off /opt/local ; sudo mv /sw_off /sw"
     }
     
     class var removeCmd: String! {
-        get {
-            return "sudo rm -r /usr/pkg ; sudo rm -r /usr/pkgsrc ; sudo rm -r /var/db/pkg"
-        }
+        return "sudo rm -r /usr/pkg ; sudo rm -r /usr/pkgsrc ; sudo rm -r /var/db/pkg"
     }
 }
 

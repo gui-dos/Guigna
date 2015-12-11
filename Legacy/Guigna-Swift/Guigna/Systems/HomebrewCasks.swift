@@ -2,13 +2,10 @@ import Foundation
 
 class HomebrewCasks: GSystem {
     
-    class func prefix() -> String { // class vars not yet supported
-        return "/usr/local"
-    }
+    override class var prefix: String { return "/usr/local" }
     
     init(agent: GAgent) {
         super.init(name: "Homebrew Casks", agent: agent)
-        prefix = "/usr/local"
         homepage = "http://caskroom.io"
         logpage = "http://github.com/caskroom/homebrew-cask/commits"
         cmd = "\(prefix)/bin/brew cask"
@@ -278,19 +275,13 @@ class HomebrewCasks: GSystem {
             return "sudo mv \(prefix)_off \(prefix)"
         }
     }
-    
-    // TODO: class vars  not yet supported
-    
+        
     class var setupCmd: String! {
-        get {
-            return "\(prefix())/bin/brew tap caskroom/cask"
-        }
+        return "\(prefix)/bin/brew tap caskroom/cask"
     }
     
     class var removeCmd: String! {
-        get {
-            return "\(prefix())/bin/brew untap caskroom/cask"
-        }
+        return "\(prefix)/bin/brew untap caskroom/cask"
     }
     
     override func verbosifiedCmd(command: String) -> String {
