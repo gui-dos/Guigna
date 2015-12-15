@@ -1692,7 +1692,7 @@
                 system = [[GMacPorts alloc] initWithAgent:self.agent];
                 if (![fileManager fileExistsAtPath:command]) {
                     NSString *escapedAppDir = [APPDIR replace:@" " with:@"__"];
-                    [agent outputForCommand:[NSString stringWithFormat:@"/usr/bin/rsync -rtzv rsync://rsync.macports.org/release/tarballs/PortIndex_darwin_12_i386/PortIndex %@/Macports/PortIndex", escapedAppDir]];
+                    [agent outputForCommand:[NSString stringWithFormat:@"/usr/bin/rsync -rtzv rsync://rsync.macports.org/release/tarballs/PortIndex_darwin_15_i386/PortIndex %@/Macports/PortIndex", escapedAppDir]];
                     system.mode = GOnlineMode;
                 }
                 [addedSystems addObject:system];
@@ -1719,7 +1719,7 @@
                 system = [[GRudix alloc] initWithAgent:self.agent];
                 system.mode = ([fileManager fileExistsAtPath:command]) ? GOfflineMode : GOnlineMode;
                 if (system.mode == GOfflineMode)
-                    [addedSystems addObject:system]; // FIXME: manifest is not available anymore 
+                    [addedSystems addObject:system]; // FIXME: manifest is not available anymore
                 
             } else if ([title is:@"iTunes"]) {
                 system = [[GITunes alloc] initWithAgent:self.agent];
@@ -1860,53 +1860,44 @@
 
 - (IBAction)tools:(id)sender {
     NSString *title = [sender title];
-    if ([title is:@"Install Fink"]) {
-        [self execute:[GFink setupCmd] withBaton:@"relaunch"];
-        // TODO: activate system
-    }
     
-    else if ([title is:@"Remove Fink"]) {
-        [self execute:[GFink removeCmd] withBaton:@"relaunch"];
-    }
-    
-    else if ([title is:@"Install Homebrew"]) {
-        [self execute:[GHomebrew setupCmd] withBaton:@"relaunch"];
-    }
-    
-    else if ([title is:@"Install Homebrew Cask"]) {
-        [self execute:[GHomebrewCasks setupCmd] withBaton:@"relaunch"];
-    }
-    
-    else if ([title is:@"Remove Homebrew"]) {
-        [self execute:[GHomebrew removeCmd] withBaton:@"relaunch"];
-    }
-    
-    else if ([title is:@"Install pkgsrc"]) {
+    if ([title is:@"Install pkgsrc"]) {
         [self execute:[GPkgsrc setupCmd] withBaton:@"relaunch"];
     }
     
     else if ([title is:@"Fetch pkgsrc and INDEX"]) {
-        [self execute:@"cd ~/Library/Application\\ Support/Guigna/pkgsrc ; curl -L -O ftp://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/INDEX ; curl -L -O ftp://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc.tar.gz ; sudo tar -xvzf pkgsrc.tar.gz -C /usr"];
-    }
-    
-    else if ([title is:@"Remove pkgsrc"]) {
+        [self execute:@"cd ~/Library/Application\\ Support/Guigna/pkgsrc ; curl -L -O ftp://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/INDEX ; curl -L -O ftp://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc.tar.gz ; sudo tar -xvzf pkgsrc.tar.gz -C /usr" withBaton:@"relaunch"];
+        
+    } else if ([title is:@"Remove pkgsrc"]) {
         [self execute:[GPkgsrc removeCmd] withBaton:@"relaunch"];
-    }
-    
-    else if ([title is:@"Fetch FreeBSD INDEX"]) {
+        
+    } else if ([title is:@"Fetch FreeBSD INDEX"]) {
         [self execute:@"cd ~/Library/Application\\ Support/Guigna/FreeBSD ; curl -L -O ftp://ftp.freebsd.org/pub/FreeBSD/ports/packages/INDEX" withBaton:@"relaunch"];
-    }
-    
-    else if ([title is:@"Install Rudix"]) {
+        
+    } else if ([title is:@"Install Fink"]) {
+        [self execute:[GFink setupCmd] withBaton:@"relaunch"];
+        // TODO: activate system
+        
+    } else if ([title is:@"Remove Fink"]) {
+        [self execute:[GFink removeCmd] withBaton:@"relaunch"];
+        
+    } else if ([title is:@"Install Homebrew"]) {
+        [self execute:[GHomebrew setupCmd] withBaton:@"relaunch"];
+        
+    } else if ([title is:@"Install Homebrew Cask"]) {
+        [self execute:[GHomebrewCasks setupCmd] withBaton:@"relaunch"];
+        
+    } else if ([title is:@"Remove Homebrew"]) {
+        [self execute:[GHomebrew removeCmd] withBaton:@"relaunch"];
+        
+    } else if ([title is:@"Fetch MacPorts PortIndex"]) {
+        [self execute:@"cd ~/Library/Application\\ Support/Guigna/Macports ; /usr/bin/rsync -rtzv rsync://rsync.macports.org/release/tarballs/PortIndex_darwin_15_i386/PortIndex PortIndex"  withBaton:@"relaunch"];
+        
+    } else if ([title is:@"Install Rudix"]) {
         [self execute:[GRudix setupCmd] withBaton:@"relaunch"];
-    }
-    
-    else if ([title is:@"Remove Rudix"]) {
+        
+    } else if ([title is:@"Remove Rudix"]) {
         [self execute:[GRudix removeCmd] withBaton:@"relaunch"];
-    }
-    
-    else if ([title is:@"Fetch MacPorts PortIndex"]) {
-        [self execute:@"cd ~/Library/Application\\ Support/Guigna/Macports ; /usr/bin/rsync -rtzv rsync://rsync.macports.org/release/tarballs/PortIndex_darwin_12_i386/PortIndex PortIndex"];
         
     } else if ([title is:@"Install Gentoo"]) {
         [self execute:[GGentoo setupCmd] withBaton:@"relaunch"];

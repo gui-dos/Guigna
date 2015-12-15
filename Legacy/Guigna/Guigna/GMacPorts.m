@@ -365,7 +365,7 @@
 
 - (NSString *)updateCmd {
     if (self.mode == GOnlineMode) {
-        return @"sudo cd ; cd ~/Library/Application\\ Support/Guigna/Macports ; /usr/bin/rsync -rtzv rsync://rsync.macports.org/release/tarballs/PortIndex_darwin_13_i386/PortIndex PortIndex";
+        return @"sudo cd ; cd ~/Library/Application\\ Support/Guigna/Macports ; /usr/bin/rsync -rtzv rsync://rsync.macports.org/release/tarballs/PortIndex_darwin_15_i386/PortIndex PortIndex";
     } else {
         return [NSString stringWithFormat:@"sudo %@ -d selfupdate", self.cmd];
     }

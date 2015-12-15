@@ -1785,7 +1785,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                         system = MacPorts(agent: agent)
                         let escapedAppDir = APPDIR.replace(" ","__")
                         if !(fileManager.fileExistsAtPath(command)) {
-                            agent.output("/usr/bin/rsync -rtzv rsync://rsync.macports.org/release/tarballs/PortIndex_darwin_12_i386/PortIndex \(escapedAppDir)/MacPorts/PortIndex")
+                            agent.output("/usr/bin/rsync -rtzv rsync://rsync.macports.org/release/tarballs/PortIndex_darwin_15_i386/PortIndex \(escapedAppDir)/MacPorts/PortIndex")
                             system.mode = .Online
                         }
                         addedSystems.append(system)
@@ -1958,16 +1958,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     @IBAction func tools(sender: NSMenuItem) {
         let title = sender.title
         
-        if title == "Install Homebrew" {
-            execute(Homebrew.setupCmd, baton: "relaunch")
-            
-        } else if title == "Install Homebrew Cask" {
-            execute(HomebrewCasks.setupCmd, baton: "relaunch")
-            
-        } else if title == "Remove Homebrew" {
-            execute(Homebrew.removeCmd, baton: "relaunch")
-            
-        } else if  title == "Install pkgsrc" {
+        if title == "Install pkgsrc" {
             execute(Pkgsrc.setupCmd, baton: "relaunch")
             
         } else if title == "Fetch pkgsrc and INDEX" {
@@ -1979,16 +1970,28 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         } else if title == "Fetch FreeBSD INDEX" {
             execute("cd ~/Library/Application\\ Support/Guigna/FreeBSD ; curl -L -O ftp://ftp.freebsd.org/pub/FreeBSD/ports/packages/INDEX", baton: "relaunch")
             
-        } else if  title == "Install Fink" {
+        } else if title == "Install Fink" {
             execute(Fink.setupCmd, baton: "relaunch")
             
-        } else if  title == "Remove Fink" {
+        } else if title == "Remove Fink" {
             execute(Fink.removeCmd, baton: "relaunch")
             
-        } else if  title == "Install Rudix" {
+        } else if title == "Install Homebrew" {
+            execute(Homebrew.setupCmd, baton: "relaunch")
+            
+        } else if title == "Install Homebrew Cask" {
+            execute(HomebrewCasks.setupCmd, baton: "relaunch")
+            
+        } else if title == "Remove Homebrew" {
+            execute(Homebrew.removeCmd, baton: "relaunch")
+            
+        } else if title == "Fetch MacPorts PortIndex" {
+            execute("cd ~/Library/Application\\ Support/Guigna/Macports ; /usr/bin/rsync -rtzv rsync://rsync.macports.org/release/tarballs/PortIndex_darwin_15_i386/PortIndex PortIndex", baton: "relaunch")
+            
+        } else if title == "Install Rudix" {
             execute(Rudix.setupCmd, baton: "relaunch")
             
-        } else if  title == "Remove Rudix" {
+        } else if title == "Remove Rudix" {
             execute(Rudix.removeCmd, baton: "relaunch")
             
         } else {
