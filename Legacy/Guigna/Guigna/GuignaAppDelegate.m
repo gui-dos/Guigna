@@ -1664,10 +1664,8 @@
     } else {
         NSString *title = [sender title];
         NSInteger state = [sender state];
-        GSource *source = nil;
         GSystem *system = nil;
         NSString *command = @"command";
-        NSInteger status = GOffState;
         
         NSFileManager *fileManager = [NSFileManager defaultManager];
         NSMutableArray *addedSystems = [NSMutableArray array];
@@ -1729,25 +1727,7 @@
             
             if ([addedSystems count] > 0) {
                 for (GSystem *system in addedSystems) {
-                    [systems addObject:system];
-                    source = system;
-                    NSInteger systemsCount = [[[sourcesController content][0] valueForKey:@"categories"] count];
-                    [[[sourcesController content][0] mutableArrayValueForKey:@"categories"] addObject:source];
-                    // selecting the new system avoids memory peak > 1.5 GB:
-                    [sourcesController setSelectionIndexPath:[[NSIndexPath indexPathWithIndex:0] indexPathByAddingIndex:systemsCount]];
-                    [sourcesOutline reloadData];
-                    [sourcesOutline display];
-                    [self sourcesSelectionDidChange:[[sourcesController content][0] mutableArrayValueForKey:@"categories"][systemsCount]];
-                    [itemsController addObjects:[system list]];
-                    [itemsTable display];
-                    [allPackages addObjectsFromArray:system.items];
-                    [packagesIndex addEntriesFromDictionary:system.index];
-                    // duplicate code from reloalAllPackages
-                    source.categories = [NSMutableArray array];
-                    NSMutableArray *cats = [source mutableArrayValueForKey:@"categories"];
-                    for (NSString *category in [system categoriesList]) {
-                        [cats addObject:[[GSource alloc] initWithName:category]];
-                    }
+                    [self addSystem:system];
                 }
                 [sourcesOutline reloadData];
                 [sourcesOutline display];
@@ -1758,29 +1738,57 @@
             }
             
         } else {
-            [self optionsStatus:[NSString stringWithFormat: @"Removing %@...", title]];
-            [agent outputForCommand:@"/bin/echo"]; // workaround for updating status in El Capitan
-            NSArray *filtered = [[[sourcesController content][0] categories]filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"name BEGINSWITH %@", title]];
-            if ([filtered count] > 0) {
-                for (GSource *source in filtered) {
-                    status = source.status;
-                    if (status == GOnState) {
-                        [itemsController removeObjects:[items filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"system.name == %@", source.name]]];
-                        [allPackages filterUsingPredicate:[NSPredicate predicateWithFormat:@"system.name != %@", source.name]];
-                        for (GPackage *pkg in source.items) {
-                            [packagesIndex removeObjectForKey:[pkg key]];
-                        }
-                        [source.items removeAllObjects];
-                        [[[sourcesController content][0] mutableArrayValueForKey:@"categories"] removeObject:source];
-                        [systems removeObject:source];
-                    }
-                }
-            }
+            [self removeSystemsNamed:title];
             [self optionsStatus:@"OK."];
         }
     }
     self.ready = YES;
 }
+
+
+- (void)addSystem:(GSystem*)system {
+    [systems addObject:system];
+    NSInteger systemsCount = [[[sourcesController content][0] valueForKey:@"categories"] count];
+    [[[sourcesController content][0] mutableArrayValueForKey:@"categories"] addObject:system];
+    // selecting the new system avoids memory peak > 1.5 GB:
+    [sourcesController setSelectionIndexPath:[[NSIndexPath indexPathWithIndex:0] indexPathByAddingIndex:systemsCount]];
+    [sourcesOutline reloadData];
+    [sourcesOutline display];
+    [self sourcesSelectionDidChange:[[sourcesController content][0] mutableArrayValueForKey:@"categories"][systemsCount]];
+    [itemsController addObjects:[system list]];
+    [itemsTable display];
+    [allPackages addObjectsFromArray:system.items];
+    [packagesIndex addEntriesFromDictionary:system.index];
+    // duplicate code from reloalAllPackages
+    system.categories = [NSMutableArray array];
+    NSMutableArray *cats = [system mutableArrayValueForKey:@"categories"];
+    for (NSString *category in [system categoriesList]) {
+        [cats addObject:[[GSource alloc] initWithName:category]];
+    }
+}
+
+- (void)removeSystemsNamed:(NSString*)name {
+    NSInteger status = GOffState;
+    [self optionsStatus:[NSString stringWithFormat: @"Removing %@...", name]];
+    [agent outputForCommand:@"/bin/echo"]; // workaround for updating status in El Capitan
+    NSArray *filtered = [[[sourcesController content][0] categories] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"name BEGINSWITH %@", name]];
+    if ([filtered count] > 0) {
+        for (GSource *source in filtered) {
+            status = source.status;
+            if (status == GOnState) {
+                [itemsController removeObjects:[items filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"system.name == %@", source.name]]];
+                [allPackages filterUsingPredicate:[NSPredicate predicateWithFormat:@"system.name != %@", source.name]];
+                for (GPackage *pkg in source.items) {
+                    [packagesIndex removeObjectForKey:[pkg key]];
+                }
+                [source.items removeAllObjects];
+                [[[sourcesController content][0] mutableArrayValueForKey:@"categories"] removeObject:source];
+                [systems removeObject:source];
+            }
+        }
+    }
+}
+
 
 -(void)applyTheme:(NSString *)theme {
     if ([theme is:@"Retro"]) {

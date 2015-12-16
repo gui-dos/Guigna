@@ -1752,16 +1752,8 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             if sender is NSButton {
                 let title = (sender as! NSButton).title
                 let state = (sender as! NSButton).state
-                var source: GSystem!
                 var system: GSystem!
                 var command = "command"
-                var status: GState = .Off
-                
-                let sourcesContent = self.sourcesController.content as! NSArray
-                let systemsSource = sourcesContent[0] as! GSource
-                let systemsArray = systemsSource.categories! as! [GSource]
-                let systemsMutableArray = systemsSource.mutableArrayValueForKey("categories")
-                
                 let fileManager = NSFileManager.defaultManager()
                 var addedSystems = [GSystem]()
                 
@@ -1823,27 +1815,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     
                     if addedSystems.count > 0 {
                         for system in addedSystems {
-                            systems.append(system)
-                            source = system
-                            let systemsCount = systemsArray.count
-                            systemsMutableArray.addObject(source)
-                            // selecting the new system avoids memory peak > 1.5 GB:
-                            sourcesController.setSelectionIndexPath(NSIndexPath(index: 0).indexPathByAddingIndex(systemsCount))
-                            sourcesOutline.reloadData()
-                            sourcesOutline.display()
-                            sourcesSelectionDidChange(systemsMutableArray[systemsCount])
-                            itemsController.addObjects(system.list())
-                            itemsTable.display()
-                            allPackages += system.items as! [GPackage]
-                            for (key, value) in system.index {
-                                packagesIndex[key] = value
-                            }
-                            // duplicate code from reloalAllPackages
-                            source.categories = []
-                            let categories = source.mutableArrayValueForKey("categories")
-                            for category in source.categoriesList() {
-                                categories.addObject(GSource(name: category))
-                            }
+                            addSystem(system)
                         }
                         sourcesOutline.reloadData()
                         sourcesOutline.display()
@@ -1854,30 +1826,67 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     }
                     
                 } else {
-                    optionsStatus("Removing \(title)...")
-                    agent.output("/bin/echo") // workaround for updating status in El Capitan
-                    let filtered = systemsArray.filter { $0.name.hasPrefix(title) } // remove both Homebrew and Homebrew Casks
-                    if filtered.count > 0 {
-                        for source in filtered as! [GSystem] {
-                            status = source.status
-                            if status == .On {
-                                itemsController.removeObjects(items.filter { $0.system.name == source.name })
-                                allPackages = allPackages.filter { $0.system.name != source.name }
-                                for pkg in source.items as! [GPackage] {
-                                    packagesIndex.removeValueForKey(pkg.key())
-                                }
-                                source.items.removeAll()
-                                systemsSource.mutableArrayValueForKey("categories").removeObject(source)
-                                systems.removeAtIndex(systems.indexOf(source)!)
-                            }
-                        }
-                    }
+                    removeSystems(title)
                     optionsStatus("OK.")
                 }
             }
         }
         self.ready = true
     }
+    
+    func addSystem(system: GSystem) {
+        systems.append(system)
+        let sourcesContent = self.sourcesController.content as! NSArray
+        let systemsSource = sourcesContent[0] as! GSource
+        let systemsArray = systemsSource.categories! as! [GSource]
+        let systemsMutableArray = systemsSource.mutableArrayValueForKey("categories")
+        let systemsCount = systemsArray.count
+        systemsMutableArray.addObject(system)
+        // selecting the new system avoids memory peak > 1.5 GB:
+        sourcesController.setSelectionIndexPath(NSIndexPath(index: 0).indexPathByAddingIndex(systemsCount))
+        sourcesOutline.reloadData()
+        sourcesOutline.display()
+        sourcesSelectionDidChange(systemsMutableArray[systemsCount])
+        itemsController.addObjects(system.list())
+        itemsTable.display()
+        allPackages += system.items as! [GPackage]
+        for (key, value) in system.index {
+            packagesIndex[key] = value
+        }
+        // duplicate code from reloalAllPackages
+        system.categories = []
+        let categories = system.mutableArrayValueForKey("categories")
+        for category in system.categoriesList() {
+            categories.addObject(GSource(name: category))
+        }
+    }
+    
+    func removeSystems(name: String) {
+        optionsStatus("Removing \(name)...")
+        agent.output("/bin/echo") // workaround for updating status in El Capitan
+        let sourcesContent = self.sourcesController.content as! NSArray
+        let systemsSource = sourcesContent[0] as! GSource
+        let systemsArray = systemsSource.categories! as! [GSource]
+        let systemsMutableArray = systemsSource.mutableArrayValueForKey("categories")
+        let filtered = systemsArray.filter { $0.name.hasPrefix(name) }
+        var status: GState = .Off
+        if filtered.count > 0 {
+            for source in filtered as! [GSystem] {
+                status = source.status
+                if status == .On {
+                    itemsController.removeObjects(items.filter { $0.system.name == source.name })
+                    allPackages = allPackages.filter { $0.system.name != source.name }
+                    for pkg in source.items as! [GPackage] {
+                        packagesIndex.removeValueForKey(pkg.key())
+                    }
+                    source.items.removeAll()
+                    systemsMutableArray.removeObject(source)
+                    systems.removeAtIndex(systems.indexOf(source)!)
+                }
+            }
+        }
+    }
+    
     
     func applyTheme(theme: String) {
         if theme == "Retro" {
