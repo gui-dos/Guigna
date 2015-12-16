@@ -3,13 +3,20 @@
 #import "GAgent.h"
 #import "GPackage.h"
 
-@interface GSystem : GSource
+@interface GSystem : GSource {
+    
+    NSMutableDictionary *_defaults;
+    
+}
 
 @property(strong) NSString *prefix;
 @property(strong) NSMutableDictionary *index;
 @property(readonly, getter=isHidden) BOOL hidden;
 
 - (instancetype)initWithName:(NSString *)name agent:(GAgent *)agent;
+
+- (NSObject *)defaults:(NSString *)key;
+- (void)setDefaults:(NSObject *)value forKey:(NSString *)key;
 
 - (NSArray *)list;
 - (NSArray *)installed;

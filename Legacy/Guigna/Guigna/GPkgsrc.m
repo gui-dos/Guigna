@@ -259,7 +259,7 @@
 }
 
 - (NSString *)updateCmd {
-    if (self.mode == GOnlineMode || [self.agent.appDelegate.defaults[@"pkgsrcCVS"] isEqual:@NO])
+    if (self.mode == GOnlineMode || [[self defaults:@"pkgsrcCVS"] isEqual:@NO])
         return nil;
     else
         return @"sudo cd; cd /usr/pkgsrc ; sudo cvs update -dP";

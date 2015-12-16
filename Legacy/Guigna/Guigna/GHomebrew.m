@@ -54,8 +54,9 @@
         [self.items addObject:pkg];
         self[name] = pkg;
     }
+    
     // TODO
-    if ([self.agent.appDelegate.defaults[@"HomebrewMainTaps"] isEqual:@YES]) {
+    if ([[self defaults:@"HomebrewMainTaps"] isEqual:@YES]) {
         output = [NSMutableArray arrayWithArray:[[self outputFor:@"%@ search \"\"", self.cmd] componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
         for (NSString *line in output) {
             if (![line contains:@"/"])
@@ -74,6 +75,7 @@
             self[name] = pkg;
         }
     }
+    
     [self installed]; // update status
     return self.items;
 }

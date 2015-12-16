@@ -9,8 +9,25 @@
     self.prefix = [[self class] prefix];
     self.status = GOnState;
     _index = [NSMutableDictionary dictionary];
+    _defaults = [NSMutableDictionary dictionary];
     return self;
 }
+
+
+- (NSObject *)defaults:(NSString *)key {
+    if (self.agent != nil) {
+        return [self.agent.appDelegate defaults][key];
+    } else {
+        return _defaults[key];
+    }
+}
+
+- (void)setDefaults:(NSObject *)value forKey:(NSString *)key {
+    _defaults[key] = value;
+    if (self.agent != nil)
+        [[[self.agent.appDelegate defaults] values] setValue:value forKey:key];
+}
+
 
 - (NSArray *)list {
     return @[];

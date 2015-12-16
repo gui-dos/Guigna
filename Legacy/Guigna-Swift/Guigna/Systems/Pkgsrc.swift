@@ -264,7 +264,7 @@ class Pkgsrc: GSystem {
     
     override var updateCmd: String! {
         get {
-            if mode == .Online || agent.appDelegate!.defaults["pkgsrcCVS"] == false {
+            if mode == .Online || (defaults?["pkgsrcCVS"] as? Bool ?? false) == false {
                 return nil
             } else {
                 return "sudo cd; cd /usr/pkgsrc ; sudo cvs update -dP"

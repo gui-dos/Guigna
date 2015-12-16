@@ -22,7 +22,7 @@
     [self.index removeAllObjects];
     [self.items removeAllObjects];
     NSMutableArray *pkgs = [NSMutableArray array];
-    if ([self.agent.appDelegate.defaults[@"MacPortsParsePortIndex"] isEqual:@NO] && self.mode == GOfflineMode) {
+    if ([[self defaults:@"MacPortsParsePortIndex"] isEqual:@NO] && (self.mode == GOfflineMode)) {
         NSMutableArray *output = [NSMutableArray arrayWithArray:[[self outputFor:@"%@ list", self.cmd] split:@"\n"]];
         [output removeLastObject];
         NSCharacterSet *whitespaceCharacterSet = [NSCharacterSet whitespaceCharacterSet];

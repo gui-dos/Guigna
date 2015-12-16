@@ -6,12 +6,26 @@ class GSystem: GSource {
     
     var prefix: String
     var index: [String: GPackage]
+    var defaults: [String: AnyObject]?
     
     override init(name: String, agent: GAgent!) {
         prefix = self.dynamicType.prefix
         index = [String: GPackage](minimumCapacity: 50000)
         super.init(name: name, agent: agent)
         status = .On
+    }
+    
+    func defaults(key: String) -> AnyObject? {
+        if self.agent != nil {
+            return self.agent.appDelegate?.defaults[key]
+        } else {
+            return self.defaults?[key]
+        }
+    }
+    
+    func setDefaults(value: AnyObject, forKey key: String) {
+        self.defaults?[key] = value
+        self.agent?.appDelegate?.defaults.values.setValue(value as! NSObject, forKey: key)
     }
     
     func list() -> [GPackage] {

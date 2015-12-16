@@ -47,7 +47,10 @@ class Homebrew: GSystem {
             items.append(pkg)
             self[name] = pkg
         }
-        // TODO HomebrewMainTaps
+        
+        // TODO: HomebrewMainTaps
+        // if (defaults?["HomebrewMainTaps"] as? Bool ?? false) == true {
+        
         self.installed() // update status
         return items as! [GPackage]
     }
