@@ -178,7 +178,6 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             system("mkdir -p '\(APPDIR)/\(dir)'")
         }
         
-        let fileManager = NSFileManager.defaultManager()
         system("osascript -e 'tell application \"Terminal\" to close (windows whose name contains \"Guigna \")'")
         terminal = SBApplication(bundleIdentifier: "com.apple.Terminal")
         let guignaFunction = "guigna() { osascript -e 'tell app \"Guigna\"' -e \"open POSIX file \\\"\(APPDIR)/$2\\\"\" -e 'end' &>/dev/null; }"
@@ -209,7 +208,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         
         let knownPaths = ["MacPorts": "/opt/local", "Homebrew": "/usr/local", "pkgsrc": "/usr/pkg", "Fink": "/sw"]
         for (system, prefix) in knownPaths {
-            if fileManager.fileExistsAtPath("\(prefix)_off") {
+            if "\(prefix)_off".exists {
                 let alert = NSAlert()
                 alert.alertStyle = .CriticalAlertStyle
                 alert.messageText = "Hidden system detected."
@@ -235,7 +234,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         
         terminal.doScript("clear ; printf \"\\e[3J\" ; echo Welcome to Guigna! ; echo", `in`:shell)
         
-        if fileManager.fileExistsAtPath(portPath) || fileManager.fileExistsAtPath("\(APPDIR)/MacPorts/PortIndex") {
+        if portPath.exists || "\(APPDIR)/MacPorts/PortIndex".exists {
             if defaults["MacPortsStatus"] == nil {
                 defaults["MacPortsStatus"] = GState.On.rawValue
             }
@@ -245,10 +244,10 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
         if defaults["MacPortsStatus"] != nil && defaults["MacPortsStatus"] == GState.On.rawValue {
             let macports = MacPorts(agent: agent)
-            if !fileManager.fileExistsAtPath(portPath) {
+            if !portPath.exists {
                 macports.mode = .Online
             }
-            if !(macports.mode == .Online && !fileManager.fileExistsAtPath("\(APPDIR)/MacPorts/PortIndex")) {
+            if !(macports.mode == .Online && !"\(APPDIR)/MacPorts/PortIndex".exists) {
                 systems.append(macports)
                 if macports.cmd != portPath {
                     macports.prefix = ((portPath as NSString).stringByDeletingLastPathComponent as NSString).stringByDeletingLastPathComponent
@@ -257,20 +256,20 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             }
         }
         
-        if fileManager.fileExistsAtPath(brewPath) {
+        if brewPath.exists {
             if defaults["HomebrewStatus"] == nil {
                 defaults["HomebrewStatus"] = GState.On.rawValue
             }
         }
         if defaults["HomebrewStatus"] != nil && defaults["HomebrewStatus"] == GState.On.rawValue {
-            if fileManager.fileExistsAtPath(brewPath) { // TODO: online mode
+            if brewPath.exists { // TODO: online mode
                 let homebrew = Homebrew(agent: agent)
                 systems.append(homebrew)
                 if homebrew.cmd != brewPath {
                     homebrew.prefix = ((brewPath as NSString).stringByDeletingLastPathComponent as NSString).stringByDeletingLastPathComponent
                     homebrew.cmd = brewPath
                 }
-                if fileManager.fileExistsAtPath("\(homebrew.prefix)/Library/Taps/caskroom/homebrew-cask/cmd/brew-cask.rb") {
+                if "\(homebrew.prefix)/Library/Taps/caskroom/homebrew-cask/cmd/brew-cask.rb".exists {
                     let homebrewcasks = HomebrewCasks(agent: agent)
                     systems.append(homebrewcasks)
                     homebrewcasks.prefix = homebrew.prefix
@@ -279,21 +278,21 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             }
         }
         
-        if fileManager.fileExistsAtPath("/sw/bin/fink") {
+        if "/sw/bin/fink".exists {
             if defaults["FinkStatus"] == nil {
                 defaults["FinkStatus"] = GState.On.rawValue
             }
         }
         if defaults["FinkStatus"] != nil && defaults["FinkStatus"] == GState.On.rawValue {
             let fink = Fink(agent: agent)
-            if !fileManager.fileExistsAtPath("/sw/bin/fink") {
+            if !"/sw/bin/fink".exists {
                 fink.mode = .Online
             }
             systems.append(fink)
         }
         
         // TODO: Index user defaults
-        if fileManager.fileExistsAtPath("/usr/pkg/sbin/pkg_info") || fileManager.fileExistsAtPath("\(APPDIR)/pkgsrc/INDEX") {
+        if "/usr/pkg/sbin/pkg_info".exists || "\(APPDIR)/pkgsrc/INDEX".exists {
             if defaults["pkgsrcStatus"] == nil {
                 defaults["pkgsrcStatus"] = GState.On.rawValue
                 defaults["pkgsrcCVS"] = true
@@ -301,13 +300,13 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
         if defaults["pkgsrcStatus"] != nil && defaults["pkgsrcStatus"] == GState.On.rawValue {
             let pkgsrc = Pkgsrc(agent: agent)
-            if !fileManager.fileExistsAtPath("/usr/pkg/sbin/pkg_info") {
+            if !"/usr/pkg/sbin/pkg_info".exists {
                 pkgsrc.mode = .Online
             }
             systems.append(pkgsrc)
         }
         
-        if fileManager.fileExistsAtPath("\(APPDIR)/FreeBSD/INDEX") {
+        if "\(APPDIR)/FreeBSD/INDEX".exists {
             if defaults["FreeBSDStatus"] == nil {
                 defaults["FreeBSDStatus"] = GState.On.rawValue
             }
@@ -318,14 +317,14 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             systems.append(freebsd)
         }
         
-        if fileManager.fileExistsAtPath("/usr/local/bin/rudix") {
+        if "/usr/local/bin/rudix".exists {
             if defaults["RudixStatus"] == nil {
                 defaults["RudixStatus"] = GState.On.rawValue
             }
         }
         if defaults["RudixStatus"] != nil && defaults["RudixStatus"] == GState.On.rawValue {
             let rudix = Rudix(agent: agent)
-            if !fileManager.fileExistsAtPath("/usr/local/bin/rudix") {
+            if !"/usr/local/bin/rudix".exists {
                 rudix.mode = .Online
             }
             systems.append(rudix)
@@ -1535,10 +1534,9 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
         
         let prefixes = ["/opt/local", "/usr/local", "/sw", "/usr/pkg"]
-        let fileManager = NSFileManager.defaultManager()
         var detectedPrefixes = [String]()
         for prefix in prefixes {
-            if fileManager.fileExistsAtPath(prefix) {
+            if prefix.exists {
                 detectedPrefixes.append(prefix)
             }
         }
@@ -1601,7 +1599,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     if otherSystem.hideCmd != nil
                         && otherSystem.hideCmd != system.hideCmd
                         && systemTasks.indexOf(otherSystem.hideCmd) == nil
-                        && fileManager.fileExistsAtPath(otherSystem.prefix) {
+                        && otherSystem.prefix.exists {
                             tasks.append(otherSystem.hideCmd)
                             systemTasks.append(otherSystem.hideCmd)
                             // TODO: set GOnlineMode
@@ -1620,7 +1618,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     if otherSystem.hideCmd != nil
                         && otherSystem.hideCmd != system.hideCmd
                         && systemTasks.indexOf(otherSystem.unhideCmd) == nil
-                        && fileManager.fileExistsAtPath(otherSystem.prefix) {
+                        && otherSystem.prefix.exists {
                             tasks.append(otherSystem.unhideCmd)
                             systemTasks.append(otherSystem.unhideCmd)
                     }
@@ -1754,7 +1752,6 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 let state = (sender as! NSButton).state
                 var system: GSystem!
                 var command = "command"
-                let fileManager = NSFileManager.defaultManager()
                 var addedSystems = [GSystem]()
                 
                 if state == NSOnState {
@@ -1763,10 +1760,10 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     
                     if title == "Homebrew" {
                         command = "/usr/local/bin/brew"
-                        if fileManager.fileExistsAtPath(command) {
+                        if command.exists {
                             system = Homebrew(agent: agent)
                             addedSystems.append(system)
-                            if fileManager.fileExistsAtPath("/usr/local/Library/Taps/caskroom/homebrew-cask/cmd/brew-cask.rb") {
+                            if "/usr/local/Library/Taps/caskroom/homebrew-cask/cmd/brew-cask.rb".exists {
                                 system = HomebrewCasks(agent: agent)
                                 addedSystems.append(system)
                             }
@@ -1776,7 +1773,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                         command = "/opt/local/bin/port"
                         system = MacPorts(agent: agent)
                         let escapedAppDir = APPDIR.replace(" ","__")
-                        if !(fileManager.fileExistsAtPath(command)) {
+                        if !command.exists {
                             agent.output("/usr/bin/rsync -rtzv rsync://rsync.macports.org/release/tarballs/PortIndex_darwin_15_i386/PortIndex \(escapedAppDir)/MacPorts/PortIndex")
                             system.mode = .Online
                         }
@@ -1785,13 +1782,13 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     } else if title == "Fink" {
                         command = "/sw/bin/fink"
                         system = Fink(agent: agent)
-                        system.mode = (fileManager.fileExistsAtPath(command)) ? .Offline : .Online
+                        system.mode = command.exists ? .Offline : .Online
                         addedSystems.append(system)
                         
                     } else if title == "pkgsrc" {
                         command = "/usr/pkg/sbin/pkg_info"
                         system = Pkgsrc(agent: agent)
-                        system.mode = (fileManager.fileExistsAtPath(command)) ? .Offline : .Online
+                        system.mode = command.exists ? .Offline : .Online
                         addedSystems.append(system)
                         
                     } else if title == "FreeBSD" {
@@ -1803,7 +1800,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     } else if title == "Rudix" {
                         command = "/usr/local/bin/rudix"
                         system = Rudix(agent: agent)
-                        system.mode = (fileManager.fileExistsAtPath(command)) ? .Offline : .Online
+                        system.mode = command.exists ? .Offline : .Online
                         if system.mode == .Offline { // FIXME: manifest is not available anymore
                             addedSystems.append(system)
                         }
@@ -1826,7 +1823,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     }
                     
                 } else {
-                    removeSystems(title)
+                    removeSystems(named: title)
                     optionsStatus("OK.")
                 }
             }
@@ -1861,7 +1858,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
     }
     
-    func removeSystems(name: String) {
+    func removeSystems(named name: String) {
         optionsStatus("Removing \(name)...")
         agent.output("/bin/echo") // workaround for updating status in El Capitan
         let sourcesContent = self.sourcesController.content as! NSArray

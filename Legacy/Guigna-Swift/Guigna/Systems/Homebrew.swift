@@ -49,7 +49,7 @@ class Homebrew: GSystem {
         }
         
         if (defaults("HomebrewMainTaps") as? Bool ?? false) == true {
-            let brewCaskCommandAvailable = NSFileManager.defaultManager().fileExistsAtPath("\(prefix)/Library/Taps/caskroom/homebrew-cask/cmd/brew-cask.rb")
+            let brewCaskCommandAvailable = "\(prefix)/Library/Taps/caskroom/homebrew-cask/cmd/brew-cask.rb".exists
             outputLines = output("\(cmd) search \"\"").componentsSeparatedByCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
             for line in outputLines {
                 if !line.contains("/") {
@@ -244,7 +244,7 @@ class Homebrew: GSystem {
             let tokens = (item as! GPackage).repo!.split("/")
             let user = tokens[0]
             path = "\(user)/homebrew-\(tokens[1])/commits/master"
-            if NSFileManager.defaultManager().fileExistsAtPath("\(prefix)/Library/Taps/\(user)/homebrew-\(tokens[1])/Formula") {
+            if "\(prefix)/Library/Taps/\(user)/homebrew-\(tokens[1])/Formula".exists {
                 path += "/Formula"
             }
         }

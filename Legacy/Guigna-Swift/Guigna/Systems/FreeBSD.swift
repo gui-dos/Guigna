@@ -17,7 +17,7 @@ class FreeBSD: GSystem {
         items.removeAll(keepCapacity: true)
         
         let indexPath = ("~/Library/Application Support/Guigna/FreeBSD/INDEX" as NSString).stringByExpandingTildeInPath
-        if NSFileManager.defaultManager().fileExistsAtPath(indexPath) {
+        if indexPath.exists {
             let lines = (try! String(contentsOfFile: indexPath, encoding: NSUTF8StringEncoding)).split("\n")
             for line in lines {
                 let components = line.split("|")

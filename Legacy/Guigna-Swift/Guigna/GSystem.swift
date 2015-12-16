@@ -46,7 +46,7 @@ class GSystem: GSource {
     
     var isHidden: Bool {
         get {
-            return NSFileManager.defaultManager().fileExistsAtPath(prefix + "_off")
+            return "\(prefix)_off".exists
         }
     }
     

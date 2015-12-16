@@ -25,9 +25,11 @@ extension Array {
 extension String {
     
     var length: Int {
-        get {
-            return self.characters.count
-        }
+        return self.characters.count
+    }
+    
+    var exists: Bool {
+        return NSFileManager.defaultManager().fileExistsAtPath((self as NSString).stringByExpandingTildeInPath)
     }
     
     func index(string: String) -> Int {
