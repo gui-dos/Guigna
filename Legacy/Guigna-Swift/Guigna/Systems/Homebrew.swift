@@ -60,6 +60,9 @@ class Homebrew: GSystem {
                 if tokens[1] == "cask" && brewCaskCommandAvailable {
                     continue
                 }
+                if self[name] != nil {
+                    continue
+                }
                 let repo = "\(tokens[0])/\(tokens[1])"
                 let pkg = GPackage(name: name, version: "", system: self, status: .Available)
                 pkg.categories = tokens[1]

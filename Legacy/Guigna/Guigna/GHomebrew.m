@@ -66,6 +66,8 @@
             NSString *name = tokens[[tokens count]-1];
             if ([tokens[1] is:@"cask"] && brewCaskCommandAvailable)
                 continue;
+            if (self[name] != nil)
+                continue;
             NSString *repo = [NSString stringWithFormat:@"%@/%@", tokens[0], tokens[1]];
             GPackage *pkg = [[GPackage alloc] initWithName:name
                                                    version:@""
