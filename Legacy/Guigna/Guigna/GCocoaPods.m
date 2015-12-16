@@ -28,8 +28,11 @@
         NSString *htmlDescription = [node[@"description"][0] stringValue];
         NSXMLElement *descriptionNode = [[[NSXMLDocument alloc] initWithXMLString:htmlDescription options:NSXMLDocumentTidyHTML error:nil] rootElement];
         NSString *description = [descriptionNode[@".//p"][1] stringValue];
-        NSString *license = [descriptionNode[@".//li[starts-with(.,'License:')]"][0] stringValue];
-        license = [license substringFromIndex: 9];
+        NSString *license = @"";
+        NSArray *licenseNodes = descriptionNode[@".//li[starts-with(.,'License:')]"];
+        if ([licenseNodes count] > 0) {
+            license = [[licenseNodes[0] stringValue] substringFromIndex:9];
+        }
         NSString *version = [descriptionNode[@".//li[starts-with(.,'Latest version:')]"][0] stringValue];
         version = [version substringFromIndex: 15];
         NSString *home = [descriptionNode[@".//li[starts-with(.,'Homepage:')]/a"][0] href];

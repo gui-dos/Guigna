@@ -183,8 +183,11 @@ class CocoaPods: GScrape {
                 let htmlDescription = node["description"][0].stringValue!
                 let descriptionNode = (try! NSXMLDocument(XMLString: htmlDescription, options: Int(NSXMLDocumentTidyHTML))).rootElement()!
                 let description = descriptionNode[".//p"][1].stringValue!
-                var license = descriptionNode[".//li[starts-with(.,'License:')]"][0].stringValue!
-                license = license.substringFromIndex(9)
+                var licenseNodes = descriptionNode[".//li[starts-with(.,'License:')]"]
+                var license: String = ""
+                if licenseNodes.count > 0 {
+                    license = licenseNodes[0].stringValue!.substringFromIndex(9)
+                }
                 var version = descriptionNode[".//li[starts-with(.,'Latest version:')]"][0].stringValue!
                 version = version.substringFromIndex(15)
                 let home = descriptionNode[".//li[starts-with(.,'Homepage:')]/a"][0].stringValue!
