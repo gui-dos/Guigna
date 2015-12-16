@@ -601,10 +601,18 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 self.sourcesOutline.setDelegate(nil)
                 self.status("Indexing categories...")
                 for system in (((self.sourcesController.content as! NSArray)[0] as! GSource).categories as! [GSystem]) {
+                    // duplicate code is addSystem()
                     system.categories = []
                     let categories = system.mutableArrayValueForKey("categories")
                     for category in system.categoriesList() {
-                        categories.addObject(GSource(name: category))
+                        let categorySource = GSource(name: category)
+                        if system.name == "Homebrew" {
+                            if category == "cask" {
+                                continue
+                            }
+                            categorySource.homepage = system.logpage.replace("homebrew", "homebrew-" + category)
+                        }
+                        categories.addObject(categorySource)
                     }
                 }
                 self.sourcesOutline.setDelegate(self)
@@ -785,6 +793,10 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                         }
                         
                     } else if !(src == "SYSTEMS" || src == "STATUS" || src == "") { // a category was selected
+                        if first {
+                            segmentedControl.selectedSegment = 2 // shows System Log
+                            self.updateTabView(nil)
+                        }
                         itemsController.filterPredicate = NSPredicate(format: "categories CONTAINS[c] '\(src)'")
                         packages = system.items.filter { $0.categories != nil && $0.categories!.contains(src) } as! [GPackage]
                         
@@ -942,6 +954,10 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 if sourcesController.selectedObjects.count == 1 {
                     if sourcesController.selectedObjects[0] is GSystem {
                         page = (sourcesController.selectedObjects[0] as! GSystem).logpage
+                    } else {
+                        if let homepage = (sourcesController.selectedObjects[0] as! GSource).homepage {
+                            page = homepage
+                        }
                     }
                 }
             }
@@ -1854,7 +1870,14 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         system.categories = []
         let categories = system.mutableArrayValueForKey("categories")
         for category in system.categoriesList() {
-            categories.addObject(GSource(name: category))
+            let categorySource = GSource(name: category)
+            if system.name == "Homebrew" {
+                if category == "cask" {
+                    continue
+                }
+                categorySource.homepage = system.logpage.replace("homebrew", "homebrew-" + category)
+            }
+            categories.addObject(categorySource)
         }
     }
     

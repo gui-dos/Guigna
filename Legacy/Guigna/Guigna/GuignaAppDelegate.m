@@ -583,10 +583,17 @@
                 [sourcesOutline setDelegate:nil];
                 [self status:@"Indexing categories..."];
                 for (GSystem *system in [[sourcesController content][0] categories]) {
+                    // duplicate code in addSystem
                     system.categories = [NSMutableArray array];
                     NSMutableArray *cats = [system mutableArrayValueForKey:@"categories"];
                     for (NSString *category in [system categoriesList]) {
-                        [cats addObject:[[GSource alloc] initWithName:category]];
+                        GSource *categorySource = [[GSource alloc] initWithName:category];
+                        if ([system.name is:@"Homebrew"]) {
+                            if ([category is:@"cask"])
+                                continue;
+                            categorySource.homepage = [system.logpage replace:@"homebrew" with:[@"homebrew-" stringByAppendingString:category]];
+                        }
+                        [cats addObject:categorySource];
                     }
                 }
                 [sourcesOutline setDelegate:self];
@@ -763,6 +770,10 @@
                 } else if (!([src is:@"SYSTEMS"]
                              || [src is:@"STATUS"]
                              || [src is:@""])) { // a category was selected
+                    if (first) {
+                        [segmentedControl setSelectedSegment:2]; // shows System Log
+                        [self updateTabView:nil];
+                    }
                     [itemsController setFilterPredicate:[NSPredicate predicateWithFormat:@"categories CONTAINS[c] %@", src]];
                     packages = [system.items filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"categories CONTAINS[c] %@", src]];
                     
@@ -912,6 +923,10 @@
             if ([[sourcesController selectedObjects] count] == 1 ) {
                 if ([[sourcesController selectedObjects][0] isKindOfClass:[GSystem class]]) {
                     page = [(GSystem *)[sourcesController selectedObjects][0] logpage];
+                } else {
+                    NSString *homepage = [(GSource *)[sourcesController selectedObjects][0] homepage];
+                    if (homepage != nil)
+                        page = homepage;
                 }
             }
         }
@@ -1763,7 +1778,13 @@
     system.categories = [NSMutableArray array];
     NSMutableArray *cats = [system mutableArrayValueForKey:@"categories"];
     for (NSString *category in [system categoriesList]) {
-        [cats addObject:[[GSource alloc] initWithName:category]];
+        GSource *categorySource = [[GSource alloc] initWithName:category];
+        if ([system.name is:@"Homebrew"]) {
+            if ([category is:@"cask"])
+                continue;
+            categorySource.homepage = [system.logpage replace:@"homebrew" with:[@"homebrew-" stringByAppendingString:category]];
+        }
+        [cats addObject:categorySource];
     }
 }
 
