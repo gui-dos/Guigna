@@ -25,8 +25,8 @@ class GSystem: GSource {
     
     func setDefaults(value: AnyObject, forKey key: String) {
         self.defaults?[key] = value
-        self.agent?.appDelegate?.defaults.values.setValue(value as! NSObject, forKey: key)
-    }
+        self.agent?.appDelegate?.defaults[key] = value as! NSObject
+        }
     
     func list() -> [GPackage] {
         return []

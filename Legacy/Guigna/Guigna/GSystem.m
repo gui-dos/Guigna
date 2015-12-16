@@ -25,7 +25,7 @@
 - (void)setDefaults:(NSObject *)value forKey:(NSString *)key {
     _defaults[key] = value;
     if (self.agent != nil)
-        [[[self.agent.appDelegate defaults] values] setValue:value forKey:key];
+        [self.agent.appDelegate defaults][key] = value;
 }
 
 

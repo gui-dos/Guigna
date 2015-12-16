@@ -16,7 +16,7 @@ class MacPorts: GSystem {
         index.removeAll(keepCapacity: true)
         items.removeAll(keepCapacity: true)
         
-        if (defaults?["MacPortsParsePortIndex"] as? Bool ?? false) == false && mode == .Offline {
+        if (defaults("MacPortsParsePortIndex") as? Bool ?? false) == false && mode == .Offline {
             var outputLines = output("\(cmd) list").split("\n")
             outputLines.removeLast()
             let whitespaceCharacterSet = NSCharacterSet.whitespaceCharacterSet()

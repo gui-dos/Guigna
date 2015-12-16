@@ -48,8 +48,24 @@ class Homebrew: GSystem {
             self[name] = pkg
         }
         
-        // TODO: HomebrewMainTaps
-        // if (defaults?["HomebrewMainTaps"] as? Bool ?? false) == true {
+        if (defaults("HomebrewMainTaps") as? Bool ?? false) == true {
+            outputLines = output("\(cmd) search \"\"").componentsSeparatedByCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+            for line in outputLines {
+                if !line.contains("/") {
+                    continue
+                }
+                let tokens = line.split("/")
+                let name = tokens.last!
+                let repo = "\(tokens[0])/\(tokens[1])"
+                let pkg = GPackage(name: name, version: "", system: self, status: .Available)
+                pkg.categories = tokens[1]
+                pkg.repo = repo
+                pkg.description = repo
+                items.append(pkg)
+                self[name] = pkg
+            }
+        }
+        
         
         self.installed() // update status
         return items as! [GPackage]
