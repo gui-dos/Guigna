@@ -49,6 +49,7 @@ class Homebrew: GSystem {
         }
         
         if (defaults("HomebrewMainTaps") as? Bool ?? false) == true {
+            let brewCaskCommandAvailable = NSFileManager.defaultManager().fileExistsAtPath("\(prefix)/Library/Taps/caskroom/homebrew-cask/cmd/brew-cask.rb")
             outputLines = output("\(cmd) search \"\"").componentsSeparatedByCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
             for line in outputLines {
                 if !line.contains("/") {
@@ -56,6 +57,9 @@ class Homebrew: GSystem {
                 }
                 let tokens = line.split("/")
                 let name = tokens.last!
+                if tokens[1] == "cask" && brewCaskCommandAvailable {
+                    continue
+                }
                 let repo = "\(tokens[0])/\(tokens[1])"
                 let pkg = GPackage(name: name, version: "", system: self, status: .Available)
                 pkg.categories = tokens[1]

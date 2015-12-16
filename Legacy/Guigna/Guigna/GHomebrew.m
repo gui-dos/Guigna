@@ -57,12 +57,15 @@
     
     // TODO
     if ([[self defaults:@"HomebrewMainTaps"] isEqual:@YES]) {
+        BOOL brewCaskCommandAvailable = [[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@/Library/Taps/caskroom/homebrew-cask/cmd/brew-cask.rb", self.prefix]];
         output = [NSMutableArray arrayWithArray:[[self outputFor:@"%@ search \"\"", self.cmd] componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
         for (NSString *line in output) {
             if (![line contains:@"/"])
                 continue;
             NSArray *tokens = [line split:@"/"];
             NSString *name = tokens[[tokens count]-1];
+            if ([tokens[1] is:@"cask"] && brewCaskCommandAvailable)
+                continue;
             NSString *repo = [NSString stringWithFormat:@"%@/%@", tokens[0], tokens[1]];
             GPackage *pkg = [[GPackage alloc] initWithName:name
                                                    version:@""
