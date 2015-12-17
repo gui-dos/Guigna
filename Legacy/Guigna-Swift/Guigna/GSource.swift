@@ -14,7 +14,7 @@ enum GMode: Int {
 
 
 class GSource: NSObject {
-    
+
     var name: String
     var categories: [AnyObject]?
     var items: [GItem]
@@ -24,7 +24,7 @@ class GSource: NSObject {
     var homepage: String!
     var logpage: String!
     var cmd: String!
-    
+
     init(name: String, agent: GAgent?) {
         self.name = name
         self.agent = agent
@@ -33,15 +33,15 @@ class GSource: NSObject {
         status = .On
         mode = .Offline
     }
-    
+
     convenience init(name: String) {
         self.init(name: name, agent: nil)
     }
-    
+
     func info(item: GItem) -> String {
         return "\(item.name) - \(item.version)\n\(self.home(item))"
     }
-    
+
     func home(item: GItem) -> String {
         if item.homepage != nil {
             return item.homepage
@@ -49,43 +49,43 @@ class GSource: NSObject {
             return homepage
         }
     }
-    
+
     func log(item: GItem) -> String {
         return home(item)
     }
-    
+
     func contents(item: GItem) -> String {
         return ""
     }
-    
+
     func cat(item: GItem) -> String {
         return "[Not Available]"
     }
-    
-    
+
+
     func deps(item: GItem) -> String {
         return ""
     }
-    
-    
+
+
     func dependents(item: GItem) -> String {
         return ""
     }
-    
+
 }
 
 
 @objc(GSourceTransformer)
 class GSourceTransformer: NSValueTransformer {
-    
+
     override class func transformedValueClass() -> AnyClass {
         return NSImage.self
     }
-    
+
     override class func allowsReverseTransformation() -> Bool {
         return false
     }
-    
+
     override func transformedValue(source: AnyObject?) -> AnyObject? {
         if source == nil {
             return nil

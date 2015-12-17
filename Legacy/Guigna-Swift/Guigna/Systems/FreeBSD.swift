@@ -1,21 +1,21 @@
 import Foundation
 
 class FreeBSD: GSystem {
-    
+
     override class var prefix: String { return  "" }
-    
+
     init(agent: GAgent) {
         super.init(name: "FreeBSD", agent: agent)
         homepage = "http://www.freebsd.org/ports/"
         logpage = "http://www.freshports.org"
         cmd = "\(prefix)freebsd"
     }
-    
+
     override func list() -> [GPackage] {
-        
+
         index.removeAll(keepCapacity: true)
         items.removeAll(keepCapacity: true)
-        
+
         let indexPath = ("~/Library/Application Support/Guigna/FreeBSD/INDEX" as NSString).stringByExpandingTildeInPath
         if indexPath.exists {
             let lines = (try! String(contentsOfFile: indexPath, encoding: NSUTF8StringEncoding)).split("\n")
@@ -38,7 +38,7 @@ class FreeBSD: GSystem {
                 items.append(pkg)
                 // self[id] = pkg
             }
-            
+
         } else {
             let url = NSURL(string: "http://www.freebsd.org/ports/master-index.html")!
             if let xmlDoc = try? NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML)) {
@@ -66,8 +66,8 @@ class FreeBSD: GSystem {
         // self.installed() // update status
         return items as! [GPackage]
     }
-    
-    
+
+
     override func info(item: GItem) -> String { // TODO: Offline mode
         let category = item.categories!.split()[0]
         var itemName = item.name
@@ -81,8 +81,8 @@ class FreeBSD: GSystem {
         }
         return pkgDescr
     }
-    
-    
+
+
     override func home(item: GItem) -> String {
         if item.homepage != nil { // already available from INDEX
             return item.homepage
@@ -99,12 +99,12 @@ class FreeBSD: GSystem {
         }
         return self.log(item) // TODO
     }
-    
+
     override func log(item: GItem) -> String {
         let category = item.categories!.split()[0]
         return "http://www.freshports.org/\(category)/\(item.name)"
     }
-    
+
     override func contents(item: GItem) -> String {
         let category = item.categories!.split()[0]
         var itemName = item.name
@@ -118,7 +118,7 @@ class FreeBSD: GSystem {
         }
         return pkgPlist
     }
-    
+
     override func cat(item: GItem) -> String {
         let category = item.categories!.split()[0]
         var itemName = item.name
@@ -132,9 +132,9 @@ class FreeBSD: GSystem {
         }
         return makefile
     }
-    
+
     // TODO: deps => parse requirements:
     // http://www.FreeBSD.org/cgi/ports.cgi?query=%5E' + '%@-%@' item.name-item.version
-    
+
 }
 

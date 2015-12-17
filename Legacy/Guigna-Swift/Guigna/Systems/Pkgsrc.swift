@@ -1,16 +1,16 @@
 import Foundation
 
 class Pkgsrc: GSystem {
-    
+
     override class var prefix: String { return  "/usr/pkg" }
-    
+
     init(agent: GAgent) {
         super.init(name: "pkgsrc", agent: agent)
         homepage = "http://www.pkgsrc.org"
         logpage = "http://www.netbsd.org/changes/pkg-changes.html"
         cmd = "\(prefix)/sbin/pkg_info"
     }
-    
+
     // include category for managing duplicates of xp, binutils, fuse, p5-Net-CUPS
     override func key(package pkg: GPackage) -> String {
         if pkg.id != nil {
@@ -19,12 +19,12 @@ class Pkgsrc: GSystem {
             return "\(pkg.categories!.split()[0])/\(pkg.name)-\(name)"
         }
     }
-    
+
     override func list() -> [GPackage] {
-        
+
         index.removeAll(keepCapacity: true)
         items.removeAll(keepCapacity: true)
-        
+
         let indexPath = ("~/Library/Application Support/Guigna/pkgsrc/INDEX" as NSString).stringByExpandingTildeInPath
         if indexPath.exists {
             let lines = (try! String(contentsOfFile: indexPath, encoding: NSUTF8StringEncoding)).split("\n")
@@ -51,7 +51,7 @@ class Pkgsrc: GSystem {
                 items.append(pkg)
                 self[id] = pkg
             }
-            
+
         } else {
             let url = NSURL(string: "http://ftp.netbsd.org/pub/pkgsrc/current/pkgsrc/README-all.html")!
             if let xmlDoc = try? NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML)) {
@@ -88,20 +88,20 @@ class Pkgsrc: GSystem {
         self.installed() // update status
         return items as! [GPackage]
     }
-    
+
     // TODO: outdated()
     override func installed() -> [GPackage] {
-        
+
         if self.isHidden {
             return items.filter { $0.status != .Available} as! [GPackage]
         }
         var pkgs = [GPackage]()
         pkgs.reserveCapacity(50000)
-        
+
         if mode == .Online {
             return pkgs
         }
-        
+
         var status: GStatus
         for pkg in items as! [GPackage] {
             status = pkg.status
@@ -146,11 +146,11 @@ class Pkgsrc: GSystem {
         }
         return pkgs
     }
-    
+
     // TODO: pkg_info -d
-    
+
     // TODO: pkg_info -B PKGPATH=misc/figlet
-    
+
     override func info(item: GItem) -> String {
         if self.isHidden {
             return super.info(item)
@@ -165,8 +165,8 @@ class Pkgsrc: GSystem {
             }
         }
     }
-    
-    
+
+
     override func home(item: GItem) -> String {
         if item.homepage != nil { // already available from INDEX
             return item.homepage
@@ -175,7 +175,7 @@ class Pkgsrc: GSystem {
             return links[2].href
         }
     }
-    
+
     override func log(item: GItem) -> String {
         if item.id != nil {
             return "http://cvsweb.NetBSD.org/bsdweb.cgi/pkgsrc/\(item.id)/"
@@ -183,7 +183,7 @@ class Pkgsrc: GSystem {
             return "http://cvsweb.NetBSD.org/bsdweb.cgi/pkgsrc/\(item.categories)/\(item.name)/"
         }
     }
-    
+
     override func contents(item: GItem) -> String {
         if item.status != .Available {
             return output("\(cmd) -L \(item.name)").split("Files:\n")[1]
@@ -195,7 +195,7 @@ class Pkgsrc: GSystem {
             }
         }
     }
-    
+
     override func cat(item: GItem) -> String {
         if item.status != .Available {
             let filtered = items.filter { $0.name == item.name }
@@ -207,11 +207,11 @@ class Pkgsrc: GSystem {
             return (try? String(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories)/\(item.name)/Makefile")!, encoding: NSUTF8StringEncoding)) ?? ""
         }
     }
-    
+
     // TODO: Deps: pkg_info -n -r, scrape site, parse Index
-    
+
     override func deps(item: GItem) -> String { // FIXME: "*** PACKAGE MAY NOT BE DELETED *** "
-        
+
         if item.status != .Available {
             let components = output("\(cmd) -n \(item.name)").split("Requires:\n")
             if components.count > 1 {
@@ -227,7 +227,7 @@ class Pkgsrc: GSystem {
             return "[Not available]"
         }
     }
-    
+
     override func dependents(item: GItem) -> String {
         if item.status != .Available {
             let components = output("\(cmd) -r \(item.name)").split("required by list:\n")
@@ -240,7 +240,7 @@ class Pkgsrc: GSystem {
             return "[Not available]"
         }
     }
-    
+
     override func installCmd(pkg: GPackage) -> String {
         if pkg.id != nil {
             return "cd /usr/pkgsrc/\(pkg.id) ; sudo /usr/pkg/bin/bmake install clean clean-depends"
@@ -248,12 +248,12 @@ class Pkgsrc: GSystem {
             return "cd /usr/pkgsrc/\(pkg.categories)/\(pkg.name) ; sudo /usr/pkg/bin/bmake install clean clean-depends"
         }
     }
-    
+
     override func uninstallCmd(pkg: GPackage) -> String {
         return "sudo \(prefix)/sbin/pkg_delete \(pkg.name)"
     }
-    
-    
+
+
     override func cleanCmd(pkg: GPackage) -> String {
         if pkg.id != nil {
             return "cd /usr/pkgsrc/\(pkg.id) ; sudo /usr/pkg/bin/bmake clean clean-depends"
@@ -261,7 +261,7 @@ class Pkgsrc: GSystem {
             return "cd /usr/pkgsrc/\(pkg.categories)/\(pkg.name) ; sudo /usr/pkg/bin/bmake clean clean-depends"
         }
     }
-    
+
     override var updateCmd: String! {
         get {
             if mode == .Online || (defaults("pkgsrcCVS") as? Bool ?? false) == false {
@@ -271,22 +271,22 @@ class Pkgsrc: GSystem {
             }
         }
     }
-    
+
     override var hideCmd: String! {
         get {
             return "sudo mv \(prefix) \(prefix)_off"}
     }
-    
+
     override var unhideCmd: String! {
         get {
             return "sudo mv \(prefix)_off \(prefix)"}
     }
-    
-    
+
+
     class var setupCmd: String! {
         return "sudo mv /usr/local /usr/local_off ; sudo mv /opt/local /opt/local_off ; sudo mv /sw /sw_off ; cd ~/Library/Application\\ Support/Guigna/pkgsrc ; curl -L -O ftp://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc.tar.gz ; sudo tar -xvzf pkgsrc.tar.gz -C /usr; cd /usr/pkgsrc/bootstrap ; sudo ./bootstrap --compiler clang; sudo mv /usr/local_off /usr/local ; sudo mv /opt/local_off /opt/local ; sudo mv /sw_off /sw"
     }
-    
+
     class var removeCmd: String! {
         return "sudo rm -r /usr/pkg ; sudo rm -r /usr/pkgsrc ; sudo rm -r /var/db/pkg"
     }

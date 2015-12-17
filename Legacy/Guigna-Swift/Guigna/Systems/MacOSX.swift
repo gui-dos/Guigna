@@ -1,34 +1,34 @@
 import Foundation
 
 class MacOSX: GSystem {
-    
+
     override class var prefix: String { return "" }
-    
+
     init(agent: GAgent) {
         super.init(name: "Mac OS X", agent: agent)
         homepage = "http://support.apple.com/downloads/"
         logpage = "http://support.apple.com/downloads/"
         cmd = "/usr/sbin/pkgutil"
     }
-    
+
     override func list() -> [GPackage] {
-        
+
         index.removeAll(keepCapacity: true)
         items.removeAll(keepCapacity: true)
-        
+
         items = installed()
         return items as! [GPackage]
     }
-    
-    
+
+
     override func installed() -> [GPackage] {
-        
+
         var pkgs = [GPackage]()
         pkgs.reserveCapacity(1000)
-        
+
         var pkgIds = output("/usr/sbin/pkgutil --pkgs").split("\n")
         pkgIds.removeLast()
-        
+
         let history = Array(((NSArray(contentsOfFile: "/Library/Receipts/InstallHistory.plist") as? [AnyObject]) ?? []).reverse())
         var keepPkg: Bool
         for dict in history as! [NSDictionary] {
@@ -67,21 +67,21 @@ class MacOSX: GSystem {
         //    }
         return pkgs
     }
-    
-    
+
+
     override func outdated() -> [GPackage] {
         let pkgs = [GPackage]()
         // TODO: sudo /usr/sbin/softwareupdate --list
         return pkgs
     }
-    
-    
+
+
     override func inactive() -> [GPackage] {
         let pkgs = [GPackage]()
         return pkgs
     }
-    
-    
+
+
     override func info(item: GItem) -> String {
         var info = ""
         for pkgId in item.id.split() {
@@ -90,7 +90,7 @@ class MacOSX: GSystem {
         }
         return info
     }
-    
+
     override func home(item: GItem) -> String {
         var homepage = "http://support.apple.com/downloads/"
         if item.categories == "storeagent" || item.categories == "storedownloadd" {
@@ -115,7 +115,7 @@ class MacOSX: GSystem {
         }
         return homepage
     }
-    
+
     override func log(item: GItem) -> String {
         var page = self.logpage
         if item.categories == "storeagent" || item.categories == "storedownloadd" {
@@ -129,7 +129,7 @@ class MacOSX: GSystem {
         }
         return page
     }
-    
+
     override func contents(item: GItem) -> String {
         var contents = ""
         for pkgId in item.id.split() {
@@ -147,12 +147,12 @@ class MacOSX: GSystem {
         }
         return contents
     }
-    
+
     override func cat(item: GItem) -> String {
         return "TODO"
     }
-    
-    
+
+
     override func uninstallCmd(pkg: GPackage) -> String {
         // SEE: https://github.com/caskroom/homebrew-cask/blob/master/lib/cask/pkg.rb
         var commands = [String]()
@@ -193,10 +193,10 @@ class MacOSX: GSystem {
             commands.append("sudo \(cmd) --forget \(pkgId)")
         }
         return commands.join(" ; ")
-        
+
         // TODO: disable Launchd daemons, clean Application Support, Caches, Preferences
         // SEE: https://github.com/caskroom/homebrew-cask/blob/master/lib/cask/artifact/pkg.rb
     }
-    
+
 }
 

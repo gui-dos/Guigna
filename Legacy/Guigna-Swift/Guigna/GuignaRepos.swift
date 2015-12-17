@@ -5,14 +5,14 @@ class GRepo: GScrape {
 
 
 class Native: GRepo {
-    
+
     init(agent: GAgent) {
         super.init(name: "Native Installers", agent: agent)
         homepage = "http://github.com/gui-dos/Guigna/"
         itemsPerPage = 250
         cmd = "installer"
     }
-    
+
     override func refresh() {
         var pkgs = [GItem]()
         let url = NSURL(string: "https://docs.google.com/spreadsheets/d/1HOslVAaEwrcd7hmu6rWzd7jayMUT-nzaL9YL8llE35Q")!

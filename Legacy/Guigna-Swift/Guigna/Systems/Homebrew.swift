@@ -1,23 +1,23 @@
 import Foundation
 
 class Homebrew: GSystem {
-    
+
     override class var prefix: String { return "/usr/local"}
-    
+
     init(agent: GAgent) {
         super.init(name: "Homebrew", agent: agent)
         homepage = "http://brew.sh/"
         logpage = "http://github.com/Homebrew/homebrew/commits"
         cmd = "\(prefix)/bin/brew"
     }
-    
+
     override func list() -> [GPackage] {
-        
+
         index.removeAll(keepCapacity: true)
         items.removeAll(keepCapacity: true)
-        
+
         // /usr/bin/ruby -C /usr/local/Library/Homebrew -I. -e "require 'global'; require 'formula'; Formula.each {|f| puts \"#{f.name} #{f.pkg_version}\"}"
-        
+
         var outputLines = output("/usr/bin/ruby -C \(prefix)/Library/Homebrew -I. -e require__'global';require__'formula';__Formula.each__{|f|__puts__\"#{f.full_name}|#{f.pkg_version}|#{f.bottle}|#{f.desc}\"}").split("\n")
         outputLines.removeLast()
         for line in outputLines {
@@ -47,7 +47,7 @@ class Homebrew: GSystem {
             items.append(pkg)
             self[name] = pkg
         }
-        
+
         if (defaults("HomebrewMainTaps") as? Bool ?? false) == true {
             let brewCaskCommandAvailable = "\(prefix)/Library/Taps/caskroom/homebrew-cask/cmd/brew-cask.rb".exists
             outputLines = output("\(cmd) search \"\"").componentsSeparatedByCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
@@ -72,26 +72,26 @@ class Homebrew: GSystem {
                 self[name] = pkg
             }
         }
-        
-        
+
+
         self.installed() // update status
         return items as! [GPackage]
     }
-    
-    
+
+
     override func installed() -> [GPackage] {
-        
+
         if self.isHidden {
             return items.filter { $0.status != .Available} as! [GPackage]
         }
-        
+
         var pkgs = [GPackage]()
         pkgs.reserveCapacity(50000)
-        
+
         if mode == .Online {
             return pkgs
         }
-        
+
         var outputLines = output("\(cmd) list --versions").split("\n")
         outputLines.removeLast()
         let itemsCount = items.count
@@ -142,21 +142,21 @@ class Homebrew: GSystem {
         }
         return pkgs
     }
-    
-    
+
+
     override func outdated() -> [GPackage] {
-        
+
         if self.isHidden {
             return items.filter { $0.status == .Outdated} as! [GPackage]
         }
-        
+
         var pkgs = [GPackage]()
         pkgs.reserveCapacity(50000)
-        
+
         if mode == .Online {
             return pkgs
         }
-        
+
         var outputLines = output("\(cmd) outdated").split("\n")
         outputLines.removeLast()
         for line in outputLines {
@@ -183,20 +183,20 @@ class Homebrew: GSystem {
         }
         return pkgs
     }
-    
-    
+
+
     override func inactive() -> [GPackage] {
-        
+
         if self.isHidden {
             return items.filter { $0.status == .Inactive} as! [GPackage]
         }
         var pkgs = [GPackage]()
         pkgs.reserveCapacity(50000)
-        
+
         if mode == .Online {
             return pkgs
         }
-        
+
         for pkg in installed() {
             if pkg.status == .Inactive {
                 pkgs.append(pkg)
@@ -204,7 +204,7 @@ class Homebrew: GSystem {
         }
         return pkgs
     }
-    
+
     override func info(item: GItem) -> String {
         if !self.isHidden {
             return output("\(cmd) info \(item.name)")
@@ -212,7 +212,7 @@ class Homebrew: GSystem {
             return super.info(item)
         }
     }
-    
+
     override func home(item: GItem) -> String {
         var page = ""
         if self.isHidden {
@@ -235,7 +235,7 @@ class Homebrew: GSystem {
         }
         return log(item)
     }
-    
+
     override func log(item: GItem) -> String {
         var path: String
         if (item as! GPackage).repo == nil {
@@ -250,7 +250,7 @@ class Homebrew: GSystem {
         }
         return "http://github.com/\(path)/\(item.name).rb"
     }
-    
+
     override func contents(item: GItem) -> String {
         if !self.isHidden {
             return output("\(cmd) list -v \(item.name)")
@@ -258,7 +258,7 @@ class Homebrew: GSystem {
             return ""
         }
     }
-    
+
     override func cat(item: GItem) -> String {
         if !self.isHidden {
             return output("\(cmd) cat \(item.name)")
@@ -266,7 +266,7 @@ class Homebrew: GSystem {
             return (try? String(contentsOfFile: "\(prefix)_off/Library/Formula/\(item.name).rb", encoding: NSUTF8StringEncoding)) ?? ""
         }
     }
-    
+
     override func deps(item: GItem) -> String {
         if !self.isHidden {
             return output("\(cmd) deps -n \(item.name)")
@@ -274,7 +274,7 @@ class Homebrew: GSystem {
             return "[Cannot compute the dependencies now]"
         }
     }
-    
+
     override func dependents(item: GItem) -> String {
         if !self.isHidden {
             return output("\(cmd) uses --installed \(item.name)")
@@ -282,18 +282,18 @@ class Homebrew: GSystem {
             return ""
         }
     }
-    
+
     override func options(pkg: GPackage) -> String! {
         var options: String! = nil
         let outputLines = output("\(cmd) options \(pkg.name)").split("\n")
-        if outputLines.count > 1  {
+        if outputLines.count > 1 {
             let optionLines = outputLines.filter { $0.hasPrefix("--") }
             options = optionLines.join().replace("--", "")
         }
         return options
     }
-    
-    
+
+
     override func installCmd(pkg: GPackage) -> String {
         var options: String! = pkg.markedOptions
         if options == nil {
@@ -303,8 +303,8 @@ class Homebrew: GSystem {
         }
         return "\(cmd) install \(options) \(pkg.name)"
     }
-    
-    
+
+
     override func uninstallCmd(pkg: GPackage) -> String {
         if pkg.status == .Inactive {
             return self.cleanCmd(pkg)
@@ -312,48 +312,48 @@ class Homebrew: GSystem {
             return "\(cmd) remove --force \(pkg.name)"
         }
     }
-    
+
     override func upgradeCmd(pkg: GPackage) -> String {
         return "\(cmd) upgrade \(pkg.name)"
     }
-    
-    
+
+
     override func cleanCmd(pkg: GPackage) -> String {
         return "\(cmd) cleanup --force \(pkg.name) &>/dev/null ; rm -f /Library/Caches/Homebrew/\(pkg.name)-\(pkg.installed)*bottle*"
     }
-    
-    
+
+
     override var updateCmd: String! {
         get {
             return "\(cmd) update"
         }
     }
-    
+
     override var hideCmd: String! {
         get {
             return "sudo mv \(prefix) \(prefix)_off"
         }
     }
-    
+
     override var unhideCmd: String! {
         get {
             return "sudo mv \(prefix)_off \(prefix)"
         }
     }
-    
+
     class var setupCmd: String! {
         return "ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)\" ; /usr/local/bin/brew update"
     }
-    
+
     class var removeCmd: String! {
         return "cd /usr/local ; curl -L https://raw.github.com/gist/1173223 -o uninstall_homebrew.sh; sudo sh uninstall_homebrew.sh ; rm uninstall_homebrew.sh ; sudo rm -rf /Library/Caches/Homebrew; rm -rf /usr/local/.git"
     }
-    
+
     override func verbosifiedCmd(command: String) -> String {
         var tokens = command.split()
         tokens.insert("-v", atIndex: 2)
         return tokens.join()
     }
-    
+
 }
 

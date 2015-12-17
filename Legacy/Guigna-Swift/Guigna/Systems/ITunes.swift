@@ -1,28 +1,28 @@
 import Foundation
 
 class ITunes: GSystem {
-    
+
     override class var prefix: String { return "" }
-    
+
     init(agent: GAgent) {
         super.init(name: "iTunes", agent: agent)
         homepage = "https://itunes.apple.com/genre/ios/id36?mt=8"
         logpage = "https://itunes.apple.com/genre/ios/id36?mt=8"
         cmd = "/Applications/iTunes.app/Contents/MacOS/iTunes"
     }
-    
+
     override func list() -> [GPackage] {
-        
+
         index.removeAll(keepCapacity: true)
         items.removeAll(keepCapacity: true)
-        
+
         items = installed()
         return items as! [GPackage]
     }
-    
-    
+
+
     override func installed() -> [GPackage] {
-        
+
         var pkgs = [GPackage]()
         pkgs.reserveCapacity(1000)
         let fileManager = NSFileManager.defaultManager()
@@ -54,12 +54,12 @@ class ITunes: GSystem {
         }
         return pkgs
     }
-    
-    
+
+
     override func info(item: GItem) -> String {
         return cat(item)
     }
-    
+
     override func home(item: GItem) -> String {
         var homepage = self.homepage
         let ipa = ("~/Music/iTunes/iTunes Media/Mobile Applications/\(item.id).ipa" as NSString).stringByExpandingTildeInPath
@@ -87,7 +87,7 @@ class ITunes: GSystem {
             return log(item)
         }
     }
-    
+
     override func log(item: GItem) -> String {
         let ipa = ("~/Music/iTunes/iTunes Media/Mobile Applications/\(item.id).ipa" as NSString).stringByExpandingTildeInPath
         var escapedIpa = ipa.replace(" ", "__")
@@ -100,13 +100,13 @@ class ITunes: GSystem {
         let itemId: Int = metadata["itemId"]! as! Int
         return "http://itunes.apple.com/app/id\(itemId)"
     }
-    
+
     override func contents(item: GItem) -> String {
         let ipa = ("~/Music/iTunes/iTunes Media/Mobile Applications/\(item.id).ipa" as NSString).stringByExpandingTildeInPath
         let escapedIpa = ipa.replace(" ", "__")
         return output("/usr/bin/zipinfo -1 \(escapedIpa)")
     }
-    
+
     override func cat(item: GItem) -> String {
         let ipa = ("~/Music/iTunes/iTunes Media/Mobile Applications/\(item.id).ipa" as NSString).stringByExpandingTildeInPath
         var escapedIpa = ipa.replace(" ", "__")
@@ -118,11 +118,11 @@ class ITunes: GSystem {
         let metadata = plist.propertyList() as! NSDictionary
         return metadata.description as String
     }
-    
+
     override func uninstallCmd(pkg: GPackage) -> String {
         return "rm -r '" + ("~/Music/iTunes/iTunes Media/Mobile Applications/\(pkg.id).ipa" as NSString).stringByExpandingTildeInPath + "'"
     }
-    
-    
+
+
 }
 

@@ -1,16 +1,16 @@
 import Foundation
 
 class Rudix: GSystem {
-    
+
     override class var prefix: String { return "/usr/local" }
-    
+
     init(agent: GAgent) {
         super.init(name: "Rudix", agent: agent)
         homepage = "http://rudix.org/"
         logpage = "https://github.com/rudix-mac/rudix/commits"
         cmd = "\(prefix)/bin/rudix"
     }
-    
+
     class func clampedOSVersion() -> String {
         var osVersion = G.OSVersion()
         if osVersion < "10.6" || osVersion > "10.9" {
@@ -18,12 +18,12 @@ class Rudix: GSystem {
         }
         return osVersion
     }
-    
+
     override func list() -> [GPackage] {
-        
+
         index.removeAll(keepCapacity: true)
         items.removeAll(keepCapacity: true)
-        
+
         var manifest = ""
         if mode == .Online { // FIXME: manifest is not available anymore
             manifest = (try? String(contentsOfURL: NSURL(string: "http://rudix.org/download/2014/10.9/00MANIFEST.txt")!, encoding: NSUTF8StringEncoding)) ?? ""
@@ -65,21 +65,21 @@ class Rudix: GSystem {
         self.installed() // update status
         return items as! [GPackage]
     }
-    
-    
+
+
     override func installed() -> [GPackage] {
-        
+
         if self.isHidden {
             return items.filter { $0.status != .Available} as! [GPackage]
         }
-        
+
         var pkgs = [GPackage]()
         pkgs.reserveCapacity(50000)
-        
+
         if mode == .Online {
             return pkgs
         }
-        
+
         var outputLines = output("\(cmd)").split("\n")
         outputLines.removeLast()
         var status: GStatus
@@ -108,8 +108,8 @@ class Rudix: GSystem {
         }
         return pkgs
     }
-    
-    
+
+
     override func home(item: GItem) -> String {
         for line in cat(item).split("\n") {
             if line.hasPrefix("Site=") {
@@ -121,12 +121,12 @@ class Rudix: GSystem {
         }
         return "http://rudix.org/packages/\(item.name).html"
     }
-    
-    
+
+
     override func log(item: GItem) -> String {
         return "https://github.com/rudix-mac/rudix/commits/master/Ports/\(item.name)"
     }
-    
+
     override func contents(item: GItem) -> String {
         if item.installed != nil {
             return output("\(cmd) --files \(item.name)")
@@ -134,12 +134,12 @@ class Rudix: GSystem {
             return "" // TODO: parse http://rudix.org/packages/%@.html
         }
     }
-    
+
     override func cat(item: GItem) -> String {
         return (try? String(contentsOfURL: NSURL(string: "https://raw.githubusercontent.com/rudix-mac/rudix/master/Ports/\(item.name)/Makefile")!, encoding: NSUTF8StringEncoding)) ?? ""
     }
-    
-    
+
+
     override func installCmd(pkg: GPackage) -> String {
         var command = "\(cmd) install \(pkg.name)"
         let osxVersion = Rudix.clampedOSVersion()
@@ -148,11 +148,11 @@ class Rudix: GSystem {
         }
         return "sudo \(command)"
     }
-    
+
     override func uninstallCmd(pkg: GPackage) -> String {
         return "sudo \(cmd) remove \(pkg.name)"
     }
-    
+
     override func fetchCmd(pkg: GPackage) -> String {
         var command = "cd ~/Downloads ; \(cmd) --download \(pkg.name)"
         let osxVersion = Rudix.clampedOSVersion()
@@ -161,19 +161,19 @@ class Rudix: GSystem {
         }
         return command
     }
-    
+
     override var hideCmd: String! {
         get {
             return "sudo mv \(prefix) \(prefix)_off"
         }
     }
-    
+
     override var unhideCmd: String! {
         get {
             return "sudo mv \(prefix)_off \(prefix)"
         }
     }
-    
+
     class var setupCmd: String! {
         var command = "curl -s https://raw.githubusercontent.com/rudix-mac/rpm/master/rudix.py | sudo python - install rudix"
         let osxVersion = Rudix.clampedOSVersion()
@@ -182,10 +182,10 @@ class Rudix: GSystem {
         }
         return command
     }
-    
+
     class var removeCmd: String! {
         return "sudo /usr/local/bin/rudix -R" // TODO: prefix
     }
-    
+
 }
 

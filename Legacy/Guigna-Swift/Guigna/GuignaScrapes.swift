@@ -3,25 +3,25 @@ import Foundation
 class GScrape: GSource {
     var pageNumber: Int
     var itemsPerPage: Int!
-    
+
     override init(name: String, agent: GAgent!) {
         pageNumber = 1
         super.init(name: name, agent: agent)
     }
-    
+
     func refresh() {};
 }
 
 
 class PkgsrcSE: GScrape {
-    
+
     init(agent: GAgent) {
         super.init(name: "Pkgsrc.se", agent: agent)
         homepage = "http://pkgsrc.se/"
         itemsPerPage = 25
         cmd = "pkgsrc"
     }
-    
+
     override func refresh() {
         var entries = [GItem]()
         let url = NSURL(string: "http://pkgsrc.se/?page=\(pageNumber)")!
@@ -59,11 +59,11 @@ class PkgsrcSE: GScrape {
         }
         items = entries
     }
-    
+
     override func home(item: GItem) -> String {
         return agent.nodes(URL: self.log(item), XPath: "//div[@id=\"main\"]//a")[2].href
     }
-    
+
     override func log(item: GItem) -> String {
         return "http://pkgsrc.se/\(item.id)"
     }
@@ -71,14 +71,14 @@ class PkgsrcSE: GScrape {
 
 
 class Freecode: GScrape {
-    
+
     init(agent: GAgent) {
         super.init(name: "Freecode", agent: agent)
         homepage = "http://www.freecode.club/"
         itemsPerPage = 40
         cmd = "freecode"
     }
-    
+
     override func refresh() {
         var projs = [GItem]()
         let url = NSURL(string: "http://freecode.club/index?n=\(pageNumber)")!
@@ -112,11 +112,11 @@ class Freecode: GScrape {
         }
         items = projs
     }
-    
+
     override func home(item: GItem) -> String {
         return item.homepage
     }
-    
+
     override func log(item: GItem) -> String {
         return "http://freecode.club/projects/\(item.id)"
     }
@@ -124,14 +124,14 @@ class Freecode: GScrape {
 
 
 class Debian: GScrape {
-    
+
     init(agent: GAgent) {
         super.init(name: "Debian", agent: agent)
         homepage = "http://packages.debian.org/unstable/"
         itemsPerPage = 100
         cmd = "apt-get"
     }
-    
+
     override func refresh() {
         var pkgs = [GItem]()
         let url = NSURL(string: "http://news.gmane.org/group/gmane.linux.debian.devel.changes.unstable/last=")!
@@ -148,7 +148,7 @@ class Debian: GScrape {
         }
         items = pkgs
     }
-    
+
     override func home(item: GItem) -> String {
         var page = log(item)
         let links = agent.nodes(URL: page, XPath: "//a[text()=\"Homepage\"]")
@@ -157,7 +157,7 @@ class Debian: GScrape {
         }
         return page
     }
-    
+
     override func log(item: GItem) -> String {
         return "http://packages.debian.org/sid/\(item.name)"
     }
@@ -165,14 +165,14 @@ class Debian: GScrape {
 
 
 class CocoaPods: GScrape {
-    
+
     init(agent: GAgent) {
         super.init(name: "CocoaPods", agent: agent)
         homepage = "http://www.cocoapods.org"
         itemsPerPage = 25
         cmd = "pod"
     }
-    
+
     override func refresh() {
         var pods = [GItem]()
         let url = NSURL(string: "https://feeds.cocoapods.org/new-pods.rss")!
@@ -202,11 +202,11 @@ class CocoaPods: GScrape {
         }
         items = pods
     }
-    
+
     override func home(item: GItem) -> String {
         return item.homepage
     }
-    
+
     override func log(item: GItem) -> String {
         return "http://github.com/CocoaPods/Specs/tree/master/Specs/\(item.name)"
     }
@@ -214,14 +214,14 @@ class CocoaPods: GScrape {
 
 
 class PyPI: GScrape {
-    
+
     init(agent: GAgent) {
         super.init(name: "PyPI", agent: agent)
         homepage = "http://pypi.python.org/pypi"
         itemsPerPage = 40
         cmd = "pip"
     }
-    
+
     override func refresh() {
         var eggs = [GItem]()
         let url = NSURL(string: homepage)!
@@ -244,12 +244,12 @@ class PyPI: GScrape {
         }
         items = eggs
     }
-    
+
     override func home(item: GItem) -> String {
         return agent.nodes(URL: self.log(item), XPath:"//ul[@class=\"nodot\"]/li/a")[0].stringValue!
         // if nil return [self log:item];
     }
-    
+
     override func log(item: GItem) -> String {
         return "\(self.homepage)/\(item.name)/\(item.version)"
     }
@@ -257,14 +257,14 @@ class PyPI: GScrape {
 
 
 class RubyGems: GScrape {
-    
+
     init(agent: GAgent) {
         super.init(name: "RubyGems", agent: agent)
         homepage = "http://rubygems.org/"
         itemsPerPage = 25
         cmd = "gem"
     }
-    
+
     override func refresh() {
         var gems = [GItem]()
         let url = NSURL(string: "http://m.rubygems.org/")!
@@ -284,7 +284,7 @@ class RubyGems: GScrape {
         }
         items = gems
     }
-    
+
     override func home(item: GItem) -> String {
         var page = log(item)
         let links = agent.nodes(URL:page, XPath:"//div[@class=\"links\"]/a")
@@ -297,23 +297,23 @@ class RubyGems: GScrape {
         }
         return page
     }
-    
+
     override func log(item: GItem) -> String {
         return "\(self.homepage)gems/\(item.name)"
     }
-    
+
 }
 
 
 class MacUpdate: GScrape {
-    
+
     init(agent: GAgent) {
         super.init(name: "MacUpdate", agent: agent)
         homepage = "http://www.macupdate.com/"
         itemsPerPage = 80
         cmd = "macupdate"
     }
-    
+
     override func refresh() {
         var apps = [GItem]()
         let url = NSURL(string: "https://www.macupdate.com/page/\(pageNumber - 1)")!
@@ -343,13 +343,13 @@ class MacUpdate: GScrape {
         }
         items = apps
     }
-    
+
     override func home(item: GItem) -> String {
         let nodes = agent.nodes(URL: log(item), XPath: "//a[@target=\"devsite\"]")
         let href = nodes[0].href.stringByRemovingPercentEncoding
         return "http://www.macupdate.com\(href!)"
     }
-    
+
     override func log(item: GItem) -> String {
         return "http://www.macupdate.com/app/mac/\(item.id)"
     }
@@ -357,15 +357,15 @@ class MacUpdate: GScrape {
 
 
 class AppShopper: GScrape {
-    
+
     init(agent: GAgent) {
         super.init(name: "AppShopper", agent: agent)
         homepage = "http://appshopper.com/mac/all/"
         itemsPerPage = 20
         cmd = "appstore"
     }
-    
-    
+
+
     override func refresh() {
         var apps = [GItem]()
         let url = NSURL(string: "http://appshopper.com/mac/all/\(pageNumber)")!
@@ -401,7 +401,7 @@ class AppShopper: GScrape {
         }
         items = apps
     }
-    
+
     override func home(item: GItem) -> String {
         let url = NSURL(string: "http://itunes.apple.com/app/id" + item.id.split()[0])!
         if let xmlDoc = try? NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML)) {
@@ -418,7 +418,7 @@ class AppShopper: GScrape {
             return log(item)
         }
     }
-    
+
     override func log(item: GItem) -> String {
         let name = item.id.split()[1]
         var category = item.categories!.replace(" ", "-").lowercaseString
@@ -429,14 +429,14 @@ class AppShopper: GScrape {
 
 
 class AppShopperIOS: GScrape {
-    
+
     init(agent: GAgent) {
         super.init(name: "AppShopper iOS", agent: agent)
         homepage = "http://appshopper.com/all/"
         itemsPerPage = 20
         cmd = "appstore"
     }
-    
+
     override func refresh() {
         var apps = [GItem]()
         let url = NSURL(string: "http://appshopper.com/all/\(pageNumber)")!
@@ -472,7 +472,7 @@ class AppShopperIOS: GScrape {
         }
         items = apps
     }
-    
+
     override func home(item: GItem) -> String {
         let url = NSURL(string: "http://itunes.apple.com/app/id" + item.id.split()[0])!
         if let xmlDoc = try? NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML)) {
@@ -489,7 +489,7 @@ class AppShopperIOS: GScrape {
             return log(item)
         }
     }
-    
+
     override func log(item: GItem) -> String {
         let name = item.id.split()[1]
         var category = item.categories!.replace(" ", "-").lowercaseString

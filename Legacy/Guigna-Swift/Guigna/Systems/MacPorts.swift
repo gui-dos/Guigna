@@ -1,21 +1,21 @@
 import Foundation
 
 class MacPorts: GSystem {
-    
+
     override class var prefix: String { return "/opt/local"}
-    
+
     init(agent: GAgent) {
         super.init(name: "MacPorts", agent: agent)
         homepage = "http://www.macports.org"
         logpage = "http://trac.macports.org/timeline"
         cmd = "\(prefix)/bin/port"
     }
-    
+
     override func list() -> [GPackage] {
-        
+
         index.removeAll(keepCapacity: true)
         items.removeAll(keepCapacity: true)
-        
+
         if (defaults("MacPortsParsePortIndex") as? Bool ?? false) == false && mode == .Offline {
             var outputLines = output("\(cmd) list").split("\n")
             outputLines.removeLast()
@@ -32,7 +32,7 @@ class MacPorts: GSystem {
                 items.append(pkg)
                 self[name] = pkg
             }
-            
+
         } else {
             var portIndex = ""
             if mode == .Online { // TODO: fetch PortIndex
@@ -109,20 +109,20 @@ class MacPorts: GSystem {
         self.installed() // update status
         return items as! [GPackage]
     }
-    
-    
+
+
     override func installed() -> [GPackage] {
-        
+
         if self.isHidden {
             return items.filter { $0.status != .Available} as! [GPackage]
         }
         var pkgs = [GPackage]()
         pkgs.reserveCapacity(50000)
-        
+
         if mode == .Online {
             return pkgs
         }
-        
+
         var outputLines = output("\(cmd) installed").split("\n")
         outputLines.removeLast()
         outputLines.removeAtIndex(0)
@@ -181,21 +181,21 @@ class MacPorts: GSystem {
         }
         return pkgs
     }
-    
-    
+
+
     override func outdated() -> [GPackage] {
-        
+
         if self.isHidden {
             return items.filter { $0.status == .Outdated} as! [GPackage]
         }
-        
+
         var pkgs = [GPackage]()
         pkgs.reserveCapacity(50000)
-        
+
         if mode == .Online {
             return pkgs
         }
-        
+
         var outputLines = output("\(cmd) outdated").split("\n")
         outputLines.removeLast()
         outputLines.removeAtIndex(0)
@@ -216,20 +216,20 @@ class MacPorts: GSystem {
         }
         return pkgs
     }
-    
-    
+
+
     override func inactive() -> [GPackage] {
-        
+
         if self.isHidden {
             return items.filter { $0.status == .Inactive} as! [GPackage]
         }
         var pkgs = [GPackage]()
         pkgs.reserveCapacity(50000)
-        
+
         if mode == .Online {
             return pkgs
         }
-        
+
         for pkg in installed() {
             if pkg.status == .Inactive {
                 pkgs.append(pkg)
@@ -237,8 +237,8 @@ class MacPorts: GSystem {
         }
         return pkgs
     }
-    
-    
+
+
     override func info(item: GItem) -> String {
         if self.isHidden {
             return super.info(item)
@@ -257,8 +257,8 @@ class MacPorts: GSystem {
         let columns = agent.appDelegate!.shellColumns
         return output("/bin/sh -c export__COLUMNS=\(columns)__;__\(cmd)__info__\(item.name)")
     }
-    
-    
+
+
     override func home(item: GItem) -> String {
         if self.isHidden {
             var homepage: String
@@ -278,33 +278,33 @@ class MacPorts: GSystem {
         let url = output("\(cmd) -q info --homepage \(item.name)")
         return url.substringToIndex(url.length - 1)
     }
-    
+
     override func log(item: GItem) -> String {
         let category = item.categories!.split()[0]
         return "http://trac.macports.org/log/trunk/dports/\(category)/\(item.name)/Portfile"
     }
-    
+
     override func contents(item: GItem) -> String {
         if self.isHidden || mode == .Online {
             return "[Not Available]"
         }
         return output("\(cmd) contents \(item.name)")
     }
-    
+
     override func cat(item: GItem) -> String {
         if self.isHidden || mode == .Online {
             return (try? String(contentsOfURL: NSURL(string: "http://trac.macports.org/browser/trunk/dports/\(item.categories!.split()[0])/\(item.name)/Portfile?format=txt")!, encoding: NSUTF8StringEncoding)) ?? ""
         }
         return output("\(cmd) cat \(item.name)")
     }
-    
+
     override func deps(item: GItem) -> String {
         if self.isHidden || mode == .Online {
             return "[Cannot compute the dependencies now]"
         }
         return output("\(cmd) rdeps --index \(item.name)")
     }
-    
+
     override func dependents(item: GItem) -> String {
         if self.isHidden || mode == .Online {
             return ""
@@ -316,16 +316,16 @@ class MacPorts: GSystem {
             return "[\(item.name) not installed]"
         }
     }
-    
+
     override func options(pkg: GPackage) -> String! {
         var variants: String! = nil
         let infoOutput = output("\(cmd) info --variants \(pkg.name)").stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
-        if infoOutput.length > 10  {
+        if infoOutput.length > 10 {
             variants = infoOutput.substringFromIndex(10).split(", ").join()
         }
         return variants
     }
-    
+
     override func installCmd(pkg: GPackage) -> String {
         var variants: String! = pkg.markedOptions
         if variants == nil {
@@ -335,7 +335,7 @@ class MacPorts: GSystem {
         }
         return "sudo \(cmd) install \(pkg.name) \(variants)"
     }
-    
+
     override func uninstallCmd(pkg: GPackage) -> String {
         if pkg.status == .Outdated || pkg.status == .Updated {
             return "sudo \(cmd) -f uninstall \(pkg.name) ; sudo \(cmd) clean --all \(pkg.name)"
@@ -343,23 +343,23 @@ class MacPorts: GSystem {
             return "sudo \(cmd) -f uninstall \(pkg.name) @\(pkg.installed)"
         }
     }
-    
+
     override func deactivateCmd(pkg: GPackage) -> String {
         return "sudo \(cmd) deactivate \(pkg.name)"
     }
-    
+
     override func upgradeCmd(pkg: GPackage) -> String {
         return "sudo \(cmd) upgrade \(pkg.name)"
     }
-    
+
     override func fetchCmd(pkg: GPackage) -> String {
         return "sudo \(cmd) fetch \(pkg.name)"
     }
-    
+
     override func cleanCmd(pkg: GPackage) -> String {
         return "sudo \(cmd) clean --all \(pkg.name)"
     }
-    
+
     override var updateCmd: String! {
         get {
             if mode == .Online {
@@ -369,16 +369,16 @@ class MacPorts: GSystem {
             }
         }
     }
-    
+
     override var hideCmd: String! {
         get {
             return "sudo mv \(prefix) \(prefix)_off"}
     }
-    
+
     override var unhideCmd: String! {
         get {
             return "sudo mv \(prefix)_off \(prefix)"}
     }
-    
+
 }
 

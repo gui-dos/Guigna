@@ -1,9 +1,9 @@
 import Foundation
 
 class Fink: GSystem {
-    
+
     override class var prefix: String { return "/sw" }
-    
+
     init(agent: GAgent) {
         super.init(name: "Fink", agent: agent)
         homepage = "http://www.finkproject.org"
@@ -11,12 +11,12 @@ class Fink: GSystem {
         // @"http://github.com/fink/fink/commits/master"
         cmd = "\(prefix)/bin/fink"
     }
-    
+
     override func list() -> [GPackage] {
-        
+
         index.removeAll(keepCapacity: true)
         items.removeAll(keepCapacity: true)
-        
+
         if mode == .Online {
             let url = NSURL(string: "http://pdb.finkproject.org/pdb/browse.php")!
             if let xmlDoc = try? NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML)) {
@@ -65,20 +65,20 @@ class Fink: GSystem {
         self.installed() // update status
         return items as! [GPackage]
     }
-    
-    
+
+
     override func installed() -> [GPackage] {
-        
+
         if self.isHidden {
             return items.filter { $0.status != .Available} as! [GPackage]
         }
         var pkgs = [GPackage]()
         pkgs.reserveCapacity(50000)
-        
+
         if mode == .Online {
             return pkgs
         }
-        
+
         var status: GStatus
         for pkg in items as! [GPackage] {
             status = pkg.status
@@ -109,19 +109,19 @@ class Fink: GSystem {
         }
         return pkgs
     }
-    
+
     override func outdated() -> [GPackage] {
-        
+
         if self.isHidden {
             return items.filter { $0.status == .Outdated} as! [GPackage]
         }
         var pkgs = [GPackage]()
         pkgs.reserveCapacity(50000)
-        
+
         if mode == .Online {
             return pkgs
         }
-        
+
         var outputLines = output("\(cmd) list --outdated --tab").split("\n")
         outputLines.removeLast()
         for line in outputLines {
@@ -143,11 +143,11 @@ class Fink: GSystem {
         }
         return pkgs
     }
-    
+
     // TODO: pkg_info -d
-    
+
     // TODO: pkg_info -B PKGPATH=misc/figlet
-    
+
     override func info(item: GItem) -> String {
         if self.isHidden {
             return super.info(item)
@@ -162,10 +162,10 @@ class Fink: GSystem {
         } else {
             return output("\(cmd) dumpinfo \(item.name)")
         }
-        
+
     }
-    
-    
+
+
     override func home(item: GItem) -> String {
         let nodes = agent.nodes(URL: "http://pdb.finkproject.org/pdb/package.php/\(item.name)", XPath: "//a[contains(@title, \"home\")]")
         if nodes.count == 0 {
@@ -174,16 +174,16 @@ class Fink: GSystem {
             return nodes[0].stringValue!
         }
     }
-    
+
     override func log(item: GItem) -> String {
         return "http://pdb.finkproject.org/pdb/package.php/\(item.name)"
         // @"http://github.com/fink/fink/commits/master"
     }
-    
+
     override func contents(item: GItem) -> String {
         return ""
     }
-    
+
     override func cat(item: GItem) -> String {
         if item.status != .Available || mode == .Online {
             let nodes = agent.nodes(URL: "http://pdb.finkproject.org/pdb/package.php/\(item.name)", XPath: "//a[contains(@title, \"info\")]")
@@ -198,24 +198,24 @@ class Fink: GSystem {
             return output("\(cmd) dumpinfo \(item.name)")
         }
     }
-    
-    
+
+
     // TODO: Deps
-    
+
     override func installCmd(pkg: GPackage) -> String {
         return "sudo \(cmd) install \(pkg.name)"
-        
+
     }
-    
+
     override func uninstallCmd(pkg: GPackage) -> String {
         return "sudo \(cmd) remove \(pkg.name)"
     }
-    
+
     override func upgradeCmd(pkg: GPackage) -> String {
         return "sudo \(cmd) update \(pkg.name)"
     }
-    
-    
+
+
     override var updateCmd: String! {
         get {
             if mode == .Online {
@@ -225,27 +225,27 @@ class Fink: GSystem {
             }
         }
     }
-    
+
     override var hideCmd: String! {
         get {
             return "sudo mv \(prefix) \(prefix)_off"}
     }
-    
+
     override var unhideCmd: String! {
         get {
             return "sudo mv \(prefix)_off \(prefix)"}
     }
-    
-    
+
+
     class var setupCmd: String! {
         return "sudo mv /usr/local /usr/local_off ; sudo mv /opt/local /opt/local_off ; sudo mv /usr/pkg /usr/pkg_off ; cd ~/Library/Application\\ Support/Guigna/Fink ; curl -L -O http://downloads.sourceforge.net/fink/fink-0.37.0.tar.gz ; tar -xvzf fink-0.37.0.tar.gz ; cd fink-0.37.0 ; sudo ./bootstrap ; /sw/bin/pathsetup.sh ; . /sw/bin/init.sh ; /sw/bin/fink selfupdate-rsync ; /sw/bin/fink index -f ; sudo mv /usr/local_off /usr/local ; sudo mv /opt/local_off /opt/local ; sudo mv /usr/pkg_off /usr/pkg"
     }
-    
+
     class var removeCmd: String! {
         return "sudo rm -rf /sw"
     }
-    
-    override func verbosifiedCmd(command: String) -> String  {
+
+    override func verbosifiedCmd(command: String) -> String {
         return cmd.replace(cmd, "\(cmd) -v")
     }
 }

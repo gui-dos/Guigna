@@ -1,21 +1,21 @@
 import Foundation
 
 class HomebrewCasks: GSystem {
-    
+
     override class var prefix: String { return "/usr/local" }
-    
+
     init(agent: GAgent) {
         super.init(name: "Homebrew Casks", agent: agent)
         homepage = "http://caskroom.io"
         logpage = "http://github.com/caskroom/homebrew-cask/commits"
         cmd = "\(prefix)/bin/brew cask"
     }
-    
+
     override func list() -> [GPackage] {
-        
+
         index.removeAll(keepCapacity: true)
         items.removeAll(keepCapacity: true)
-        
+
         var outputLines = output("/bin/sh -c /usr/bin/grep__\"version__\"__-r__/\(prefix)/Library/Taps/caskroom/homebrew-cask/Casks").split("\n")
         outputLines.removeLast()
         let whitespaceCharacterSet = NSCharacterSet.whitespaceCharacterSet()
@@ -81,29 +81,29 @@ class HomebrewCasks: GSystem {
         self.installed() // update status
         return items as! [GPackage]
     }
-    
+
     // TODO: port from Homebrew
-    
+
     override func installed() -> [GPackage] {
-        
+
         if self.isHidden {
             return items.filter { $0.status != .Available} as! [GPackage]
         }
-        
+
         var pkgs = [GPackage]()
         pkgs.reserveCapacity(50000)
-        
+
         if mode == .Online {
             return pkgs
         }
-        
+
         let escapedCmd = cmd.replace(" ", "__")
         var outputLines = output("/bin/sh -c export__PATH=\(prefix)/bin:$PATH__;__\(escapedCmd)__list__2>/dev/null").split("\n")
         outputLines.removeLast()
         var status: GStatus
-        
+
         // TODO: remove inactive packages from items and allPackages
-        
+
         for pkg in items as! [GPackage] {
             status = pkg.status
             pkg.installed = nil
@@ -140,31 +140,31 @@ class HomebrewCasks: GSystem {
         }
         return pkgs
     }
-    
-    
+
+
     override func outdated() -> [GPackage] {
-        
+
         if self.isHidden {
             return items.filter { $0.status == .Outdated} as! [GPackage]
         }
-        
+
         var pkgs = [GPackage]()
         pkgs.reserveCapacity(50000)
-        
+
         if mode == .Online {
             return pkgs
         }
-        
+
         for pkg in installed() {
             if pkg.status == .Outdated {
                 pkgs.append(pkg)
             }
         }
         return pkgs
-        
+
     }
-    
-    
+
+
     override func info(item: GItem) -> String {
         let escapedCmd = cmd.replace(" ", "__")
         if !self.isHidden {
@@ -173,7 +173,7 @@ class HomebrewCasks: GSystem {
             return super.info(item)
         }
     }
-    
+
     override func home(item: GItem) -> String {
         let escapedCmd = cmd.replace(" ", "__")
         if self.isHidden {
@@ -194,7 +194,7 @@ class HomebrewCasks: GSystem {
         }
         return log(item)
     }
-    
+
     override func log(item: GItem) -> String {
         var path = ""
         if (item as! GPackage).repo == nil {
@@ -206,7 +206,7 @@ class HomebrewCasks: GSystem {
         }
         return "http://github.com/\(path)/\(item.name).rb"
     }
-    
+
     override func contents(item: GItem) -> String {
         let escapedCmd = cmd.replace(" ", "__")
         if !self.isHidden {
@@ -215,7 +215,7 @@ class HomebrewCasks: GSystem {
             return ""
         }
     }
-    
+
     override func cat(item: GItem) -> String {
         let escapedCmd = cmd.replace(" ", "__")
         if !self.isHidden {
@@ -224,16 +224,16 @@ class HomebrewCasks: GSystem {
             return (try? String(contentsOfFile: "\(prefix)_off/Library/Taps/caskroom/homebrew-cask/Casks/\(item.name).rb", encoding: NSUTF8StringEncoding)) ?? ""
         }
     }
-    
+
     override func deps(item: GItem) -> String {
         return ""
     }
-    
+
     override func dependents(item: GItem) -> String {
         return ""
     }
-    
-    
+
+
     override func installCmd(pkg: GPackage) -> String {
         var options: String! = pkg.markedOptions
         if options == nil {
@@ -243,52 +243,52 @@ class HomebrewCasks: GSystem {
         }
         return "\(cmd) install \(options) \(pkg.name)"
     }
-    
-    
+
+
     override func uninstallCmd(pkg: GPackage) -> String {
         return "\(cmd) zap \(pkg.name)"
     }
-    
+
     // TODO: uninstall only, don't zap settings
     override func upgradeCmd(pkg: GPackage) -> String {
         return "\(cmd) zap \(pkg.name) ; \(cmd) install \(pkg.name)"
     }
-    
+
     override func cleanCmd(pkg: GPackage) -> String {
         return "\(cmd) cleanup --force \(pkg.name) &>/dev/null"
     }
-    
+
     //    override var updateCmd: String! {
     //    get {
     //        return "\(cmd) update"
     //    }
     //    }
-    
+
     override var hideCmd: String! {
         get {
             return "sudo mv \(prefix) \(prefix)_off"
         }
     }
-    
+
     override var unhideCmd: String! {
         get {
             return "sudo mv \(prefix)_off \(prefix)"
         }
     }
-        
+
     class var setupCmd: String! {
         return "\(prefix)/bin/brew tap caskroom/cask"
     }
-    
+
     class var removeCmd: String! {
         return "\(prefix)/bin/brew untap caskroom/cask"
     }
-    
+
     override func verbosifiedCmd(command: String) -> String {
         var tokens = command.split()
         tokens.insert("-v", atIndex: 2)
         return tokens.join()
     }
-    
+
 }
 

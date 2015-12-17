@@ -1,12 +1,12 @@
 import Foundation
 
 class GAgent: NSObject {
-    
+
     var appDelegate: GAppDelegate?
     var processID: CInt?
-    
+
     func output(command: String) -> String {
-        
+
         let task = NSTask()
         let tokens = command.componentsSeparatedByString(" ")
         let command = tokens[0]
@@ -40,8 +40,8 @@ class GAgent: NSObject {
         // NSString __autoreleasing *errorOutput = [[NSString alloc] initWithData:errorData encoding:NSUTF8StringEncoding];
         return output as String
     }
-    
-    
+
+
     func nodes(URL url: String, XPath xpath: String) -> [NSXMLNode] {
         // FIXME: doesn't allow xpath on childnodes
         var error: NSError? = nil

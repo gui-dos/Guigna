@@ -26,7 +26,7 @@ class GItem: NSObject {
     dynamic var version: String
     weak var source: GSource!
     weak var system: GSystem!
-    
+
     dynamic var status: GStatus
     dynamic var mark: GMark
     dynamic var installed: String!
@@ -48,7 +48,7 @@ class GItem: NSObject {
     var screenshots: String!
     var URL: String!
     var id: String!
-    
+
     init(name: String, version: String, source: GSource, status: GStatus) {
         self.name = name
         self.version = version
@@ -57,43 +57,43 @@ class GItem: NSObject {
         self.status = status
         self.mark = .NoMark
     }
-    
+
     var info: String {
         get {
             return source.info(self)
         }
     }
-    
+
     var home: String {
         get {
             return source.home(self)
         }
     }
-    
+
     var log: String {
         get {
             return source.log(self)
         }
     }
-    
+
     var contents: String {
         get {
             return source.contents(self)
         }
     }
-    
+
     var cat: String {
         get {
             return source.cat(self)
         }
     }
-    
+
     var deps: String {
         get {
             return source.deps(self)
         }
     }
-    
+
     var dependents: String {
         get {
             return source.dependents(self)
@@ -104,15 +104,15 @@ class GItem: NSObject {
 
 @objc(GStatusTransformer)
 class GStatusTransformer: NSValueTransformer {
-    
+
     override class func transformedValueClass() -> AnyClass {
         return NSImage.self
     }
-    
+
     override class func allowsReverseTransformation() -> Bool {
         return false
     }
-    
+
     override func transformedValue(value: AnyObject?) -> AnyObject? {
         if value == nil {
             return nil
@@ -140,15 +140,15 @@ class GStatusTransformer: NSValueTransformer {
 
 @objc(GMarkTransformer)
 class GMarkTransformer: NSValueTransformer {
-    
+
     override class func transformedValueClass() -> AnyClass {
         return NSImage.self
     }
-    
+
     override class func allowsReverseTransformation() -> Bool {
         return false
     }
-    
+
     override func transformedValue(value: AnyObject?) -> AnyObject? {
         if value == nil {
             return nil

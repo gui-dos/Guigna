@@ -4,10 +4,10 @@ import ScriptingBridge
 
 @NSApplicationMain
 class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDelegate, NSOutlineViewDelegate, NSOutlineViewDataSource, NSTableViewDelegate, NSTableViewDataSource, NSTextViewDelegate {
-    
+
     var agent: GAgent = GAgent()
     @IBOutlet var defaults: NSUserDefaultsController!
-    
+
     @IBOutlet var window: NSWindow!
     @IBOutlet var sourcesOutline: NSOutlineView!
     @IBOutlet var itemsTable: NSTableView!
@@ -30,30 +30,30 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     @IBOutlet var applyButton: NSToolbarItem!
     @IBOutlet var stopButton: NSToolbarItem!
     @IBOutlet var syncButton: NSToolbarItem!
-    
+
     var statusItem: NSStatusItem!
     @IBOutlet var statusMenu: NSMenu!
     @IBOutlet var toolsMenu: NSMenu!
     @IBOutlet var markMenu: NSMenu!
-    
+
     @IBOutlet var optionsPanel: NSPanel!
     @IBOutlet var optionsProgressIndicator: NSProgressIndicator!
     @IBOutlet var optionsStatusField: NSTextField!
     @IBOutlet var themesSegmentedControl: NSSegmentedControl!
-    
+
     var terminal: AnyObject! // TerminalApplication!
     var shell: AnyObject! // TerminalTab!
     var shellWindow: NSObject! // TerminalWindow!
     var browser: AnyObject! // SafariApplication!
-    
+
     @IBOutlet var sourcesController: NSTreeController!
     @IBOutlet var itemsController: NSArrayController!
-    
+
     var sources = [GSource]()
     var systems = [GSystem]()
     var scrapes = [GScrape]()
     var repos   = [GRepo]()
-    
+
     var items = [GItem]()
     var allPackages = [GPackage]()
     var packagesIndex = [String: GPackage](minimumCapacity: 150000)
@@ -62,17 +62,17 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     var selectedSegment = "Info"
     var previousSegment = 0
     let APPDIR = ("~/Library/Application Support/Guigna" as NSString).stringByExpandingTildeInPath
-    
+
     dynamic var tableFont: NSFont!
     dynamic var tableTextColor: NSColor!
     dynamic var logTextColor: NSColor!
     dynamic var linkTextAttributes: [String : AnyObject]!
     dynamic var sourceListBackgroundColor: NSColor!
-    
+
     dynamic var adminPassword: String?
     var minuteTimer: NSTimer?
     dynamic var ready = false
-    
+
     var shellColumns: Int {
         get {
             let attrs = [NSFontAttributeName: NSFont(name: "Andale Mono", size: 11.0)!]
@@ -81,7 +81,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             return columns
         }
     }
-    
+
     func status(var msg: String) {
         if msg.hasSuffix("...") {
             progressIndicator.startAnimation(self)
@@ -103,14 +103,14 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         statusMenu.itemAtIndex(0)?.title = msg
         statusItem.toolTip = msg
     }
-    
+
     func info(text: String) {
         infoText.string = text
         infoText.scrollRangeToVisible(NSMakeRange(0, 0))
         infoText.display()
         tabView.display()
     }
-    
+
     func log(text: String) {
         let attributedString = NSAttributedString(string: text, attributes: [NSFontAttributeName: NSFont(name: "Andale Mono", size:11.0)!, NSForegroundColorAttributeName: logTextColor])
         let storage = logText.textStorage!
@@ -121,12 +121,12 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         logText.scrollRangeToVisible(NSMakeRange(logText.string!.length, 0))
         tabView.display()
     }
-    
-    
+
+
     func applicationDidFinishLaunching(aNotification: NSNotification) {
-        
+
         tableProgressIndicator.startAnimation(self)
-        
+
         let defaultsTransformer = GDefaultsTransformer()
         NSValueTransformer.setValueTransformer(defaultsTransformer, forName: "GDefaultsTransformer")
         let statusTransformer = GStatusTransformer()
@@ -135,20 +135,20 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         NSValueTransformer.setValueTransformer(markTransformer, forName: "GMarkTransformer")
         let sourceTransformer = GSourceTransformer()
         NSValueTransformer.setValueTransformer(sourceTransformer, forName: "GSourceTransformer")
-        
+
         statusItem = NSStatusBar.systemStatusBar().statusItemWithLength(-1) // NSVariableStatusItemLength
         statusItem.title = "😺"
         statusItem.highlightMode = true
         statusItem.menu = statusMenu
         itemsTable.doubleAction = "showMarkMenu:"
         window.titleVisibility = .Hidden
-        
+
         infoText.font = NSFont(name: "Andale Mono", size: 11.0)
         logText.font  = NSFont(name: "Andale Mono", size: 11.0)
         let welcomeMsg = "\n\t\t\t\t\tWelcome to Guigna\n\t\tGUIGNA: the GUI of Guigna is Not by Apple  :)\n\n\t[Sync] to update from remote repositories.\n\tRight/double click a package to mark it.\n\t[Apply] to commit the changes to a [Shell].\n\n\tYou can try other commands typing in the yellow prompt.\n\tTip: Command-click to combine sources.\n\tWarning: keep the Guigna shell open!\n\n\n\t\t\t\tTHIS IS ONLY A PROTOTYPE.\n\n\n\t\t\t\tguido.soranzio@gmail.com"
         info(welcomeMsg)
         infoText.checkTextInDocument(nil)
-        
+
         let columnsMenu     = NSMenu(title: "ItemsColumnsMenu")
         let viewColumnsMenu = NSMenu(title: "ItemsColumnsMenu")
         for menu in [columnsMenu, viewColumnsMenu] {
@@ -166,18 +166,18 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         let columnsMenuItem = NSMenuItem(title: "Columns", action: nil, keyEquivalent: "")
         columnsMenuItem.submenu = viewColumnsMenu
         viewMenu.submenu!.addItem(columnsMenuItem)
-        
+
         agent.appDelegate = self
-        
+
         allPackages.reserveCapacity(150000)
-        
+
         system("mkdir -p '\(APPDIR)'")
         system("touch '\(APPDIR)/output'")
         system("touch '\(APPDIR)/sync'")
         for dir in ["MacPorts", "Homebrew", "Fink", "pkgsrc", "FreeBSD", "Gentoo"] {
             system("mkdir -p '\(APPDIR)/\(dir)'")
         }
-        
+
         system("osascript -e 'tell application \"Terminal\" to close (windows whose name contains \"Guigna \")'")
         terminal = SBApplication(bundleIdentifier: "com.apple.Terminal")
         let guignaFunction = "guigna() { osascript -e 'tell app \"Guigna\"' -e \"open POSIX file \\\"\(APPDIR)/$2\\\"\" -e 'end' &>/dev/null; }"
@@ -205,7 +205,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             themesSegmentedControl.selectedSegment = ["Default", "Retro"].indexOf(theme)!
             applyTheme(theme)
         }
-        
+
         let knownPaths = ["MacPorts": "/opt/local", "Homebrew": "/usr/local", "pkgsrc": "/usr/pkg", "Fink": "/sw"]
         for (system, prefix) in knownPaths {
             if "\(prefix)_off".exists {
@@ -220,7 +220,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 }
             }
         }
-        
+
         var portPath = MacPorts.prefix + "/bin/port"
         var brewPath = Homebrew.prefix + "/bin/brew"
         let paths = agent.output("/bin/bash -l -c which__port__brew").split("\n")
@@ -231,9 +231,9 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 brewPath = path
             }
         }
-        
+
         terminal.doScript("clear ; printf \"\\e[3J\" ; echo Welcome to Guigna! ; echo", `in`:shell)
-        
+
         if portPath.exists || "\(APPDIR)/MacPorts/PortIndex".exists {
             if defaults["MacPortsStatus"] == nil {
                 defaults["MacPortsStatus"] = GState.On.rawValue
@@ -255,7 +255,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 }
             }
         }
-        
+
         if brewPath.exists {
             if defaults["HomebrewStatus"] == nil {
                 defaults["HomebrewStatus"] = GState.On.rawValue
@@ -277,7 +277,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 }
             }
         }
-        
+
         if "/sw/bin/fink".exists {
             if defaults["FinkStatus"] == nil {
                 defaults["FinkStatus"] = GState.On.rawValue
@@ -290,7 +290,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             }
             systems.append(fink)
         }
-        
+
         // TODO: Index user defaults
         if "/usr/pkg/sbin/pkg_info".exists || "\(APPDIR)/pkgsrc/INDEX".exists {
             if defaults["pkgsrcStatus"] == nil {
@@ -305,7 +305,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             }
             systems.append(pkgsrc)
         }
-        
+
         if "\(APPDIR)/FreeBSD/INDEX".exists {
             if defaults["FreeBSDStatus"] == nil {
                 defaults["FreeBSDStatus"] = GState.On.rawValue
@@ -316,7 +316,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             freebsd.mode = .Online
             systems.append(freebsd)
         }
-        
+
         if "/usr/local/bin/rudix".exists {
             if defaults["RudixStatus"] == nil {
                 defaults["RudixStatus"] = GState.On.rawValue
@@ -329,9 +329,9 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             }
             systems.append(rudix)
         }
-        
+
         systems.append(MacOSX(agent: agent))
-        
+
         if defaults["iTunesStatus"] == nil {
             defaults["iTunesStatus"] = GState.On.rawValue
         }
@@ -339,18 +339,18 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             let itunes = ITunes(agent: agent)
             systems.append(itunes)
         }
-        
+
         if defaults["DebugMode"] == nil {
             defaults["DebugMode"] = false
         }
-        
+
         if defaults["ScrapesCount"] == nil {
             defaults["ScrapesCount"] = 15
         }
-        
+
         repos   += [Native(agent: agent)]
         scrapes += [PkgsrcSE(agent: agent), Freecode(agent: agent), Debian(agent: agent), CocoaPods(agent: agent), PyPI(agent: agent), RubyGems(agent: agent), MacUpdate(agent: agent), AppShopper(agent: agent), AppShopperIOS(agent: agent)]
-        
+
         let source1 = GSource(name: "SYSTEMS")
         source1.categories = systems
         let source2 = GSource(name: "STATUS")
@@ -363,49 +363,49 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         sourcesOutline.reloadData()
         sourcesOutline.expandItem(nil, expandChildren: true)
         sourcesOutline.display()
-        
+
         browser =  SBApplication(bundleIdentifier: "com.apple.Safari")
-        
+
         let queue = dispatch_queue_create("name.Guigna", DISPATCH_QUEUE_CONCURRENT)
         dispatch_async(queue) {
             self.reloadAllPackages()
         }
-        
+
         minuteTimer = NSTimer.scheduledTimerWithTimeInterval(60.0, target: self, selector: "minuteCheck:", userInfo: nil, repeats: true)
-        
+
         self.applyButton.enabled = false
         self.stopButton.enabled = false
         self.syncButton.enabled = false
-        
-        
+
+
         self.options(self)
     }
-    
+
     func applicationDidBecomeActive(aNotification: NSNotification) {
         if shellWindow != nil && (self.shellWindow.valueForKey("name") as! NSString).containsString("sudo") {
             raiseShell(self)
         }
     }
-    
+
     func applicationShouldTerminateAfterLastWindowClosed(theApp: NSApplication) -> Bool {
         return true
     }
-    
+
     func windowWillClose(notification: NSNotification) {
         if self.ready {
             system("osascript -e 'tell application \"Terminal\" to close (windows whose name contains \"Guigna \")'")
         }
     }
-    
+
     func splitView(splitView: NSSplitView, shouldAdjustSizeOfSubview subview: NSView) -> Bool {
         return !subview.isEqualTo(splitView.subviews[0])
     }
-    
+
     func outlineView(outlineView: NSOutlineView, isGroupItem item: AnyObject) -> Bool {
         let source = item.representedObject as! GSource
         return source.categories != nil && !(source is GSystem)
     }
-    
+
     func outlineView(outlineView: NSOutlineView, viewForTableColumn tableColumn: NSTableColumn?, item: AnyObject) -> NSView? {
         let source = item.representedObject as! GSource
         if !(item.parentNode!!.representedObject is GSource) {
@@ -418,12 +418,12 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             }
         }
     }
-    
+
     func outlineView(outlineView: NSOutlineView, shouldShowOutlineCellForItem item: AnyObject) -> Bool {
         return (item.representedObject as! GSource) is GSystem
     }
-    
-    
+
+
     func application(sender: NSApplication, openFile filename: String) -> Bool {
         status("Ready.")
         var history = shell.valueForKey("history") as! String
@@ -434,7 +434,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         history = history.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
         log(history + "\n")
         stopButton.enabled = false
-        
+
         if filename == "\(APPDIR)/output" {
             status("Analyzing committed changes...")
             if markedItems.count > 0 {
@@ -461,25 +461,25 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 for item in markedItems {
                     mark = item.mark
                     markName = markNames[Int(mark.rawValue)]
-                    
+
                     // TODO verify command did really complete
-                    
+
                     if mark == GMark.Install { // explicit GMark otherwise it doesn't compile
                         marksCount--
-                        
+
                     } else if mark == .Uninstall {
                         marksCount--
-                        
+
                     } else if mark == .Deactivate {
                         marksCount--
-                        
+
                     } else if mark == .Upgrade {
                         marksCount--
-                        
+
                     } else if mark == .Fetch {
                         marksCount--
                     }
-                    
+
                     let itemSystem = item.system
                     let systemName = itemSystem.name
                     log("😺 \(markName) \(systemName) \(item.name): DONE\n")
@@ -502,7 +502,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 }
             }
             status("Shell: OK.")
-            
+
         } else if filename == "\(APPDIR)/sync" {
             let queue = dispatch_queue_create("name.Guigna", DISPATCH_QUEUE_CONCURRENT)
             dispatch_async(queue) {
@@ -511,9 +511,9 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
         return true
     }
-    
+
     func reloadAllPackages() {
-        
+
         self.ready = false
         dispatch_sync(dispatch_get_main_queue()) {
             self.itemsController.filterPredicate = nil
@@ -524,9 +524,9 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         var updated = 0
         var `new` = 0
         var previousPackage: GPackage?
-        
+
         var newIndex = [String: GPackage](minimumCapacity: 150000)
-        
+
         for system in systems {
             let systemName = system.name
             dispatch_sync(dispatch_get_main_queue()) {
@@ -557,7 +557,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 newIndex[key] = value
             }
         }
-        
+
         if packagesIndex.count > 0 {
             dispatch_sync(dispatch_get_main_queue()) {
                 self.sourcesOutline.setDelegate(nil)
@@ -620,16 +620,16 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 self.sourcesOutline.display()
             }
         }
-        
+
         for system in systems {
             // avoid adding duplicates of inactive packages already added by system.list
             allPackages += system.items.filter { $0.status != .Inactive} as! [GPackage]
         }
-        
+
         packagesIndex = newIndex
         markedItems.removeAll()
         marksCount = 0
-        
+
         dispatch_sync(dispatch_get_main_queue()) {
             self.itemsController.sortDescriptors = [NSSortDescriptor(key: "status", ascending: false)]
             self.updateMarkedSource()
@@ -641,7 +641,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             self.status("OK.")
         }
     }
-    
+
     @IBAction func syncAction(sender: AnyObject) {
         tableProgressIndicator.startAnimation(self)
         info("[Contents not yet available]")
@@ -650,7 +650,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         stopButton.enabled = true
         self.sync(sender)
     }
-    
+
     func sync(sender: AnyObject) {
         self.ready = false
         status("Syncing...")
@@ -706,11 +706,11 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             }
         }
     }
-    
+
     func outlineViewSelectionDidChange(notification: NSNotification) {
         sourcesSelectionDidChange(notification)
     }
-    
+
     func sourcesSelectionDidChange(sender: AnyObject!) {
         let selectedObjects = sourcesController.selectedObjects as NSArray
         var selectedSources = selectedObjects.copy() as! [GSource]
@@ -748,7 +748,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 for system in selectedSystems {
                     var packages = [GPackage]()
                     packages.reserveCapacity(50000)
-                    
+
                     if src == "installed" {
                         if first {
                             status("Verifying installed packages...")
@@ -756,7 +756,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                             itemsTable.display()
                         }
                         packages = system.installed()
-                        
+
                     } else if src == "outdated" {
                         if first {
                             status("Verifying outdated packages...")
@@ -764,7 +764,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                             itemsTable.display()
                         }
                         packages = system.outdated()
-                        
+
                     } else if src == "inactive" {
                         if first {
                             status("Verifying inactive packages...")
@@ -772,7 +772,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                             itemsTable.display()
                         }
                         packages = system.inactive()
-                        
+
                     } else if src.hasPrefix("updated") || src.hasPrefix("new") {
                         src = src.split()[0]
                         let st: GStatus = (src == "updated") ? .Updated : .New
@@ -782,7 +782,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                             itemsTable.display()
                             packages = (itemsController.arrangedObjects as! NSArray).mutableCopy() as! [GPackage]
                         }
-                        
+
                     } else if src.hasPrefix("marked") {
                         src = src.split()[0]
                         if first {
@@ -791,7 +791,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                             itemsTable.display()
                             packages = (itemsController.arrangedObjects as! NSArray).mutableCopy() as! [GPackage]
                         }
-                        
+
                     } else if !(src == "SYSTEMS" || src == "STATUS" || src == "") { // a category was selected
                         if first {
                             segmentedControl.selectedSegment = 2 // shows System Log
@@ -799,13 +799,13 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                         }
                         itemsController.filterPredicate = NSPredicate(format: "categories CONTAINS[c] '\(src)'")
                         packages = system.items.filter { $0.categories != nil && $0.categories!.contains(src) } as! [GPackage]
-                        
+
                     } else { // a system was selected
                         itemsController.filterPredicate = nil
                         itemsTable.display()
                         packages = system.items as! [GPackage]
                         if first && itemsController.selectedObjects.count == 0 {
-                            if sourcesController.selectedObjects.count == 1  {
+                            if sourcesController.selectedObjects.count == 1 {
                                 if sourcesController.selectedObjects[0] is GSystem {
                                     segmentedControl.selectedSegment = 2 // shows System Log
                                     self.updateTabView(nil)
@@ -813,14 +813,14 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                             }
                         }
                     }
-                    
+
                     if first {
                         itemsController.filterPredicate = nil
                         itemsController.removeObjectsAtArrangedObjectIndexes(NSIndexSet(indexesInRange: NSMakeRange(0, itemsController.arrangedObjects.count)))
                         itemsController.sortDescriptors = []
                         first = false
                     }
-                    
+
                     itemsController.addObjects(packages)
                     itemsTable.display()
                     // TODO: port
@@ -843,11 +843,11 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 }
             }
         }
-        
-        
+
+
         searchField.stringValue = filter
         searchField.performClick(self)
-        
+
         if selectedSystems.count > 0 {
             itemsController.sortDescriptors = [NSSortDescriptor(key: "status", ascending: false)]
         }
@@ -856,7 +856,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             status("OK.")
         }
     }
-    
+
     func tableViewSelectionDidChange(notification: NSNotification) {
         let selectedItems = itemsController.selectedObjects
         var item: GItem! = nil
@@ -876,12 +876,12 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
         updateTabView(item)
     }
-    
+
     func toggleTableColumn(sender: NSMenuItem) {
         let column = sender.representedObject as! NSTableColumn
         column.hidden = !column.hidden
     }
-    
+
     @IBAction func switchSegment(sender: NSSegmentedControl) {
         selectedSegment = sender.labelForSegment(sender.selectedSegment)!
         let selectedItems = itemsController.selectedObjects
@@ -893,8 +893,8 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             updateTabView(item)
         }
     }
-    
-    
+
+
     @IBAction func toggleShell(button: NSButton) {
         let selectedItems = itemsController.selectedObjects
         var item: GItem? = nil
@@ -913,7 +913,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             }
         }
     }
-    
+
     func updateTabView(item: GItem!) {
         if segmentedControl.selectedSegment == -1 {
             shellDisclosure.state = NSOnState
@@ -925,7 +925,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         clearButton.hidden = (selectedSegment != "Shell")
         screenshotsButton.hidden = (!(item?.source is GScrape) || selectedSegment != "Home")
         moreButton.hidden =  !(item?.source is GScrape)
-        
+
         if selectedSegment == "Home" || selectedSegment == "Log" {
             tabView.selectTabViewItemWithIdentifier("web")
             webView.display()
@@ -997,7 +997,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     if selectedSegment == "Info" {
                         info(item.info)
                         infoText.checkTextInDocument(nil)
-                        
+
                     } else if selectedSegment == "Contents" {
                         let contents = item.contents
                         if contents == "" || contents.hasSuffix("not installed.\n") {
@@ -1005,11 +1005,11 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                         } else {
                             info("[Click on a path to open in Finder]\n\(contents)\nUninstall command:\n\((item as! GPackage).uninstallCmd)")
                         }
-                        
+
                     } else if selectedSegment == "Spec" {
                         info(item.cat)
                         infoText.checkTextInDocument(nil)
-                        
+
                     } else if selectedSegment == "Deps" {
                         tableProgressIndicator.startAnimation(self)
                         status("Computing dependencies...")
@@ -1038,17 +1038,17 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             tabView.display()
         }
     }
-    
+
     func updateCmdLine(cmd: String) {
         cmdline.stringValue = cmd
         cmdline.display()
     }
-    
+
     func clear(sender: AnyObject) {
         logText.string = ""
     }
-    
-    
+
+
     func webView(sender: WebView, didStartProvisionalLoadForFrame: WebFrame) {
         var url = webView.mainFrameURL
         if url.hasPrefix("about:") {
@@ -1059,7 +1059,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             status("Loading \(url)...")
         }
     }
-    
+
     func webView(sender: WebView, didFinishLoadForFrame: WebFrame) {
         let cmdlineString = cmdline.stringValue
         if cmdlineString.hasPrefix("Loading") {
@@ -1071,7 +1071,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             updateCmdLine(webView.mainFrameURL)
         }
     }
-    
+
     func webView(sender: WebView, didFailProvisionalLoadWithError: NSError, forFrame: WebFrame) {
         let cmdlineString = cmdline.stringValue
         if cmdlineString.hasPrefix("Loading") {
@@ -1083,7 +1083,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             updateCmdLine(webView.mainFrameURL)
         }
     }
-    
+
     func updateScrape(scrape: GScrape) {
         segmentedControl.selectedSegment = 1
         selectedSegment = "Home"
@@ -1114,8 +1114,8 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             status("OK.")
         }
     }
-    
-    
+
+
     @IBAction func moreScrapes(sender: AnyObject) {
         tableProgressIndicator.startAnimation(self)
         let scrape = sourcesController.selectedObjects[0] as! GScrape
@@ -1124,7 +1124,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         itemsController.rearrangeObjects()
         tableProgressIndicator.stopAnimation(self)
     }
-    
+
     @IBAction func toggleScreenshots(sender: AnyObject) {
         let selectedItems = itemsController.selectedObjects
         var item: GItem? = nil
@@ -1135,15 +1135,15 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             tableProgressIndicator.stopAnimation(self)
         }
     }
-    
+
     override func controlTextDidBeginEditing(aNotification: NSNotification) {
     }
-    
+
     func textViewDidChangeSelection(aNotification: NSNotification) {
         let selectedRange = infoText.selectedRange as NSRange
         let storageString = infoText.textStorage!.string as NSString
         let line = storageString.substringWithRange(storageString.paragraphRangeForRange(selectedRange))
-        
+
         if selectedSegment == "Contents" {
             var file: String = line.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
             // TODO detect types
@@ -1156,7 +1156,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             } else {
                 NSWorkspace.sharedWorkspace().openFile(file)
             }
-            
+
         } else if selectedSegment == "Deps" {
             let dep = line.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
             let selectedItems = itemsController.selectedObjects
@@ -1173,7 +1173,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             }
         }
     }
-    
+
     func textView(textView: NSTextView, clickedOnLink link: AnyObject, atIndex charIndex: Int) -> Bool {
         let url = link as! NSURL
         let urlString = url.absoluteString
@@ -1187,7 +1187,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             return false
         }
     }
-    
+
     @IBAction func executeCmdLine(sender: AnyObject) {
         let selectedItems = itemsController.selectedObjects
         var item: GItem? = nil
@@ -1241,8 +1241,8 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             }
         }
     }
-    
-    
+
+
     @IBAction func executeCommandsMenu(sender: NSPopUpButton) {
         let selectedItems = itemsController.selectedObjects
         var item: GItem! = nil
@@ -1258,8 +1258,8 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             executeCmdLine(sender)
         }
     }
-    
-    
+
+
     func execute(cmd: String, baton: String) {
         let briefCmd = cmd.split(" ; ").filter { !($0.hasPrefix("sudo mv")) }.join(" ; ")
         status("Executing '\(briefCmd)' in the shell...")
@@ -1272,33 +1272,33 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         else {
             command = "\(cmd) ; guigna --baton \(baton)"
         }
-        
+
         if adminPassword != nil {
             command = command.replace("sudo", "echo \"\(adminPassword!)\" | sudo -S")
         }
         raiseShell(self)
         terminal.doScript(command, `in`:self.shell)
-        
+
     }
-    
+
     func execute(cmd: String) {
         execute(cmd, baton:"output")
     }
-    
+
     func sudo(cmd: String, baton: String) {
         let command = "sudo \(cmd)"
         execute(command, baton: baton)
     }
-    
+
     func sudo(cmd: String) {
         sudo(cmd, baton: "output")
     }
-    
+
     func executeAsRoot(cmd: String) {
         let command = "osascript -e 'do shell script \"\(cmd)\" with administrator privileges'"
         system(command)
     }
-    
+
     func minuteCheck(timer: NSTimer) {
         if shellWindow != nil && (shellWindow.valueForKey("name") as! NSString).containsString("sudo") {
             if NSApplication.sharedApplication().active {
@@ -1307,11 +1307,11 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             NSApplication.sharedApplication().requestUserAttention(.CriticalRequest)
         }
     }
-    
-    
+
+
     func menuNeedsUpdate(menu: NSMenu) {
         let title = menu.title
-        
+
         if title == "ItemsColumnsMenu" {
             for menuItem in menu.itemArray {
                 let column = menuItem.representedObject as! NSTableColumn
@@ -1325,7 +1325,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 let arrangedObjects = itemsController.arrangedObjects as! NSArray
                 selectedItems.append(arrangedObjects[itemsTable.clickedRow] as! GItem)
             }
-            
+
             if title == "Mark" { // TODO: Disable marks based on status
                 tableProgressIndicator.startAnimation(self)
                 status("Analyzing selected items...")
@@ -1376,7 +1376,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 if !statusField.stringValue.hasPrefix("Executing") {
                     status("OK.")
                 }
-                
+
             } else if title == "Commands" {
                 while commandsPopUp.numberOfItems > 1 {
                     commandsPopUp.removeItemAtIndex(1)
@@ -1394,17 +1394,17 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             }
         }
     }
-    
-    
+
+
     @IBAction func marks(sender: AnyObject) {
         // TODO
         showMarkMenu(self)
     }
-    
+
     @IBAction func showMarkMenu(sender: AnyObject) {
         NSMenu.popUpContextMenu(markMenu, withEvent: NSApp.currentEvent!, forView: itemsTable)
     }
-    
+
     @IBAction func mark(sender: NSMenuItem) {
         let selectedObjects = itemsController.selectedObjects as NSArray
         var selectedItems = selectedObjects.copy() as! [GItem]
@@ -1416,33 +1416,33 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         var mark: GMark = .NoMark
         for item in selectedItems {
             title = sender.title
-            
+
             if title == "Install" {
                 if (item.source is GScrape) && item.URL != nil {
                     NSWorkspace.sharedWorkspace().openURL(NSURL(string: item.URL)!)
                     continue
                 }
                 mark = .Install
-                
+
             } else if title == "Uninstall" {
                 mark = .Uninstall
-                
+
             } else if title == "Deactivate" {
                 mark = .Deactivate
-                
+
             } else if title == "Upgrade" {
                 mark = .Upgrade
-                
+
             } else if title == "Fetch" {
                 if (item.source is GScrape) && item.URL != nil {
                     NSWorkspace.sharedWorkspace().openURL(NSURL(string: item.URL)!)
                     continue
                 }
                 mark = .Fetch
-                
+
             } else if title == "Clean" {
                 mark = .Clean
-                
+
             } else if title == "Unmark" {
                 mark = .NoMark
                 if item is GPackage {
@@ -1467,7 +1467,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 packagesIndex[(item as! GPackage).key()]!.markedOptions = options
                 mark = .Install
             }
-            
+
             if title == "Unmark" {
                 if item.mark != .NoMark {
                     marksCount--
@@ -1477,11 +1477,11 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     marksCount++
                 }
             }
-            
+
             item.mark = mark
             let systemName = item.system.name
             var package: GPackage!
-            
+
             if item.status == .Inactive || systemName == "Mac OS X" || systemName == "iTunes" {
                 package = allPackages.filter { $0.name == item.name && $0.installed != nil && $0.installed == item.installed }[0]
             } else {
@@ -1493,7 +1493,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
         updateMarkedSource()
     }
-    
+
     func updateMarkedSource() {
         sourcesOutline.setDelegate(nil)
         let sourcesContent = sourcesController.content as! NSArray
@@ -1519,8 +1519,8 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         sourcesOutline.setDelegate(self)
         applyButton.enabled = (marksCount > 0)
     }
-    
-    
+
+
     @IBAction func apply(sender: AnyObject) {
         self.ready = false
         markedItems = allPackages.filter { $0.mark != .NoMark } as [GItem]
@@ -1539,7 +1539,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         for item in markedItems as! [GPackage] {
             markedSystems.addObject(item.system)
         }
-        
+
         // workaround since an immutable array is necessary as a Dictionary Optional
         var systemsDict = [String: [GPackage]]()
         for system in markedSystems.allObjects as! [GSystem] {
@@ -1548,7 +1548,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         for item in markedItems as! [GPackage] {
             systemsDict[item.system.name]?.append(item)
         }
-        
+
         let prefixes = ["/opt/local", "/usr/local", "/sw", "/usr/pkg"]
         var detectedPrefixes = [String]()
         for prefix in prefixes {
@@ -1574,31 +1574,31 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 // markName = markNames[Int(mark.rawValue)]
                 command = nil
                 hidesOthers = false
-                
+
                 if mark == .Install {
                     command = item.installCmd
-                    
+
                     if item.system.name != "Homebrew Casks" && item.system.name != "Rudix" {
                         hidesOthers = true
                     }
-                    
+
                 } else if mark == .Uninstall {
                     command = item.uninstallCmd
-                    
+
                 } else if mark == .Deactivate {
                     command = item.deactivateCmd
-                    
+
                 } else if mark == .Upgrade {
                     command = item.upgradeCmd
                     hidesOthers = true
-                    
+
                 } else if mark == .Fetch {
                     command = item.fetchCmd
-                    
+
                 } else if mark == .Clean {
                     command = item.cleanCmd
                 }
-                
+
                 if command != nil {
                     if defaults["DebugMode"] == true {
                         command = item.system.verbosifiedCmd(command)
@@ -1606,7 +1606,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     systemCommands.append(command)
                 }
             }
-            
+
             if hidesOthers && (systems.count > 1 || detectedPrefixes.count > 0) {
                 for otherSystem in systems {
                     if otherSystem === system {
@@ -1645,10 +1645,10 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             }
         }
         execute(tasks.join(" ; "))
-        
+
     }
-    
-    
+
+
     func raiseBrowser(sender: AnyObject) {
         let selectedItems = itemsController.selectedObjects
         var item: GItem? = nil
@@ -1689,7 +1689,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         firstWindow = (browser.valueForKey("windows") as! [NSObject])[0]
         firstWindow.valueForKey("document")!.setValue(NSURL(string: url)!, forKey: "URL")
     }
-    
+
     func raiseShell(sender: AnyObject) {
         for window in terminal.valueForKey("windows") as! [NSObject] {
             if !(window.valueForKey("name") as! NSString).containsString("Guigna ") {
@@ -1714,13 +1714,13 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             }
         }
     }
-    
+
     func open(sender: AnyObject) {
         NSApp.activateIgnoringOtherApps(true)
         window.makeKeyAndOrderFront(nil)
         raiseShell(self)
     }
-    
+
     @IBAction func options(sender: AnyObject) {
         window.beginSheet(optionsPanel) {
             if $0 == NSModalResponseStop {
@@ -1728,15 +1728,15 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             }
         }
     }
-    
+
     @IBAction func closeOptions(sender: AnyObject) {
         self.window.endSheet(self.optionsPanel)
         if self.ready {
             syncButton.enabled = true
         }
     }
-    
-    
+
+
     func optionsStatus(var msg: String) {
         if msg.hasSuffix("...") {
             optionsProgressIndicator.startAnimation(self)
@@ -1753,15 +1753,15 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         optionsStatusField.stringValue = msg
         optionsStatusField.display()
     }
-    
-    
+
+
     @IBAction func preferences(sender: AnyObject) {
         self.ready = false
         // optionsPanel.display()
         if sender is NSSegmentedControl {
             let theme = (sender as! NSSegmentedControl).labelForSegment((sender as! NSSegmentedControl).selectedSegment)!
             applyTheme(theme)
-            
+
         } else {
             if sender is NSButton {
                 let title = (sender as! NSButton).title
@@ -1769,11 +1769,11 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 var system: GSystem!
                 var command = "command"
                 var addedSystems = [GSystem]()
-                
+
                 if state == NSOnState {
                     optionsStatus("Adding \(title)...")
                     agent.output("/bin/echo") // workaround for updating status in El Capitan
-                    
+
                     if title == "Homebrew" {
                         command = "/usr/local/bin/brew"
                         if command.exists {
@@ -1784,7 +1784,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                                 addedSystems.append(system)
                             }
                         }
-                        
+
                     } else if title == "MacPorts" {
                         command = "/opt/local/bin/port"
                         system = MacPorts(agent: agent)
@@ -1794,25 +1794,25 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                             system.mode = .Online
                         }
                         addedSystems.append(system)
-                        
+
                     } else if title == "Fink" {
                         command = "/sw/bin/fink"
                         system = Fink(agent: agent)
                         system.mode = command.exists ? .Offline : .Online
                         addedSystems.append(system)
-                        
+
                     } else if title == "pkgsrc" {
                         command = "/usr/pkg/sbin/pkg_info"
                         system = Pkgsrc(agent: agent)
                         system.mode = command.exists ? .Offline : .Online
                         addedSystems.append(system)
-                        
+
                     } else if title == "FreeBSD" {
                         system = FreeBSD(agent: agent)
                         system.mode = .Online
                         addedSystems.append(system)
-                        
-                        
+
+
                     } else if title == "Rudix" {
                         command = "/usr/local/bin/rudix"
                         system = Rudix(agent: agent)
@@ -1820,12 +1820,12 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                         if system.mode == .Offline { // FIXME: manifest is not available anymore
                             addedSystems.append(system)
                         }
-                        
+
                     } else if title == "iTunes" {
                         system = ITunes(agent: agent)
                         addedSystems.append(system)
                     }
-                    
+
                     if addedSystems.count > 0 {
                         for system in addedSystems {
                             addSystem(system)
@@ -1837,7 +1837,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     } else {
                         optionsStatus("\(title)'s \(command) not detected.")
                     }
-                    
+
                 } else {
                     removeSystems(named: title)
                     optionsStatus("OK.")
@@ -1846,7 +1846,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
         self.ready = true
     }
-    
+
     func addSystem(system: GSystem) {
         systems.append(system)
         let sourcesContent = self.sourcesController.content as! NSArray
@@ -1880,7 +1880,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             categories.addObject(categorySource)
         }
     }
-    
+
     func removeSystems(named name: String) {
         optionsStatus("Removing \(name)...")
         agent.output("/bin/echo") // workaround for updating status in El Capitan
@@ -1906,8 +1906,8 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             }
         }
     }
-    
-    
+
+
     func applyTheme(theme: String) {
         if theme == "Retro" {
             window.backgroundColor = NSColor.greenColor()
@@ -1944,7 +1944,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             statsLabel.backgroundColor = NSColor.greenColor()
             shell.setValue(NSColor(calibratedRed: 0.0, green: 0.0, blue: 1.0, alpha: 1.0), forKey: "backgroundColor")
             shell.setValue(NSColor(calibratedRed: 1.0, green: 1.0, blue: 1.0, alpha: 1.0), forKey: "normalTextColor")
-            
+
         } else { // Default theme
             window.backgroundColor = NSColor.windowBackgroundColor()
             segmentedControl.superview!.layer!.backgroundColor = NSColor.windowBackgroundColor().CGColor
@@ -1978,90 +1978,90 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
         defaults["Theme"] = theme
     }
-    
-    
+
+
     @IBAction func toolsAction(sender: AnyObject) {
         NSMenu.popUpContextMenu(toolsMenu, withEvent: NSApp.currentEvent!, forView: itemsTable)
     }
-    
+
     @IBAction func tools(sender: NSMenuItem) {
         let title = sender.title
-        
+
         if title == "Install pkgsrc" {
             execute(Pkgsrc.setupCmd, baton: "relaunch")
-            
+
         } else if title == "Fetch pkgsrc and INDEX" {
             execute("cd ~/Library/Application\\ Support/Guigna/pkgsrc ; curl -L -O ftp://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/INDEX ; curl -L -O ftp://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc.tar.gz ; sudo tar -xvzf pkgsrc.tar.gz -C /usr", baton: "relaunch")
-            
+
         } else if title == "Remove pkgsrc" {
             execute(Pkgsrc.removeCmd, baton: "relaunch")
-            
+
         } else if title == "Fetch FreeBSD INDEX" {
             execute("cd ~/Library/Application\\ Support/Guigna/FreeBSD ; curl -L -O ftp://ftp.freebsd.org/pub/FreeBSD/ports/packages/INDEX", baton: "relaunch")
-            
+
         } else if title == "Install Fink" {
             execute(Fink.setupCmd, baton: "relaunch")
-            
+
         } else if title == "Remove Fink" {
             execute(Fink.removeCmd, baton: "relaunch")
-            
+
         } else if title == "Install Homebrew" {
             execute(Homebrew.setupCmd, baton: "relaunch")
-            
+
         } else if title == "Install Homebrew Cask" {
             execute(HomebrewCasks.setupCmd, baton: "relaunch")
-            
+
         } else if title == "Remove Homebrew" {
             execute(Homebrew.removeCmd, baton: "relaunch")
-            
+
         } else if title == "Fetch MacPorts PortIndex" {
             execute("cd ~/Library/Application\\ Support/Guigna/Macports ; /usr/bin/rsync -rtzv rsync://rsync.macports.org/release/tarballs/PortIndex_darwin_15_i386/PortIndex PortIndex", baton: "relaunch")
-            
+
         } else if title == "Install Rudix" {
             execute(Rudix.setupCmd, baton: "relaunch")
-            
+
         } else if title == "Remove Rudix" {
             execute(Rudix.removeCmd, baton: "relaunch")
-            
+
         } else {
             execute("echo TODO")
         }
-        
+
     }
-    
+
     @IBAction func search(sender: AnyObject) {
         window.makeFirstResponder(searchField)
     }
-    
+
     @IBAction func showHelp(sender: AnyObject) { // TODO
         cmdline.stringValue = "http://github.com/gui-dos/Guigna/wiki/The-Guigna-Guide"
         segmentedControl.selectedSegment = 1
         selectedSegment = "Home"
         updateTabView(nil)
     }
-    
+
     @IBAction func stop(sender: AnyObject) {
     }
-    
+
     @IBAction func details(sender: AnyObject) {
     }
-    
-    
-    
+
+
+
     // GAppDelegate protocol
-    
+
     func addItem(item: GItem) {
         allPackages.append(item as! GPackage)
     }
-    
+
     func removeItem(item: GItem) {
         // TODO: remove a package from allPackages: GPackage should implement Equatable
     }
-    
+
     func removeItems(excludeElement: (GItem) -> Bool) {
         allPackages = allPackages.filter {!excludeElement($0)}
     }
-    
+
 }
 
 
