@@ -1,6 +1,6 @@
 import Foundation
 
-class ITunes: GSystem {
+final class ITunes: GSystem {
 
     override class var prefix: String { return "" }
 
@@ -125,4 +125,3 @@ class ITunes: GSystem {
 
 
 }
-

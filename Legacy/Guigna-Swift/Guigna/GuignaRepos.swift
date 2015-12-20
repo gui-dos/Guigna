@@ -4,7 +4,7 @@ class GRepo: GScrape {
 }
 
 
-class Native: GRepo {
+final class Native: GRepo {
 
     init(agent: GAgent) {
         super.init(name: "Native Installers", agent: agent)

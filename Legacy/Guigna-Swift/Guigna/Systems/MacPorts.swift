@@ -1,6 +1,6 @@
 import Foundation
 
-class MacPorts: GSystem {
+final class MacPorts: GSystem {
 
     override class var prefix: String { return "/opt/local"}
 
@@ -381,4 +381,3 @@ class MacPorts: GSystem {
     }
 
 }
-

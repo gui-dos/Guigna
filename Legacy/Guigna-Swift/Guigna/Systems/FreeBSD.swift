@@ -1,6 +1,6 @@
 import Foundation
 
-class FreeBSD: GSystem {
+final class FreeBSD: GSystem {
 
     override class var prefix: String { return  "" }
 
@@ -137,4 +137,3 @@ class FreeBSD: GSystem {
     // http://www.FreeBSD.org/cgi/ports.cgi?query=%5E' + '%@-%@' item.name-item.version
 
 }
-

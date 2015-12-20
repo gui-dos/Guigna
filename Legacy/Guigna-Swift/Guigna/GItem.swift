@@ -22,7 +22,7 @@ import Foundation
 
 
 class GItem: NSObject {
-    var name: String
+    let name: String
     dynamic var version: String
     weak var source: GSource!
     weak var system: GSystem!

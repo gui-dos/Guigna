@@ -1,6 +1,6 @@
 import Foundation
 
-class HomebrewCasks: GSystem {
+final class HomebrewCasks: GSystem {
 
     override class var prefix: String { return "/usr/local" }
 
@@ -291,4 +291,3 @@ class HomebrewCasks: GSystem {
     }
 
 }
-

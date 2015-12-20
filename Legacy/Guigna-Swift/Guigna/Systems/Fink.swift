@@ -1,6 +1,6 @@
 import Foundation
 
-class Fink: GSystem {
+final class Fink: GSystem {
 
     override class var prefix: String { return "/sw" }
 
@@ -52,8 +52,7 @@ class Fink: GSystem {
                 status = .Available
                 if state == "i" || state == "p" {
                     status = .UpToDate
-                }
-                else if state == "(i)" {
+                } else if state == "(i)" {
                     status = .Outdated
                 }
                 let pkg = GPackage(name: name, version: version, system: self, status: status)

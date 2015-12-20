@@ -1,6 +1,6 @@
 import Foundation
 
-class Pkgsrc: GSystem {
+final class Pkgsrc: GSystem {
 
     override class var prefix: String { return  "/usr/pkg" }
 

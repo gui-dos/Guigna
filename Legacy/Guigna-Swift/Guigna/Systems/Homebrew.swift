@@ -1,6 +1,6 @@
 import Foundation
 
-class Homebrew: GSystem {
+final class Homebrew: GSystem {
 
     override class var prefix: String { return "/usr/local"}
 

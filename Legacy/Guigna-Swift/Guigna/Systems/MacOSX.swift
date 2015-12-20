@@ -1,6 +1,6 @@
 import Foundation
 
-class MacOSX: GSystem {
+final class MacOSX: GSystem {
 
     override class var prefix: String { return "" }
 
@@ -199,4 +199,3 @@ class MacOSX: GSystem {
     }
 
 }
-

@@ -1,6 +1,6 @@
 import Foundation
 
-class GPackage: GItem {
+final class GPackage: GItem {
 
     var options: String!
     var markedOptions: String!

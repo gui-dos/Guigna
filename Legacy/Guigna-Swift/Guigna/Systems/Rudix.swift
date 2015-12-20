@@ -1,6 +1,6 @@
 import Foundation
 
-class Rudix: GSystem {
+final class Rudix: GSystem {
 
     override class var prefix: String { return "/usr/local" }
 
@@ -188,4 +188,3 @@ class Rudix: GSystem {
     }
 
 }
-
