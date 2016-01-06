@@ -50,9 +50,9 @@
             NSString *category = components[6];
             NSString *homepage = components[11];
             GPackage *pkg = [[GPackage alloc] initWithName:name
-                                                       version:version
-                                                        system:self
-                                                        status:GAvailableStatus];
+                                                   version:version
+                                                    system:self
+                                                    status:GAvailableStatus];
             pkg.ID = ID;
             pkg.categories = category;
             pkg.description = description;
@@ -79,9 +79,9 @@
             if (idx != NSNotFound)
                 description = [description substringToIndex:idx];
             GPackage *pkg = [[GPackage alloc] initWithName:name
-                                                       version:version
-                                                        system:self
-                                                        status:GAvailableStatus];
+                                                   version:version
+                                                    system:self
+                                                    status:GAvailableStatus];
             pkg.categories = category;
             pkg.description = description;
             NSString *ID = [NSString stringWithFormat:@"%@/%@", category, name];
@@ -130,9 +130,9 @@
         NSString *latestVersion = (pkg == nil) ? nil : [pkg.version copy];
         if (pkg == nil) {
             pkg = [[GPackage alloc] initWithName:name
-                                             version:latestVersion
-                                              system:self
-                                              status:status];
+                                         version:latestVersion
+                                          system:self
+                                          status:status];
             self[ID] = pkg;
         } else {
             if (pkg.status == GAvailableStatus)
@@ -176,10 +176,10 @@
 }
 
 - (NSString *)log:(GItem *)item {
-        if (item.ID != nil)
-            return [NSString stringWithFormat:@"http://cvsweb.NetBSD.org/bsdweb.cgi/pkgsrc/%@/", item.ID];
-        else
-            return [NSString stringWithFormat:@"http://cvsweb.NetBSD.org/bsdweb.cgi/pkgsrc/%@/%@/", item.categories, item.name];
+    if (item.ID != nil)
+        return [NSString stringWithFormat:@"http://cvsweb.NetBSD.org/bsdweb.cgi/pkgsrc/%@/", item.ID];
+    else
+        return [NSString stringWithFormat:@"http://cvsweb.NetBSD.org/bsdweb.cgi/pkgsrc/%@/%@/", item.categories, item.name];
 }
 
 

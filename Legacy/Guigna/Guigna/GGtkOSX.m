@@ -19,7 +19,7 @@
 }
 
 
-// TODO: 
+// TODO:
 - (NSString *)log:(GItem *)item {
     return @"http://git.gnome.org/browse/gtk-osx/";
 }

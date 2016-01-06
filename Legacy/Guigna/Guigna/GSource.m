@@ -63,11 +63,11 @@
 @implementation GSourceTransformer
 
 + (Class)transformedValueClass {
-	return [NSImage class];
+    return [NSImage class];
 }
 
 + (BOOL)allowsReverseTransformation {
-	return NO;
+    return NO;
 }
 
 - (id)transformedValue:(GSource *)source {
@@ -122,7 +122,7 @@
         return [NSImage imageNamed:@"status-updated.tiff"];
     else if ([name hasPrefix:@"new"])
         return [NSImage imageNamed:@"status-new.tiff"];
-    
+
     else
         return nil;
 }

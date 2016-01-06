@@ -5,12 +5,10 @@
 
 - (NSString *)join {
     return [self componentsJoinedByString:@" "];
-    
 }
 
 - (NSString *)join:(NSString *)separator {
     return [self componentsJoinedByString:separator];
-    
 }
 
 @end
@@ -95,15 +93,15 @@
 
 - (void)swipeWithEvent:(NSEvent *)event {
     CGFloat x = [event deltaX];
-	if (x < 0 && [self canGoForward])
-		[self goForward];
-	else if (x > 0 && [self canGoBack])
-		[self goBack];
+    if (x < 0 && [self canGoForward])
+        [self goForward];
+    else if (x > 0 && [self canGoBack])
+        [self goBack];
 }
 
 - (void)magnifyWithEvent:(NSEvent *)event {
-	float multiplier = [self textSizeMultiplier] * ([event magnification] + 1.0);
-	[self setTextSizeMultiplier:multiplier];
+    float multiplier = [self textSizeMultiplier] * ([event magnification] + 1.0);
+    [self setTextSizeMultiplier:multiplier];
 }
 
 @end

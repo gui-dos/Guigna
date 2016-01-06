@@ -23,7 +23,7 @@
     [names removeObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0,2)]];
     NSMutableArray *comments = [NSMutableArray arrayWithArray:mainDiv[@"div"]];
     [comments removeObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0,2)]];
-    
+
     int i = 0;
     for (id node in names) {
         NSString *ID = [node[@"a"][0] stringValue];
@@ -42,9 +42,9 @@
         description = [description substringToIndex:([description index:@"\n"])];
         description = [description substringFromIndex:([description index:@": "]) + 2];
         GItem *entry = [[GItem alloc] initWithName:name
-                                          version:version
-                                           source:self
-                                           status:GAvailableStatus];
+                                           version:version
+                                            source:self
+                                            status:GAvailableStatus];
         entry.ID = ID;
         entry.description = description;
         entry.categories = category;

@@ -19,7 +19,7 @@
 }
 
 - (NSArray *)list {
-    
+
     NSMutableArray *output = [NSMutableArray arrayWithArray:[[self outputFor:@"/bin/sh -c /usr/bin/grep__\"version__\"__-r__/%@/Library/Taps/caskroom/homebrew-cask/Casks", self.prefix] split:@"\n"]];
     [output removeLastObject];
     [self.index removeAllObjects];
@@ -68,7 +68,7 @@
             }
         }
     }
-    
+
     output = [NSMutableArray arrayWithArray:[[self outputFor:@"/bin/sh -c /usr/bin/grep__\"name__'\"__-r__/%@/Library/Taps/caskroom/homebrew-cask/Casks", self.prefix] split:@"\n"]];
     [output removeLastObject];
     for (NSString *line in output) {
@@ -95,9 +95,9 @@
     NSMutableArray *pkgs = [NSMutableArray array];
     if (self.mode == GOnlineMode)
         return pkgs;
-    
+
     // TODO: remove inactive packages from items and allPackages
-    
+
     GStatus status;
     for (GPackage *pkg in self.items) {
         status = pkg.status;
@@ -230,7 +230,7 @@
         options = @"";
     else
         options = [@"--" stringByAppendingString:[options replace:@" " with:@" --"]];
-    
+
     return [NSString stringWithFormat:@"%@ install %@ %@", self.cmd, options, pkg.name];
 }
 
@@ -241,7 +241,7 @@
 // TODO: uninstall only, don't zap settings
 - (NSString *) upgradeCmd:(GPackage *)pkg {
     return [NSString stringWithFormat:@"%@ zap %@ ; %@ install %@", self.cmd, pkg.name, self.cmd, pkg.name ];
-    
+
 }
 
 - (NSString *)cleanCmd:(GPackage *)pkg {

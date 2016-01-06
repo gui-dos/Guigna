@@ -7,9 +7,9 @@
 @property(strong) NSString *repo;
 
 - (instancetype)initWithName:(NSString *)name
-           version:(NSString *)version
-            system:(GSystem *)system
-            status:(GStatus)status;
+                     version:(NSString *)version
+                      system:(GSystem *)system
+                      status:(GStatus)status;
 
 - (NSString *) key;
 - (NSArray *)dependenciesList;

@@ -19,7 +19,7 @@
 }
 
 
-// TODO: 
+// TODO:
 - (NSString *)log:(GItem *)item {
     return @"http://packages.gentoo.org/arch/x64-macos?arches=all";
 }

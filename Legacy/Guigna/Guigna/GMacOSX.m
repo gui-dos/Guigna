@@ -201,11 +201,11 @@
                     [commands addObject:[NSString stringWithFormat:@"sudo rm \"%@\"", filePath]];
             }
         }
-        
+
         [commands addObject:[NSString stringWithFormat:@"sudo %@ --forget %@", self.cmd, pkgID]];
     }
     return [commands join:@" ; "];
-    
+
     // TODO: disable Launchd daemons, clean Application Support, Caches, Preferences
     // SEE: https://github.com/caskroom/homebrew-cask/blob/master/lib/cask/artifact/pkg.rb
 }

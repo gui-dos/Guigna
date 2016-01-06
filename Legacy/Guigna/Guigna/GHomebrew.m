@@ -21,9 +21,9 @@
 - (NSArray *)list {
     [self.index removeAllObjects];
     [self.items removeAllObjects];
-    
+
     // /usr/bin/ruby -C /usr/local/Library/Homebrew -I. -e "require 'global'; require 'formula'; Formula.each {|f| puts \"#{f.name} #{f.pkg_version}\"}"
-    
+
     NSMutableArray *output = [NSMutableArray arrayWithArray:[[self outputFor:@"/usr/bin/ruby -C %@/Library/Homebrew -I. -e require__'global';require__'formula';__Formula.each__{|f|__puts__\"#{f.full_name}|#{f.pkg_version}|#{f.bottle}|#{f.desc}\"}", self.prefix] split:@"\n"]];
     [output removeLastObject];
     for (NSString *line in output) {
@@ -54,7 +54,7 @@
         [self.items addObject:pkg];
         self[name] = pkg;
     }
-    
+
     // TODO
     if ([[self defaults:@"HomebrewMainTaps"] isEqual:@YES]) {
         BOOL brewCaskCommandAvailable = [[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@/Library/Taps/caskroom/homebrew-cask/cmd/brew-cask.rb", self.prefix]];
@@ -80,7 +80,7 @@
             self[name] = pkg;
         }
     }
-    
+
     [self installed]; // update status
     return self.items;
 }
@@ -235,7 +235,7 @@
         }
     }
     return [NSString stringWithFormat:@"http://github.com/%@/%@.rb", path, item.name];
-    
+
 }
 
 - (NSString *)contents:(GItem *)item {
@@ -289,7 +289,7 @@
         options = @"";
     else
         options = [@"--" stringByAppendingString:[options replace:@" " with:@" --"]];
-    
+
     return [NSString stringWithFormat:@"%@ install %@ %@", self.cmd, options, pkg.name];
 }
 
@@ -302,7 +302,7 @@
 
 - (NSString *) upgradeCmd:(GPackage *)pkg {
     return [NSString stringWithFormat:@"%@ upgrade %@", self.cmd, pkg.name];
-    
+
 }
 
 - (NSString *)cleanCmd:(GPackage *)pkg {

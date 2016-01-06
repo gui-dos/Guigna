@@ -77,7 +77,7 @@
 // TODO:
 - (NSString *)info:(GItem *)item {
     return [self cat:item];
-    
+
 }
 
 - (NSString *)home:(GItem *)item {

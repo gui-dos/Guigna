@@ -4,9 +4,9 @@
 #import "GPackage.h"
 
 @interface GSystem : GSource {
-    
+
     NSMutableDictionary *_defaults;
-    
+
 }
 
 @property(strong) NSString *prefix;

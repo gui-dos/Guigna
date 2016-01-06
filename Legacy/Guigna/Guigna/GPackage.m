@@ -4,19 +4,19 @@
 @implementation GPackage
 
 - (instancetype)initWithName:(NSString *)name
-           version:(NSString *)version
-            system:(GSystem *)system
-            status:(GStatus)status {
+                     version:(NSString *)version
+                      system:(GSystem *)system
+                      status:(GStatus)status {
     self = [super initWithName:name
-            version:version
-            source:(GSource *)system
-            status:status];
+                       version:version
+                        source:(GSource *)system
+                        status:status];
     self.system = system;
     return self;
 }
 
 - (NSString *)key {
-    return [self.system keyForPackage:self];  
+    return [self.system keyForPackage:self];
 }
 
 - (NSArray *)dependenciesList {

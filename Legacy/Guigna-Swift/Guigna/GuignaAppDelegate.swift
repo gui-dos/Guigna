@@ -2023,6 +2023,9 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         } else if title == "Remove Rudix" {
             execute(Rudix.removeCmd, baton: "relaunch")
 
+        } else if title == "Reset Guigna" {
+            execute("defaults delete name.soranzio.guido.Guigna ; defaults delete name.soranzio.guido.Guigna-Swift ; rm -r Library/Application\\ Support/Guigna/ ; rm -r Library/Preferences/name.soranzio.guido.Guigna* ; rm -r Library/Saved\\ Application\\ State/name.soranzio.guido.Guigna*", baton: "relaunch")
+
         } else {
             execute("echo TODO")
         }

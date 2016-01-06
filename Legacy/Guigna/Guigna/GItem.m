@@ -7,9 +7,9 @@
 @synthesize description;
 
 - (instancetype)initWithName:(NSString *)name
-           version:(NSString *)version
-            source:(GSource *)source
-            status:(GStatus)status {
+                     version:(NSString *)version
+                      source:(GSource *)source
+                      status:(GStatus)status {
     self = [super init];
     if (self) {
         _name = [name copy];
@@ -24,12 +24,12 @@
 
 - (instancetype)initWithCoder:(NSCoder *)coder
 {
-	self = [super init];
-	if (self) {
-		_name = [coder decodeObjectForKey:@"name"];
-		_version = [coder decodeObjectForKey:@"version"];
-	}
-	return self;
+    self = [super init];
+    if (self) {
+        _name = [coder decodeObjectForKey:@"name"];
+        _version = [coder decodeObjectForKey:@"version"];
+    }
+    return self;
 }
 
 - (void)encodeWithCoder:(NSCoder *)coder {
@@ -73,11 +73,11 @@
 @implementation GStatusTransformer
 
 + (Class)transformedValueClass {
-	return [NSImage class];
+    return [NSImage class];
 }
 
 + (BOOL)allowsReverseTransformation {
-	return NO;
+    return NO;
 }
 
 - (id)transformedValue:(id)status {
@@ -111,11 +111,11 @@
 @implementation GMarkTransformer
 
 + (Class)transformedValueClass {
-	return [NSImage class];
+    return [NSImage class];
 }
 
 + (BOOL)allowsReverseTransformation {
-	return NO;
+    return NO;
 }
 
 - (id)transformedValue:(id)mark {

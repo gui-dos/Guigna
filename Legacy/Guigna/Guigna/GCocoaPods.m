@@ -95,53 +95,51 @@
  //    }
  return self.items;
  }
- 
- 
- 
+
  // TODO
  - (NSString *)info:(GItem *)item {
  return [self outputFor:@"%@ search --stats --no-color %@", self.cmd, item.name];
  }
- 
+
  - (NSString *)home:(GItem *)item {
  return item.homepage;
  }
- 
+
  - (NSString *)log:(GItem *)item {
  if (item != nil ) {
  return [NSString stringWithFormat:@"http://github.com/CocoaPods/Specs/tree/master/%@", item.name];
  } else {
  return @"http://github.com/CocoaPods/Specs/commits";
  }
- 
- 
+
+
  - (NSString *)contents:(GItem *)item {
  return [self outputFor:@"%@ search --stats --no-color %@", self.cmd, item.name];
  }
- 
+
  // TODO:
  - (NSString *)cat:(GItem *)item {
  return [self outputFor:@"%@ cat %@", self.cmd, item.name];
  }
- 
+
  - (NSString *)deps:(GItem *)item {
  return [self outputFor:@"%@ search --stats --no-color %@", self.cmd, item.name];
  }
- 
+
  - (NSString *)dependents:(GItem *)item {
  return [self outputFor:@"%@ search --stats --no-color %@", self.cmd, item.name];
  }
- 
- 
+
+
  - (NSString *)updateCmd {
  return [NSString stringWithFormat:@"%@ repo update  --no-color", self.cmd];
  }
- 
+
  // TODO:
  + (NSString *)setupCmd {
  return @"sudo /opt/local/bin/gem1.9 install pod; /opt/local/bin/pod setup";
  }
- 
+
  + (NSString *)removeCmd {
  return @"sudo /opt/local/bin/gem1.9 uninstall pod";
  }

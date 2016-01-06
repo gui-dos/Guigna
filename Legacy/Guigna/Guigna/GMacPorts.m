@@ -45,7 +45,7 @@
             [pkgs addObject:pkg];
             [self.items addObject:pkg];
             self[name] = pkg;
-            
+
         }
     } else {
         NSString *portIndex;

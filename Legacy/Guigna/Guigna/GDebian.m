@@ -25,9 +25,9 @@
         NSString *name = components[1];
         NSString *version = components[2];
         GItem *pkg = [[GItem alloc] initWithName:name
-                                          version:version
-                                           source:self
-                                           status:GAvailableStatus];
+                                         version:version
+                                          source:self
+                                          status:GAvailableStatus];
         [pkgs addObject:pkg];
     }
     self.items = pkgs;

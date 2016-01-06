@@ -76,26 +76,26 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     [tableProgressIndicator startAnimation:self];
-    
+
     GStatusTransformer *statusTransformer = [[GStatusTransformer alloc] init];
     [NSValueTransformer setValueTransformer:statusTransformer forName:@"StatusTransformer"];
     GSourceTransformer *sourceTransformer = [[GSourceTransformer alloc] init];
     [NSValueTransformer setValueTransformer:sourceTransformer forName:@"SourceTransformer"];
     GMarkTransformer *markTransformer = [[GMarkTransformer alloc] init];
     [NSValueTransformer setValueTransformer:markTransformer forName:@"MarkTransformer"];
-    
+
     self.statusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength];
     [statusItem setTitle:@"😺"];
     [statusItem setHighlightMode:YES];
     [statusItem setMenu:statusMenu];
     [itemsTable setDoubleAction:@selector(showMarkMenu:)];
-    
+
     [infoText setFont:[NSFont fontWithName:@"Andale Mono" size:11.0]];
     [logText setFont: [NSFont fontWithName:@"Andale Mono" size:11.0]];
     NSString *welcomeMsg = @"\n\t\t\t\t\tWelcome to Guigna\n\t\tGUIGNA: the GUI of Guigna is Not by Apple  :)\n\n\t[Sync] to update from remote repositories.\n\tRight/double click a package to mark it.\n\t[Apply] to commit the changes to a [Shell].\n\n\tYou can try other commands typing in the yellow prompt.\n\tTip: Command-click to combine sources.\n\tWarning: keep the Guigna shell open!\n\n\n\t\t\t\tTHIS IS ONLY A PROTOTYPE.\n\n\n\t\t\t\tguido.soranzio@gmail.com";
     [self info:welcomeMsg];
     [infoText checkTextInDocument:nil];
-    
+
     NSMenu *columnsMenu = [[NSMenu alloc] initWithTitle:@"ItemsColumnsMenu"];
     NSMenu *viewColumnsMenu = [[NSMenu alloc] initWithTitle:@"ItemsColumnsMenu"];
     for (NSMenu *menu in @[columnsMenu, viewColumnsMenu]) {
@@ -115,10 +115,10 @@
     NSMenuItem *columnsMenuItem = [[NSMenuItem alloc] initWithTitle:@"Columns" action:nil keyEquivalent:@ ""];
     [columnsMenuItem setSubmenu:viewColumnsMenu];
     [[viewMenu submenu] addItem:columnsMenuItem];
-    
+
     agent = [[GAgent alloc] init];
     agent.appDelegate = self;
-    
+
     sources = [[NSMutableArray alloc] init];
     systems = [[NSMutableArray alloc] init];
     scrapes = [[NSMutableArray alloc] init];
@@ -126,7 +126,7 @@
     items = [[NSMutableArray alloc] init];
     allPackages = [[NSMutableArray alloc] init];
     packagesIndex = [[NSMutableDictionary alloc] init];
-    
+
     self.APPDIR = [@"~/Library/Application Support/Guigna" stringByExpandingTildeInPath];
     system([[NSString stringWithFormat: @"mkdir -p '%@'", self.APPDIR] UTF8String]);
     system([[NSString stringWithFormat: @"touch '%@/output'", self.APPDIR] UTF8String]);
@@ -134,7 +134,7 @@
     for (NSString *dir in @[@"MacPorts", @"Homebrew", @"Fink", @"pkgsrc", @"FreeBSD", @"Gentoo"]) {
         system([[NSString stringWithFormat: @"mkdir -p '%@/%@'", self.APPDIR, dir] UTF8String]);
     }
-    
+
     NSFileManager *fileManager = [NSFileManager defaultManager];
     system("osascript -e 'tell application \"Terminal\" to close (windows whose name contains \"Guigna \")'");
     self.terminal = [SBApplication applicationWithBundleIdentifier:@"com.apple.Terminal"];
@@ -159,7 +159,7 @@
         [themesSegmentedControl setSelectedSegment:[@[@"Default", @"Retro"] indexOfObject:theme]];
         [self applyTheme:theme];
     }
-    
+
     NSDictionary *knownPaths = @{@"MacPorts": @"/opt/local", @"Homebrew": @"/usr/local", @"pkgsrc": @"/usr/pkg", @"Fink": @"/sw"};
     NSString *prefix;
     for (NSString *system in knownPaths.allKeys) {
@@ -176,7 +176,7 @@
             }
         }
     }
-    
+
     NSString *portPath = [[GMacPorts prefix] stringByAppendingString:@"/bin/port"];
     NSString *brewPath = [[GHomebrew prefix] stringByAppendingString:@"/bin/brew"];
     NSArray *paths = [[agent outputForCommand:@"/bin/bash -l -c which__port__brew"] split:@"\n"];
@@ -187,9 +187,9 @@
             brewPath = path;
         }
     }
-    
+
     [self.terminal doScript:@"clear ; printf \"\\e[3J\" ; echo Welcome to Guigna! ; echo" in:self.shell];
-    
+
     if ([fileManager fileExistsAtPath:portPath]
         || [fileManager fileExistsAtPath:[NSString stringWithFormat:@"%@/MacPorts/PortIndex", self.APPDIR]]) {
         if (defaults[@"MacPortsStatus"] == nil)
@@ -210,7 +210,7 @@
             }
         }
     }
-    
+
     if ([fileManager fileExistsAtPath:brewPath]) {
         if (defaults[@"HomebrewStatus"] == nil)
             defaults[@"HomebrewStatus"] = @(GOnState);
@@ -231,7 +231,7 @@
             }
         }
     }
-    
+
     if ([fileManager fileExistsAtPath:@"/sw/bin/fink"]) {
         if (defaults[@"FinkStatus"] == nil)
             defaults[@"FinkStatus"] = @(GOnState);
@@ -242,7 +242,7 @@
             fink.mode = GOnlineMode;
         [systems addObject:fink];
     }
-    
+
     // TODO: Index user defaults
     if ([fileManager fileExistsAtPath:@"/usr/pkg/sbin/pkg_info"]
         || [fileManager fileExistsAtPath:[NSString stringWithFormat:@"%@/pkgsrc/INDEX", self.APPDIR]]) {
@@ -257,7 +257,7 @@
             pkgsrc.mode = GOnlineMode;
         [systems addObject:pkgsrc];
     }
-    
+
     if ([fileManager fileExistsAtPath:[NSString stringWithFormat:@"%@/FreeBSD/INDEX", self.APPDIR]]) {
         if (defaults[@"FreeBSDStatus"] == nil)
             defaults[@"FreeBSDStatus"] = @(GOnState);
@@ -267,7 +267,7 @@
         freebsd.mode = GOnlineMode;
         [systems addObject:freebsd];
     }
-    
+
     if ([fileManager fileExistsAtPath:@"/usr/local/bin/rudix"]) {
         if (defaults[@"RudixStatus"] == nil)
             defaults[@"RudixStatus"] = @(GOnState);
@@ -278,24 +278,24 @@
             rudix.mode = GOnlineMode;
         [systems addObject:rudix];
     }
-    
+
     GSystem *macosx = [[GMacOSX alloc] initWithAgent:self.agent];
     [systems addObject:macosx];
-    
+
     if (defaults[@"iTunesStatus"] == nil)
         defaults[@"iTunesStatus"] = @(GOnState);
     if ([defaults[@"iTunesStatus"] isEqual:@(GOnState)]) {
         GSystem *itunes = [[GITunes alloc] initWithAgent:self.agent];
         [systems addObject:itunes];
     }
-    
-    
+
+
     if (defaults[@"ScrapesCount"] == nil)
         defaults[@"ScrapesCount"] = @15;
-    
+
     GRepo *native = [[GNative alloc] initWithAgent:self.agent];
     [repos addObject:native];
-    
+
     GScrape *pkgsrcse = [[GPkgsrcSE alloc] initWithAgent:self.agent];
     GScrape *freecode = [[GFreecode alloc] initWithAgent:self.agent];
     GScrape *debian = [[GDebian alloc] initWithAgent:self.agent];
@@ -306,7 +306,7 @@
     GScrape *macupdate = [[GMacUpdate alloc] initWithAgent:self.agent];
     GScrape *appshopperios = [[GAppShopperIOS alloc] initWithAgent:self.agent];
     [scrapes addObjectsFromArray:@[pkgsrcse, freecode, debian, cocoapods, pypi, rubygems, macupdate, appshopper, appshopperios]];
-    
+
     GSource *source1 = [[GSource alloc] initWithName:@"SYSTEMS"];
     source1.categories = [[NSMutableArray alloc] init];
     [source1.categories addObjectsFromArray:systems];
@@ -323,18 +323,18 @@
     [sourcesOutline reloadData];
     [sourcesOutline expandItem:nil expandChildren:YES];
     [sourcesOutline display];
-    
+
     self.browser =  [SBApplication applicationWithBundleIdentifier:@"com.apple.Safari"];
     selectedSegment = @"Info";
-    
+
     [self performSelectorInBackground:@selector(reloadAllPackages) withObject:nil];
-    
+
     _minuteTimer = [NSTimer scheduledTimerWithTimeInterval:60.0 target:self selector:@selector(minuteCheck:) userInfo:nil repeats:YES];
-    
+
     [applyButton setEnabled:NO];
     [stopButton setEnabled:NO];
     [syncButton setEnabled:NO];
-    
+
     [self options:self];
 }
 
@@ -423,7 +423,7 @@
         }
     }
     [self status:@"Shell: OK."];
-    
+
     if ([filename is:[NSString stringWithFormat:@"%@/output", self.APPDIR]]) {
         [self status:@"Analyzing committed changes..."];
         if ([lastLines count] > 1) {
@@ -459,16 +459,16 @@
                 // TODO verify command did really complete
                 if (mark == GInstallMark) {
                     self.marksCount--;
-                    
+
                 } else if (mark == GUninstallMark) {
                     self.marksCount--;
-                    
+
                 } else if (mark == GDeactivateMark) {
                     self.marksCount--;
-                    
+
                 } else if (mark == GUpgradeMark) {
                     self.marksCount--;
-                    
+
                 } else if (mark == GFetchMark) {
                     self.marksCount--;
                 }
@@ -494,11 +494,11 @@
             }
         }
         [self status:@"Shell: OK."];
-        
+
     } else if ([filename is:[NSString stringWithFormat:@"%@/sync", self.APPDIR]]) {
         [self performSelectorInBackground:@selector(reloadAllPackages) withObject:nil];
     }
-    
+
     return YES;
 }
 
@@ -544,7 +544,7 @@
             }
             [newIndex addEntriesFromDictionary:system.index];
         }
-        
+
         if ([packagesIndex count] > 0) {
             dispatch_sync(dispatch_get_main_queue(), ^{
                 [sourcesOutline setDelegate:nil];
@@ -577,7 +577,7 @@
                 [packagesIndex removeAllObjects];
                 [allPackages removeAllObjects];
             });
-            
+
         } else {
             dispatch_sync(dispatch_get_main_queue(), ^{
                 [sourcesOutline setDelegate:nil];
@@ -724,7 +724,7 @@
                 [itemsController addObjects:allPackages];
             for (GSystem *system in selectedSystems) {
                 NSArray *packages = @[];
-                
+
                 if ([src is:@"installed"]) {
                     if (first) {
                         [self status:@"Verifying installed packages..."];
@@ -732,7 +732,7 @@
                         [itemsTable display];
                     }
                     packages = [system installed];
-                    
+
                 } else if ([src is:@"outdated"]) {
                     if (first) {
                         [self status:@"Verifying outdated packages..."];
@@ -740,7 +740,7 @@
                         [itemsTable display];
                     }
                     packages = [system outdated];
-                    
+
                 } else if ([src is:@"inactive"]) {
                     if (first) {
                         [self status:@"Verifying inactive packages..."];
@@ -748,7 +748,7 @@
                         [itemsTable display];
                     }
                     packages = [system inactive];
-                    
+
                 } else if ([src hasPrefix:@"updated"] || [src hasPrefix:@"new"]) {
                     src = [src split][0];
                     GStatus status = [src is:@"updated"] ? GUpdatedStatus : GNewStatus;
@@ -766,7 +766,7 @@
                         [itemsTable display];
                         packages = [[itemsController arrangedObjects] mutableCopy];
                     }
-                    
+
                 } else if (!([src is:@"SYSTEMS"]
                              || [src is:@"STATUS"]
                              || [src is:@""])) { // a category was selected
@@ -776,7 +776,7 @@
                     }
                     [itemsController setFilterPredicate:[NSPredicate predicateWithFormat:@"categories CONTAINS[c] %@", src]];
                     packages = [system.items filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"categories CONTAINS[c] %@", src]];
-                    
+
                 } else { // a system was selected
                     [itemsController setFilterPredicate:nil];
                     [itemsTable display];
@@ -789,13 +789,13 @@
                         }
                     }
                 }
-                
+
                 if (first) {
                     [itemsController setFilterPredicate:nil];
                     [itemsController removeObjectsAtArrangedObjectIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [[itemsController arrangedObjects] count])]];
                     first = NO;
                 }
-                
+
                 [itemsController addObjects:packages];
                 [itemsTable display];
                 GMark mark = GNoMark;
@@ -899,7 +899,7 @@
     [clearButton setHidden: ![selectedSegment is:@"Shell"]];
     [screenshotsButton setHidden: ![item.source isKindOfClass:[GScrape class]] || ![selectedSegment is:@"Home"]];
     [moreButton setHidden: ![item.source isKindOfClass:[GScrape class]]];
-    
+
     if ([selectedSegment is:@"Home"] || [selectedSegment is:@"Log"]) {
         [tabView selectTabViewItemWithIdentifier:@"web"];
         [webView display];
@@ -945,7 +945,7 @@
                 [self updateCmdLine:page];
             }
         }
-        
+
     } else {
         if (item != nil) {
             NSString *cmd;
@@ -967,22 +967,22 @@
                 [self info:@""];
                 if (![[statusField stringValue] hasPrefix:@"Executing"])
                     [self status:@"Getting info..."];
-                
+
                 if ([selectedSegment is:@"Info"]) {
                     [self info:[item info]];
                     [infoText checkTextInDocument:nil];
-                    
+
                 } else if ([selectedSegment is:@"Contents"]) {
                     NSString *contents =[item contents];
                     if ([contents is:@""] || [contents hasSuffix:@"not installed.\n"])
                         [self info:@"[Contents not available]"];
                     else
                         [self info:[NSString stringWithFormat:@"[Click on a path to open in Finder]\n%@\nUninstall command:\n%@", contents, [(GPackage *)item uninstallCmd]]];
-                    
+
                 } else if ([selectedSegment is:@"Spec"]) {
                     [self info:[item cat]];
                     [infoText checkTextInDocument:nil];
-                    
+
                 } else if ([selectedSegment is:@"Deps"]) {
                     [tableProgressIndicator startAnimation:self];
                     [self status:@"Computing dependencies..."];
@@ -1003,7 +1003,7 @@
             [infoText setDelegate:self];
             if (![[statusField stringValue] hasPrefix:@"Executing"])
                 [self status:@"OK."];
-            
+
         } else if ([selectedSegment is:@"Shell"]) {
             [tabView selectTabViewItemWithIdentifier:@"log"];
         }
@@ -1107,7 +1107,7 @@
     NSRange selectedRange = [infoText selectedRange];
     NSTextStorage *storage = [infoText textStorage];
     NSString *line = [[storage string] substringWithRange:[[storage string] paragraphRangeForRange: selectedRange]];
-    
+
     if ([selectedSegment is:@"Contents"]) {
         NSString *file = [line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         // TODO detect types
@@ -1116,11 +1116,11 @@
         file = [[file split:@" ("][0] stringByExpandingTildeInPath];
         if ([file hasSuffix:@".nib"]) {
             [self execute:[NSString stringWithFormat:@"/usr/bin/plutil -convert xml1 -o - %@", file]];
-            
+
         } else {
             [[NSWorkspace sharedWorkspace] openFile:file];
         }
-        
+
     } else if ([selectedSegment is:@"Deps"]) {
         NSString *dep = [line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         NSArray *selectedItems = [itemsController selectedObjects];
@@ -1277,12 +1277,12 @@
             NSTableColumn *column = [menuItem representedObject];
             [menuItem setState:column.isHidden ? NSOffState : NSOnState];
         }
-        
+
     } else {
         NSMutableArray *selectedItems = [[itemsController selectedObjects] mutableCopy];
         if ([itemsTable clickedRow] != -1)
             [selectedItems addObject:[itemsController arrangedObjects][[itemsTable clickedRow]]];
-        
+
         if ([title is:@"Mark"]) { // TODO: Disable marks based on status
             [tableProgressIndicator startAnimation:self];
             [self status:@"Analyzing selected items..."];
@@ -1323,7 +1323,7 @@
             [tableProgressIndicator stopAnimation:self];
             if (![[statusField stringValue] hasPrefix:@"Executing"])
                 [self status:@"OK."];
-            
+
         } else if ([title is:@"Commands"]) {
             while ([commandsPopUp numberOfItems] > 1) {
                 [commandsPopUp removeItemAtIndex:1];
@@ -1362,7 +1362,7 @@
     GMark mark = GNoMark;
     for (GItem *item in selectedItems) {
         title = [sender title];
-        
+
         if ([title is:@"Install"]) {
             if (item.URL != nil && [item.source isKindOfClass:[GScrape class]]) {
                 [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:item.URL]];
@@ -1497,26 +1497,26 @@
             markName = @[@"None", @"Install", @"Uninstall", @"Deactivate", @"Upgrade", @"Fetch", @"Clean"][mark];
             command = nil;
             hidesOthers = NO;
-            
+
             if (mark == GInstallMark) {
                 command = [item installCmd];
-                
+
                 if (!([item.system.name is:@"Homebrew Casks"] || [item.system.name is:@"Rudix"]))
                     hidesOthers = YES;
-                
+
             } else if (mark == GUninstallMark) {
                 command = [item uninstallCmd];
-                
+
             } else if (mark == GDeactivateMark) {
                 command = [item deactivateCmd];
-                
+
             } else if (mark == GUpgradeMark) {
                 command = [item upgradeCmd];
                 hidesOthers = YES;
-                
+
             } else if (mark == GFetchMark) {
                 command = [item fetchCmd];
-                
+
             } else if (mark == GCleanMark) {
                 command = [item cleanCmd];
             }
@@ -1603,7 +1603,7 @@
     [browser activate];
     if ([[browser windows] count] == 0) {
         [[browser windows] addObject:[[[browser classForScriptingClass:@"document"] alloc] init]];
-        
+
     } else {
         [[[browser windows][0] tabs] addObject:[[[browser classForScriptingClass:@"tab"] alloc] init]];
         ((SafariWindow *)([browser windows][0])).currentTab = [[browser windows][0] tabs][[[[browser windows][0] tabs] count]-1];
@@ -1675,20 +1675,20 @@
     if ([sender isKindOfClass:[NSSegmentedControl class]]) {
         NSString *theme = [sender labelForSegment:[(NSSegmentedControl *)sender selectedSegment]];
         [self applyTheme:theme];
-        
+
     } else {
         NSString *title = [sender title];
         NSInteger state = [sender state];
         GSystem *system = nil;
         NSString *command = @"command";
-        
+
         NSFileManager *fileManager = [NSFileManager defaultManager];
         NSMutableArray *addedSystems = [NSMutableArray array];
-        
+
         if (state == NSOnState) {
             [self optionsStatus:[NSString stringWithFormat: @"Adding %@...", title]];
             [agent outputForCommand:@"/bin/echo"]; // workaround for updating status in El Capitan
-            
+
             if ([title is:@"Homebrew"]) {
                 command = @"/usr/local/bin/brew";
                 if ([fileManager fileExistsAtPath:command]) {
@@ -1699,7 +1699,7 @@
                         [addedSystems addObject:system];
                     }
                 }
-                
+
             } else if ([title is:@"MacPorts"]) {
                 command = @"/opt/local/bin/port";
                 system = [[GMacPorts alloc] initWithAgent:self.agent];
@@ -1709,37 +1709,37 @@
                     system.mode = GOnlineMode;
                 }
                 [addedSystems addObject:system];
-                
+
             } else if ([title is:@"Fink"]) {
                 command = @"/sw/bin/fink";
                 system = [[GFink alloc] initWithAgent:self.agent];
                 system.mode = ([fileManager fileExistsAtPath:command]) ? GOfflineMode : GOnlineMode;
                 [addedSystems addObject:system];
-                
+
             } else if ([title is:@"pkgsrc"]) {
                 command = @"/usr/pkg/sbin/pkg_info";
                 system = [[GPkgsrc alloc] initWithAgent:self.agent];
                 system.mode = ([fileManager fileExistsAtPath:command]) ? GOfflineMode : GOnlineMode;
                 [addedSystems addObject:system];
-                
+
             } else if ([title is:@"FreeBSD"]) {
                 system = [[GFreeBSD alloc] initWithAgent:self.agent];
                 system.mode = GOnlineMode;
                 [addedSystems addObject:system];
-                
+
             } else if ([title is:@"Rudix"]) {
                 command = @"/usr/local/bin/rudix";
                 system = [[GRudix alloc] initWithAgent:self.agent];
                 system.mode = ([fileManager fileExistsAtPath:command]) ? GOfflineMode : GOnlineMode;
                 if (system.mode == GOfflineMode)
                     [addedSystems addObject:system]; // FIXME: manifest is not available anymore
-                
+
             } else if ([title is:@"iTunes"]) {
                 system = [[GITunes alloc] initWithAgent:self.agent];
                 [addedSystems addObject:system];
-                
+
             }
-            
+
             if ([addedSystems count] > 0) {
                 for (GSystem *system in addedSystems) {
                     [self addSystem:system];
@@ -1751,7 +1751,7 @@
             } else {
                 [self optionsStatus:[NSString stringWithFormat:@"%@'s %@ not detected.", title, command]];
             }
-            
+
         } else {
             [self removeSystemsNamed:title];
             [self optionsStatus:@"OK."];
@@ -1847,7 +1847,7 @@
         [statsLabel setBackgroundColor:[NSColor greenColor]];
         shell.backgroundColor = [NSColor colorWithCalibratedRed:0.0 green:0.0 blue:1.0 alpha:1.0];
         shell.normalTextColor = [NSColor colorWithCalibratedRed:1.0 green:1.0 blue:1.0 alpha:1.0];
-        
+
     } else { // Default theme
         [_window setBackgroundColor:[NSColor windowBackgroundColor]];
         [segmentedControl superview].layer.backgroundColor = [NSColor windowBackgroundColor].CGColor;
@@ -1889,53 +1889,56 @@
 
 - (IBAction)tools:(id)sender {
     NSString *title = [sender title];
-    
+
     if ([title is:@"Install pkgsrc"]) {
         [self execute:[GPkgsrc setupCmd] withBaton:@"relaunch"];
     }
-    
+
     else if ([title is:@"Fetch pkgsrc and INDEX"]) {
         [self execute:@"cd ~/Library/Application\\ Support/Guigna/pkgsrc ; curl -L -O ftp://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/INDEX ; curl -L -O ftp://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc.tar.gz ; sudo tar -xvzf pkgsrc.tar.gz -C /usr" withBaton:@"relaunch"];
-        
+
     } else if ([title is:@"Remove pkgsrc"]) {
         [self execute:[GPkgsrc removeCmd] withBaton:@"relaunch"];
-        
+
     } else if ([title is:@"Fetch FreeBSD INDEX"]) {
         [self execute:@"cd ~/Library/Application\\ Support/Guigna/FreeBSD ; curl -L -O ftp://ftp.freebsd.org/pub/FreeBSD/ports/packages/INDEX" withBaton:@"relaunch"];
-        
+
     } else if ([title is:@"Install Fink"]) {
         [self execute:[GFink setupCmd] withBaton:@"relaunch"];
         // TODO: activate system
-        
+
     } else if ([title is:@"Remove Fink"]) {
         [self execute:[GFink removeCmd] withBaton:@"relaunch"];
-        
+
     } else if ([title is:@"Install Homebrew"]) {
         [self execute:[GHomebrew setupCmd] withBaton:@"relaunch"];
-        
+
     } else if ([title is:@"Install Homebrew Cask"]) {
         [self execute:[GHomebrewCasks setupCmd] withBaton:@"relaunch"];
-        
+
     } else if ([title is:@"Remove Homebrew"]) {
         [self execute:[GHomebrew removeCmd] withBaton:@"relaunch"];
-        
+
     } else if ([title is:@"Fetch MacPorts PortIndex"]) {
         [self execute:@"cd ~/Library/Application\\ Support/Guigna/Macports ; /usr/bin/rsync -rtzv rsync://rsync.macports.org/release/tarballs/PortIndex_darwin_15_i386/PortIndex PortIndex"  withBaton:@"relaunch"];
-        
+
     } else if ([title is:@"Install Rudix"]) {
         [self execute:[GRudix setupCmd] withBaton:@"relaunch"];
-        
+
     } else if ([title is:@"Remove Rudix"]) {
         [self execute:[GRudix removeCmd] withBaton:@"relaunch"];
-        
+
     } else if ([title is:@"Install Gentoo"]) {
         [self execute:[GGentoo setupCmd] withBaton:@"relaunch"];
-        
+
     } else if ([title is:@"Build Gtk-OSX"]) {
         [self execute:[GGtkOSX setupCmd] withBaton:@"relaunch"];
-        
+
     } else if ([title is:@"Remove Gtk-OSX"]) {
         [self execute:[GGtkOSX removeCmd] withBaton:@"relaunch"];
+
+    } else if ([title is:@"Reset Guigna"]) {
+        [self execute:@"defaults delete name.soranzio.guido.Guigna ; defaults delete name.soranzio.guido.Guigna-Swift ; rm -r Library/Application\\ Support/Guigna/ ; rm -r Library/Preferences/name.soranzio.guido.Guigna* ; rm -r Library/Saved\\ Application\\ State/name.soranzio.guido.Guigna*"  withBaton:@"relaunch"];
     }
 }
 

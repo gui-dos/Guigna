@@ -46,9 +46,9 @@ typedef NS_ENUM(NSInteger, GMark) {
 
 
 - (instancetype)initWithName:(NSString *)name
-           version:(NSString *)version
-            source:(GSource *)source
-            status:(GStatus)status;
+                     version:(NSString *)version
+                      source:(GSource *)source
+                      status:(GStatus)status;
 
 - (NSString *)info;
 - (NSString *)home;
