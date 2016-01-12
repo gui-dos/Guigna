@@ -106,7 +106,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
 
     func info(text: String) {
         infoText.string = text
-        infoText.scrollRangeToVisible(NSMakeRange(0, 0))
+        infoText.scrollRangeToVisible(NSRange(location: 0, length: 0))
         infoText.display()
         tabView.display()
     }
@@ -118,7 +118,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         storage.appendAttributedString(attributedString)
         storage.endEditing()
         logText.display()
-        logText.scrollRangeToVisible(NSMakeRange(logText.string!.length, 0))
+        logText.scrollRangeToVisible(NSRange(location: logText.string!.length, length: 0))
         tabView.display()
     }
 
@@ -494,7 +494,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 self.updateMarkedSource()
                 if (self.terminal.valueForKey("frontmost") as! NSObject) == false {
                     let notification = NSUserNotification()
-                    notification.title = "Ready.";
+                    notification.title = "Ready."
                     // notification.subtitle = @"%ld changes applied";
                     notification.informativeText = "The changes to the marked packages have been applied."
                     notification.soundName = NSUserNotificationDefaultSoundName
@@ -517,7 +517,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         self.ready = false
         dispatch_sync(dispatch_get_main_queue()) {
             self.itemsController.filterPredicate = nil
-            self.itemsController.removeObjectsAtArrangedObjectIndexes(NSIndexSet(indexesInRange: NSMakeRange(0, self.itemsController.arrangedObjects.count)))
+            self.itemsController.removeObjectsAtArrangedObjectIndexes(NSIndexSet(indexesInRange: NSRange(location: 0, length: self.itemsController.arrangedObjects.count)))
             self.itemsController.sortDescriptors = []
             self.tableProgressIndicator.startAnimation(self)
         }
@@ -732,7 +732,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         var src: String
         let filter = searchField.stringValue
         itemsController.filterPredicate = nil
-        itemsController.removeObjectsAtArrangedObjectIndexes(NSIndexSet(indexesInRange: NSMakeRange(0, itemsController.arrangedObjects.count)))
+        itemsController.removeObjectsAtArrangedObjectIndexes(NSIndexSet(indexesInRange: NSRange(location: 0, length: itemsController.arrangedObjects.count)))
         itemsController.sortDescriptors = []
         var first = true
         for source in selectedSources {
@@ -816,7 +816,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
 
                     if first {
                         itemsController.filterPredicate = nil
-                        itemsController.removeObjectsAtArrangedObjectIndexes(NSIndexSet(indexesInRange: NSMakeRange(0, itemsController.arrangedObjects.count)))
+                        itemsController.removeObjectsAtArrangedObjectIndexes(NSIndexSet(indexesInRange: NSRange(location: 0, length: itemsController.arrangedObjects.count)))
                         itemsController.sortDescriptors = []
                         first = false
                     }
@@ -1268,8 +1268,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         if baton == "relaunch" {
             self.ready = false
             command = "\(cmd) ; osascript -e 'tell app \"Guigna\"' -e 'quit' -e 'end tell' &>/dev/null ; osascript -e 'tell app \"Guigna\"' -e 'ignoring application responses' -e 'activate' -e 'end ignoring' -e 'end tell' &>/dev/null"
-        }
-        else {
+        } else {
             command = "\(cmd) ; guigna --baton \(baton)"
         }
 
@@ -1385,7 +1384,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     commandsPopUp.addItemWithTitle("[no package selected]")
                 } else {
                     let item = selectedItems[0] // TODO
-                    if (item.system != nil) {
+                    if item.system != nil {
                         for commandArray in item.system.availableCommands() {
                             commandsPopUp.addItemWithTitle(commandArray[0])
                         }
@@ -2015,7 +2014,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             execute(Homebrew.removeCmd, baton: "relaunch")
 
         } else if title == "Fetch MacPorts PortIndex" {
-            execute("cd ~/Library/Application\\ Support/Guigna/Macports ; /usr/bin/rsync -rtzv rsync://rsync.macports.org/release/tarballs/PortIndex_darwin_15_i386/PortIndex PortIndex", baton: "relaunch")
+            execute("cd ~/Library/Application\\ Support/Guigna/MacPorts ; /usr/bin/rsync -rtzv rsync://rsync.macports.org/release/tarballs/PortIndex_darwin_15_i386/PortIndex PortIndex", baton: "relaunch")
 
         } else if title == "Install Rudix" {
             execute(Rudix.setupCmd, baton: "relaunch")
@@ -2024,7 +2023,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             execute(Rudix.removeCmd, baton: "relaunch")
 
         } else if title == "Reset Guigna" {
-            execute("defaults delete name.soranzio.guido.Guigna ; defaults delete name.soranzio.guido.Guigna-Swift ; rm -r Library/Application\\ Support/Guigna/ ; rm -r Library/Preferences/name.soranzio.guido.Guigna* ; rm -r Library/Saved\\ Application\\ State/name.soranzio.guido.Guigna*", baton: "relaunch")
+            execute("defaults delete name.soranzio.guido.Guigna ; defaults delete name.soranzio.guido.Guigna-Swift ; rm -r Library/Application\\ Support/Guigna ; rm -r Library/Preferences/name.soranzio.guido.Guigna* ; rm -r Library/Saved\\ Application\\ State/name.soranzio.guido.Guigna*", baton: "relaunch")
 
         } else {
             execute("echo TODO")
@@ -2036,7 +2035,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         window.makeFirstResponder(searchField)
     }
 
-    @IBAction func showHelp(sender: AnyObject) { // TODO
+    @IBAction func showHelp(sender: AnyObject) {
         cmdline.stringValue = "http://github.com/gui-dos/Guigna/wiki/The-Guigna-Guide"
         segmentedControl.selectedSegment = 1
         selectedSegment = "Home"
@@ -2048,7 +2047,6 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
 
     @IBAction func details(sender: AnyObject) {
     }
-
 
 
     // GAppDelegate protocol
@@ -2073,5 +2071,3 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
 @objc(GDefaultsTransformer)
 class GDefaultsTransformer: NSValueTransformer {
 }
-
-

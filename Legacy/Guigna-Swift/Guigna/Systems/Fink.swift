@@ -248,4 +248,3 @@ final class Fink: GSystem {
         return cmd.replace(cmd, "\(cmd) -v")
     }
 }
-

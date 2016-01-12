@@ -1920,7 +1920,7 @@
         [self execute:[GHomebrew removeCmd] withBaton:@"relaunch"];
 
     } else if ([title is:@"Fetch MacPorts PortIndex"]) {
-        [self execute:@"cd ~/Library/Application\\ Support/Guigna/Macports ; /usr/bin/rsync -rtzv rsync://rsync.macports.org/release/tarballs/PortIndex_darwin_15_i386/PortIndex PortIndex"  withBaton:@"relaunch"];
+        [self execute:@"cd ~/Library/Application\\ Support/Guigna/MacPorts ; /usr/bin/rsync -rtzv rsync://rsync.macports.org/release/tarballs/PortIndex_darwin_15_i386/PortIndex PortIndex" withBaton:@"relaunch"];
 
     } else if ([title is:@"Install Rudix"]) {
         [self execute:[GRudix setupCmd] withBaton:@"relaunch"];
@@ -1938,7 +1938,7 @@
         [self execute:[GGtkOSX removeCmd] withBaton:@"relaunch"];
 
     } else if ([title is:@"Reset Guigna"]) {
-        [self execute:@"defaults delete name.soranzio.guido.Guigna ; defaults delete name.soranzio.guido.Guigna-Swift ; rm -r Library/Application\\ Support/Guigna/ ; rm -r Library/Preferences/name.soranzio.guido.Guigna* ; rm -r Library/Saved\\ Application\\ State/name.soranzio.guido.Guigna*"  withBaton:@"relaunch"];
+        [self execute:@"defaults delete name.soranzio.guido.Guigna ; defaults delete name.soranzio.guido.Guigna-Swift ; rm -r Library/Application\\ Support/Guigna ; rm -r Library/Preferences/name.soranzio.guido.Guigna* ; rm -r Library/Saved\\ Application\\ State/name.soranzio.guido.Guigna*" withBaton:@"relaunch"];
     }
 }
 

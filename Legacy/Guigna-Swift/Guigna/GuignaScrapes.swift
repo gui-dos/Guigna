@@ -9,7 +9,7 @@ class GScrape: GSource {
         super.init(name: name, agent: agent)
     }
 
-    func refresh() {};
+    func refresh() {}
 }
 
 

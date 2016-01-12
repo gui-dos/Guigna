@@ -291,4 +291,3 @@ final class Pkgsrc: GSystem {
         return "sudo rm -r /usr/pkg ; sudo rm -r /usr/pkgsrc ; sudo rm -r /var/db/pkg"
     }
 }
-
