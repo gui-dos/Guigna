@@ -104,7 +104,7 @@ class GSourceTransformer: NSValueTransformer {
             return NSImage(named: "system-itunes.tiff")
         case "Fink":
             return NSImage(named: "system-fink.tiff")
-        case "pkgsrc":
+        case "pkgsrc", "pkgin":
             return NSImage(named: "system-pkgsrc.tiff")
         case "FreeBSD":
             return NSImage(named: "source-freebsd.tiff")
@@ -126,9 +126,7 @@ class GSourceTransformer: NSValueTransformer {
             return NSImage(named: "source-cocoapods.tiff")
         case "MacUpdate":
             return NSImage(named: "source-macupdate.tiff")
-        case "AppShopper":
-            return NSImage(named: "source-appshopper.tiff")
-        case "AppShopper iOS":
+        case "AppShopper", "AppShopper iOS":
             return NSImage(named: "source-appshopper.tiff")
         case "installed":
             return NSImage(named: NSImageNameStatusAvailable)

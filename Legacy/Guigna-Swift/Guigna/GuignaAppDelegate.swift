@@ -291,6 +291,8 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             systems.append(fink)
         }
 
+        // TODO detect pkgsrc in /opt/pkg
+        
         // TODO: Index user defaults
         if "/usr/pkg/sbin/pkg_info".exists || "\(APPDIR)/pkgsrc/INDEX".exists {
             if defaults["pkgsrcStatus"] == nil {
@@ -304,6 +306,19 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 pkgsrc.mode = .Online
             }
             systems.append(pkgsrc)
+        }
+
+        if "/opt/pkg/bin/pkgin".exists {
+            if defaults["pkginStatus"] == nil {
+                defaults["pkginStatus"] = GState.On.rawValue
+            }
+        }
+        if defaults["pkginStatus"] != nil && defaults["pkginStatus"] == GState.On.rawValue {
+            let pkgin = Pkgin(agent: agent)
+            if !"/opt/pkg/bin/pkgbin".exists {
+                pkgin.mode = .Online
+            }
+            systems.append(pkgin)
         }
 
         if "\(APPDIR)/FreeBSD/INDEX".exists {

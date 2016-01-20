@@ -1,14 +1,21 @@
 import Foundation
 
-final class Pkgsrc: GSystem {
+final class Pkgin: GSystem {
 
-    override class var prefix: String { return  "/usr/pkg" }
+    // TODO: complete porting from Pkgsrc
+    // TODO: Objective-C version
+
+    override class var prefix: String { return "/opt/pkg" }
 
     init(agent: GAgent) {
-        super.init(name: "pkgsrc", agent: agent)
-        homepage = "http://www.pkgsrc.org"
-        logpage = "http://www.netbsd.org/changes/pkg-changes.html"
-        cmd = "\(prefix)/sbin/pkg_info"
+        super.init(name: "pkgin", agent: agent)
+        homepage = "https://pkgsrc.joyent.com"
+        logpage = "https://github.com/joyent/pkgsrc/commits/trunk"
+        cmd = "\(prefix)/bin/pkgin"
+    }
+
+    var pkgsrcCmd: String {
+        return "\(prefix)/sbin/pkg_info"
     }
 
     // include category for managing duplicates of xp, binutils, fuse, p5-Net-CUPS
@@ -25,66 +32,97 @@ final class Pkgsrc: GSystem {
         index.removeAll(keepCapacity: true)
         items.removeAll(keepCapacity: true)
 
-        let indexPath = ("~/Library/Application Support/Guigna/pkgsrc/INDEX" as NSString).stringByExpandingTildeInPath
-        if indexPath.exists {
-            let lines = (try! String(contentsOfFile: indexPath, encoding: NSUTF8StringEncoding)).split("\n")
-            for line in lines {
-                let components = line.split("|")
-                var name = components[0]
-                var idx = name.rindex("-")
-                if idx == NSNotFound {
-                    continue
-                }
-                let version = name.substringFromIndex(idx + 1)
-                // name = [name substringToIndex:idx];
-                let id = components[1]
-                idx = id.rindex("/")
-                name = id.substringFromIndex(idx + 1)
-                let description = components[3]
-                let category = components[6]
-                let homepage = components[11]
-                let pkg = GPackage(name: name, version: version, system: self, status: .Available)
-                pkg.id = id
-                pkg.categories = category
-                pkg.description = description
-                pkg.homepage = homepage
-                items.append(pkg)
-                self[id] = pkg
-            }
+        // from Pkgsrc:
+        //
+        //        let indexPath = ("~/Library/Application Support/Guigna/pkgsrc/INDEX" as NSString).stringByExpandingTildeInPath
+        //        if indexPath.exists {
+        //            let lines = (try! String(contentsOfFile: indexPath, encoding: NSUTF8StringEncoding)).split("\n")
+        //            for line in lines {
+        //                let components = line.split("|")
+        //                var name = components[0]
+        //                var idx = name.rindex("-")
+        //                if idx == NSNotFound {
+        //                    continue
+        //                }
+        //                let version = name.substringFromIndex(idx + 1)
+        //                // name = [name substringToIndex:idx];
+        //                let id = components[1]
+        //                idx = id.rindex("/")
+        //                name = id.substringFromIndex(idx + 1)
+        //                let description = components[3]
+        //                let category = components[6]
+        //                let homepage = components[11]
+        //                let pkg = GPackage(name: name, version: version, system: self, status: .Available)
+        //                pkg.id = id
+        //                pkg.categories = category
+        //                pkg.description = description
+        //                pkg.homepage = homepage
+        //                items.append(pkg)
+        //                self[id] = pkg
+        //            }
+        //
+        //        } else {
+        //            let url = NSURL(string: "http://ftp.netbsd.org/pub/pkgsrc/current/pkgsrc/README-all.html")!
+        //            if let xmlDoc = try? NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML)) {
+        //                let nodes = xmlDoc.rootElement()!["//tr"]
+        //                for node in nodes {
+        //                    let rowData = node["td"]
+        //                    if rowData.count == 0 {
+        //                        continue
+        //                    }
+        //                    var name = rowData[0].stringValue!
+        //                    var idx = name.rindex("-")
+        //                    if idx == NSNotFound {
+        //                        continue
+        //                    }
+        //                    let version = name.substring(idx + 1, name.length - idx - 3)
+        //                    name = name.substringToIndex(idx)
+        //                    var category = rowData[1].stringValue!
+        //                    category = category.substring(1, category.length - 3)
+        //                    var description = rowData[2].stringValue!
+        //                    idx = description.rindex("  ")
+        //                    if idx != NSNotFound {
+        //                        description = description.substringToIndex(idx)
+        //                    }
+        //                    let pkg = GPackage(name: name, version: version, system: self, status: .Available)
+        //                    pkg.categories = category
+        //                    pkg.description = description
+        //                    let id = "\(category)/\(name)"
+        //                    pkg.id = id
+        //                    items.append(pkg)
+        //                    self[id] = pkg
+        //                }
+        //            }
+        //        }
 
-        } else {
-            let url = NSURL(string: "http://ftp.netbsd.org/pub/pkgsrc/current/pkgsrc/README-all.html")!
-            if let xmlDoc = try? NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML)) {
-                let nodes = xmlDoc.rootElement()!["//tr"]
-                for node in nodes {
-                    let rowData = node["td"]
-                    if rowData.count == 0 {
-                        continue
-                    }
-                    var name = rowData[0].stringValue!
-                    var idx = name.rindex("-")
-                    if idx == NSNotFound {
-                        continue
-                    }
-                    let version = name.substring(idx + 1, name.length - idx - 3)
-                    name = name.substringToIndex(idx)
-                    var category = rowData[1].stringValue!
-                    category = category.substring(1, category.length - 3)
-                    var description = rowData[2].stringValue!
-                    idx = description.rindex("  ")
-                    if idx != NSNotFound {
-                        description = description.substringToIndex(idx)
-                    }
-                    let pkg = GPackage(name: name, version: version, system: self, status: .Available)
-                    pkg.categories = category
-                    pkg.description = description
-                    let id = "\(category)/\(name)"
-                    pkg.id = id
-                    items.append(pkg)
-                    self[id] = pkg
-                }
-            }
+        var outputLines = output("\(cmd) avail").split("\n")
+        outputLines.removeLast()
+
+        // duplicate from installed():
+        // TODO: categories / ids
+
+        let whitespaceCharacterSet = NSCharacterSet.whitespaceCharacterSet()
+        for line in outputLines {
+            var idx = line.index(" ")
+            var name = line.substringToIndex(idx)
+            let description = line.substringFromIndex(idx + 1).stringByTrimmingCharactersInSet(whitespaceCharacterSet)
+            idx = name.rindex("-")
+            let version = name.substringFromIndex(idx + 1)
+            name = name.substringToIndex(idx)
+            // let id = ids[i]
+            // idx = id.index("/")
+            // name = id.substringFromIndex(idx + 1)
+            let category = "TODO"
+            let pkg = GPackage(name: name, version: version, system: self, status: .Available)
+            pkg.categories = category
+            pkg.description = description
+            let id = "\(category)/\(name)"
+            pkg.id = id
+            items.append(pkg)
+            self[id] = pkg
+            // i++
         }
+
         self.installed() // update status
         return items as! [GPackage]
     }
@@ -111,9 +149,9 @@ final class Pkgsrc: GSystem {
             }
         }
         // [self outdated]; // index outdated ports // TODO
-        var outputLines = output(cmd).split("\n")
+        var outputLines = output("\(cmd) list").split("\n")
         outputLines.removeLast()
-        var ids = output("\(cmd) -Q PKGPATH -a").split("\n")
+        var ids = output("\(pkgsrcCmd) -Q PKGPATH -a").split("\n")
         ids.removeLast()
         let whitespaceCharacterSet = NSCharacterSet.whitespaceCharacterSet()
         var i = 0
@@ -123,7 +161,7 @@ final class Pkgsrc: GSystem {
             let description = line.substringFromIndex(idx + 1).stringByTrimmingCharactersInSet(whitespaceCharacterSet)
             idx = name.rindex("-")
             let version = name.substringFromIndex(idx + 1)
-            // name = [name substringToIndex:idx];
+            // name = name.substringToIndex(idx)
             let id = ids[i]
             idx = id.index("/")
             name = id.substringFromIndex(idx + 1)
@@ -264,11 +302,12 @@ final class Pkgsrc: GSystem {
 
     override var updateCmd: String! {
         get {
-            if mode == .Online || (defaults("pkgsrcCVS") as? Bool ?? false) == false {
-                return nil
-            } else {
-                return "sudo cd; cd /usr/pkgsrc ; sudo cvs update -dP"
-            }
+            //            if mode == .Online || (defaults("pkgsrcCVS") as? Bool ?? false) == false {
+            //                return nil
+            //            } else {
+            //                return "sudo cd; cd /usr/pkgsrc ; sudo cvs update -dP"
+            //            }
+            return "sudo \(cmd) -y update"
         }
     }
 
@@ -284,10 +323,10 @@ final class Pkgsrc: GSystem {
 
 
     class var setupCmd: String! {
-        return "sudo mv /usr/local /usr/local_off ; sudo mv /opt/local /opt/local_off ; sudo mv /sw /sw_off ; cd ~/Library/Application\\ Support/Guigna/pkgsrc ; curl -L -O ftp://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc.tar.gz ; sudo tar -xvzf pkgsrc.tar.gz -C /usr; cd /usr/pkgsrc/bootstrap ; sudo ./bootstrap --compiler clang; sudo mv /usr/local_off /usr/local ; sudo mv /opt/local_off /opt/local ; sudo mv /sw_off /sw"
+        return "sudo mv /usr/local /usr/local_off ; sudo mv /opt/local /opt/local_off ; sudo mv /sw /sw_off ; cd ~/Library/Application\\ Support/Guigna/pkgsrc ; git clone git://github.com/cmacrae/saveosx.git ; cd saveosx ; sudo ./bootstrap ; sudo mv /usr/local_off /usr/local ; sudo mv /opt/local_off /opt/local ; sudo mv /sw_off /sw"
     }
-
+    
     class var removeCmd: String! {
-        return "sudo rm -r /usr/pkg ; sudo rm -r /usr/pkgsrc ; sudo rm -r /var/db/pkg"
+        return "sudo rm -r /opt/pkg ; sudo rm -r /var/db/pkgin"
     }
 }

@@ -30,8 +30,8 @@ TODO
 * pkgsrc deps, outdated, options, Pkgsrc.se CVSWeb
   Faster pkgsrc cvs update -dP (i.e. github.com/jsonn/pkgsrc)
   port2pkg and pkgsrc wip
+* pkgin: categories, Objective-C
 * Rudix online mode
-* GPkgin: http://pkgsrc.smartos.org/packages/Darwin/
 * GHMUG: http://www.hmug.org/pub/MacOS_X/Status.php
 * Display notes and caveats after installing
 * Details sliding panel

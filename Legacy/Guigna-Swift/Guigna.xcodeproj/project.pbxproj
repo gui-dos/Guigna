@@ -31,6 +31,7 @@
 		C5AD0FB7196287360001FB53 /* GSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5AD0FB5196287360001FB53 /* GSource.swift */; };
 		C5B736FF194732C90046B2E2 /* GAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5B736FE194732C80046B2E2 /* GAdditions.swift */; };
 		C5D04FBB195D853300D968E5 /* GuignaScrapes.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D04FBA195D853300D968E5 /* GuignaScrapes.swift */; };
+		C5DAB13F1C4D56F800868FFE /* Pkgin.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5DAB13E1C4D56F800868FFE /* Pkgin.swift */; };
 		C5DB9B881945A9B80005244E /* guigna.icns in Resources */ = {isa = PBXBuildFile; fileRef = C5DB9B6B1945A9B70005244E /* guigna.icns */; };
 		C5DB9B891945A9B80005244E /* source-appshopper.tiff in Resources */ = {isa = PBXBuildFile; fileRef = C5DB9B6C1945A9B70005244E /* source-appshopper.tiff */; };
 		C5DB9B8A1945A9B80005244E /* source-cocoapods.tiff in Resources */ = {isa = PBXBuildFile; fileRef = C5DB9B6D1945A9B70005244E /* source-cocoapods.tiff */; };
@@ -107,6 +108,7 @@
 		C5AD0FB5196287360001FB53 /* GSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GSource.swift; sourceTree = "<group>"; };
 		C5B736FE194732C80046B2E2 /* GAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GAdditions.swift; sourceTree = "<group>"; };
 		C5D04FBA195D853300D968E5 /* GuignaScrapes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GuignaScrapes.swift; sourceTree = "<group>"; };
+		C5DAB13E1C4D56F800868FFE /* Pkgin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pkgin.swift; sourceTree = "<group>"; };
 		C5DB9B6B1945A9B70005244E /* guigna.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = guigna.icns; sourceTree = "<group>"; };
 		C5DB9B6C1945A9B70005244E /* source-appshopper.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "source-appshopper.tiff"; sourceTree = "<group>"; };
 		C5DB9B6D1945A9B70005244E /* source-cocoapods.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "source-cocoapods.tiff"; sourceTree = "<group>"; };
@@ -243,6 +245,7 @@
 				C5635BEA1952F53F007424E2 /* MacPorts.swift */,
 				C554334B1972EE060080B0BD /* Fink.swift */,
 				C5E07BBB1972779400DA3CD3 /* Pkgsrc.swift */,
+				C5DAB13E1C4D56F800868FFE /* Pkgin.swift */,
 				C5A5B206198FD9E7000CB3FD /* FreeBSD.swift */,
 				C56062D9198D0704001F0F93 /* Rudix.swift */,
 				C562EF8F1993BA16001309A9 /* ITunes.swift */,
@@ -434,6 +437,7 @@
 				C5A1215E1945EB2700A351A8 /* GItem.swift in Sources */,
 				C5A1214F1945D91800A351A8 /* GAgent.swift in Sources */,
 				C5A5B207198FD9E7000CB3FD /* FreeBSD.swift in Sources */,
+				C5DAB13F1C4D56F800868FFE /* Pkgin.swift in Sources */,
 				C56062DA198D0704001F0F93 /* Rudix.swift in Sources */,
 				C554334C1972EE060080B0BD /* Fink.swift in Sources */,
 				C5AD0FB6196287360001FB53 /* GPackage.swift in Sources */,
