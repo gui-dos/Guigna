@@ -95,32 +95,35 @@ final class Pkgin: GSystem {
         //            }
         //        }
 
-        var outputLines = output("\(cmd) avail").split("\n")
-        outputLines.removeLast()
+        var categories = output("\(cmd) show-all-categories").split("\n")
+        categories.removeLast()
+        for category in categories {
+            var outputLines = output("\(cmd) show-category \(category)").split("\n")
+            outputLines.removeLast()
 
-        // duplicate from installed():
-        // TODO: categories / ids
+            // duplicate from installed():
+            // TODO: categories / ids
 
-        let whitespaceCharacterSet = NSCharacterSet.whitespaceCharacterSet()
-        for line in outputLines {
-            var idx = line.index(" ")
-            var name = line.substringToIndex(idx)
-            let description = line.substringFromIndex(idx + 1).stringByTrimmingCharactersInSet(whitespaceCharacterSet)
-            idx = name.rindex("-")
-            let version = name.substringFromIndex(idx + 1)
-            name = name.substringToIndex(idx)
-            // let id = ids[i]
-            // idx = id.index("/")
-            // name = id.substringFromIndex(idx + 1)
-            let category = "TODO"
-            let pkg = GPackage(name: name, version: version, system: self, status: .Available)
-            pkg.categories = category
-            pkg.description = description
-            let id = "\(category)/\(name)"
-            pkg.id = id
-            items.append(pkg)
-            self[id] = pkg
-            // i++
+            let whitespaceCharacterSet = NSCharacterSet.whitespaceCharacterSet()
+            for line in outputLines {
+                var idx = line.index(" ")
+                var name = line.substringToIndex(idx)
+                let description = line.substringFromIndex(idx + 1).stringByTrimmingCharactersInSet(whitespaceCharacterSet)
+                idx = name.rindex("-")
+                let version = name.substringFromIndex(idx + 1)
+                name = name.substringToIndex(idx)
+                // let id = ids[i]
+                // idx = id.index("/")
+                // name = id.substringFromIndex(idx + 1)
+                let pkg = GPackage(name: name, version: version, system: self, status: .Available)
+                pkg.categories = category
+                pkg.description = description
+                let id = "\(category)/\(name)"
+                pkg.id = id
+                items.append(pkg)
+                self[id] = pkg
+                // i++
+            }
         }
 
         self.installed() // update status
@@ -190,18 +193,19 @@ final class Pkgin: GSystem {
     // TODO: pkg_info -B PKGPATH=misc/figlet
 
     override func info(item: GItem) -> String {
-        if self.isHidden {
-            return super.info(item)
-        }
-        if mode != .Offline && item.status != .Available {
-            return output("\(cmd) \(item.name)")
-        } else {
-            if item.id != nil {
-                return (try? String(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.id)/DESCR")!, encoding: NSUTF8StringEncoding)) ?? ""
-            } else { // TODO lowercase (i.e. Hermes -> hermes)
-                return (try? String(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories)/\(item.name)/DESCR")!, encoding: NSUTF8StringEncoding)) ?? ""
-            }
-        }
+        //        if self.isHidden {
+        //            return super.info(item)
+        //        }
+        //        if mode != .Offline && item.status != .Available {
+        //            return output("\(cmd) \(item.name)")
+        //        } else {
+        //            if item.id != nil {
+        //                return (try? String(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.id)/DESCR")!, encoding: NSUTF8StringEncoding)) ?? ""
+        //            } else { // TODO lowercase (i.e. Hermes -> hermes)
+        //                return (try? String(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories)/\(item.name)/DESCR")!, encoding: NSUTF8StringEncoding)) ?? ""
+        //            }
+        //        }
+        return output("\(cmd) pkg-descr \(item.name)")
     }
 
 
