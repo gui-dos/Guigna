@@ -1,6 +1,7 @@
 FIXME
 
 * El Capitan:
+  - SIP prevents from renaming /usr/local_off
   - Selected sources are not highlighted until resizing the window
   - optionsStatus() thread doesn't update the GUI
 * Swift:
@@ -30,7 +31,7 @@ TODO
 * pkgsrc deps, outdated, options, Pkgsrc.se CVSWeb
   Faster pkgsrc cvs update -dP (i.e. github.com/jsonn/pkgsrc)
   port2pkg and pkgsrc wip
-* pkgin: categories, Objective-C
+* pkgin: merge with pkgsrc, Objective-C
 * Rudix online mode
 * GHMUG: http://www.hmug.org/pub/MacOS_X/Status.php
 * Display notes and caveats after installing
