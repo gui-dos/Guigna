@@ -314,11 +314,11 @@
 }
 
 - (NSString *)hideCmd {
-    return [NSString stringWithFormat:@"sudo mv %@ %@_off", self.prefix, self.prefix];
+    return [NSString stringWithFormat:@"for dir in bin etc include lib opt share ; do sudo mv %@/\"$dir\"{,_off} ; done", self.prefix];
 }
 
 - (NSString *)unhideCmd {
-    return [NSString stringWithFormat:@"sudo mv %@_off %@", self.prefix, self.prefix];
+    return [NSString stringWithFormat:@"for dir in bin etc include lib opt share ; do sudo mv %@/\"$dir\"{_off,} ; done", self.prefix];
 }
 
 + (NSString *)setupCmd {

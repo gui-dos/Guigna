@@ -208,7 +208,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
 
         let knownPaths = ["MacPorts": "/opt/local", "Homebrew": "/usr/local", "pkgsrc": "/usr/pkg", "Fink": "/sw"]
         for (system, prefix) in knownPaths {
-            if "\(prefix)_off".exists {
+            if "\(prefix)_off".exists || "\(prefix)/bin_off".exists {
                 let alert = NSAlert()
                 alert.alertStyle = .CriticalAlertStyle
                 alert.messageText = "Hidden system detected."
@@ -216,7 +216,11 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 alert.addButtonWithTitle("Unhide")
                 alert.addButtonWithTitle("Continue")
                 if alert.runModal() == NSAlertFirstButtonReturn {
-                    executeAsRoot("mv \(prefix)_off \(prefix)")
+                    if prefix != "/usr/local" {
+                        executeAsRoot("mv \(prefix)_off \(prefix)")
+                    } else {
+                        executeAsRoot("for dir in bin etc include lib opt share ; do sudo mv \(prefix)/\"$dir\"{_off,} ; done")
+                    }
                 }
             }
         }
@@ -292,7 +296,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
 
         // TODO detect pkgsrc in /opt/pkg
-        
+
         // TODO: Index user defaults
         if "/usr/pkg/sbin/pkg_info".exists || "\(APPDIR)/pkgsrc/INDEX".exists {
             if defaults["pkgsrcStatus"] == nil {
@@ -1308,7 +1312,8 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         sudo(cmd, baton: "output")
     }
 
-    func executeAsRoot(cmd: String) {
+    func executeAsRoot(var cmd: String) {
+        cmd = cmd.replace("\"", "\\\"")
         let command = "osascript -e 'do shell script \"\(cmd)\" with administrator privileges'"
         system(command)
     }
@@ -1563,7 +1568,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             systemsDict[item.system.name]?.append(item)
         }
 
-        let prefixes = ["/opt/local", "/usr/local", "/sw", "/usr/pkg"]
+        let prefixes = ["/opt/local", "/usr/local", "/sw", "/usr/pkg", "/opt/pkg"]
         var detectedPrefixes = [String]()
         for prefix in prefixes {
             if prefix.exists {
@@ -1636,7 +1641,11 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     }
                 }
                 for prefix in detectedPrefixes {
-                    tasks.append("sudo mv \(prefix) \(prefix)_off")
+                    if prefix != "/usr/local" {
+                        tasks.append("sudo mv \(prefix) \(prefix)_off")
+                    } else {
+                        tasks.append("for dir in bin etc include lib opt share ; do sudo mv \(prefix)/\"$dir\"{,_off} ; done")
+                    }
                 }
             }
             tasks += systemCommands
@@ -1654,7 +1663,11 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     }
                 }
                 for prefix in detectedPrefixes {
-                    tasks.append("sudo mv \(prefix)_off \(prefix)")
+                    if prefix != "/usr/local" {
+                        tasks.append("sudo mv \(prefix)_off \(prefix)")
+                    } else {
+                        tasks.append("for dir in bin etc include lib opt share ; do sudo mv \(prefix)/\"$dir\"{_off,} ; done")
+                    }
                 }
             }
         }
@@ -2007,6 +2020,9 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         } else if title == "Fetch pkgsrc and INDEX" {
             execute("cd ~/Library/Application\\ Support/Guigna/pkgsrc ; curl -L -O ftp://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/INDEX ; curl -L -O ftp://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc.tar.gz ; sudo tar -xvzf pkgsrc.tar.gz -C /usr", baton: "relaunch")
 
+        } else if title == "Install pkgin" {
+            execute(Pkgin.setupCmd, baton: "relaunch")
+
         } else if title == "Remove pkgsrc" {
             execute(Pkgsrc.removeCmd, baton: "relaunch")
 
@@ -2027,57 +2043,57 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
 
         } else if title == "Remove Homebrew" {
             execute(Homebrew.removeCmd, baton: "relaunch")
-
+            
         } else if title == "Fetch MacPorts PortIndex" {
             execute("cd ~/Library/Application\\ Support/Guigna/MacPorts ; /usr/bin/rsync -rtzv rsync://rsync.macports.org/release/tarballs/PortIndex_darwin_15_i386/PortIndex PortIndex", baton: "relaunch")
-
+            
         } else if title == "Install Rudix" {
             execute(Rudix.setupCmd, baton: "relaunch")
-
+            
         } else if title == "Remove Rudix" {
             execute(Rudix.removeCmd, baton: "relaunch")
-
+            
         } else if title == "Reset Guigna" {
             execute("defaults delete name.soranzio.guido.Guigna ; defaults delete name.soranzio.guido.Guigna-Swift ; rm -r Library/Application\\ Support/Guigna ; rm -r Library/Preferences/name.soranzio.guido.Guigna* ; rm -r Library/Saved\\ Application\\ State/name.soranzio.guido.Guigna*", baton: "relaunch")
-
+            
         } else {
             execute("echo TODO")
         }
-
+        
     }
-
+    
     @IBAction func search(sender: AnyObject) {
         window.makeFirstResponder(searchField)
     }
-
+    
     @IBAction func showHelp(sender: AnyObject) {
         cmdline.stringValue = "http://github.com/gui-dos/Guigna/wiki/The-Guigna-Guide"
         segmentedControl.selectedSegment = 1
         selectedSegment = "Home"
         updateTabView(nil)
     }
-
+    
     @IBAction func stop(sender: AnyObject) {
     }
-
+    
     @IBAction func details(sender: AnyObject) {
     }
-
-
+    
+    
     // GAppDelegate protocol
-
+    
     func addItem(item: GItem) {
         allPackages.append(item as! GPackage)
     }
-
+    
     func removeItem(item: GItem) {
         // TODO: remove a package from allPackages: GPackage should implement Equatable
     }
-
+    
     func removeItems(excludeElement: (GItem) -> Bool) {
         allPackages = allPackages.filter {!excludeElement($0)}
     }
-
+    
 }
 
 

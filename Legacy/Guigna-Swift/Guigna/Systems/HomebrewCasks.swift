@@ -266,13 +266,13 @@ final class HomebrewCasks: GSystem {
 
     override var hideCmd: String! {
         get {
-            return "sudo mv \(prefix) \(prefix)_off"
+            return "for dir in bin etc include lib opt share ; do sudo mv \(prefix)/\"$dir\"{,_off} ; done"
         }
     }
 
     override var unhideCmd: String! {
         get {
-            return "sudo mv \(prefix)_off \(prefix)"
+            return "for dir in bin etc include lib opt share ; do sudo mv \(prefix)/\"$dir\"{_off,} ; done"
         }
     }
 
@@ -283,11 +283,11 @@ final class HomebrewCasks: GSystem {
     class var removeCmd: String! {
         return "\(prefix)/bin/brew untap caskroom/cask"
     }
-
+    
     override func verbosifiedCmd(command: String) -> String {
         var tokens = command.split()
         tokens.insert("-v", atIndex: 2)
         return tokens.join()
     }
-
+    
 }

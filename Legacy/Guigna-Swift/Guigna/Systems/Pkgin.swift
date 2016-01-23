@@ -329,7 +329,7 @@ final class Pkgin: GSystem {
 
 
     class var setupCmd: String! {
-        return "sudo mv /usr/local /usr/local_off ; sudo mv /opt/local /opt/local_off ; sudo mv /sw /sw_off ; cd ~/Library/Application\\ Support/Guigna/pkgsrc ; git clone git://github.com/cmacrae/saveosx.git ; cd saveosx ; sudo ./bootstrap ; sudo mv /usr/local_off /usr/local ; sudo mv /opt/local_off /opt/local ; sudo mv /sw_off /sw"
+        return "for dir in bin etc include lib opt share ; do sudo mv /usr/local/\"$dir\"{,_off} ; done ; sudo mv /opt/local /opt/local_off ; sudo mv /sw /sw_off ; cd ~/Library/Application\\ Support/Guigna/pkgsrc ; git clone git://github.com/cmacrae/saveosx.git ; cd saveosx ; ./bootstrap ; for dir in bin etc include lib opt share ; do sudo mv /usr/local/\"$dir\"{_off,} ; done ; sudo mv /opt/local_off /opt/local ; sudo mv /sw_off /sw"
     }
     
     class var removeCmd: String! {

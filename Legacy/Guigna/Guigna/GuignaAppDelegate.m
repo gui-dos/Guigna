@@ -164,7 +164,7 @@
     NSString *prefix;
     for (NSString *system in knownPaths.allKeys) {
         prefix = knownPaths[system];
-        if ([fileManager fileExistsAtPath:[prefix stringByAppendingString:@"_off"]]) {
+        if ([fileManager fileExistsAtPath:[prefix stringByAppendingString:@"_off"]] || [fileManager fileExistsAtPath:[prefix stringByAppendingString:@"/bin_off"]]) {
             NSAlert *alert = [[NSAlert alloc] init];
             [alert setAlertStyle:NSCriticalAlertStyle];
             [alert setMessageText:@"Hidden system detected."];
@@ -172,7 +172,11 @@
             [alert addButtonWithTitle:@"Unhide"];
             [alert addButtonWithTitle:@"Continue"];
             if ([alert runModal] == NSAlertFirstButtonReturn) {
-                [self executeAsRoot:[NSString stringWithFormat:@"mv %@_off %@", prefix, prefix]];
+                if (![prefix is:@"/usr/local"]) {
+                    [self executeAsRoot:[NSString stringWithFormat:@"mv %@_off %@", prefix, prefix]];
+                } else {
+                    [self executeAsRoot:[NSString stringWithFormat:@"for dir in bin etc include lib opt share ; do sudo mv %@/\"$dir\"{_off,} ; done", prefix]];
+                }
             }
         }
     }
@@ -1259,7 +1263,8 @@
 }
 
 - (void)executeAsRoot:(NSString *)cmd {
-    system([[NSString stringWithFormat: @"osascript -e 'do shell script \"%@\" with administrator privileges'", cmd] UTF8String]);
+    NSString *command = [cmd replace:@"\"" with:@"\\\""];
+    system([[NSString stringWithFormat: @"osascript -e 'do shell script \"%@\" with administrator privileges'", command] UTF8String]);
 }
 
 - (void)minuteCheck:(NSTimer *)timer {
@@ -1474,7 +1479,7 @@
     for (GPackage *item in markedItems) {
         [systemsDict[item.system.name] addObject:item];
     }
-    NSArray *prefixes = @[@"/opt/local", @"/usr/local", @"/sw", @"/usr/pkg"];
+    NSArray *prefixes = @[@"/opt/local", @"/usr/local", @"/sw", @"/usr/pkg", @"/opt/pkg"];
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSMutableArray *detectedPrefixes = [NSMutableArray array];
     for (NSString *prefix in prefixes) {
@@ -1541,7 +1546,11 @@
                 }
             }
             for (NSString *prefix in detectedPrefixes) {
-                [tasks addObject:[NSString stringWithFormat:@"sudo mv %@ %@_off", prefix, prefix]];
+                if (![prefix is:@"/usr/local"]) {
+                    [tasks addObject:[NSString stringWithFormat:@"sudo mv %@ %@_off", prefix, prefix]];
+                } else {
+                    [tasks addObject:[NSString stringWithFormat:@"for dir in bin etc include lib opt share ; do sudo mv %@/\"$dir\"{,_off} ; done", prefix]];
+                }
             }
         }
         [tasks addObjectsFromArray:systemCommands];
@@ -1559,7 +1568,11 @@
                 }
             }
             for (NSString *prefix in detectedPrefixes) {
-                [tasks addObject:[NSString stringWithFormat:@"sudo mv %@_off %@", prefix, prefix]];
+                if (![prefix is:@"/usr/local"]) {
+                    [tasks addObject:[NSString stringWithFormat:@"sudo mv %@_off %@", prefix, prefix]];
+                } else {
+                    [tasks addObject:[NSString stringWithFormat:@"for dir in bin etc include lib opt share ; do sudo mv %@/\"$dir\"{_off,} ; done", prefix]];
+                }
             }
         }
     }
