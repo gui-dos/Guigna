@@ -16,9 +16,12 @@ final class Homebrew: GSystem {
         index.removeAll(keepCapacity: true)
         items.removeAll(keepCapacity: true)
 
-        // /usr/bin/ruby -C /usr/local/Library/Homebrew -I. -e "require 'global'; require 'formula'; Formula.each {|f| puts \"#{f.name} #{f.pkg_version}\"}"
+        // /usr/bin/ruby -C /usr/local/Library/Homebrew -I. -e "require 'global'; require 'formula'; Formula.each {|f| puts \"#{f.name} #{f.pkg_version}\"}" not supported anymore
+        // see: https://github.com/Homebrew/homebrew/pull/48261
 
-        var outputLines = output("/usr/bin/ruby -C \(prefix)/Library/Homebrew -I. -e require__'global';require__'formula';__Formula.each__{|f|__puts__\"#{f.full_name}|#{f.pkg_version}|#{f.bottle}|#{f.desc}\"}").split("\n")
+        let workaround = "ENV['HOMEBREW_PREFIX']='\(prefix)';ENV['HOMEBREW_REPOSITORY']='\(prefix)';ENV['HOMEBREW_LIBRARY']='\(prefix)/Library';ENV['HOMEBREW_CELLAR']='\(prefix)/Cellar';"
+
+        var outputLines = output("/usr/bin/ruby -C \(prefix)/Library/Homebrew -I. -e " + workaround + "require__'global';require__'formula';__Formula.each__{|f|__puts__\"#{f.full_name}|#{f.pkg_version}|#{f.bottle}|#{f.desc}\"}").split("\n")
         outputLines.removeLast()
         for line in outputLines {
             let components = line.split("|")
