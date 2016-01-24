@@ -202,7 +202,7 @@ final class Pkgin: GSystem {
         //            if item.id != nil {
         //                return (try? String(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.id)/DESCR")!, encoding: NSUTF8StringEncoding)) ?? ""
         //            } else { // TODO lowercase (i.e. Hermes -> hermes)
-        //                return (try? String(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories)/\(item.name)/DESCR")!, encoding: NSUTF8StringEncoding)) ?? ""
+        //                return (try? String(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories!)/\(item.name)/DESCR")!, encoding: NSUTF8StringEncoding)) ?? ""
         //            }
         //        }
         return output("\(cmd) pkg-descr \(item.name)")
@@ -213,17 +213,18 @@ final class Pkgin: GSystem {
         if item.homepage != nil { // already available from INDEX
             return item.homepage
         } else {
-            let links = agent.nodes(URL: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories)/\(item.name)/README.html", XPath: "//p/a")
+            let links = agent.nodes(URL: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories!)/\(item.name)/README.html", XPath: "//p/a")
             return links[2].href
         }
     }
 
     override func log(item: GItem) -> String {
-        if item.id != nil {
-            return "http://cvsweb.NetBSD.org/bsdweb.cgi/pkgsrc/\(item.id)/"
-        } else {
-            return "http://cvsweb.NetBSD.org/bsdweb.cgi/pkgsrc/\(item.categories)/\(item.name)/"
-        }
+        //        if item.id != nil {
+        //            return "http://cvsweb.NetBSD.org/bsdweb.cgi/pkgsrc/\(item.id)/"
+        //        } else {
+        //            return "http://cvsweb.NetBSD.org/bsdweb.cgi/pkgsrc/\(item.categories!)/\(item.name)/"
+        //        }
+        return "https://github.com/joyent/pkgsrc/commits/trunk/\(item.categories!)/\(item.name)"
     }
 
     override func contents(item: GItem) -> String {
@@ -233,7 +234,7 @@ final class Pkgin: GSystem {
             if item.id != nil {
                 return (try? String(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.id)/PLIST")!, encoding: NSUTF8StringEncoding)) ?? ""
             } else { // TODO lowercase (i.e. Hermes -> hermes)
-                return (try? String(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories)/\(item.name)/PLIST")!, encoding: NSUTF8StringEncoding)) ?? ""
+                return (try? String(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories!)/\(item.name)/PLIST")!, encoding: NSUTF8StringEncoding)) ?? ""
             }
         }
     }
@@ -246,7 +247,7 @@ final class Pkgin: GSystem {
         if item.id != nil {
             return (try? String(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.id)/Makefile")!, encoding: NSUTF8StringEncoding)) ?? ""
         } else { // TODO lowercase (i.e. Hermes -> hermes)
-            return (try? String(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories)/\(item.name)/Makefile")!, encoding: NSUTF8StringEncoding)) ?? ""
+            return (try? String(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories!)/\(item.name)/Makefile")!, encoding: NSUTF8StringEncoding)) ?? ""
         }
     }
 
@@ -287,7 +288,7 @@ final class Pkgin: GSystem {
         //        if pkg.id != nil {
         //            return "cd /usr/pkgsrc/\(pkg.id) ; sudo /usr/pkg/bin/bmake install clean clean-depends"
         //        } else {
-        //            return "cd /usr/pkgsrc/\(pkg.categories)/\(pkg.name) ; sudo /usr/pkg/bin/bmake install clean clean-depends"
+        //            return "cd /usr/pkgsrc/\(pkg.categories!)/\(pkg.name) ; sudo /usr/pkg/bin/bmake install clean clean-depends"
         //        }
         return "sudo \(cmd) -y install \(pkg.name)"
     }
@@ -302,7 +303,7 @@ final class Pkgin: GSystem {
         if pkg.id != nil {
             return "cd /usr/pkgsrc/\(pkg.id) ; sudo /usr/pkg/bin/bmake clean clean-depends"
         } else {
-            return "cd /usr/pkgsrc/\(pkg.categories)/\(pkg.name) ; sudo /usr/pkg/bin/bmake clean clean-depends"
+            return "cd /usr/pkgsrc/\(pkg.categories!)/\(pkg.name) ; sudo /usr/pkg/bin/bmake clean clean-depends"
         }
     }
 
