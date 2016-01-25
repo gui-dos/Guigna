@@ -1280,7 +1280,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
 
 
     func execute(cmd: String, baton: String) {
-        let briefCmd = cmd.split(" ; ").filter { !($0.hasPrefix("sudo mv")) }.join(" ; ")
+        let briefCmd = cmd.split(" ; ").filter { !($0.hasPrefix("sudo mv") || $0.hasPrefix("for dir in") || $0.hasPrefix("do sudo")) || $0.hasPrefix("done")}.join(" ; ")
         status("Executing '\(briefCmd)' in the shell...")
         log("😺===> \(briefCmd)\n")
         var command: String
