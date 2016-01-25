@@ -105,7 +105,7 @@ final class Pkgin: GSystem {
             // TODO: categories / ids
 
             let whitespaceCharacterSet = NSCharacterSet.whitespaceCharacterSet()
-            for line in outputLines {
+            for line in outputLines.reverse() {
                 var idx = line.index(" ")
                 var name = line.substringToIndex(idx)
                 let description = line.substringFromIndex(idx + 1).stringByTrimmingCharactersInSet(whitespaceCharacterSet)

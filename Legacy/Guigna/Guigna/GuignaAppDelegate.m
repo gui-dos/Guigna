@@ -1232,7 +1232,7 @@
 
 
 - (void)execute:(NSString *)cmd withBaton:(NSString *)baton {
-    NSString *briefCmd = [[[cmd split:@" ; "] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT (SELF BEGINSWITH 'sudo mv' || SELF BEGINSWITH 'for dir in' || SELF BEGINSWITH 'do sudo mv' || SELF BEGINSWITH 'done')" ]] join:@" ; "];
+    NSString *briefCmd = [[[cmd split:@" ; "] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT (SELF BEGINSWITH 'sudo mv' || SELF BEGINSWITH 'for dir in' || SELF BEGINSWITH 'do sudo' || SELF BEGINSWITH 'done')" ]] join:@" ; "];
     [self status:[NSString stringWithFormat:@"Executing '%@' in the shell...", briefCmd]];
     [self log:[NSString stringWithFormat:@"😺===> %@\n", briefCmd]];
     NSString *command;

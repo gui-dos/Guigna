@@ -319,7 +319,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
         if defaults["pkginStatus"] != nil && defaults["pkginStatus"] == GState.On.rawValue {
             let pkgin = Pkgin(agent: agent)
-            if !"/opt/pkg/bin/pkgbin".exists {
+            if !"/opt/pkg/bin/pkgin".exists {
                 pkgin.mode = .Online
             }
             systems.append(pkgin)
