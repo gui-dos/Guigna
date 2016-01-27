@@ -25,7 +25,7 @@
     // /usr/bin/ruby -C /usr/local/Library/Homebrew -I. -e "require 'global'; require 'formula'; Formula.each {|f| puts \"#{f.name} #{f.pkg_version}\"}" not supported anymore
     // see: https://github.com/Homebrew/homebrew/pull/48261
 
-    NSString *workaround = [NSString stringWithFormat: @"ENV['HOMEBREW_PREFIX']='%@';ENV['HOMEBREW_REPOSITORY']='%@';ENV['HOMEBREW_LIBRARY']='%@/Library';ENV['HOMEBREW_CELLAR']='%@/Cellar';", self.prefix, self.prefix, self.prefix, self.prefix];
+    NSString *workaround = [NSString stringWithFormat: @"ENV['HOMEBREW_BREW_FILE']='%@/bin/brew';ENV['HOMEBREW_PREFIX']='%@';ENV['HOMEBREW_REPOSITORY']='%@';ENV['HOMEBREW_LIBRARY']='%@/Library';ENV['HOMEBREW_CELLAR']='%@/Cellar';", self.prefix, self.prefix, self.prefix, self.prefix, self.prefix];
 
     NSMutableArray *output = [NSMutableArray arrayWithArray:[[self outputFor:@"/usr/bin/ruby -C %@/Library/Homebrew -I. -e %@require__'global';require__'formula';__Formula.each__{|f|__puts__\"#{f.full_name}|#{f.pkg_version}|#{f.bottle}|#{f.desc}\"}", self.prefix, workaround] split:@"\n"]];
     [output removeLastObject];
