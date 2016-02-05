@@ -59,7 +59,7 @@ final class FreeBSD: GSystem {
                     pkg.description = description
                     items.append(pkg)
                     // self[id] = pkg
-                    i++
+                    i += 1
                 }
             }
         }

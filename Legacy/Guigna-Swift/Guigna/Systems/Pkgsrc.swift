@@ -142,7 +142,7 @@ final class Pkgsrc: GSystem {
             pkg.description = description
             pkg.id = id
             pkgs.append(pkg)
-            i++
+            i += 1
         }
         return pkgs
     }

@@ -122,7 +122,7 @@ final class Pkgin: GSystem {
                 pkg.id = id
                 items.append(pkg)
                 self[id] = pkg
-                // i++
+                // i += 1
             }
         }
 
@@ -183,7 +183,7 @@ final class Pkgin: GSystem {
             pkg.description = description
             pkg.id = id
             pkgs.append(pkg)
-            i++
+            i += 1
         }
         return pkgs
     }

@@ -484,19 +484,19 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     // TODO verify command did really complete
 
                     if mark == GMark.Install { // explicit GMark otherwise it doesn't compile
-                        marksCount--
+                        marksCount -= 1
 
                     } else if mark == .Uninstall {
-                        marksCount--
+                        marksCount -= 1
 
                     } else if mark == .Deactivate {
-                        marksCount--
+                        marksCount -= 1
 
                     } else if mark == .Upgrade {
-                        marksCount--
+                        marksCount -= 1
 
                     } else if mark == .Fetch {
-                        marksCount--
+                        marksCount -= 1
                     }
 
                     let itemSystem = item.system
@@ -1112,12 +1112,12 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
         let scrapesCount: Int = (defaults["ScrapesCount"] as! NSNumber).integerValue
         let pagesToScrape = Int(ceil(Double(scrapesCount) / Double(scrape.itemsPerPage)))
-        for var i = 1; i <= pagesToScrape; ++i {
+        for i in 1...pagesToScrape {
             scrape.refresh()
             itemsController.addObjects(scrape.items)
             itemsTable.display()
             if i != pagesToScrape {
-                scrape.pageNumber++
+                scrape.pageNumber += 1
             }
         }
         if itemsController.selectionIndex == NSNotFound {
@@ -1489,11 +1489,11 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
 
             if title == "Unmark" {
                 if item.mark != .NoMark {
-                    marksCount--
+                    marksCount -= 1
                 }
             } else {
                 if item.mark == .NoMark {
-                    marksCount++
+                    marksCount += 1
                 }
             }
 
