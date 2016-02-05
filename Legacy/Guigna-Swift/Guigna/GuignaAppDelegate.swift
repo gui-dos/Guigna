@@ -182,7 +182,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         terminal = SBApplication(bundleIdentifier: "com.apple.Terminal")
         let guignaFunction = "guigna() { osascript -e 'tell app \"Guigna\"' -e \"open POSIX file \\\"\(APPDIR)/$2\\\"\" -e 'end' &>/dev/null; }"
         let initScript = "unset HISTFILE ; " + guignaFunction
-        shell = terminal.doScript(initScript, `in`: nil)
+        shell = terminal.doScript(initScript, in: nil)
         shell.setValue("Guigna", forKey: "customTitle")
         for window in terminal.valueForKey("windows") as! [NSObject] {
             if (window.valueForKey("name") as! NSString).containsString("Guigna ") {
@@ -236,7 +236,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             }
         }
 
-        terminal.doScript("clear ; printf \"\\e[3J\" ; echo Welcome to Guigna! ; echo", `in`:shell)
+        terminal.doScript("clear ; printf \"\\e[3J\" ; echo Welcome to Guigna! ; echo", in:shell)
 
         if portPath.exists || "\(APPDIR)/MacPorts/PortIndex".exists {
             if defaults["MacPortsStatus"] == nil {
@@ -1295,7 +1295,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             command = command.replace("sudo", "echo \"\(adminPassword!)\" | sudo -S")
         }
         raiseShell(self)
-        terminal.doScript(command, `in`:self.shell)
+        terminal.doScript(command, in:self.shell)
 
     }
 

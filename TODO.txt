@@ -2,9 +2,8 @@ FIXME
 
 * El Capitan:
   - Selected sources are not highlighted until resizing the window
-  - optionsStatus() thread doesn't update the GUI
+  - the status() thread doesn't update the main GUI
 * Swift:
-  - MacPorts.list() too slow
   - filter() for inactive packages should be called only for MacPorts and Homebrew
 * Scraping the version numbers and the descriptions from Homebrew formulae is excessively slow
 * Help doesn't always open the wiki page
