@@ -82,7 +82,8 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
     }
 
-    func status(var msg: String) {
+    func status(msg: String) {
+        var msg = msg
         if msg.hasSuffix("...") {
             progressIndicator.startAnimation(self)
             if statusField.stringValue.hasPrefix("Executing") {
@@ -1312,7 +1313,8 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         sudo(cmd, baton: "output")
     }
 
-    func executeAsRoot(var cmd: String) {
+    func executeAsRoot(cmd: String) {
+        var cmd = cmd
         cmd = cmd.replace("\"", "\\\"")
         let command = "osascript -e 'do shell script \"\(cmd)\" with administrator privileges'"
         system(command)
@@ -1764,7 +1766,8 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     }
 
 
-    func optionsStatus(var msg: String) {
+    func optionsStatus(msg: String) {
+        var msg = msg
         if msg.hasSuffix("...") {
             optionsProgressIndicator.startAnimation(self)
             if optionsStatusField.stringValue.hasPrefix("Executing") {
