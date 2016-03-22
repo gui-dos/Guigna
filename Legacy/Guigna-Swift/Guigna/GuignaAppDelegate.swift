@@ -141,7 +141,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         statusItem.title = "😺"
         statusItem.highlightMode = true
         statusItem.menu = statusMenu
-        itemsTable.doubleAction = "showMarkMenu:"
+        itemsTable.doubleAction = #selector(showMarkMenu(_:))
         window.titleVisibility = .Hidden
 
         infoText.font = NSFont(name: "Andale Mono", size: 11.0)
@@ -154,7 +154,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         let viewColumnsMenu = NSMenu(title: "ItemsColumnsMenu")
         for menu in [columnsMenu, viewColumnsMenu] {
             for column in itemsTable.tableColumns {
-                let menuItem = NSMenuItem(title: column.headerCell.stringValue, action: "toggleTableColumn:", keyEquivalent: "")
+                let menuItem = NSMenuItem(title: column.headerCell.stringValue, action: #selector(toggleTableColumn(_:)), keyEquivalent: "")
                 menuItem.target = self
                 menuItem.representedObject = column
                 menu.addItem(menuItem)
@@ -391,7 +391,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             self.reloadAllPackages()
         }
 
-        minuteTimer = NSTimer.scheduledTimerWithTimeInterval(60.0, target: self, selector: "minuteCheck:", userInfo: nil, repeats: true)
+        minuteTimer = NSTimer.scheduledTimerWithTimeInterval(60.0, target: self, selector: #selector(minuteCheck(_:)), userInfo: nil, repeats: true)
 
         self.applyButton.enabled = false
         self.stopButton.enabled = false
@@ -1380,7 +1380,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                         if availableOptions.count > 0 && availableOptions[0] != "" {
                             let optionsMenu = NSMenu(title: "Options")
                             for availableOption in availableOptions {
-                                optionsMenu.addItemWithTitle(availableOption, action: "mark:", keyEquivalent: "")
+                                optionsMenu.addItemWithTitle(availableOption, action: #selector(mark(_:)), keyEquivalent: "")
                                 var options = Set(markedOptions)
                                 options.unionInPlace(currentOptions)
                                 for option in options {
