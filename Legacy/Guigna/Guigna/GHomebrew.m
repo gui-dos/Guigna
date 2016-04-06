@@ -12,7 +12,7 @@
     self = [super initWithName:@"Homebrew" agent:agent];
     if (self) {
         self.homepage = @"http://brew.sh/";
-        self.logpage = @"http://github.com/Homebrew/homebrew/commits";
+        self.logpage = @"http://github.com/Homebrew/homebrew-core/commits";
         self.cmd = [NSString stringWithFormat:@"%@/bin/brew", self.prefix];
     }
     return self;
@@ -25,7 +25,7 @@
     // /usr/bin/ruby -C /usr/local/Library/Homebrew -I. -e "require 'global'; require 'formula'; Formula.each {|f| puts \"#{f.name} #{f.pkg_version}\"}" not supported anymore
     // see: https://github.com/Homebrew/homebrew/pull/48261
 
-    NSString *workaround = [NSString stringWithFormat: @"ENV['HOMEBREW_BREW_FILE']='%@/bin/brew';ENV['HOMEBREW_PREFIX']='%@';ENV['HOMEBREW_REPOSITORY']='%@';ENV['HOMEBREW_LIBRARY']='%@/Library';ENV['HOMEBREW_CELLAR']='%@/Cellar';", self.prefix, self.prefix, self.prefix, self.prefix, self.prefix];
+    NSString *workaround = [NSString stringWithFormat: @"ENV['HOMEBREW_BREW_FILE']='%@/bin/brew';ENV['HOMEBREW_PREFIX']='%@';ENV['HOMEBREW_REPOSITORY']='%@';ENV['HOMEBREW_LIBRARY']='%@/Library';ENV['HOMEBREW_CELLAR']='%@/Cellar';ENV['HOMEBREW_OSX_VERSION']=`/usr/bin/sw_vers__-productVersion`;", self.prefix, self.prefix, self.prefix, self.prefix, self.prefix];
 
     NSMutableArray *output = [NSMutableArray arrayWithArray:[[self outputFor:@"/usr/bin/ruby -C %@/Library/Homebrew -I. -e %@require__'global';require__'formula';__Formula.each__{|f|__puts__\"#{f.full_name}|#{f.pkg_version}|#{f.bottle}|#{f.desc}\"}", self.prefix, workaround] split:@"\n"]];
     [output removeLastObject];
@@ -228,7 +228,7 @@
 - (NSString *)log:(GItem *)item {
     NSString *path;
     if (((GPackage *)item).repo == nil)
-        path = @"Homebrew/homebrew/commits/master/Library/Formula";
+        path = @"Homebrew/homebrew-core/commits/master/Formula";
     else {
         NSArray *tokens = [((GPackage *)item).repo split:@"/"];
         NSString *user = tokens[0];

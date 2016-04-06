@@ -7,7 +7,7 @@ final class Homebrew: GSystem {
     init(agent: GAgent) {
         super.init(name: "Homebrew", agent: agent)
         homepage = "http://brew.sh/"
-        logpage = "http://github.com/Homebrew/homebrew/commits"
+        logpage = "http://github.com/Homebrew/homebrew-core/commits"
         cmd = "\(prefix)/bin/brew"
     }
 
@@ -19,7 +19,7 @@ final class Homebrew: GSystem {
         // /usr/bin/ruby -C /usr/local/Library/Homebrew -I. -e "require 'global'; require 'formula'; Formula.each {|f| puts \"#{f.name} #{f.pkg_version}\"}" not supported anymore
         // see: https://github.com/Homebrew/homebrew/pull/48261
 
-        let workaround = "ENV['HOMEBREW_BREW_FILE']='\(prefix)/bin/brew';ENV['HOMEBREW_PREFIX']='\(prefix)';ENV['HOMEBREW_REPOSITORY']='\(prefix)';ENV['HOMEBREW_LIBRARY']='\(prefix)/Library';ENV['HOMEBREW_CELLAR']='\(prefix)/Cellar';"
+        let workaround = "ENV['HOMEBREW_BREW_FILE']='\(prefix)/bin/brew';ENV['HOMEBREW_PREFIX']='\(prefix)';ENV['HOMEBREW_REPOSITORY']='\(prefix)';ENV['HOMEBREW_LIBRARY']='\(prefix)/Library';ENV['HOMEBREW_CELLAR']='\(prefix)/Cellar';ENV['HOMEBREW_OSX_VERSION']=`/usr/bin/sw_vers__-productVersion`;"
 
         var outputLines = output("/usr/bin/ruby -C \(prefix)/Library/Homebrew -I. -e " + workaround + "require__'global';require__'formula';__Formula.each__{|f|__puts__\"#{f.full_name}|#{f.pkg_version}|#{f.bottle}|#{f.desc}\"}").split("\n")
         outputLines.removeLast()
@@ -242,7 +242,7 @@ final class Homebrew: GSystem {
     override func log(item: GItem) -> String {
         var path: String
         if (item as! GPackage).repo == nil {
-            path = "Homebrew/homebrew/commits/master/Library/Formula"
+            path = "Homebrew/homebrew-core/commits/master/Formula"
         } else {
             let tokens = (item as! GPackage).repo!.split("/")
             let user = tokens[0]
