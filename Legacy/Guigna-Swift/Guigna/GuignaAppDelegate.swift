@@ -402,7 +402,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     }
 
     func applicationDidBecomeActive(aNotification: NSNotification) {
-        if shellWindow != nil && (self.shellWindow.valueForKey("name") as! NSString).containsString("sudo") {
+        if shellWindow != nil && (self.shellWindow.valueForKey("name") as! NSString).containsString("— sudo") {
             raiseShell(self)
         }
     }
@@ -1321,7 +1321,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     }
 
     func minuteCheck(timer: NSTimer) {
-        if shellWindow != nil && (shellWindow.valueForKey("name") as! NSString).containsString("sudo") {
+        if shellWindow != nil && (shellWindow.valueForKey("name") as! NSString).containsString("— sudo") {
             if NSApplication.sharedApplication().active {
                 raiseShell(self)
             }

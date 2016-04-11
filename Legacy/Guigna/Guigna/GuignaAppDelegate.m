@@ -345,7 +345,7 @@
 
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification {
-    if (self.shellWindow != nil && [self.shellWindow.name contains:@"sudo"])
+    if (self.shellWindow != nil && [self.shellWindow.name contains:@"— sudo"])
         [self raiseShell:self];
 }
 
@@ -1268,7 +1268,7 @@
 }
 
 - (void)minuteCheck:(NSTimer *)timer {
-    if ([self.shellWindow.name contains:@"sudo"]) {
+    if ([self.shellWindow.name contains:@"— sudo"]) {
         if ([NSApp isActive])
             [self raiseShell:self];
         [NSApp requestUserAttention:NSCriticalRequest];
