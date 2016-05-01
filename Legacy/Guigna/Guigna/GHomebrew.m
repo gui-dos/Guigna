@@ -329,7 +329,7 @@
 }
 
 + (NSString *)removeCmd {
-    return @"cd /usr/local ; curl -L https://raw.github.com/gist/1173223 -o uninstall_homebrew.sh; sudo sh uninstall_homebrew.sh ; rm uninstall_homebrew.sh ; sudo rm -rf /Library/Caches/Homebrew; rm -rf /usr/local/.git";
+    return @"ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall)\"";
 }
 
 - (NSString *)verbosifiedCmd:(NSString *)cmd {
