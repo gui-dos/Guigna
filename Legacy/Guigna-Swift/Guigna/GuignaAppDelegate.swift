@@ -630,7 +630,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                             if category == "cask" {
                                 continue
                             }
-                            categorySource.homepage = system.logpage.replace("homebrew", "homebrew-" + category)
+                            categorySource.homepage = system.logpage.replace("homebrew-core", "homebrew-" + category)
                         }
                         categories.addObject(categorySource)
                     }

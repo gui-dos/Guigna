@@ -595,7 +595,7 @@
                         if ([system.name is:@"Homebrew"]) {
                             if ([category is:@"cask"])
                                 continue;
-                            categorySource.homepage = [system.logpage replace:@"homebrew" with:[@"homebrew-" stringByAppendingString:category]];
+                            categorySource.homepage = [system.logpage replace:@"homebrew-core" with:[@"homebrew-" stringByAppendingString:category]];
                         }
                         [cats addObject:categorySource];
                     }
