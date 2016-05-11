@@ -6,7 +6,7 @@
 - (instancetype)initWithAgent:(GAgent *)agent {
     self = [super initWithName:@"Freecode" agent:agent];
     if (self) {
-        self.homepage = @"http://freecode.club/";
+        self.homepage = @"http://freshfoss.com/";
         self.itemsPerPage = 40;
         self.cmd = @"freecode";
     }
@@ -17,7 +17,7 @@
 
 - (void)refresh {
     NSMutableArray *projs = [NSMutableArray array];
-    NSString *url = [NSString stringWithFormat:@"http://freecode.club/index?n=%ld", self.pageNumber];
+    NSString *url = [NSString stringWithFormat:@"http://freshfoss.com/?n=%ld", self.pageNumber];
     // Don't use agent.nodesForUrl since NSXMLDocumentTidyHTML strips <article>
     NSMutableString *page = [NSMutableString stringWithContentsOfURL:[NSURL URLWithString:url] encoding:NSUTF8StringEncoding error:nil];
     [page replaceOccurrencesOfString:@"article" withString:@"div" options:0 range:NSMakeRange(0, [page length])];
@@ -58,7 +58,7 @@
 }
 
 - (NSString *)log:(GItem *)item {
-    return [NSString stringWithFormat:@"http://freecode.club/projects/%@", item.ID];
+    return [NSString stringWithFormat:@"http://freshfoss.com/projects/%@", item.ID];
 }
 
 @end

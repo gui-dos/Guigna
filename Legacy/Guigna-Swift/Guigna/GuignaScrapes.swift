@@ -74,14 +74,14 @@ class Freecode: GScrape {
 
     init(agent: GAgent) {
         super.init(name: "Freecode", agent: agent)
-        homepage = "http://www.freecode.club/"
+        homepage = "http://freshfoss.com/"
         itemsPerPage = 40
         cmd = "freecode"
     }
 
     override func refresh() {
         var projs = [GItem]()
-        let url = NSURL(string: "http://freecode.club/index?n=\(pageNumber)")!
+        let url = NSURL(string: "http://freshfoss.com/?n=\(pageNumber)")!
         // Don't use agent.nodesForUrl since NSXMLDocumentTidyHTML strips <article>
         if var page = try? String(contentsOfURL: url, encoding: NSUTF8StringEncoding) {
             page = page.replace("article", "div")
@@ -118,7 +118,7 @@ class Freecode: GScrape {
     }
 
     override func log(item: GItem) -> String {
-        return "http://freecode.club/projects/\(item.id)"
+        return "http://freshfoss.com/projects/\(item.id)"
     }
 }
 
