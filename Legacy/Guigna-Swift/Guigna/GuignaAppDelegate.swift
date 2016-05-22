@@ -1111,7 +1111,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         if self.ready && !statusField.stringValue.hasPrefix("Executing") {
             status("Scraping \(scrape.name)...")
         }
-        let scrapesCount: Int = (defaults["ScrapesCount"] as! NSNumber).integerValue
+        let scrapesCount: Int = (defaults["ScrapesCount"] as! NSString).integerValue
         let pagesToScrape = Int(ceil(Double(scrapesCount) / Double(scrape.itemsPerPage)))
         for i in 1...pagesToScrape {
             scrape.refresh()
