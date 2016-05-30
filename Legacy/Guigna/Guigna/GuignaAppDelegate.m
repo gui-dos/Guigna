@@ -1172,6 +1172,7 @@
     NSMutableArray *tokens = [[input split] mutableCopy];
     NSString *cmd = tokens[0];
     if ([cmd hasPrefix:@"http"] || [cmd hasPrefix:@"www"]) { // TODO
+        [sourcesController setSelectionIndexPath:nil];
         if ([cmd hasPrefix:@"www"])
             [self updateCmdLine:[NSString stringWithFormat:@"http://%@",cmd]];
         [segmentedControl setSelectedSegment:1];

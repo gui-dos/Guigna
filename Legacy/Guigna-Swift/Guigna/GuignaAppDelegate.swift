@@ -1222,6 +1222,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         var tokens = input.split()
         var cmd = tokens[0]
         if cmd.hasPrefix("http") || cmd.hasPrefix("www") { // TODO
+            sourcesController.setSelectionIndexPath(nil)
             if cmd.hasPrefix("www") {
                 updateCmdLine("http://\(cmd)")
             }
