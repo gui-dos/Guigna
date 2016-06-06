@@ -209,9 +209,9 @@
         for (NSString *line in [[self cat:item] split:@"\n"]) {
             NSUInteger idx = [line index:@"homepage"];
             if (idx != NSNotFound) {
-                page = [[line substringFromIndex:idx + 8] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+                page = [[line substringFromIndex:idx + 8] trim];
                 if ([page contains:@"http"])
-                    return [page stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"'\""]];
+                    return [page trim:@"'\""];
             }
         }
     } else {
@@ -293,7 +293,7 @@
     else
         options = [@"--" stringByAppendingString:[options replace:@" " with:@" --"]];
 
-    return [NSString stringWithFormat:@"%@ install %@ %@", self.cmd, options, pkg.name];
+    return [[NSString stringWithFormat:@"%@ install %@ %@", self.cmd, options, pkg.name] replace:@"  " with:@" "];
 }
 
 - (NSString *) uninstallCmd:(GPackage *)pkg {

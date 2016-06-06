@@ -211,7 +211,7 @@
     if (item.status != GAvailableStatus) {
         NSArray *components = [[self outputFor:@"%@ -n %@", self.cmd, item.name] split:@"Requires:\n"];
         if ([components count] > 1) {
-            return [components[1] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+            return [components[1] trim];
         } else
             return @"[No depends]";
     } else {
@@ -227,7 +227,7 @@
     if (item.status != GAvailableStatus) {
         NSArray *components = [[self outputFor:@"%@ -r %@", self.cmd, item.name] split:@"required by list:\n"];
         if ([components count] > 1) {
-            return [components[1] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+            return [components[1] trim];
         } else
             return @"[No dependents]";
     } else

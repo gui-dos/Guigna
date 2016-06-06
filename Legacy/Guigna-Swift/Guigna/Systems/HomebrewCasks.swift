@@ -117,7 +117,7 @@ final class HomebrewCasks: GSystem {
             if name == "Error:" {
                 return pkgs
             }
-            var version = output("/bin/ls /opt/homebrew-cask/Caskroom/\(name)").stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+            var version = output("/bin/ls /opt/homebrew-cask/Caskroom/\(name)").trim()
             // TODO: manage multiple versions
             version = version.replace("\n", ", ")
             var pkg: GPackage! = self[name]
@@ -181,9 +181,9 @@ final class HomebrewCasks: GSystem {
             for line in cat(item).split("\n") {
                 let idx = line.index("homepage")
                 if idx != NSNotFound {
-                    homepage = line.substringFromIndex(idx + 8).stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+                    homepage = line.substringFromIndex(idx + 8).trim()
                     if homepage.contains("http") {
-                        return homepage.stringByTrimmingCharactersInSet(NSCharacterSet(charactersInString: "'\""))
+                        return homepage.trim("'\"")
                     }
                 }
             }
@@ -241,7 +241,7 @@ final class HomebrewCasks: GSystem {
         } else {
             options = "--" + options.replace(" ", " --")
         }
-        return "\(cmd) install \(options) \(pkg.name)"
+        return "\(cmd) install \(options) \(pkg.name)".replace("  ", " ")
     }
 
 

@@ -256,7 +256,7 @@
         NSString *homepage;
         for (NSString *line in [[self cat:item] split:@"\n"]) {
             if ([line contains:@"homepage"]) {
-                homepage = [[line substringFromIndex:8] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+                homepage = [[line substringFromIndex:8] trim];
                 if ([homepage hasPrefix:@"http"])
                     return homepage;
             }
@@ -317,7 +317,7 @@
 
 - (NSString *)options:(GPackage *)pkg {
     NSString *variants;
-    NSString *output = [[self outputFor:[NSString stringWithFormat:@"%@ info --variants %@", self.cmd, pkg.name]] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    NSString *output = [[self outputFor:[NSString stringWithFormat:@"%@ info --variants %@", self.cmd, pkg.name]] trim];
     if ([output length] > 10 ) {
         variants = [[[output substringFromIndex:10] split:@", "] join];
     }
@@ -336,7 +336,7 @@
         variants = @"";
     else
         variants = [@"+" stringByAppendingString:[variants replace:@" " with:@"+"]];
-    return [NSString stringWithFormat:@"sudo %@ install %@ %@", self.cmd, pkg.name, variants];
+    return [[NSString stringWithFormat:@"sudo %@ install %@ %@", self.cmd, pkg.name, variants] trim];
 }
 
 - (NSString *)uninstallCmd:(GPackage *)pkg {

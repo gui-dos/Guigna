@@ -82,6 +82,16 @@ extension String {
         return self.stringByReplacingOccurrencesOfString(string, withString: replacement)
     }
 
+    func trim(characters: String = "") -> String {
+        var charSet: NSCharacterSet
+        if characters.length == 0 {
+            charSet = NSCharacterSet.whitespaceAndNewlineCharacterSet()
+        } else {
+            charSet = NSCharacterSet(charactersInString: characters)
+        }
+        return self.stringByTrimmingCharactersInSet(charSet)
+    }
+
 }
 
 
@@ -140,5 +150,5 @@ extension WebView {
         let multiplier: CFloat = self.textSizeMultiplier * CFloat(event.magnification + 1.0)
         self.textSizeMultiplier = multiplier
     }
-
+    
 }

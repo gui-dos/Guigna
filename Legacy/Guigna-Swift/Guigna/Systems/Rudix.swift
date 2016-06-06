@@ -113,7 +113,7 @@ final class Rudix: GSystem {
     override func home(item: GItem) -> String {
         for line in cat(item).split("\n") {
             if line.hasPrefix("Site=") {
-                homepage = line.substringFromIndex(5).stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+                homepage = line.substringFromIndex(5).trim()
                 if homepage.hasPrefix("http") {
                     return homepage
                 }

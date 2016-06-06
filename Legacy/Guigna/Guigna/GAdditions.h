@@ -23,6 +23,8 @@
 - (NSArray *)split;
 - (NSArray *)split:(NSString *)delimiter;
 - (NSString *)replace:(NSString *)string with:(NSString*)replacement;
+- (NSString *)trim;
+- (NSString *)trim:(NSString *)characters;
 @end
 
 @interface NSXMLNode (GAdditions)

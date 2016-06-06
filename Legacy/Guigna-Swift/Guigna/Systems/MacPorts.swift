@@ -264,7 +264,7 @@ final class MacPorts: GSystem {
             var homepage: String
             for line in cat(item).split("\n") {
                 if line.contains("homepage") {
-                    homepage = line.substringFromIndex(8).stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+                    homepage = line.substringFromIndex(8).trim()
                     if homepage.hasPrefix("http") {
                         return homepage
                     }
@@ -319,7 +319,7 @@ final class MacPorts: GSystem {
 
     override func options(pkg: GPackage) -> String! {
         var variants: String! = nil
-        let infoOutput = output("\(cmd) info --variants \(pkg.name)").stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+        let infoOutput = output("\(cmd) info --variants \(pkg.name)").trim()
         if infoOutput.length > 10 {
             variants = infoOutput.substringFromIndex(10).split(", ").join()
         }
@@ -333,7 +333,7 @@ final class MacPorts: GSystem {
         } else {
             variants = "+" + variants.replace(" ", "+")
         }
-        return "sudo \(cmd) install \(pkg.name) \(variants)"
+        return "sudo \(cmd) install \(pkg.name) \(variants)".trim()
     }
 
     override func uninstallCmd(pkg: GPackage) -> String {

@@ -451,7 +451,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             let sudoCommand = "echo \"\(adminPassword!)\" | sudo -S"
             history = history.replace(sudoCommand, "sudo")
         }
-        history = history.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+        history = history.trim()
         log(history + "\n")
         stopButton.enabled = false
 
@@ -1165,10 +1165,10 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         let line = storageString.substringWithRange(storageString.paragraphRangeForRange(selectedRange))
 
         if selectedSegment == "Contents" {
-            var file: String = line.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+            var file: String = line.trim()
             // TODO detect types
             if file.contains(" -> ") { // Homebrew Casks
-                file = file.split(" -> ")[1].stringByTrimmingCharactersInSet(NSCharacterSet(charactersInString: "'"))
+                file = file.split(" -> ")[1].trim("'")
             }
             file = (file.split(" (")[0] as NSString).stringByExpandingTildeInPath
             if file.hasSuffix(".nib") {
@@ -1178,7 +1178,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             }
 
         } else if selectedSegment == "Deps" {
-            let dep = line.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+            let dep = line.trim()
             let selectedItems = itemsController.selectedObjects
             var item: GItem! = nil
             if selectedItems.count > 0 {

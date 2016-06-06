@@ -101,7 +101,7 @@
             for (NSString *line in [pkgDescr split:@"\n"]) {
                 NSUInteger idx = [line index:@"WWW:"];
                 if (idx != NSNotFound) {
-                    return [[line substringFromIndex:idx + 4] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+                    return [[line substringFromIndex:idx + 4] trim];
                 }
             }
         }

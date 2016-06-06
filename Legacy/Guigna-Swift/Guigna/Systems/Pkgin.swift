@@ -258,7 +258,7 @@ final class Pkgin: GSystem {
         if item.status != .Available {
             let components = output("\(cmd) -n \(item.name)").split("Requires:\n")
             if components.count > 1 {
-                return components[1].stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+                return components[1].trim()
             } else {
                 return "[No depends]"
             }
@@ -275,7 +275,7 @@ final class Pkgin: GSystem {
         if item.status != .Available {
             let components = output("\(cmd) -r \(item.name)").split("required by list:\n")
             if components.count > 1 {
-                return components[1].stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+                return components[1].trim()
             } else {
                 return "[No dependents]"
             }

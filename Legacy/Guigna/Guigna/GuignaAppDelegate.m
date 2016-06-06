@@ -395,7 +395,7 @@
         NSString *sudoCommand = [NSString stringWithFormat:@"echo \"%@\" | sudo -S", _adminPassword];
         [history setString:[history replace:sudoCommand with:@"sudo"]];
     }
-    [history setString:[history stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
+    [history setString:[history trim]];
     [self log:history]; [self log:@"\n"];
     [stopButton setEnabled:NO];
     [self status:@"Analyzing Shell output..."];
@@ -1113,10 +1113,10 @@
     NSString *line = [[storage string] substringWithRange:[[storage string] paragraphRangeForRange: selectedRange]];
 
     if ([selectedSegment is:@"Contents"]) {
-        NSString *file = [line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        NSString *file = [line trim];
         // TODO detect types
         if ([file contains:@" -> "]) // Homebrew Casks
-            file = [[file split:@" -> "][1] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"'"]];
+            file = [[file split:@" -> "][1] trim:@"'"];
         file = [[file split:@" ("][0] stringByExpandingTildeInPath];
         if ([file hasSuffix:@".nib"]) {
             [self execute:[NSString stringWithFormat:@"/usr/bin/plutil -convert xml1 -o - %@", file]];
@@ -1126,7 +1126,7 @@
         }
 
     } else if ([selectedSegment is:@"Deps"]) {
-        NSString *dep = [line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        NSString *dep = [line trim];
         NSArray *selectedItems = [itemsController selectedObjects];
         GItem *item = nil;
         GPackage *pkg;

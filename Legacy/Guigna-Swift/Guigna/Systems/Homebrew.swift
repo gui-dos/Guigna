@@ -222,9 +222,9 @@ final class Homebrew: GSystem {
             for line in cat(item).split("\n") {
                 let idx = line.index("homepage")
                 if idx != NSNotFound {
-                    page = line.substringFromIndex(idx + 8).stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+                    page = line.substringFromIndex(idx + 8).trim()
                     if page.contains("http") {
-                        return page.stringByTrimmingCharactersInSet(NSCharacterSet(charactersInString: "'\""))
+                        return page.trim("'\"")
                     }
                 }
             }
@@ -304,7 +304,7 @@ final class Homebrew: GSystem {
         } else {
             options = "--" + options.replace(" ", " --")
         }
-        return "\(cmd) install \(options) \(pkg.name)"
+        return "\(cmd) install \(options) \(pkg.name)".replace("  ", " ")
     }
 
 

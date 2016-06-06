@@ -113,7 +113,7 @@
         name = line;
         if ([name is:@"Error:"])
             return pkgs;
-        version = [[self outputFor:[NSString stringWithFormat:@"/bin/ls /opt/homebrew-cask/Caskroom/%@", name]] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        version = [[self outputFor:[NSString stringWithFormat:@"/bin/ls /opt/homebrew-cask/Caskroom/%@", name]] trim];
         // TODO: manage multiple versions
         version = [version replace:@"\n" with:@", "];
         GPackage *pkg = self[name];
@@ -164,9 +164,9 @@
         for (NSString *line in [[self cat:item] split:@"\n"]) {
             NSUInteger loc = [line index:@"homepage"];
             if (loc != NSNotFound) {
-                homepage = [[line substringFromIndex:loc+8] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+                homepage = [[line substringFromIndex:loc+8] trim];
                 if ([homepage contains:@"http"])
-                    return [homepage stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"'\""]];
+                    return [homepage trim:@"'\""];
             }
         }
     } else if (!self.isHidden && ((GPackage *)item).repo == nil)

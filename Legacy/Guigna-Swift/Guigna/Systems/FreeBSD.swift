@@ -92,7 +92,7 @@ final class FreeBSD: GSystem {
                 for line in Array(pkgDescr.split("\n").reverse()) {
                     let idx = line.index("WWW:")
                     if idx != NSNotFound {
-                        return line.substringFromIndex(idx + 4).stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+                        return line.substringFromIndex(idx + 4).trim()
                     }
                 }
             }
