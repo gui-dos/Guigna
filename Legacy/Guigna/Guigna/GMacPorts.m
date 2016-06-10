@@ -32,7 +32,7 @@
         NSString *categories;
         for (NSString *line in output) {
             NSArray *components = [line split:@"@"];
-            name = [components[0] stringByTrimmingCharactersInSet:whitespaceCharacterSet];
+            name = [components[0] trim:whitespaceCharacterSet];
             components = [components[1] split];
             version = components[0];
             // revision = "..."
@@ -152,7 +152,7 @@
     NSString *version;
     NSString *variants;
     for (NSString *line in output) {
-        NSArray *components = [[line stringByTrimmingCharactersInSet:whitespaceCharacterSet] split];
+        NSArray *components = [[line trim:whitespaceCharacterSet] split];
         name = components[0];
         version = [components[1] substringFromIndex:1];
         variants = nil;
@@ -310,7 +310,7 @@
     [output removeObjectAtIndex:0];
     NSMutableArray *deps = [NSMutableArray array];
     for (NSString *line in output) {
-        [deps addObject:[line stringByTrimmingCharactersInSet:whitespaceCharacterSet]];
+        [deps addObject:[line trim:whitespaceCharacterSet]];
     }
     return deps;
 }

@@ -48,7 +48,7 @@ final class Fink: GSystem {
                 }
                 let name = components[1]
                 let version = components[2]
-                let state = components[0].stringByTrimmingCharactersInSet(whitespaceCharacterSet)
+                let state = components[0].trim(whitespaceCharacterSet)
                 status = .Available
                 if state == "i" || state == "p" {
                     status = .UpToDate

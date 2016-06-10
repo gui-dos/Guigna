@@ -374,7 +374,7 @@ class AppShopper: GScrape {
         if let xmlDoc = try? NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML)) {
             let nodes = xmlDoc.rootElement()!["//div[@data-appid]"]
             for node in nodes {
-                let name = node[".//h2"][0].stringValue!.stringByTrimmingCharactersInSet(whitespaceAndNewlineCharacterSet)
+                let name = node[".//h2"][0].stringValue!.trim(whitespaceAndNewlineCharacterSet)
                 var version = node[".//span[starts-with(@class,\"version\")]"][0].stringValue!
                 version = version.substringFromIndex(2) // trim "V "
                 var id = node.attribute("data-appid")
@@ -385,7 +385,7 @@ class AppShopper: GScrape {
                 var description = node[".//p[@class=\"description\"]"][0].stringValue!
                 let price = node[".//div[@class=\"price\"]"][0].children![0].stringValue!
                 // TODO:NSXML UTF8 encoding
-                let localPrice = price.stringByTrimmingCharactersInSet(whitespaceCharacterSet).replace("â‚¬", "€")
+                let localPrice = price.trim(whitespaceCharacterSet).replace("â‚¬", "€")
                 let app = GItem(name: name, version: version, source: self, status: .Available)
                 app.id = id
                 app.categories = category
@@ -445,7 +445,7 @@ class AppShopperIOS: GScrape {
         if let xmlDoc = try? NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML)) {
             let nodes = xmlDoc.rootElement()!["//div[@data-appid]"]
             for node in nodes {
-                let name = node[".//h2"][0].stringValue!.stringByTrimmingCharactersInSet(whitespaceAndNewlineCharacterSet)
+                let name = node[".//h2"][0].stringValue!.trim(whitespaceAndNewlineCharacterSet)
                 var version = node[".//span[starts-with(@class,\"version\")]"][0].stringValue!
                 version = version.substringFromIndex(2) // trim "V "
                 var id = node.attribute("data-appid")
@@ -456,7 +456,7 @@ class AppShopperIOS: GScrape {
                 var description = node[".//p[@class=\"description\"]"][0].stringValue!
                 let price = node[".//div[@class=\"price\"]"][0].children![0].stringValue!
                 // TODO:NSXML UTF8 encoding
-                let localPrice = price.stringByTrimmingCharactersInSet(whitespaceCharacterSet).replace("â‚¬", "€")
+                let localPrice = price.trim(whitespaceCharacterSet).replace("â‚¬", "€")
                 let app = GItem(name: name, version: version, source: self, status: .Available)
                 app.id = id
                 app.categories = category

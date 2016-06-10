@@ -48,8 +48,12 @@
     return [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
 
-- (NSString *)trim:(NSString *)characters {
-    return [self stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:characters]];
+- (NSString *)trim:(NSObject *)characters {
+    if ([characters isKindOfClass:[NSString class]])
+        return [self stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:(NSString *)characters]];
+    else if ([characters isKindOfClass:[NSCharacterSet class]])
+        return [self stringByTrimmingCharactersInSet:(NSCharacterSet *)characters];
+    return (NSString *)characters;
 }
 
 @end

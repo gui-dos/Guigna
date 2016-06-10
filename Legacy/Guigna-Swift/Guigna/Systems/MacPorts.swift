@@ -22,7 +22,7 @@ final class MacPorts: GSystem {
             let whitespaceCharacterSet = NSCharacterSet.whitespaceCharacterSet()
             for line in outputLines {
                 var components = line.split("@")
-                let name = components[0].stringByTrimmingCharactersInSet(whitespaceCharacterSet)
+                let name = components[0].trim(whitespaceCharacterSet)
                 components = components[1].split()
                 let version = components[0]
                 // let revision = "..."
@@ -143,7 +143,7 @@ final class MacPorts: GSystem {
         self.outdated() // index outdated ports
         let whitespaceCharacterSet = NSCharacterSet.whitespaceCharacterSet()
         for line in outputLines {
-            var components = line.stringByTrimmingCharactersInSet(whitespaceCharacterSet).split()
+            var components = line.trim(whitespaceCharacterSet).split()
             let name = components[0]
             var version = components[1].substringFromIndex(1)
             var variants: String! = nil

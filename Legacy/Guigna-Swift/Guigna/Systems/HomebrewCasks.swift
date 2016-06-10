@@ -20,7 +20,7 @@ final class HomebrewCasks: GSystem {
         outputLines.removeLast()
         let whitespaceCharacterSet = NSCharacterSet.whitespaceCharacterSet()
         for line in outputLines {
-            let components = line.stringByTrimmingCharactersInSet(whitespaceCharacterSet).split()
+            let components = line.trim(whitespaceCharacterSet).split()
             var name = (components[0] as NSString).lastPathComponent
             name = name.substringToIndex(name.length - 4)
             var version = components.last!
@@ -58,7 +58,7 @@ final class HomebrewCasks: GSystem {
         outputLines = output("/bin/sh -c /usr/bin/grep__\"license__\"__-r__/\(prefix)/Library/Taps/caskroom/homebrew-cask/Casks").split("\n")
         outputLines.removeLast()
         for line in outputLines {
-            let components = line.stringByTrimmingCharactersInSet(whitespaceCharacterSet).split()
+            let components = line.trim(whitespaceCharacterSet).split()
             var name = (components[0] as NSString).lastPathComponent
             name = name.substringToIndex(name.length - 4)
             if let pkg = self[name] {
@@ -72,7 +72,7 @@ final class HomebrewCasks: GSystem {
         outputLines = output("/bin/sh -c /usr/bin/grep__\"name__'\"__-r__/\(prefix)/Library/Taps/caskroom/homebrew-cask/Casks").split("\n")
         outputLines.removeLast()
         for line in outputLines {
-            let components = line.stringByTrimmingCharactersInSet(whitespaceCharacterSet).split(".rb:  name '")
+            let components = line.trim(whitespaceCharacterSet).split(".rb:  name '")
             let name = (components[0] as NSString).lastPathComponent
             if let pkg = self[name] {
                 pkg.description = String((components.last!).characters.dropLast())

@@ -22,12 +22,12 @@
         NSArray *columns = node[@"td[@dir=\"ltr\"]"];
         if ([columns count] == 0)
             continue;
-        NSString *name = [[columns[0] stringValue] stringByTrimmingCharactersInSet:whitespaceCharacterSet];
+        NSString *name = [[columns[0] stringValue] trim:whitespaceCharacterSet];
         if ([name is:@"Name"])
             continue;
-        NSString *version = [[columns[1] stringValue] stringByTrimmingCharactersInSet:whitespaceCharacterSet];
-        NSString *homepage = [[columns[3] stringValue] stringByTrimmingCharactersInSet:whitespaceCharacterSet];
-        NSString *URL = [[columns[4] stringValue] stringByTrimmingCharactersInSet:whitespaceCharacterSet];
+        NSString *version = [[columns[1] stringValue] trim:whitespaceCharacterSet];
+        NSString *homepage = [[columns[3] stringValue] trim:whitespaceCharacterSet];
+        NSString *URL = [[columns[4] stringValue] trim:whitespaceCharacterSet];
         GItem *pkg = [[GItem alloc] initWithName:name
                                          version:version
                                           source:self

@@ -26,7 +26,7 @@
     [self.items removeAllObjects];
     NSCharacterSet *whitespaceCharacterSet = [NSCharacterSet whitespaceCharacterSet];
     for (NSString *line in output) {
-        NSArray *components = [[line stringByTrimmingCharactersInSet:whitespaceCharacterSet] split];
+        NSArray *components = [[line trim:whitespaceCharacterSet] split];
         NSString *name = [components[0] lastPathComponent];
         name = [name substringToIndex:[name length] -4];
         NSString *version = [components lastObject];
@@ -56,7 +56,7 @@
     output = [NSMutableArray arrayWithArray:[[self outputFor:@"/bin/sh -c /usr/bin/grep__\"license__\"__-r__/%@/Library/Taps/caskroom/homebrew-cask/Casks", self.prefix] split:@"\n"]];
     [output removeLastObject];
     for (NSString *line in output) {
-        NSArray *components = [[line stringByTrimmingCharactersInSet:whitespaceCharacterSet] split];
+        NSArray *components = [[line trim:whitespaceCharacterSet] split];
         NSString *name = [components[0] lastPathComponent];
         name = [name substringToIndex:[name length] -4];
         GPackage *pkg = self[name];
@@ -72,7 +72,7 @@
     output = [NSMutableArray arrayWithArray:[[self outputFor:@"/bin/sh -c /usr/bin/grep__\"name__'\"__-r__/%@/Library/Taps/caskroom/homebrew-cask/Casks", self.prefix] split:@"\n"]];
     [output removeLastObject];
     for (NSString *line in output) {
-        NSArray *components = [[line stringByTrimmingCharactersInSet:whitespaceCharacterSet] split:@".rb:  name '"];
+        NSArray *components = [[line trim:whitespaceCharacterSet] split:@".rb:  name '"];
         NSString *name = [components[0] lastPathComponent];
         GPackage *pkg = self[name];
         if (pkg != nil) {

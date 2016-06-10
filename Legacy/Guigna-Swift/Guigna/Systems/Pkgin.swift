@@ -108,7 +108,7 @@ final class Pkgin: GSystem {
             for line in outputLines.reverse() {
                 var idx = line.index(" ")
                 var name = line.substringToIndex(idx)
-                let description = line.substringFromIndex(idx + 1).stringByTrimmingCharactersInSet(whitespaceCharacterSet)
+                let description = line.substringFromIndex(idx + 1).trim(whitespaceCharacterSet)
                 idx = name.rindex("-")
                 let version = name.substringFromIndex(idx + 1)
                 name = name.substringToIndex(idx)
@@ -161,7 +161,7 @@ final class Pkgin: GSystem {
         for line in outputLines {
             var idx = line.index(" ")
             var name = line.substringToIndex(idx)
-            let description = line.substringFromIndex(idx + 1).stringByTrimmingCharactersInSet(whitespaceCharacterSet)
+            let description = line.substringFromIndex(idx + 1).trim(whitespaceCharacterSet)
             idx = name.rindex("-")
             let version = name.substringFromIndex(idx + 1)
             // name = name.substringToIndex(idx)

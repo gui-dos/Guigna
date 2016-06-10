@@ -24,13 +24,13 @@ final class Native: GRepo {
                 if columns.count == 0 {
                     continue
                 }
-                let name = columns[0].stringValue!.stringByTrimmingCharactersInSet(whitespaceCharacterSet)
+                let name = columns[0].stringValue!.trim(whitespaceCharacterSet)
                 if name == "Name" {
                     continue
                 }
-                let version = columns[1].stringValue!.stringByTrimmingCharactersInSet(whitespaceCharacterSet)
-                let homepage = columns[3].stringValue!.stringByTrimmingCharactersInSet(whitespaceCharacterSet)
-                let url = columns[4].stringValue!.stringByTrimmingCharactersInSet(whitespaceCharacterSet)
+                let version = columns[1].stringValue!.trim(whitespaceCharacterSet)
+                let homepage = columns[3].stringValue!.trim(whitespaceCharacterSet)
+                let url = columns[4].stringValue!.trim(whitespaceCharacterSet)
                 let pkg = GItem(name: name, version: version, source: self, status: .Available)
                 pkg.homepage = homepage
                 pkg.description = url

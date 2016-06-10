@@ -92,6 +92,10 @@ extension String {
         return self.stringByTrimmingCharactersInSet(charSet)
     }
 
+    func trim(characterSet: NSCharacterSet) -> String {
+        return self.stringByTrimmingCharactersInSet(characterSet)
+    }
+
 }
 
 

@@ -56,7 +56,7 @@
                 continue;
             name = components[1];
             version = components[2];
-            state = [components[0] stringByTrimmingCharactersInSet:whitespaceCharacterSet];
+            state = [components[0] trim:whitespaceCharacterSet];
             status = GAvailableStatus;
             if ([state is:@"i"] || [state is:@"p"])
                 status = GUpToDateStatus;

@@ -21,7 +21,7 @@
     NSCharacterSet *whitespaceAndNewlineCharacterSet = [NSCharacterSet whitespaceAndNewlineCharacterSet];
     for (id node in nodes) {
         NSString *name = [node[@".//h2"][0] stringValue];
-        name = [name stringByTrimmingCharactersInSet:whitespaceAndNewlineCharacterSet];
+        name = [name trim:whitespaceAndNewlineCharacterSet];
         NSString *version = [node[@".//span[starts-with(@class,\"version\")]"][0] stringValue];
         version = [version substringFromIndex:2]; // trim "V "
         NSString *ID = node[@"@data-appid"];
@@ -32,7 +32,7 @@
         NSString *description = [node[@".//p[@class=\"description\"]"][0]stringValue];
         NSString *price = [[node[@".//div[@class=\"price\"]"][0] children][0] stringValue];
         // TODO:NSXML UTF8 encoding
-        NSMutableString *localPrice = [[price stringByTrimmingCharactersInSet:whitespaceCharacterSet] mutableCopy];
+        NSMutableString *localPrice = [[price trim:whitespaceCharacterSet] mutableCopy];
         [localPrice replaceOccurrencesOfString:@"â‚¬" withString:@"€" options:0 range:NSMakeRange(0, [localPrice length])];
         GItem *app = [[GItem alloc] initWithName:name
                                          version:version

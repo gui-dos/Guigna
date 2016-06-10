@@ -118,7 +118,7 @@
     for (NSString *line in output) {
         NSUInteger idx = [line index:@" "];
         NSString *name = [line substringToIndex:idx];
-        NSString *description = [[line substringFromIndex:idx + 1] stringByTrimmingCharactersInSet:whitespaceCharacterSet];
+        NSString *description = [[line substringFromIndex:idx + 1] trim:whitespaceCharacterSet];
         idx = [name rindex:@"-"];
         NSString *version = [name substringFromIndex:idx + 1];
         // name = [name idx];
