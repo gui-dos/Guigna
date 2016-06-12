@@ -113,7 +113,7 @@
         name = line;
         if ([name is:@"Error:"])
             return pkgs;
-        version = [[self outputFor:[NSString stringWithFormat:@"/bin/ls /opt/homebrew-cask/Caskroom/%@", name]] trim];
+        version = [[self outputFor:[NSString stringWithFormat:@"/bin/ls %@/Caskroom/%@", self.prefix, name]] trim];
         // TODO: manage multiple versions
         version = [version replace:@"\n" with:@", "];
         GPackage *pkg = self[name];
