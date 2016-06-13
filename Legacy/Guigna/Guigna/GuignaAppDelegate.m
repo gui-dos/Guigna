@@ -1055,6 +1055,17 @@
         [self updateCmdLine:[webView mainFrameURL]];
 }
 
+- (void)webView:(WebView *)sender mouseDidMoveOverElement:(NSDictionary *)elementInformation modifierFlags:(NSUInteger)modifierFlags {
+    if (![[statusField stringValue] hasSuffix:@"..."]) {
+        NSURL *url = elementInformation[WebElementLinkURLKey];
+        if (url) {
+            [self status:[url absoluteString]];
+        } else {
+            [self status:@"OK."];
+        }
+    }
+}
+
 
 - (void)updateScrape:(GScrape *)scrape {
     [segmentedControl setSelectedSegment:1];

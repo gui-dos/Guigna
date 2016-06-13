@@ -598,14 +598,15 @@
                                                             </tabViewItem>
                                                             <tabViewItem label="Web" identifier="web" id="518">
                                                                 <view key="view" id="519">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="577" height="231"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="583" height="231"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <subviews>
                                                                         <webView id="520">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="577" height="231"/>
+                                                                            <rect key="frame" x="0.0" y="0.0" width="583" height="231"/>
                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                             <webPreferences key="preferences" identifier="WebTab" defaultFontSize="16" defaultFixedFontSize="13" minimumFontSize="0"/>
                                                                             <connections>
+                                                                                <outlet property="UIDelegate" destination="386" id="HoC-cE-1Ge"/>
                                                                                 <outlet property="frameLoadDelegate" destination="386" id="1335"/>
                                                                             </connections>
                                                                         </webView>

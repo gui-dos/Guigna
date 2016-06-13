@@ -1104,6 +1104,18 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
     }
 
+
+    func webView(sender: WebView!, mouseDidMoveOverElement elementInformation: [NSObject : AnyObject]!,modifierFlags: Int) {
+        if !statusField.stringValue.hasSuffix("...") {
+            if let url = elementInformation[WebElementLinkURLKey] {
+                status((url as! NSURL).absoluteString)
+            } else {
+                status("OK.")
+            }
+        }
+    }
+
+
     func updateScrape(scrape: GScrape) {
         segmentedControl.selectedSegment = 1
         selectedSegment = "Home"
