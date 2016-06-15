@@ -1072,12 +1072,12 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
 
     func webView(_ sender: WebView, didStartProvisionalLoadForFrame: WebFrame) {
         var url = webView.mainFrameURL
-        if ((url?.hasPrefix("about:")) != nil) {
+        if url!.hasPrefix("about:") {
             url = cmdline.stringValue
         }
-        updateCmdLine("Loading \(url)...")
+        updateCmdLine("Loading \(url!)...")
         if self.ready && !statusField.stringValue.hasPrefix("Executing") {
-            status("Loading \(url)...")
+            status("Loading \(url!)...")
         }
     }
 
