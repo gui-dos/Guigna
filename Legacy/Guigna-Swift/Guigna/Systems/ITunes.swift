@@ -62,7 +62,7 @@ final class ITunes: GSystem {
 
     override func home(_ item: GItem) -> String {
         var homepage = self.homepage
-        let ipa = ("~/Music/iTunes/iTunes Media/Mobile Applications/\(item.id).ipa" as NSString).expandingTildeInPath
+        let ipa = ("~/Music/iTunes/iTunes Media/Mobile Applications/\(item.id!).ipa" as NSString).expandingTildeInPath
         var escapedIpa = ipa.replace(" ", "__")
         var plist = output("/usr/bin/unzip -p \(escapedIpa) iTunesMetadata.plist")
         if  plist == "" { // binary plist
@@ -89,7 +89,7 @@ final class ITunes: GSystem {
     }
 
     override func log(_ item: GItem) -> String {
-        let ipa = ("~/Music/iTunes/iTunes Media/Mobile Applications/\(item.id).ipa" as NSString).expandingTildeInPath
+        let ipa = ("~/Music/iTunes/iTunes Media/Mobile Applications/\(item.id!).ipa" as NSString).expandingTildeInPath
         var escapedIpa = ipa.replace(" ", "__")
         var plist = output("/usr/bin/unzip -p \(escapedIpa) iTunesMetadata.plist")
         if  plist == "" { // binary plist
@@ -102,13 +102,13 @@ final class ITunes: GSystem {
     }
 
     override func contents(_ item: GItem) -> String {
-        let ipa = ("~/Music/iTunes/iTunes Media/Mobile Applications/\(item.id).ipa" as NSString).expandingTildeInPath
+        let ipa = ("~/Music/iTunes/iTunes Media/Mobile Applications/\(item.id!).ipa" as NSString).expandingTildeInPath
         let escapedIpa = ipa.replace(" ", "__")
         return output("/usr/bin/zipinfo -1 \(escapedIpa)")
     }
 
     override func cat(_ item: GItem) -> String {
-        let ipa = ("~/Music/iTunes/iTunes Media/Mobile Applications/\(item.id).ipa" as NSString).expandingTildeInPath
+        let ipa = ("~/Music/iTunes/iTunes Media/Mobile Applications/\(item.id!).ipa" as NSString).expandingTildeInPath
         var escapedIpa = ipa.replace(" ", "__")
         var plist = output("/usr/bin/unzip -p \(escapedIpa) iTunesMetadata.plist")
         if  plist == "" { // binary plist

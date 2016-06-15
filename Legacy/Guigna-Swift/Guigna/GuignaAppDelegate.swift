@@ -1001,7 +1001,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             if item != nil {
                 let cmd = (item.source.cmd as NSString).lastPathComponent
                 if item.source.name == "Mac OS X" {
-                    updateCmdLine("\(cmd) \(item.id)")
+                    updateCmdLine("\(cmd) \(item.id!)")
                 } else {
                     updateCmdLine("\(cmd) \(item.name)")
                 }
@@ -1124,7 +1124,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         if self.ready && !statusField.stringValue.hasPrefix("Executing") {
             status("Scraping \(scrape.name)...")
         }
-        let scrapesCount: Int = (defaults["ScrapesCount"] as! NSString).integerValue
+        let scrapesCount: Int = defaults["ScrapesCount"] as! NSInteger
         let pagesToScrape = Int(ceil(Double(scrapesCount) / Double(scrape.itemsPerPage)))
         for i in 1...pagesToScrape {
             scrape.refresh()

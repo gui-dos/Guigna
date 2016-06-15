@@ -45,22 +45,22 @@ class GAgent: NSObject {
     func nodes(URL url: String, XPath xpath: String) -> [XMLNode] {
         // FIXME: doesn't allow xpath on childnodes
         var error: NSError? = nil
-        var page: NSMutableString?
+        var page: String?
         do {
-            page = try NSMutableString(contentsOf: URL(string: url)!, encoding: String.Encoding.utf8.rawValue)
+            page = try String(contentsOf: URL(string: url)!, encoding: String.Encoding.utf8)
         } catch let error1 as NSError {
             error = error1
             page = nil
         }
         if page == nil {
             do {
-                page = try NSMutableString(contentsOf: URL(string: url)!, encoding: String.Encoding.isoLatin1.rawValue)
+                page = try String(contentsOf: URL(string: url)!, encoding: String.Encoding.isoLatin1)
             } catch let error1 as NSError {
                 error = error1
                 page = nil
             }
         }
-        let data: Data = page!.data(using: String.Encoding.utf8.rawValue)!
+        let data: Data = page!.data(using: String.Encoding.utf8)!
         var nodes = [XMLNode]()
         do {
             let doc = try XMLDocument(data: data, options: Int(NSXMLDocumentTidyHTML))

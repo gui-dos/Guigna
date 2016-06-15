@@ -84,7 +84,7 @@ final class MacOSX: GSystem {
 
     override func info(_ item: GItem) -> String {
         var info = ""
-        for pkgId in item.id.split() {
+        for pkgId in item.id!.split() {
             info += output("/usr/sbin/pkgutil --pkg-info \(pkgId)")
             info += "\n"
         }
@@ -94,7 +94,7 @@ final class MacOSX: GSystem {
     override func home(_ item: GItem) -> String {
         var homepage = "http://support.apple.com/downloads/"
         if item.categories == "storeagent" || item.categories == "storedownloadd" {
-            let url = "http://itunes.apple.com/lookup?bundleId=\(item.id)"
+            let url = "http://itunes.apple.com/lookup?bundleId=\(item.id!)"
             let data = (try? Data(contentsOf: URL(string: url)!)) ?? Data()
             let results = (((try! JSONSerialization.jsonObject(with: data, options: [])) as! NSDictionary)["results"]! as! NSArray)
             if results.count > 0 {
@@ -119,7 +119,7 @@ final class MacOSX: GSystem {
     override func log(_ item: GItem) -> String {
         var page = self.logpage
         if item.categories == "storeagent" || item.categories == "storedownloadd" {
-            let url = "http://itunes.apple.com/lookup?bundleId=\(item.id)"
+            let url = "http://itunes.apple.com/lookup?bundleId=\(item.id!)"
             let data = (try? Data(contentsOf: URL(string: url)!)) ?? Data()
             let results = (((try! JSONSerialization.jsonObject(with: data, options: [])) as! NSDictionary)["results"]! as! NSArray)
             if results.count > 0 {
@@ -132,7 +132,7 @@ final class MacOSX: GSystem {
 
     override func contents(_ item: GItem) -> String {
         var contents = ""
-        for pkgId in item.id.split() {
+        for pkgId in item.id!.split() {
             let infoOutput = output("\(cmd) --pkg-info-plist \(pkgId)")
             if infoOutput == "" {
                 continue

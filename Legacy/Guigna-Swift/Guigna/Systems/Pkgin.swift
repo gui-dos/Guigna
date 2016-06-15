@@ -200,7 +200,7 @@ final class Pkgin: GSystem {
         //            return output("\(cmd) \(item.name)")
         //        } else {
         //            if item.id != nil {
-        //                return (try? String(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.id)/DESCR")!, encoding: NSUTF8StringEncoding)) ?? ""
+        //                return (try? String(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.id!)/DESCR")!, encoding: NSUTF8StringEncoding)) ?? ""
         //            } else { // TODO lowercase (i.e. Hermes -> hermes)
         //                return (try? String(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories!)/\(item.name)/DESCR")!, encoding: NSUTF8StringEncoding)) ?? ""
         //            }
@@ -220,7 +220,7 @@ final class Pkgin: GSystem {
 
     override func log(_ item: GItem) -> String {
         //        if item.id != nil {
-        //            return "http://cvsweb.NetBSD.org/bsdweb.cgi/pkgsrc/\(item.id)/"
+        //            return "http://cvsweb.NetBSD.org/bsdweb.cgi/pkgsrc/\(item.id!)/"
         //        } else {
         //            return "http://cvsweb.NetBSD.org/bsdweb.cgi/pkgsrc/\(item.categories!)/\(item.name)/"
         //        }
@@ -232,7 +232,7 @@ final class Pkgin: GSystem {
             return output("\(cmd) -L \(item.name)").split("Files:\n")[1]
         } else {
             if item.id != nil {
-                return String(contentsOfURL: URL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.id)/PLIST")!, encoding: String.Encoding.utf8) ?? ""
+                return String(contentsOfURL: URL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.id!)/PLIST")!, encoding: String.Encoding.utf8) ?? ""
             } else { // TODO lowercase (i.e. Hermes -> hermes)
                 return String(contentsOfURL: URL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories!)/\(item.name)/PLIST")!, encoding: String.Encoding.utf8) ?? ""
             }
@@ -245,7 +245,7 @@ final class Pkgin: GSystem {
             item.id = filtered[0].id
         }
         if item.id != nil {
-            return String(contentsOfURL: URL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.id)/Makefile")!, encoding: String.Encoding.utf8) ?? ""
+            return String(contentsOfURL: URL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.id!)/Makefile")!, encoding: String.Encoding.utf8) ?? ""
         } else { // TODO lowercase (i.e. Hermes -> hermes)
             return String(contentsOfURL: URL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories!)/\(item.name)/Makefile")!, encoding: String.Encoding.utf8) ?? ""
         }

@@ -65,7 +65,7 @@ class PkgsrcSE: GScrape {
     }
 
     override func log(_ item: GItem) -> String {
-        return "http://pkgsrc.se/\(item.id)"
+        return "http://pkgsrc.se/\(item.id!)"
     }
 }
 
@@ -118,7 +118,7 @@ class Freecode: GScrape {
     }
 
     override func log(_ item: GItem) -> String {
-        return "http://freshfoss.com/projects/\(item.id)"
+        return "http://freshfoss.com/projects/\(item.id!)"
     }
 }
 
@@ -351,7 +351,7 @@ class MacUpdate: GScrape {
     }
 
     override func log(_ item: GItem) -> String {
-        return "http://www.macupdate.com/app/mac/\(item.id)"
+        return "http://www.macupdate.com/app/mac/\(item.id!)"
     }
 }
 
@@ -379,7 +379,7 @@ class AppShopper: GScrape {
                 version = version.substringFromIndex(2) // trim "V "
                 var id = node.attribute("data-appid")
                 let nick = (node["a"][0].href as NSString).lastPathComponent
-                id = "\(id) \(nick)"
+                id = "\(id!) \(nick)"
                 let category = node[".//h5/span"][0].stringValue!
                 let type = node[".//span[starts-with(@class,\"change\")]"][0].stringValue!
                 var description = node[".//p[@class=\"description\"]"][0].stringValue!
@@ -403,7 +403,7 @@ class AppShopper: GScrape {
     }
 
     override func home(_ item: GItem) -> String {
-        let url = URL(string: "http://itunes.apple.com/app/id" + item.id.split()[0])!
+        let url = URL(string: "http://itunes.apple.com/app/id" + item.id!.split()[0])!
         if let xmlDoc = try? XMLDocument(contentsOf: url, options: Int(NSXMLDocumentTidyHTML)) {
             let mainDiv = xmlDoc.rootElement()!["//div[@id=\"main\"]"][0]
             let links = mainDiv["//div[@class=\"app-links\"]/a"]
@@ -420,7 +420,7 @@ class AppShopper: GScrape {
     }
 
     override func log(_ item: GItem) -> String {
-        let name = item.id.split()[1]
+        let name = item.id!.split()[1]
         var category = item.categories!.replace(" ", "-").lowercased()
         category = category.replace("-&-", "-").lowercased() // fix Healthcare & Fitness
         return "http://www.appshopper.com/mac/\(category)/\(name)"
@@ -450,7 +450,7 @@ class AppShopperIOS: GScrape {
                 version = version.substringFromIndex(2) // trim "V "
                 var id = node.attribute("data-appid")
                 let nick = (node["a"][0].href as NSString).lastPathComponent
-                id = "\(id) \(nick)"
+                id = "\(id!) \(nick)"
                 let category = node[".//h5/span"][0].stringValue!
                 let type = node[".//span[starts-with(@class,\"change\")]"][0].stringValue!
                 var description = node[".//p[@class=\"description\"]"][0].stringValue!
@@ -474,7 +474,7 @@ class AppShopperIOS: GScrape {
     }
 
     override func home(_ item: GItem) -> String {
-        let url = URL(string: "http://itunes.apple.com/app/id" + item.id.split()[0])!
+        let url = URL(string: "http://itunes.apple.com/app/id" + item.id!.split()[0])!
         if let xmlDoc = try? XMLDocument(contentsOf: url, options: Int(NSXMLDocumentTidyHTML)) {
             let mainDiv = xmlDoc.rootElement()!["//div[@id=\"main\"]"][0]
             let links = mainDiv["//div[@class=\"app-links\"]/a"]
@@ -491,7 +491,7 @@ class AppShopperIOS: GScrape {
     }
 
     override func log(_ item: GItem) -> String {
-        let name = item.id.split()[1]
+        let name = item.id!.split()[1]
         var category = item.categories!.replace(" ", "-").lowercased()
         category = category.replace("-&-", "-").lowercased() // fix Healthcare & Fitness
         return "http://www.appshopper.com/\(category)/\(name)"
