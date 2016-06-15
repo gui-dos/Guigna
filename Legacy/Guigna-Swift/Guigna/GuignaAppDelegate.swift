@@ -173,14 +173,14 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         allPackages.reserveCapacity(150000)
 
         let escapedAPPDIR = APPDIR.replace(" ", "__")
-        agent.output("/bin/mkdir -p '\(escapedAPPDIR)'")
-        agent.output("/usr/bin/touch '\(escapedAPPDIR)/output'")
-        agent.output("/usr/bin/touch '\(escapedAPPDIR)/sync'")
+        agent.output("/bin/mkdir -p \(escapedAPPDIR)")
+        agent.output("/usr/bin/touch \(escapedAPPDIR)/output")
+        agent.output("/usr/bin/touch \(escapedAPPDIR)/sync")
         for dir in ["MacPorts", "Homebrew", "Fink", "pkgsrc", "FreeBSD", "Gentoo"] {
-            agent.output("/bin/mkdir -p '\(escapedAPPDIR)/\(dir)'")
+            agent.output("/bin/mkdir -p \(escapedAPPDIR)/\(dir)")
         }
 
-        agent.output("/usr/bin/osascript -e 'tell__application__\"Terminal\"__to__close__(windows__whose__name__contains__\"Guigna__\")'")
+        agent.output("/usr/bin/osascript -e tell__application__\"Terminal\"__to__close__(windows__whose__name__contains__\"Guigna__\")")
         terminal = SBApplication(bundleIdentifier: "com.apple.Terminal")
         let guignaFunction = "guigna() { osascript -e 'tell app \"Guigna\"' -e \"open POSIX file \\\"\(APPDIR)/$2\\\"\" -e 'end' &>/dev/null; }"
         let initScript = "unset HISTFILE ; " + guignaFunction
@@ -414,7 +414,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
 
     func windowWillClose(_ notification: Notification) {
         if self.ready {
-            agent.output("/usr/bin/osascript -e 'tell__application__\"Terminal\"__to__close__(windows__whose__name__contains__\"Guigna__\")'")
+            agent.output("/usr/bin/osascript -e tell__application__\"Terminal\"__to__close__(windows__whose__name__contains__\"Guigna__\")")
         }
     }
 
@@ -1330,7 +1330,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     func executeAsRoot(_ cmd: String) {
         var cmd = cmd
         cmd = cmd.replace("\"", "\\\"").replace(" ", "__")
-        let command = "/usr/bin/osascript -e 'do__shell__script__\"\(cmd)\"__with__administrator__privileges'"
+        let command = "/usr/bin/osascript -e do__shell__script__\"\(cmd)\"__with__administrator__privileges"
         agent.output(command)
     }
 
