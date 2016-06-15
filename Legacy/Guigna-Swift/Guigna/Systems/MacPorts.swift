@@ -293,7 +293,7 @@ final class MacPorts: GSystem {
 
     override func cat(_ item: GItem) -> String {
         if self.isHidden || mode == .online {
-            return (try? String(contentsOfURL: URL(string: "http://trac.macports.org/browser/trunk/dports/\(item.categories!.split()[0])/\(item.name)/Portfile?format=txt")!, encoding: String.Encoding.utf8)) ?? ""
+            return (try? String(contentsOf: URL(string: "http://trac.macports.org/browser/trunk/dports/\(item.categories!.split()[0])/\(item.name)/Portfile?format=txt")!, encoding: String.Encoding.utf8)) ?? ""
         }
         return output("\(cmd) cat \(item.name)")
     }

@@ -83,7 +83,7 @@ class Freecode: GScrape {
         var projs = [GItem]()
         let url = URL(string: "http://freshfoss.com/?n=\(pageNumber)")!
         // Don't use agent.nodesForUrl since NSXMLDocumentTidyHTML strips <article>
-        if var page = try? String(contentsOfURL: url, encoding: String.Encoding.utf8) {
+        if var page = try? String(contentsOf: url, encoding: String.Encoding.utf8) {
             page = page.replace("article", "div")
             if let xmlDoc = try? XMLDocument(xmlString: page, options: Int(NSXMLDocumentTidyHTML)) {
                 let nodes = xmlDoc.rootElement()![".//div[starts-with(@class, 'project')]"]
