@@ -331,9 +331,9 @@ final class MacPorts: GSystem {
         if variants == nil {
             variants = ""
         } else {
-            variants = "+" + variants.replace(" ", "+")
+            variants = "+" + variants!.replace(" ", "+")
         }
-        return "sudo \(cmd) install \(pkg.name) \(variants)".trim()
+        return "sudo \(cmd) install \(pkg.name) \(variants!)".trim()
     }
 
     override func uninstallCmd(_ pkg: GPackage) -> String {

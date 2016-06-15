@@ -302,9 +302,9 @@ final class Homebrew: GSystem {
         if options == nil {
             options = ""
         } else {
-            options = "--" + options.replace(" ", " --")
+            options = "--" + options!.replace(" ", " --")
         }
-        return "\(cmd) install \(options) \(pkg.name)".replace("  ", " ")
+        return "\(cmd) install \(options!) \(pkg.name)".replace("  ", " ")
     }
 
 
