@@ -131,7 +131,7 @@ class GSystem: GSource {
         return command.replace("\(cmd)", "\(cmd) -d")
     }
 
-    func output(_ command: String) -> String! {
+    func output(_ command: String) -> String {
         return agent.output(command)
     }
 }

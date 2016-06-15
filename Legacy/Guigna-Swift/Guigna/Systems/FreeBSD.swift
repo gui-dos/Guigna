@@ -71,10 +71,10 @@ final class FreeBSD: GSystem {
     override func info(_ item: GItem) -> String { // TODO: Offline mode
         let category = item.categories!.split()[0]
         var itemName = item.name
-        var pkgDescr = (try? String(contentsOfURL: URL(string: "http://svnweb.freebsd.org/ports/head/\(category)/\(item.name)/pkg-descr?view=co")!, encoding: String.Encoding.utf8)) ?? ""
+        var pkgDescr = String(contentsOfURL: URL(string: "http://svnweb.freebsd.org/ports/head/\(category)/\(item.name)/pkg-descr?view=co")!, encoding: String.Encoding.utf8) ?? ""
         if pkgDescr.hasPrefix("<!DOCTYPE") { // 404 File Not Found
             itemName = itemName.lowercased()
-            pkgDescr = (try? String(contentsOfURL: URL(string: "http://svnweb.freebsd.org/ports/head/\(category)/\(item.name)/pkg-descr?view=co")!, encoding: String.Encoding.utf8)) ?? ""
+            pkgDescr = String(contentsOfURL: URL(string: "http://svnweb.freebsd.org/ports/head/\(category)/\(item.name)/pkg-descr?view=co")!, encoding: String.Encoding.utf8) ?? ""
         }
         if pkgDescr.hasPrefix("<!DOCTYPE") { // 404 File Not Found
             pkgDescr = "[Info not reachable]"

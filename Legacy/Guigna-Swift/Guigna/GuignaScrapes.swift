@@ -346,7 +346,7 @@ class MacUpdate: GScrape {
 
     override func home(_ item: GItem) -> String {
         let nodes = agent.nodes(URL: log(item), XPath: "//a[@target=\"devsite\"]")
-        let href = nodes[0].href.stringByRemovingPercentEncoding
+        let href = nodes[0].href.removingPercentEncoding
         return "http://www.macupdate.com\(href!)"
     }
 

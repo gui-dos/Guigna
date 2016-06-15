@@ -34,7 +34,7 @@ extension String {
 
     func index(_ string: String) -> Int {
         if let range = self.range(of: string) {
-            return characters.distance(from: startIndex, to: range.lowerBound)
+            return self.distance(from: startIndex, to: range.lowerBound)
         } else {
             return NSNotFound
         }
@@ -42,7 +42,7 @@ extension String {
 
     func rindex(_ string: String) -> Int {
         if let range = self.range(of: string, options: .backwardsSearch) {
-            return characters.distance(from: startIndex, to: range.lowerBound)
+            return self.distance(from: startIndex, to: range.lowerBound)
         } else {
             return NSNotFound
         }
@@ -53,25 +53,29 @@ extension String {
     }
 
     subscript(index: Int) -> Character {
-        return self[characters.index(startIndex, offsetBy: index)]
+        return self[self.index(startIndex, offsetBy: index)]
     }
 
-    subscript(range: Range<Int>) -> String {
-        let rangeStartIndex = characters.index(startIndex, offsetBy: range.lowerBound)
-        return self[rangeStartIndex..<<#T##String.CharacterView corresponding to `rangeStartIndex`##String.CharacterView#>.index(rangeStartIndex, offsetBy: range.endIndex - range.startIndex)]
+    subscript(range: CountableRange<Int>) -> String {
+        let lowerIndex = self.index(startIndex, offsetBy: range.lowerBound)
+        return self[lowerIndex..<self.index(lowerIndex, offsetBy: range.upperBound - range.lowerBound)]
     }
 
+    subscript(range: CountableClosedRange<Int>) -> String {
+        let lowerIndex = self.index(startIndex, offsetBy: range.lowerBound)
+        return self[lowerIndex...self.index(lowerIndex, offsetBy: range.upperBound - range.lowerBound)]
+    }
     func substring(_ location: Int, _ length: Int) -> String {
-        let locationIndex = characters.index(startIndex, offsetBy: location)
-        return self[locationIndex..<<#T##String.CharacterView corresponding to `locationIndex`##String.CharacterView#>.index(locationIndex, offsetBy: length)]
+        let locationIndex = self.index(startIndex, offsetBy: location)
+        return self[locationIndex..<self.index(locationIndex, offsetBy: length)]
     }
 
     func substringFromIndex(_ index: Int) -> String {
-        return self[characters.index(startIndex, offsetBy: index)..<endIndex]
+        return self[self.index(startIndex, offsetBy: index)..<endIndex]
     }
 
     func substringToIndex(_ index: Int) -> String {
-        return self[startIndex..<characters.index(startIndex, offsetBy: index)]
+        return self[startIndex..<self.index(startIndex, offsetBy: index)]
     }
 
     func split(_ delimiter: String = " ") -> [String] {

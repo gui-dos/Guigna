@@ -131,11 +131,11 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         let defaultsTransformer = GDefaultsTransformer()
         ValueTransformer.setValueTransformer(defaultsTransformer, forName: "GDefaultsTransformer" as ValueTransformerName)
         let statusTransformer = GStatusTransformer()
-        ValueTransformer.setValueTransformer(statusTransformer, forName: "GStatusTransformer")
+        ValueTransformer.setValueTransformer(statusTransformer, forName: "GStatusTransformer" as ValueTransformerName)
         let markTransformer = GMarkTransformer()
-        ValueTransformer.setValueTransformer(markTransformer, forName: "GMarkTransformer")
+        ValueTransformer.setValueTransformer(markTransformer, forName: "GMarkTransformer" as ValueTransformerName)
         let sourceTransformer = GSourceTransformer()
-        ValueTransformer.setValueTransformer(sourceTransformer, forName: "GSourceTransformer")
+        ValueTransformer.setValueTransformer(sourceTransformer, forName: "GSourceTransformer" as ValueTransformerName)
 
         statusItem = NSStatusBar.system().statusItem(withLength: -1) // NSVariableStatusItemLength
         statusItem.title = "😺"
@@ -172,14 +172,15 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
 
         allPackages.reserveCapacity(150000)
 
-        system("mkdir -p '\(APPDIR)'")
-        system("touch '\(APPDIR)/output'")
-        system("touch '\(APPDIR)/sync'")
+        let escapedAPPDIR = APPDIR.replace(" ", "__")
+        agent.output("/bin/mkdir -p '\(escapedAPPDIR)'")
+        agent.output("/usr/bin/touch '\(escapedAPPDIR)/output'")
+        agent.output("/usr/bin/touch '\(escapedAPPDIR)/sync'")
         for dir in ["MacPorts", "Homebrew", "Fink", "pkgsrc", "FreeBSD", "Gentoo"] {
-            system("mkdir -p '\(APPDIR)/\(dir)'")
+            agent.output("/bin/mkdir -p '\(escapedAPPDIR)/\(dir)'")
         }
 
-        system("osascript -e 'tell application \"Terminal\" to close (windows whose name contains \"Guigna \")'")
+        agent.output("/usr/bin/osascript -e 'tell__application__\"Terminal\"__to__close__(windows__whose__name__contains__\"Guigna__\")'")
         terminal = SBApplication(bundleIdentifier: "com.apple.Terminal")
         let guignaFunction = "guigna() { osascript -e 'tell app \"Guigna\"' -e \"open POSIX file \\\"\(APPDIR)/$2\\\"\" -e 'end' &>/dev/null; }"
         let initScript = "unset HISTFILE ; " + guignaFunction
@@ -413,7 +414,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
 
     func windowWillClose(_ notification: Notification) {
         if self.ready {
-            system("osascript -e 'tell application \"Terminal\" to close (windows whose name contains \"Guigna \")'")
+            agent.output("/usr/bin/osascript -e 'tell__application__\"Terminal\"__to__close__(windows__whose__name__contains__\"Guigna__\")'")
         }
     }
 
@@ -428,10 +429,10 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
 
     func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: AnyObject) -> NSView? {
         let source = item.representedObject as! GSource
-        if !(item.parent!!.representedObject is GSource) {
+        if !((item as! NSTreeNode).parent!.representedObject is GSource) {
             return outlineView.make(withIdentifier: "HeaderCell", owner:self) as! NSTableCellView
         } else {
-            if source.categories == nil && (item.parent!!.representedObject is GSystem) {
+            if source.categories == nil && ((item as! NSTreeNode).parent!.representedObject is GSystem) {
                 return outlineView.make(withIdentifier: "LeafCell", owner:self) as! NSTableCellView
             } else {
                 return outlineView.make(withIdentifier: "DataCell", owner:self) as! NSTableCellView
@@ -891,7 +892,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             selectedSegment = "Info"
         }
         if selectedItems?.count > 1 {
-            let itemList = selectedItems.map {$0.name}.join("\n")
+            let itemList = (selectedItems as! [GItem]).map {$0.name}.join("\n")
             info("[Multiple selection]\n\n\(itemList)")
         }
         updateTabView(item)
@@ -1328,9 +1329,9 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
 
     func executeAsRoot(_ cmd: String) {
         var cmd = cmd
-        cmd = cmd.replace("\"", "\\\"")
-        let command = "osascript -e 'do shell script \"\(cmd)\" with administrator privileges'"
-        system(command)
+        cmd = cmd.replace("\"", "\\\"").replace(" ", "__")
+        let command = "/usr/bin/osascript -e 'do__shell__script__\"\(cmd)\"__with__administrator__privileges'"
+        agent.output(command)
     }
 
     func minuteCheck(_ timer: Timer) {
@@ -1899,7 +1900,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         let systemsCount = systemsArray.count
         systemsMutableArray.add(system)
         // selecting the new system avoids memory peak > 1.5 GB:
-        sourcesController.setSelectionIndexPath(IndexPath(index: 0).adding(systemsCount))
+        sourcesController.setSelectionIndexPath(IndexPath(index: 0).appending(systemsCount))
         sourcesOutline.reloadData()
         sourcesOutline.display()
         sourcesSelectionDidChange(systemsMutableArray[systemsCount])
@@ -1918,7 +1919,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 if category == "cask" {
                     continue
                 }
-                categorySource.homepage = system.logpage.replace("homebrew", "homebrew-" + category)
+                categorySource.homepage = system.logpage?.replace("homebrew", "homebrew-" + category)
             }
             categories.add(categorySource)
         }

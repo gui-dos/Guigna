@@ -172,17 +172,17 @@ final class Homebrew: GSystem {
                 name = (name as NSString).lastPathComponent
             }
             var pkg = self[name]
-            let latestVersion: String = (pkg == nil) ? "" : pkg.version
+            let latestVersion: String = (pkg == nil) ? "" : pkg!.version
             // let version = components[1] // TODO: strangely, output contains only name
-            let version = (pkg == nil) ? "..." : pkg.installed
+            let version = (pkg == nil) ? "..." : pkg!.installed
             if pkg == nil {
                 pkg = GPackage(name: name, version: latestVersion, system: self, status: .outdated)
                 self[name] = pkg
             } else {
-                pkg.status = .outdated
+                pkg!.status = .outdated
             }
-            pkg.installed = version
-            pkgs.append(pkg)
+            pkg!.installed = version
+            pkgs.append(pkg!)
         }
         return pkgs
     }

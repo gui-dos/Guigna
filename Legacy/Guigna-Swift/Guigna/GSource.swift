@@ -23,7 +23,7 @@ class GSource: NSObject {
     var status: GState
     var homepage: String!
     var logpage: String!
-    var cmd: String!
+    var cmd: String = "CMD"
 
     init(name: String, agent: GAgent?) {
         self.name = name

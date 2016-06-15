@@ -204,15 +204,15 @@ final class MacPorts: GSystem {
             let name = components[0]
             let version = components.last!
             var pkg = self[name]
-            let latestVersion: String = (pkg == nil) ? "" : pkg.version
+            let latestVersion: String = (pkg == nil) ? "" : pkg!.version
             if pkg == nil {
                 pkg = GPackage(name: name, version: latestVersion, system: self, status: .outdated)
                 self[name] = pkg
             } else {
-                pkg.status = .outdated
+                pkg!.status = .outdated
             }
-            pkg.installed = version
-            pkgs.append(pkg)
+            pkg!.installed = version
+            pkgs.append(pkg!)
         }
         return pkgs
     }
