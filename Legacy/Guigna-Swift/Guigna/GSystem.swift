@@ -12,10 +12,10 @@ class GSystem: GSource {
         prefix = self.dynamicType.prefix
         index = [String: GPackage](minimumCapacity: 50000)
         super.init(name: name, agent: agent)
-        status = .On
+        status = .on
     }
 
-    func defaults(key: String) -> AnyObject? {
+    func defaults(_ key: String) -> AnyObject? {
         if self.agent != nil {
             return self.agent.appDelegate?.defaults[key]
         } else {
@@ -23,7 +23,7 @@ class GSystem: GSource {
         }
     }
 
-    func setDefaults(value: AnyObject, forKey key: String) {
+    func setDefaults(_ value: AnyObject, forKey key: String) {
         self.defaults?[key] = value
         self.agent?.appDelegate?.defaults[key] = value as! NSObject
     }
@@ -67,11 +67,11 @@ class GSystem: GSource {
         var categories = Set<String>()
         for item in self.items {
             if let cats = item.categories {
-                categories.unionInPlace(cats.split())
+                categories.formUnion(cats.split())
             }
         }
         var categoriesArray = Array(categories)
-        categoriesArray.sortInPlace { $0 < $1 }
+        categoriesArray.sort { $0 < $1 }
         return categoriesArray
     }
 
@@ -79,31 +79,31 @@ class GSystem: GSource {
         return [["help", "CMD help"], ["man", "man CMD | col -b"]]
     }
 
-    func installCmd(pkg: GPackage) -> String {
+    func installCmd(_ pkg: GPackage) -> String {
         return "\(cmd) install \(pkg.name)"
     }
 
-    func uninstallCmd(pkg: GPackage) -> String {
+    func uninstallCmd(_ pkg: GPackage) -> String {
         return "\(cmd) uninstall \(pkg.name)"
     }
 
-    func deactivateCmd(pkg: GPackage) -> String {
+    func deactivateCmd(_ pkg: GPackage) -> String {
         return "\(cmd) deactivate \(pkg.name)"
     }
 
-    func upgradeCmd(pkg: GPackage) -> String {
+    func upgradeCmd(_ pkg: GPackage) -> String {
         return "\(cmd) upgrade \(pkg.name)"
     }
 
-    func fetchCmd(pkg: GPackage) -> String {
+    func fetchCmd(_ pkg: GPackage) -> String {
         return "\(cmd) fetch \(pkg.name)"
     }
 
-    func cleanCmd(pkg: GPackage) -> String {
+    func cleanCmd(_ pkg: GPackage) -> String {
         return "\(cmd) clean \(pkg.name)"
     }
 
-    func options(pkg: GPackage) -> String! {
+    func options(_ pkg: GPackage) -> String! {
         return nil
     }
 
@@ -127,11 +127,11 @@ class GSystem: GSource {
         }
     }
 
-    func verbosifiedCmd(command: String) -> String {
+    func verbosifiedCmd(_ command: String) -> String {
         return command.replace("\(cmd)", "\(cmd) -d")
     }
 
-    func output(command: String) -> String! {
+    func output(_ command: String) -> String! {
         return agent.output(command)
     }
 }

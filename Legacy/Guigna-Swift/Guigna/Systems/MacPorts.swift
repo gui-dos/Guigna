@@ -13,13 +13,13 @@ final class MacPorts: GSystem {
 
     override func list() -> [GPackage] {
 
-        index.removeAll(keepCapacity: true)
-        items.removeAll(keepCapacity: true)
+        index.removeAll(keepingCapacity: true)
+        items.removeAll(keepingCapacity: true)
 
-        if (defaults("MacPortsParsePortIndex") as? Bool ?? false) == false && mode == .Offline {
+        if (defaults("MacPortsParsePortIndex") as? Bool ?? false) == false && mode == .offline {
             var outputLines = output("\(cmd) list").split("\n")
             outputLines.removeLast()
-            let whitespaceCharacterSet = NSCharacterSet.whitespaceCharacterSet()
+            let whitespaceCharacterSet = CharacterSet.whitespaces
             for line in outputLines {
                 var components = line.split("@")
                 let name = components[0].trim(whitespaceCharacterSet)
@@ -27,7 +27,7 @@ final class MacPorts: GSystem {
                 let version = components[0]
                 // let revision = "..."
                 let categories = components.last!.split("/")[0]
-                let pkg = GPackage(name: name, version: version, system: self, status: .Available)
+                let pkg = GPackage(name: name, version: version, system: self, status: .available)
                 pkg.categories = categories
                 items.append(pkg)
                 self[name] = pkg
@@ -35,15 +35,15 @@ final class MacPorts: GSystem {
 
         } else {
             var portIndex = ""
-            if mode == .Online { // TODO: fetch PortIndex
-                portIndex = (try? String(contentsOfFile: ("~/Library/Application Support/Guigna/MacPorts/PortIndex" as NSString).stringByExpandingTildeInPath, encoding: NSUTF8StringEncoding)) ?? ""
+            if mode == .online { // TODO: fetch PortIndex
+                portIndex = (try? String(contentsOfFile: ("~/Library/Application Support/Guigna/MacPorts/PortIndex" as NSString).expandingTildeInPath, encoding: String.Encoding.utf8)) ?? ""
             } else {
-                portIndex = (try? String(contentsOfFile: "\(prefix)/var/macports/sources/rsync.macports.org/release/tarballs/ports/PortIndex", encoding: NSUTF8StringEncoding)) ?? ""
+                portIndex = (try? String(contentsOfFile: "\(prefix)/var/macports/sources/rsync.macports.org/release/tarballs/ports/PortIndex", encoding: String.Encoding.utf8)) ?? ""
             }
-            let s =  NSScanner(string: portIndex)
-            s.charactersToBeSkipped = NSCharacterSet(charactersInString: "")
-            let endsCharacterSet = NSMutableCharacterSet.whitespaceAndNewlineCharacterSet()
-            endsCharacterSet.addCharactersInString("}")
+            let s =  Scanner(string: portIndex)
+            s.charactersToBeSkipped = CharacterSet(charactersIn: "")
+            let endsCharacterSet = NSMutableCharacterSet.whitespacesAndNewlines()
+            endsCharacterSet.addCharacters(in: "}")
             var str: NSString? = nil
             var name: NSString? = nil
             var key: NSString? = nil
@@ -55,24 +55,24 @@ final class MacPorts: GSystem {
             var homepage: String?
             var license: String?
             while true {
-                if !s.scanUpToString(" ", intoString: &name) {
+                if !s.scanUpTo(" ", into: &name) {
                     break
                 }
-                s.scanUpToString("\n", intoString: nil)
-                s.scanString("\n", intoString: nil)
+                s.scanUpTo("\n", into: nil)
+                s.scanString("\n", into: nil)
                 while true {
-                    s.scanUpToString(" ", intoString: &key)
-                    s.scanString(" ", intoString: nil)
-                    s.scanUpToCharactersFromSet(endsCharacterSet, intoString: &str)
+                    s.scanUpTo(" ", into: &key)
+                    s.scanString(" ", into: nil)
+                    s.scanUpToCharacters(from: endsCharacterSet as CharacterSet, into: &str)
                     value.setString(str! as String)
-                    var range = value.rangeOfString("{")
+                    var range = value.range(of: "{")
                     while range.location != NSNotFound {
-                        value.replaceCharactersInRange(range, withString: "")
-                        if s.scanUpToString("}", intoString: &str) {
-                            value.appendString(str! as String)
+                        value.replaceCharacters(in: range, with: "")
+                        if s.scanUpTo("}", into: &str) {
+                            value.append(str! as String)
                         }
-                        s.scanString("}", intoString: nil)
-                        range = value.rangeOfString("{")
+                        s.scanString("}", into: nil)
+                        range = value.range(of: "{")
                     }
                     switch key! {
                     case "version":
@@ -90,16 +90,16 @@ final class MacPorts: GSystem {
                     default:
                         break
                     }
-                    if s.scanString("\n", intoString: nil) {
+                    if s.scanString("\n", into: nil) {
                         break
                     }
-                    s.scanString(" ", intoString: nil)
+                    s.scanString(" ", into: nil)
                 }
-                let pkg = GPackage(name: name! as String, version: "\(version!)_\(revision!)", system: self, status: .Available)
+                let pkg = GPackage(name: name! as String, version: "\(version!)_\(revision!)", system: self, status: .available)
                 pkg.categories = categories!
                 pkg.description = description!
                 pkg.license = license!
-                if self.mode == .Online {
+                if self.mode == .online {
                     pkg.homepage = homepage
                 }
                 items.append(pkg)
@@ -114,34 +114,34 @@ final class MacPorts: GSystem {
     override func installed() -> [GPackage] {
 
         if self.isHidden {
-            return items.filter { $0.status != .Available} as! [GPackage]
+            return items.filter { $0.status != .available} as! [GPackage]
         }
         var pkgs = [GPackage]()
         pkgs.reserveCapacity(50000)
 
-        if mode == .Online {
+        if mode == .online {
             return pkgs
         }
 
         var outputLines = output("\(cmd) installed").split("\n")
         outputLines.removeLast()
-        outputLines.removeAtIndex(0)
+        outputLines.remove(at: 0)
         let itemsCount = items.count
-        let notInactiveItems = items.filter { $0.status != .Inactive}
+        let notInactiveItems = items.filter { $0.status != .inactive}
         if itemsCount != notInactiveItems.count {
             items = notInactiveItems
-            self.agent.appDelegate!.removeItems({ $0.status == .Inactive && $0.system === self}) // TODO: ugly
+            self.agent.appDelegate!.removeItems({ $0.status == .inactive && $0.system === self}) // TODO: ugly
         }
         var status: GStatus
         for pkg in items as! [GPackage] {
             status = pkg.status
             pkg.installed = nil
-            if status != .Updated && status != .New {
-                pkg.status = .Available
+            if status != .updated && status != .new {
+                pkg.status = .available
             }
         }
         self.outdated() // index outdated ports
-        let whitespaceCharacterSet = NSCharacterSet.whitespaceCharacterSet()
+        let whitespaceCharacterSet = CharacterSet.whitespaces
         for line in outputLines {
             var components = line.trim(whitespaceCharacterSet).split()
             let name = components[0]
@@ -156,22 +156,22 @@ final class MacPorts: GSystem {
                 variants = variants.replace(" ", "+")
                 version = "\(version) +\(variants)"
             }
-            status = components.count == 2 ? .Inactive : .UpToDate
+            status = components.count == 2 ? .inactive : .upToDate
             var pkg: GPackage! = self[name]
             let latestVersion: String = (pkg == nil) ? "" : pkg.version
-            if status == .Inactive {
+            if status == .inactive {
                 pkg = nil
             }
             if pkg == nil {
                 pkg = GPackage(name: name, version: latestVersion, system: self, status: status)
-                if status != .Inactive {
+                if status != .inactive {
                     self[name] = pkg
                 } else {
                     items.append(pkg)
                     self.agent.appDelegate!.addItem(pkg)  // TODO: ugly
                 }
             } else {
-                if pkg.status == .Available {
+                if pkg.status == .available {
                     pkg.status = status
                 }
             }
@@ -186,19 +186,19 @@ final class MacPorts: GSystem {
     override func outdated() -> [GPackage] {
 
         if self.isHidden {
-            return items.filter { $0.status == .Outdated} as! [GPackage]
+            return items.filter { $0.status == .outdated} as! [GPackage]
         }
 
         var pkgs = [GPackage]()
         pkgs.reserveCapacity(50000)
 
-        if mode == .Online {
+        if mode == .online {
             return pkgs
         }
 
         var outputLines = output("\(cmd) outdated").split("\n")
         outputLines.removeLast()
-        outputLines.removeAtIndex(0)
+        outputLines.remove(at: 0)
         for line in outputLines {
             let components = line.split(" < ")[0].split()
             let name = components[0]
@@ -206,10 +206,10 @@ final class MacPorts: GSystem {
             var pkg = self[name]
             let latestVersion: String = (pkg == nil) ? "" : pkg.version
             if pkg == nil {
-                pkg = GPackage(name: name, version: latestVersion, system: self, status: .Outdated)
+                pkg = GPackage(name: name, version: latestVersion, system: self, status: .outdated)
                 self[name] = pkg
             } else {
-                pkg.status = .Outdated
+                pkg.status = .outdated
             }
             pkg.installed = version
             pkgs.append(pkg)
@@ -221,17 +221,17 @@ final class MacPorts: GSystem {
     override func inactive() -> [GPackage] {
 
         if self.isHidden {
-            return items.filter { $0.status == .Inactive} as! [GPackage]
+            return items.filter { $0.status == .inactive} as! [GPackage]
         }
         var pkgs = [GPackage]()
         pkgs.reserveCapacity(50000)
 
-        if mode == .Online {
+        if mode == .online {
             return pkgs
         }
 
         for pkg in installed() {
-            if pkg.status == .Inactive {
+            if pkg.status == .inactive {
                 pkgs.append(pkg)
             }
         }
@@ -239,11 +239,11 @@ final class MacPorts: GSystem {
     }
 
 
-    override func info(item: GItem) -> String {
+    override func info(_ item: GItem) -> String {
         if self.isHidden {
             return super.info(item)
         }
-        if mode == .Online {
+        if mode == .online {
             // TODO: format keys and values
             var info = agent.nodes(URL: "http://www.macports.org/ports.php?by=name&substr=\(item.name)", XPath: "//div[@id=\"content\"]/dl")[0].stringValue!
             let keys = agent.nodes(URL: "http://www.macports.org/ports.php?by=name&substr=\(item.name)", XPath: "//div[@id=\"content\"]/dl//i")
@@ -259,7 +259,7 @@ final class MacPorts: GSystem {
     }
 
 
-    override func home(item: GItem) -> String {
+    override func home(_ item: GItem) -> String {
         if self.isHidden {
             var homepage: String
             for line in cat(item).split("\n") {
@@ -272,52 +272,52 @@ final class MacPorts: GSystem {
             }
             return log(item)
         }
-        if mode == .Online {
+        if mode == .online {
             return item.homepage
         }
         let url = output("\(cmd) -q info --homepage \(item.name)")
         return url.substringToIndex(url.length - 1)
     }
 
-    override func log(item: GItem) -> String {
+    override func log(_ item: GItem) -> String {
         let category = item.categories!.split()[0]
         return "http://trac.macports.org/log/trunk/dports/\(category)/\(item.name)/Portfile"
     }
 
-    override func contents(item: GItem) -> String {
-        if self.isHidden || mode == .Online {
+    override func contents(_ item: GItem) -> String {
+        if self.isHidden || mode == .online {
             return "[Not Available]"
         }
         return output("\(cmd) contents \(item.name)")
     }
 
-    override func cat(item: GItem) -> String {
-        if self.isHidden || mode == .Online {
-            return (try? String(contentsOfURL: NSURL(string: "http://trac.macports.org/browser/trunk/dports/\(item.categories!.split()[0])/\(item.name)/Portfile?format=txt")!, encoding: NSUTF8StringEncoding)) ?? ""
+    override func cat(_ item: GItem) -> String {
+        if self.isHidden || mode == .online {
+            return (try? String(contentsOfURL: URL(string: "http://trac.macports.org/browser/trunk/dports/\(item.categories!.split()[0])/\(item.name)/Portfile?format=txt")!, encoding: String.Encoding.utf8)) ?? ""
         }
         return output("\(cmd) cat \(item.name)")
     }
 
-    override func deps(item: GItem) -> String {
-        if self.isHidden || mode == .Online {
+    override func deps(_ item: GItem) -> String {
+        if self.isHidden || mode == .online {
             return "[Cannot compute the dependencies now]"
         }
         return output("\(cmd) rdeps --index \(item.name)")
     }
 
-    override func dependents(item: GItem) -> String {
-        if self.isHidden || mode == .Online {
+    override func dependents(_ item: GItem) -> String {
+        if self.isHidden || mode == .online {
             return ""
         }
         // TODO only when status == installed
-        if item.status != .Available {
+        if item.status != .available {
             return output("\(cmd) dependents \(item.name)")
         } else {
             return "[\(item.name) not installed]"
         }
     }
 
-    override func options(pkg: GPackage) -> String! {
+    override func options(_ pkg: GPackage) -> String! {
         var variants: String! = nil
         let infoOutput = output("\(cmd) info --variants \(pkg.name)").trim()
         if infoOutput.length > 10 {
@@ -326,7 +326,7 @@ final class MacPorts: GSystem {
         return variants
     }
 
-    override func installCmd(pkg: GPackage) -> String {
+    override func installCmd(_ pkg: GPackage) -> String {
         var variants: String! = pkg.markedOptions
         if variants == nil {
             variants = ""
@@ -336,33 +336,33 @@ final class MacPorts: GSystem {
         return "sudo \(cmd) install \(pkg.name) \(variants)".trim()
     }
 
-    override func uninstallCmd(pkg: GPackage) -> String {
-        if pkg.status == .Outdated || pkg.status == .Updated {
+    override func uninstallCmd(_ pkg: GPackage) -> String {
+        if pkg.status == .outdated || pkg.status == .updated {
             return "sudo \(cmd) -f uninstall \(pkg.name) ; sudo \(cmd) clean --all \(pkg.name)"
         } else {
             return "sudo \(cmd) -f uninstall \(pkg.name) @\(pkg.installed)"
         }
     }
 
-    override func deactivateCmd(pkg: GPackage) -> String {
+    override func deactivateCmd(_ pkg: GPackage) -> String {
         return "sudo \(cmd) deactivate \(pkg.name)"
     }
 
-    override func upgradeCmd(pkg: GPackage) -> String {
+    override func upgradeCmd(_ pkg: GPackage) -> String {
         return "sudo \(cmd) upgrade \(pkg.name)"
     }
 
-    override func fetchCmd(pkg: GPackage) -> String {
+    override func fetchCmd(_ pkg: GPackage) -> String {
         return "sudo \(cmd) fetch \(pkg.name)"
     }
 
-    override func cleanCmd(pkg: GPackage) -> String {
+    override func cleanCmd(_ pkg: GPackage) -> String {
         return "sudo \(cmd) clean --all \(pkg.name)"
     }
 
     override var updateCmd: String! {
         get {
-            if mode == .Online {
+            if mode == .online {
                 return "sudo cd ; cd ~/Library/Application\\ Support/Guigna/Macports ; /usr/bin/rsync -rtzv rsync://rsync.macports.org/release/tarballs/PortIndex_darwin_15_i386/PortIndex PortIndex"
             } else {
                 return "sudo \(cmd) -d selfupdate"

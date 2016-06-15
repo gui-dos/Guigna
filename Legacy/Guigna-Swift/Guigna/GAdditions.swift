@@ -3,19 +3,19 @@ import WebKit
 
 protocol GAppDelegate {
     var defaults: NSUserDefaultsController! { get set }
-    func log(text: String)
+    func log(_ text: String)
     // var allPackages: [GPackage] { get set } // to avoid in Swift since it returns a copy
-    func addItem(item: GItem) // to add an inactive package without requiring a copy of allPackages
-    func removeItem(item: GItem) // TODO
-    func removeItems(excludeElement: GItem -> Bool) // to remove inactive packages from allPackages in Swift
+    func addItem(_ item: GItem) // to add an inactive package without requiring a copy of allPackages
+    func removeItem(_ item: GItem) // TODO
+    func removeItems(_ excludeElement: (GItem) -> Bool) // to remove inactive packages from allPackages in Swift
     var shellColumns: Int { get }
 }
 
 extension Array {
 
-    func join(separator: String = " ") -> String {
+    func join(_ separator: String = " ") -> String {
         // return separator.join(self) // doesn't compile anymore with B6
-        return self._bridgeToObjectiveC().componentsJoinedByString(separator)
+        return self._bridgeToObjectiveC().componentsJoined(by: separator)
 
     }
 
@@ -29,86 +29,86 @@ extension String {
     }
 
     var exists: Bool {
-        return NSFileManager.defaultManager().fileExistsAtPath((self as NSString).stringByExpandingTildeInPath)
+        return FileManager.default().fileExists(atPath: (self as NSString).expandingTildeInPath)
     }
 
-    func index(string: String) -> Int {
-        if let range = self.rangeOfString(string) {
-            return startIndex.distanceTo(range.startIndex)
+    func index(_ string: String) -> Int {
+        if let range = self.range(of: string) {
+            return characters.distance(from: startIndex, to: range.lowerBound)
         } else {
             return NSNotFound
         }
     }
 
-    func rindex(string: String) -> Int {
-        if let range = self.rangeOfString(string, options: .BackwardsSearch) {
-            return startIndex.distanceTo(range.startIndex)
+    func rindex(_ string: String) -> Int {
+        if let range = self.range(of: string, options: .backwardsSearch) {
+            return characters.distance(from: startIndex, to: range.lowerBound)
         } else {
             return NSNotFound
         }
     }
 
-    func contains(string: String) -> Bool {
-        return self.rangeOfString(string) != nil ? true : false
+    func contains(_ string: String) -> Bool {
+        return self.range(of: string) != nil ? true : false
     }
 
     subscript(index: Int) -> Character {
-        return self[startIndex.advancedBy(index)]
+        return self[characters.index(startIndex, offsetBy: index)]
     }
 
     subscript(range: Range<Int>) -> String {
-        let rangeStartIndex = startIndex.advancedBy(range.startIndex)
-        return self[rangeStartIndex..<rangeStartIndex.advancedBy(range.endIndex - range.startIndex)]
+        let rangeStartIndex = characters.index(startIndex, offsetBy: range.lowerBound)
+        return self[rangeStartIndex..<<#T##String.CharacterView corresponding to `rangeStartIndex`##String.CharacterView#>.index(rangeStartIndex, offsetBy: range.endIndex - range.startIndex)]
     }
 
-    func substring(location: Int, _ length: Int) -> String {
-        let locationIndex = startIndex.advancedBy(location)
-        return self[locationIndex..<locationIndex.advancedBy(length)]
+    func substring(_ location: Int, _ length: Int) -> String {
+        let locationIndex = characters.index(startIndex, offsetBy: location)
+        return self[locationIndex..<<#T##String.CharacterView corresponding to `locationIndex`##String.CharacterView#>.index(locationIndex, offsetBy: length)]
     }
 
-    func substringFromIndex(index: Int) -> String {
-        return self[startIndex.advancedBy(index)..<endIndex]
+    func substringFromIndex(_ index: Int) -> String {
+        return self[characters.index(startIndex, offsetBy: index)..<endIndex]
     }
 
-    func substringToIndex(index: Int) -> String {
-        return self[startIndex..<startIndex.advancedBy(index)]
+    func substringToIndex(_ index: Int) -> String {
+        return self[startIndex..<characters.index(startIndex, offsetBy: index)]
     }
 
-    func split(delimiter: String = " ") -> [String] {
-        return self.componentsSeparatedByString(delimiter)
+    func split(_ delimiter: String = " ") -> [String] {
+        return self.components(separatedBy: delimiter)
     }
 
-    func replace(string: String, _ replacement: String) -> String {
-        return self.stringByReplacingOccurrencesOfString(string, withString: replacement)
+    func replace(_ string: String, _ replacement: String) -> String {
+        return self.replacingOccurrences(of: string, with: replacement)
     }
 
-    func trim(characters: String = "") -> String {
-        var charSet: NSCharacterSet
+    func trim(_ characters: String = "") -> String {
+        var charSet: CharacterSet
         if characters.length == 0 {
-            charSet = NSCharacterSet.whitespaceAndNewlineCharacterSet()
+            charSet = CharacterSet.whitespacesAndNewlines
         } else {
-            charSet = NSCharacterSet(charactersInString: characters)
+            charSet = CharacterSet(charactersIn: characters)
         }
-        return self.stringByTrimmingCharactersInSet(charSet)
+        return self.trimmingCharacters(in: charSet)
     }
 
-    func trim(characterSet: NSCharacterSet) -> String {
-        return self.stringByTrimmingCharactersInSet(characterSet)
+    func trim(_ characterSet: CharacterSet) -> String {
+        return self.trimmingCharacters(in: characterSet)
     }
 
 }
 
 
-extension NSXMLNode {
+extension XMLNode {
 
-    subscript(xpath: String) -> [NSXMLNode] {
+    subscript(xpath: String) -> [XMLNode] {
         get {
-            return try! self.nodesForXPath(xpath)
+            return try! self.nodes(forXPath: xpath)
         }
     }
 
-    func attribute(name: String) -> String! {
-        if let attribute = (self as! NSXMLElement).attributeForName(name) {
+    func attribute(_ name: String) -> String! {
+        if let attribute = (self as! XMLElement).attribute(forName: name) {
             return attribute.stringValue!
         } else {
             return nil
@@ -117,7 +117,7 @@ extension NSXMLNode {
 
     var href: String {
         get {
-            return (self as! NSXMLElement).attributeForName("href")!.stringValue!
+            return (self as! XMLElement).attribute(forName: "href")!.stringValue!
         }
     }
 }
@@ -126,7 +126,7 @@ extension NSXMLNode {
 extension NSUserDefaultsController {
     subscript(key: String) -> NSObject! {
         get {
-            if let value = self.values.valueForKey(key) as! NSObject! {
+            if let value = self.values.value(forKey: key) as! NSObject! {
                 return value
             } else {
                 return nil
@@ -141,7 +141,7 @@ extension NSUserDefaultsController {
 
 extension WebView {
 
-    override public func swipeWithEvent(event: NSEvent) {
+    override public func swipe(with event: NSEvent) {
         let x = event.deltaX
         if x < 0 && self.canGoForward {
             self.goForward()
@@ -150,7 +150,7 @@ extension WebView {
         }
     }
 
-    override public func magnifyWithEvent(event: NSEvent) {
+    override public func magnify(with event: NSEvent) {
         let multiplier: CFloat = self.textSizeMultiplier * CFloat(event.magnification + 1.0)
         self.textSizeMultiplier = multiplier
     }

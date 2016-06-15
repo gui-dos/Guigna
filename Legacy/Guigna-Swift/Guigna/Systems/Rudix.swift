@@ -21,12 +21,12 @@ final class Rudix: GSystem {
 
     override func list() -> [GPackage] {
 
-        index.removeAll(keepCapacity: true)
-        items.removeAll(keepCapacity: true)
+        index.removeAll(keepingCapacity: true)
+        items.removeAll(keepingCapacity: true)
 
         var manifest = ""
-        if mode == .Online { // FIXME: manifest is not available anymore
-            manifest = (try? String(contentsOfURL: NSURL(string: "http://rudix.org/download/2014/10.9/00MANIFEST.txt")!, encoding: NSUTF8StringEncoding)) ?? ""
+        if mode == .online { // FIXME: manifest is not available anymore
+            manifest = (try? String(contentsOfURL: URL(string: "http://rudix.org/download/2014/10.9/00MANIFEST.txt")!, encoding: String.Encoding.utf8)) ?? ""
         } else {
             var command = "\(cmd) search"
             let osxVersion = Rudix.clampedOSVersion()
@@ -42,21 +42,21 @@ final class Rudix: GSystem {
             var name = components[0]
             if components.count == 4 {
                 name += "-\(components[1])"
-                components.removeAtIndex(1)
+                components.remove(at: 1)
             }
             var version = components[1]
             version += "-" + components[2].split(".")[0]
-            let pkg = GPackage(name: name, version: version, system: self, status: .Available)
+            let pkg = GPackage(name: name, version: version, system: self, status: .available)
             if self[name] != nil {
                 var found: Int?
-                for (i, pkg) in items.enumerate() {
+                for (i, pkg) in items.enumerated() {
                     if pkg.name == name {
                         found = i
                         break
                     }
                 }
                 if let idx = found {
-                    items.removeAtIndex(idx)
+                    items.remove(at: idx)
                 }
             }
             items.append(pkg)
@@ -70,13 +70,13 @@ final class Rudix: GSystem {
     override func installed() -> [GPackage] {
 
         if self.isHidden {
-            return items.filter { $0.status != .Available} as! [GPackage]
+            return items.filter { $0.status != .available} as! [GPackage]
         }
 
         var pkgs = [GPackage]()
         pkgs.reserveCapacity(50000)
 
-        if mode == .Online {
+        if mode == .online {
             return pkgs
         }
 
@@ -86,8 +86,8 @@ final class Rudix: GSystem {
         for pkg in items as! [GPackage] {
             status = pkg.status
             pkg.installed = nil
-            if status != .Updated && status != .New {
-                pkg.status = .Available
+            if status != .updated && status != .new {
+                pkg.status = .available
             }
         }
         // self.outdated() // update status
@@ -96,11 +96,11 @@ final class Rudix: GSystem {
             var pkg: GPackage! = self[name]
             let latestVersion: String = (pkg == nil) ? "" : pkg.version
             if pkg == nil {
-                pkg = GPackage(name: name, version: latestVersion, system: self, status: .UpToDate)
+                pkg = GPackage(name: name, version: latestVersion, system: self, status: .upToDate)
                 self[name] = pkg
             } else {
-                if pkg.status == .Available {
-                    pkg.status = .UpToDate
+                if pkg.status == .available {
+                    pkg.status = .upToDate
                 }
             }
             pkg.installed = "" // TODO
@@ -110,7 +110,7 @@ final class Rudix: GSystem {
     }
 
 
-    override func home(item: GItem) -> String {
+    override func home(_ item: GItem) -> String {
         for line in cat(item).split("\n") {
             if line.hasPrefix("Site=") {
                 homepage = line.substringFromIndex(5).trim()
@@ -123,11 +123,11 @@ final class Rudix: GSystem {
     }
 
 
-    override func log(item: GItem) -> String {
+    override func log(_ item: GItem) -> String {
         return "https://github.com/rudix-mac/rudix/commits/master/Ports/\(item.name)"
     }
 
-    override func contents(item: GItem) -> String {
+    override func contents(_ item: GItem) -> String {
         if item.installed != nil {
             return output("\(cmd) --files \(item.name)")
         } else {
@@ -135,12 +135,12 @@ final class Rudix: GSystem {
         }
     }
 
-    override func cat(item: GItem) -> String {
-        return (try? String(contentsOfURL: NSURL(string: "https://raw.githubusercontent.com/rudix-mac/rudix/master/Ports/\(item.name)/Makefile")!, encoding: NSUTF8StringEncoding)) ?? ""
+    override func cat(_ item: GItem) -> String {
+        return (try? String(contentsOfURL: URL(string: "https://raw.githubusercontent.com/rudix-mac/rudix/master/Ports/\(item.name)/Makefile")!, encoding: String.Encoding.utf8)) ?? ""
     }
 
 
-    override func installCmd(pkg: GPackage) -> String {
+    override func installCmd(_ pkg: GPackage) -> String {
         var command = "\(cmd) install \(pkg.name)"
         let osxVersion = Rudix.clampedOSVersion()
         if G.OSVersion() != osxVersion {
@@ -149,11 +149,11 @@ final class Rudix: GSystem {
         return "sudo \(command)"
     }
 
-    override func uninstallCmd(pkg: GPackage) -> String {
+    override func uninstallCmd(_ pkg: GPackage) -> String {
         return "sudo \(cmd) remove \(pkg.name)"
     }
 
-    override func fetchCmd(pkg: GPackage) -> String {
+    override func fetchCmd(_ pkg: GPackage) -> String {
         var command = "cd ~/Downloads ; \(cmd) --download \(pkg.name)"
         let osxVersion = Rudix.clampedOSVersion()
         if G.OSVersion() != osxVersion {

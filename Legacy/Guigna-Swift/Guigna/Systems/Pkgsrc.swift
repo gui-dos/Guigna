@@ -22,12 +22,12 @@ final class Pkgsrc: GSystem {
 
     override func list() -> [GPackage] {
 
-        index.removeAll(keepCapacity: true)
-        items.removeAll(keepCapacity: true)
+        index.removeAll(keepingCapacity: true)
+        items.removeAll(keepingCapacity: true)
 
-        let indexPath = ("~/Library/Application Support/Guigna/pkgsrc/INDEX" as NSString).stringByExpandingTildeInPath
+        let indexPath = ("~/Library/Application Support/Guigna/pkgsrc/INDEX" as NSString).expandingTildeInPath
         if indexPath.exists {
-            let lines = (try! String(contentsOfFile: indexPath, encoding: NSUTF8StringEncoding)).split("\n")
+            let lines = (try! String(contentsOfFile: indexPath, encoding: String.Encoding.utf8)).split("\n")
             for line in lines {
                 let components = line.split("|")
                 var name = components[0]
@@ -43,7 +43,7 @@ final class Pkgsrc: GSystem {
                 let description = components[3]
                 let category = components[6]
                 let homepage = components[11]
-                let pkg = GPackage(name: name, version: version, system: self, status: .Available)
+                let pkg = GPackage(name: name, version: version, system: self, status: .available)
                 pkg.id = id
                 pkg.categories = category
                 pkg.description = description
@@ -53,8 +53,8 @@ final class Pkgsrc: GSystem {
             }
 
         } else {
-            let url = NSURL(string: "http://ftp.netbsd.org/pub/pkgsrc/current/pkgsrc/README-all.html")!
-            if let xmlDoc = try? NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML)) {
+            let url = URL(string: "http://ftp.netbsd.org/pub/pkgsrc/current/pkgsrc/README-all.html")!
+            if let xmlDoc = try? XMLDocument(contentsOf: url, options: Int(NSXMLDocumentTidyHTML)) {
                 let nodes = xmlDoc.rootElement()!["//tr"]
                 for node in nodes {
                     let rowData = node["td"]
@@ -75,7 +75,7 @@ final class Pkgsrc: GSystem {
                     if idx != NSNotFound {
                         description = description.substringToIndex(idx)
                     }
-                    let pkg = GPackage(name: name, version: version, system: self, status: .Available)
+                    let pkg = GPackage(name: name, version: version, system: self, status: .available)
                     pkg.categories = category
                     pkg.description = description
                     let id = "\(category)/\(name)"
@@ -93,12 +93,12 @@ final class Pkgsrc: GSystem {
     override func installed() -> [GPackage] {
 
         if self.isHidden {
-            return items.filter { $0.status != .Available} as! [GPackage]
+            return items.filter { $0.status != .available} as! [GPackage]
         }
         var pkgs = [GPackage]()
         pkgs.reserveCapacity(50000)
 
-        if mode == .Online {
+        if mode == .online {
             return pkgs
         }
 
@@ -106,8 +106,8 @@ final class Pkgsrc: GSystem {
         for pkg in items as! [GPackage] {
             status = pkg.status
             pkg.installed = nil
-            if status != .Updated && status != .New {
-                pkg.status = .Available
+            if status != .updated && status != .new {
+                pkg.status = .available
             }
         }
         // [self outdated]; // index outdated ports // TODO
@@ -115,7 +115,7 @@ final class Pkgsrc: GSystem {
         outputLines.removeLast()
         var ids = output("\(cmd) -Q PKGPATH -a").split("\n")
         ids.removeLast()
-        let whitespaceCharacterSet = NSCharacterSet.whitespaceCharacterSet()
+        let whitespaceCharacterSet = CharacterSet.whitespaces
         var i = 0
         for line in outputLines {
             var idx = line.index(" ")
@@ -127,15 +127,15 @@ final class Pkgsrc: GSystem {
             let id = ids[i]
             idx = id.index("/")
             name = id.substringFromIndex(idx + 1)
-            status = .UpToDate
+            status = .upToDate
             var pkg: GPackage! = self[id]
             let latestVersion: String = (pkg == nil) ? "" : pkg.version
             if pkg == nil {
                 pkg = GPackage(name: name, version: latestVersion, system: self, status: status)
                 self[id] = pkg
             } else {
-                if pkg.status == .Available {
-                    pkg.status = .UpToDate
+                if pkg.status == .available {
+                    pkg.status = .upToDate
                 }
             }
             pkg.installed = version
@@ -151,23 +151,23 @@ final class Pkgsrc: GSystem {
 
     // TODO: pkg_info -B PKGPATH=misc/figlet
 
-    override func info(item: GItem) -> String {
+    override func info(_ item: GItem) -> String {
         if self.isHidden {
             return super.info(item)
         }
-        if mode != .Offline && item.status != .Available {
+        if mode != .offline && item.status != .available {
             return output("\(cmd) \(item.name)")
         } else {
             if item.id != nil {
-                return (try? String(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.id)/DESCR")!, encoding: NSUTF8StringEncoding)) ?? ""
+                return (try? String(contentsOfURL: URL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.id)/DESCR")!, encoding: String.Encoding.utf8)) ?? ""
             } else { // TODO lowercase (i.e. Hermes -> hermes)
-                return (try? String(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories!)/\(item.name)/DESCR")!, encoding: NSUTF8StringEncoding)) ?? ""
+                return (try? String(contentsOfURL: URL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories!)/\(item.name)/DESCR")!, encoding: String.Encoding.utf8)) ?? ""
             }
         }
     }
 
 
-    override func home(item: GItem) -> String {
+    override func home(_ item: GItem) -> String {
         if item.homepage != nil { // already available from INDEX
             return item.homepage
         } else {
@@ -176,7 +176,7 @@ final class Pkgsrc: GSystem {
         }
     }
 
-    override func log(item: GItem) -> String {
+    override func log(_ item: GItem) -> String {
         if item.id != nil {
             return "http://cvsweb.NetBSD.org/bsdweb.cgi/pkgsrc/\(item.id)/"
         } else {
@@ -184,35 +184,35 @@ final class Pkgsrc: GSystem {
         }
     }
 
-    override func contents(item: GItem) -> String {
-        if item.status != .Available {
+    override func contents(_ item: GItem) -> String {
+        if item.status != .available {
             return output("\(cmd) -L \(item.name)").split("Files:\n")[1]
         } else {
             if item.id != nil {
-                return (try? String(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.id)/PLIST")!, encoding: NSUTF8StringEncoding)) ?? ""
+                return (try? String(contentsOfURL: URL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.id)/PLIST")!, encoding: String.Encoding.utf8)) ?? ""
             } else { // TODO lowercase (i.e. Hermes -> hermes)
-                return (try? String(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories!)/\(item.name)/PLIST")!, encoding: NSUTF8StringEncoding)) ?? ""
+                return (try? String(contentsOfURL: URL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories!)/\(item.name)/PLIST")!, encoding: String.Encoding.utf8)) ?? ""
             }
         }
     }
 
-    override func cat(item: GItem) -> String {
-        if item.status != .Available {
+    override func cat(_ item: GItem) -> String {
+        if item.status != .available {
             let filtered = items.filter { $0.name == item.name }
             item.id = filtered[0].id
         }
         if item.id != nil {
-            return (try? String(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.id)/Makefile")!, encoding: NSUTF8StringEncoding)) ?? ""
+            return (try? String(contentsOfURL: URL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.id)/Makefile")!, encoding: String.Encoding.utf8)) ?? ""
         } else { // TODO lowercase (i.e. Hermes -> hermes)
-            return (try? String(contentsOfURL: NSURL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories!)/\(item.name)/Makefile")!, encoding: NSUTF8StringEncoding)) ?? ""
+            return (try? String(contentsOfURL: URL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories!)/\(item.name)/Makefile")!, encoding: String.Encoding.utf8)) ?? ""
         }
     }
 
     // TODO: Deps: pkg_info -n -r, scrape site, parse Index
 
-    override func deps(item: GItem) -> String { // FIXME: "*** PACKAGE MAY NOT BE DELETED *** "
+    override func deps(_ item: GItem) -> String { // FIXME: "*** PACKAGE MAY NOT BE DELETED *** "
 
-        if item.status != .Available {
+        if item.status != .available {
             let components = output("\(cmd) -n \(item.name)").split("Requires:\n")
             if components.count > 1 {
                 return components[1].trim()
@@ -228,8 +228,8 @@ final class Pkgsrc: GSystem {
         }
     }
 
-    override func dependents(item: GItem) -> String {
-        if item.status != .Available {
+    override func dependents(_ item: GItem) -> String {
+        if item.status != .available {
             let components = output("\(cmd) -r \(item.name)").split("required by list:\n")
             if components.count > 1 {
                 return components[1].trim()
@@ -241,7 +241,7 @@ final class Pkgsrc: GSystem {
         }
     }
 
-    override func installCmd(pkg: GPackage) -> String {
+    override func installCmd(_ pkg: GPackage) -> String {
         if pkg.id != nil {
             return "cd /usr/pkgsrc/\(pkg.id) ; sudo /usr/pkg/bin/bmake install clean clean-depends"
         } else {
@@ -249,12 +249,12 @@ final class Pkgsrc: GSystem {
         }
     }
 
-    override func uninstallCmd(pkg: GPackage) -> String {
+    override func uninstallCmd(_ pkg: GPackage) -> String {
         return "sudo \(prefix)/sbin/pkg_delete \(pkg.name)"
     }
 
 
-    override func cleanCmd(pkg: GPackage) -> String {
+    override func cleanCmd(_ pkg: GPackage) -> String {
         if pkg.id != nil {
             return "cd /usr/pkgsrc/\(pkg.id) ; sudo /usr/pkg/bin/bmake clean clean-depends"
         } else {
@@ -264,7 +264,7 @@ final class Pkgsrc: GSystem {
 
     override var updateCmd: String! {
         get {
-            if mode == .Online || (defaults("pkgsrcCVS") as? Bool ?? false) == false {
+            if mode == .online || (defaults("pkgsrcCVS") as? Bool ?? false) == false {
                 return nil
             } else {
                 return "sudo cd; cd /usr/pkgsrc ; sudo cvs update -dP"

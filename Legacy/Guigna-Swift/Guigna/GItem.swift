@@ -1,23 +1,23 @@
 import Foundation
 
 @objc enum GStatus: Int {
-    case Available = 0
-    case Inactive
-    case UpToDate
-    case Outdated
-    case Updated
-    case New
-    case Broken
+    case available = 0
+    case inactive
+    case upToDate
+    case outdated
+    case updated
+    case new
+    case broken
 }
 
 @objc enum GMark: Int {
-    case NoMark = 0
-    case Install
-    case Uninstall
-    case Deactivate
-    case Upgrade
-    case Fetch
-    case Clean
+    case noMark = 0
+    case install
+    case uninstall
+    case deactivate
+    case upgrade
+    case fetch
+    case clean
 }
 
 
@@ -55,7 +55,7 @@ class GItem: NSObject {
         self.source = source
         self.system = nil
         self.status = status
-        self.mark = .NoMark
+        self.mark = .noMark
     }
 
     var info: String {
@@ -103,7 +103,7 @@ class GItem: NSObject {
 
 
 @objc(GStatusTransformer)
-class GStatusTransformer: NSValueTransformer {
+class GStatusTransformer: ValueTransformer {
 
     override class func transformedValueClass() -> AnyClass {
         return NSImage.self
@@ -113,23 +113,23 @@ class GStatusTransformer: NSValueTransformer {
         return false
     }
 
-    override func transformedValue(value: AnyObject?) -> AnyObject? {
+    override func transformedValue(_ value: AnyObject?) -> AnyObject? {
         if value == nil {
             return nil
         }
-        let status = GStatus(rawValue: value!.integerValue)!
+        let status = GStatus(rawValue: value!.intValue)!
         switch status {
-        case .Inactive:
+        case .inactive:
             return NSImage(named: NSImageNameStatusNone)
-        case .UpToDate:
+        case .upToDate:
             return NSImage(named: NSImageNameStatusAvailable)
-        case .Outdated:
+        case .outdated:
             return NSImage(named: NSImageNameStatusPartiallyAvailable)
-        case .Updated:
+        case .updated:
             return NSImage(named: "status-updated.tiff")
-        case .New:
+        case .new:
             return NSImage(named: "status-new.tiff")
-        case .Broken:
+        case .broken:
             return NSImage(named: NSImageNameStatusUnavailable)
         default:
             return nil
@@ -139,7 +139,7 @@ class GStatusTransformer: NSValueTransformer {
 
 
 @objc(GMarkTransformer)
-class GMarkTransformer: NSValueTransformer {
+class GMarkTransformer: ValueTransformer {
 
     override class func transformedValueClass() -> AnyClass {
         return NSImage.self
@@ -149,23 +149,23 @@ class GMarkTransformer: NSValueTransformer {
         return false
     }
 
-    override func transformedValue(value: AnyObject?) -> AnyObject? {
+    override func transformedValue(_ value: AnyObject?) -> AnyObject? {
         if value == nil {
             return nil
         }
-        let mark = GMark(rawValue: value!.integerValue)!
+        let mark = GMark(rawValue: value!.intValue)!
         switch mark {
-        case .Install:
+        case .install:
             return NSImage(named: NSImageNameAddTemplate)
-        case .Uninstall:
+        case .uninstall:
             return NSImage(named: NSImageNameRemoveTemplate)
-        case .Deactivate:
+        case .deactivate:
             return NSImage(named: NSImageNameStopProgressTemplate)
-        case .Upgrade:
+        case .upgrade:
             return NSImage(named: NSImageNameRefreshTemplate)
-        case .Fetch:
+        case .fetch:
             return NSImage(named: "source-native.tiff")
-        case .Clean:
+        case .clean:
             return NSImage(named: NSImageNameActionTemplate)
         default:
             return nil

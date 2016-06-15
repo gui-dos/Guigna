@@ -13,8 +13,8 @@ final class MacOSX: GSystem {
 
     override func list() -> [GPackage] {
 
-        index.removeAll(keepCapacity: true)
-        items.removeAll(keepCapacity: true)
+        index.removeAll(keepingCapacity: true)
+        items.removeAll(keepingCapacity: true)
 
         items = installed()
         return items as! [GPackage]
@@ -29,15 +29,15 @@ final class MacOSX: GSystem {
         var pkgIds = output("/usr/sbin/pkgutil --pkgs").split("\n")
         pkgIds.removeLast()
 
-        let history = Array(((NSArray(contentsOfFile: "/Library/Receipts/InstallHistory.plist") as? [AnyObject]) ?? []).reverse())
+        let history = Array(((NSArray(contentsOfFile: "/Library/Receipts/InstallHistory.plist") as? [AnyObject]) ?? []).reversed())
         var keepPkg: Bool
         for dict in history as! [NSDictionary] {
             keepPkg = false
             var ids = dict["packageIdentifiers"]! as! [String]
             for pkgId in ids {
-                if let idx = pkgIds.indexOf(pkgId) {
+                if let idx = pkgIds.index(of: pkgId) {
                     keepPkg = true
-                    pkgIds.removeAtIndex(idx)
+                    pkgIds.remove(at: idx)
                 }
             }
             if !keepPkg {
@@ -46,7 +46,7 @@ final class MacOSX: GSystem {
             let name = dict["displayName"]! as! String
             var version = dict["displayVersion"]! as! String
             var category = dict["processName"]! as! String
-            category = category.replace(" ", "").lowercaseString
+            category = category.replace(" ", "").lowercased()
             if category == "installer" {
                 let infoOutput = output("/usr/sbin/pkgutil --pkg-info-plist \(ids[0])")
                 if infoOutput != "" {
@@ -54,7 +54,7 @@ final class MacOSX: GSystem {
                     version = plist["pkg-version"]! as! String
                 }
             }
-            let pkg = GPackage(name: name, version: "", system: self, status: .UpToDate)
+            let pkg = GPackage(name: name, version: "", system: self, status: .upToDate)
             pkg.id = ids.join()
             pkg.categories = category
             pkg.description = pkg.id
@@ -82,7 +82,7 @@ final class MacOSX: GSystem {
     }
 
 
-    override func info(item: GItem) -> String {
+    override func info(_ item: GItem) -> String {
         var info = ""
         for pkgId in item.id.split() {
             info += output("/usr/sbin/pkgutil --pkg-info \(pkgId)")
@@ -91,16 +91,16 @@ final class MacOSX: GSystem {
         return info
     }
 
-    override func home(item: GItem) -> String {
+    override func home(_ item: GItem) -> String {
         var homepage = "http://support.apple.com/downloads/"
         if item.categories == "storeagent" || item.categories == "storedownloadd" {
             let url = "http://itunes.apple.com/lookup?bundleId=\(item.id)"
-            let data = NSData(contentsOfURL: NSURL(string: url)!) ?? NSData()
-            let results = (((try! NSJSONSerialization.JSONObjectWithData(data, options: [])) as! NSDictionary)["results"]! as! NSArray)
+            let data = (try? Data(contentsOf: URL(string: url)!)) ?? Data()
+            let results = (((try! JSONSerialization.jsonObject(with: data, options: [])) as! NSDictionary)["results"]! as! NSArray)
             if results.count > 0 {
                 let pkgId = (results[0] as! NSDictionary)["trackId"]!.stringValue!
-                let url = NSURL(string: "http://itunes.apple.com/app/id\(pkgId)")!
-                if let xmlDoc = try? NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML)) {
+                let url = URL(string: "http://itunes.apple.com/app/id\(pkgId)")!
+                if let xmlDoc = try? XMLDocument(contentsOf: url, options: Int(NSXMLDocumentTidyHTML)) {
                     let mainDiv = xmlDoc.rootElement()!["//div[@id=\"main\"]"][0]
                     let links = mainDiv["//div[@class=\"app-links\"]/a"]
                     // TODO: get screenshots via JSON
@@ -116,21 +116,21 @@ final class MacOSX: GSystem {
         return homepage
     }
 
-    override func log(item: GItem) -> String {
+    override func log(_ item: GItem) -> String {
         var page = self.logpage
         if item.categories == "storeagent" || item.categories == "storedownloadd" {
             let url = "http://itunes.apple.com/lookup?bundleId=\(item.id)"
-            let data = NSData(contentsOfURL: NSURL(string: url)!) ?? NSData()
-            let results = (((try! NSJSONSerialization.JSONObjectWithData(data, options: [])) as! NSDictionary)["results"]! as! NSArray)
+            let data = (try? Data(contentsOf: URL(string: url)!)) ?? Data()
+            let results = (((try! JSONSerialization.jsonObject(with: data, options: [])) as! NSDictionary)["results"]! as! NSArray)
             if results.count > 0 {
                 let pkgId = (results[0] as! NSDictionary)["trackId"]!.stringValue!
                 page = "http://itunes.apple.com/app/id" + pkgId
             }
         }
-        return page
+        return page!
     }
 
-    override func contents(item: GItem) -> String {
+    override func contents(_ item: GItem) -> String {
         var contents = ""
         for pkgId in item.id.split() {
             let infoOutput = output("\(cmd) --pkg-info-plist \(pkgId)")
@@ -141,22 +141,22 @@ final class MacOSX: GSystem {
             var files = output("\(cmd) --files \(pkgId)").split("\n")
             files.removeLast()
             for file in files {
-                contents += NSString.pathWithComponents([plist["volume"] as! String, plist["install-location"] as! String, file])
+                contents += NSString.path(withComponents: [plist["volume"] as! String, plist["install-location"] as! String, file])
                 contents += ("\n")
             }
         }
         return contents
     }
 
-    override func cat(item: GItem) -> String {
+    override func cat(_ item: GItem) -> String {
         return "TODO"
     }
 
 
-    override func uninstallCmd(pkg: GPackage) -> String {
+    override func uninstallCmd(_ pkg: GPackage) -> String {
         // SEE: https://github.com/caskroom/homebrew-cask/blob/master/lib/cask/pkg.rb
         var commands = [String]()
-        let fileManager = NSFileManager.defaultManager()
+        let fileManager = FileManager.default()
         var dirsToDelete = [String]()
         var isDir: ObjCBool = true
         for pkgId in pkg.id.split() {
@@ -168,8 +168,8 @@ final class MacOSX: GSystem {
             var dirs = output("\(cmd) --only-dirs --files \(pkgId)").split("\n")
             dirs.removeLast()
             for dir in dirs {
-                let dirPath = NSString.pathWithComponents([plist["volume"] as! String, plist["install-location"] as! String, dir])
-                let fileAttributes = (try! fileManager.attributesOfItemAtPath(dirPath)) as NSDictionary
+                let dirPath = NSString.path(withComponents: [plist["volume"] as! String, plist["install-location"] as! String, dir])
+                let fileAttributes = (try! fileManager.attributesOfItem(atPath: dirPath)) as NSDictionary
                 if (!(Int(fileAttributes.fileOwnerAccountID()!) == 0) && !dirPath.hasPrefix("/usr/local"))
                     || dirPath.contains(pkg.name)
                     || dirPath.contains(".")
@@ -183,8 +183,8 @@ final class MacOSX: GSystem {
             var files = output("\(cmd) --files \(pkgId)").split("\n") // links are not detected with --only-files
             files.removeLast()
             for file in files {
-                let filePath = NSString.pathWithComponents([plist["volume"] as! String, plist["install-location"] as! String, file])
-                if !(fileManager.fileExistsAtPath(filePath, isDirectory: &isDir) && isDir) {
+                let filePath = NSString.path(withComponents: [plist["volume"] as! String, plist["install-location"] as! String, file])
+                if !(fileManager.fileExists(atPath: filePath, isDirectory: &isDir) && isDir) {
                     if (dirsToDelete.filter { filePath.contains($0) }).count == 0 {
                         commands.append("sudo rm \"\(filePath)\"")
                     }

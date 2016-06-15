@@ -14,12 +14,12 @@ final class Fink: GSystem {
 
     override func list() -> [GPackage] {
 
-        index.removeAll(keepCapacity: true)
-        items.removeAll(keepCapacity: true)
+        index.removeAll(keepingCapacity: true)
+        items.removeAll(keepingCapacity: true)
 
-        if mode == .Online {
-            let url = NSURL(string: "http://pdb.finkproject.org/pdb/browse.php")!
-            if let xmlDoc = try? NSXMLDocument(contentsOfURL: url, options: Int(NSXMLDocumentTidyHTML)) {
+        if mode == .online {
+            let url = URL(string: "http://pdb.finkproject.org/pdb/browse.php")!
+            if let xmlDoc = try? XMLDocument(contentsOf: url, options: Int(NSXMLDocumentTidyHTML)) {
                 let nodes = xmlDoc.rootElement()!["//tr[@class=\"package\"]"]
                 for node in nodes {
                     let dataRows = node["td"]
@@ -29,7 +29,7 @@ final class Fink: GSystem {
                     }
                     let name = dataRows[0].stringValue!
                     let version = dataRows[1].stringValue!
-                    let pkg = GPackage(name: name, version: version, system: self, status: .Available)
+                    let pkg = GPackage(name: name, version: version, system: self, status: .available)
                     pkg.description = description
                     items.append(pkg)
                     self[name] = pkg
@@ -38,7 +38,7 @@ final class Fink: GSystem {
         } else {
             var outputLines = output("\(cmd) list --tab").split("\n")
             outputLines.removeLast()
-            let whitespaceCharacterSet = NSCharacterSet.whitespaceCharacterSet()
+            let whitespaceCharacterSet = CharacterSet.whitespaces
             var status: GStatus
             for line in outputLines {
                 let components = line.split("\t")
@@ -49,11 +49,11 @@ final class Fink: GSystem {
                 let name = components[1]
                 let version = components[2]
                 let state = components[0].trim(whitespaceCharacterSet)
-                status = .Available
+                status = .available
                 if state == "i" || state == "p" {
-                    status = .UpToDate
+                    status = .upToDate
                 } else if state == "(i)" {
-                    status = .Outdated
+                    status = .outdated
                 }
                 let pkg = GPackage(name: name, version: version, system: self, status: status)
                 pkg.description = description
@@ -69,12 +69,12 @@ final class Fink: GSystem {
     override func installed() -> [GPackage] {
 
         if self.isHidden {
-            return items.filter { $0.status != .Available} as! [GPackage]
+            return items.filter { $0.status != .available} as! [GPackage]
         }
         var pkgs = [GPackage]()
         pkgs.reserveCapacity(50000)
 
-        if mode == .Online {
+        if mode == .online {
             return pkgs
         }
 
@@ -82,8 +82,8 @@ final class Fink: GSystem {
         for pkg in items as! [GPackage] {
             status = pkg.status
             pkg.installed = nil
-            if status != .Updated && status != .New { // TODO: !pkg.description.hasPrefix("[virtual")
-                pkg.status = .Available
+            if status != .updated && status != .new { // TODO: !pkg.description.hasPrefix("[virtual")
+                pkg.status = .available
             }
         }
         var outputLines = output("\(prefix)/bin/dpkg-query --show").split("\n")
@@ -92,15 +92,15 @@ final class Fink: GSystem {
             let components = line.split("\t")
             let name = components[0]
             let version = components[1]
-            status = .UpToDate
+            status = .upToDate
             var pkg: GPackage! = self[name]
             let latestVersion: String = (pkg == nil) ? "" : pkg.version
             if pkg == nil {
                 pkg = GPackage(name: name, version: latestVersion, system: self, status: status)
                 self[name] = pkg
             } else {
-                if pkg.status == .Available {
-                    pkg.status = .UpToDate
+                if pkg.status == .available {
+                    pkg.status = .upToDate
                 }
             }
             pkg.installed = version
@@ -112,12 +112,12 @@ final class Fink: GSystem {
     override func outdated() -> [GPackage] {
 
         if self.isHidden {
-            return items.filter { $0.status == .Outdated} as! [GPackage]
+            return items.filter { $0.status == .outdated} as! [GPackage]
         }
         var pkgs = [GPackage]()
         pkgs.reserveCapacity(50000)
 
-        if mode == .Online {
+        if mode == .online {
             return pkgs
         }
 
@@ -132,10 +132,10 @@ final class Fink: GSystem {
             var pkg: GPackage! = self[name]
             let latestVersion: String = (pkg == nil) ? "" : pkg.version
             if pkg == nil {
-                pkg = GPackage(name: name, version: latestVersion, system: self, status: .Outdated)
+                pkg = GPackage(name: name, version: latestVersion, system: self, status: .outdated)
                 self[name] = pkg
             } else {
-                pkg.status = .Outdated
+                pkg.status = .outdated
             }
             pkg.description = description
             pkgs.append(pkg)
@@ -147,11 +147,11 @@ final class Fink: GSystem {
 
     // TODO: pkg_info -B PKGPATH=misc/figlet
 
-    override func info(item: GItem) -> String {
+    override func info(_ item: GItem) -> String {
         if self.isHidden {
             return super.info(item)
         }
-        if mode == .Online {
+        if mode == .online {
             let nodes = agent.nodes(URL: "http://pdb.finkproject.org/pdb/package.php/\(item.name)", XPath: "//div[@class=\"desc\"]")
             if nodes.count == 0 {
                 return "[Info not available]"
@@ -165,7 +165,7 @@ final class Fink: GSystem {
     }
 
 
-    override func home(item: GItem) -> String {
+    override func home(_ item: GItem) -> String {
         let nodes = agent.nodes(URL: "http://pdb.finkproject.org/pdb/package.php/\(item.name)", XPath: "//a[contains(@title, \"home\")]")
         if nodes.count == 0 {
             return "[Homepage not available]"
@@ -174,23 +174,23 @@ final class Fink: GSystem {
         }
     }
 
-    override func log(item: GItem) -> String {
+    override func log(_ item: GItem) -> String {
         return "http://pdb.finkproject.org/pdb/package.php/\(item.name)"
         // @"http://github.com/fink/fink/commits/master"
     }
 
-    override func contents(item: GItem) -> String {
+    override func contents(_ item: GItem) -> String {
         return ""
     }
 
-    override func cat(item: GItem) -> String {
-        if item.status != .Available || mode == .Online {
+    override func cat(_ item: GItem) -> String {
+        if item.status != .available || mode == .online {
             let nodes = agent.nodes(URL: "http://pdb.finkproject.org/pdb/package.php/\(item.name)", XPath: "//a[contains(@title, \"info\")]")
             if nodes.count == 0 {
                 return "[.info not reachable]"
             } else {
                 let cvs = nodes[0].stringValue!
-                let info = (try? String(contentsOfURL: NSURL(string: "http://fink.cvs.sourceforge.net/fink/\(cvs)")!, encoding: NSUTF8StringEncoding)) ?? ""
+                let info = (try? String(contentsOfURL: URL(string: "http://fink.cvs.sourceforge.net/fink/\(cvs)")!, encoding: String.Encoding.utf8)) ?? ""
                 return info
             }
         } else {
@@ -201,23 +201,23 @@ final class Fink: GSystem {
 
     // TODO: Deps
 
-    override func installCmd(pkg: GPackage) -> String {
+    override func installCmd(_ pkg: GPackage) -> String {
         return "sudo \(cmd) install \(pkg.name)"
 
     }
 
-    override func uninstallCmd(pkg: GPackage) -> String {
+    override func uninstallCmd(_ pkg: GPackage) -> String {
         return "sudo \(cmd) remove \(pkg.name)"
     }
 
-    override func upgradeCmd(pkg: GPackage) -> String {
+    override func upgradeCmd(_ pkg: GPackage) -> String {
         return "sudo \(cmd) update \(pkg.name)"
     }
 
 
     override var updateCmd: String! {
         get {
-            if mode == .Online {
+            if mode == .online {
                 return nil
             } else {
                 return "sudo \(cmd) selfupdate"
@@ -244,7 +244,7 @@ final class Fink: GSystem {
         return "sudo rm -rf /sw"
     }
 
-    override func verbosifiedCmd(command: String) -> String {
+    override func verbosifiedCmd(_ command: String) -> String {
         return cmd.replace(cmd, "\(cmd) -v")
     }
 }

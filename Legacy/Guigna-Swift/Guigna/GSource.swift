@@ -1,15 +1,15 @@
 import Foundation
 
 enum GState: Int {
-    case Off
-    case On
-    case Hidden
+    case off
+    case on
+    case hidden
 }
 
 
 enum GMode: Int {
-    case Offline
-    case Online
+    case offline
+    case online
 }
 
 
@@ -30,19 +30,19 @@ class GSource: NSObject {
         self.agent = agent
         items = [GItem]()
         items.reserveCapacity(50000)
-        status = .On
-        mode = .Offline
+        status = .on
+        mode = .offline
     }
 
     convenience init(name: String) {
         self.init(name: name, agent: nil)
     }
 
-    func info(item: GItem) -> String {
+    func info(_ item: GItem) -> String {
         return "\(item.name) - \(item.version)\n\(self.home(item))"
     }
 
-    func home(item: GItem) -> String {
+    func home(_ item: GItem) -> String {
         if item.homepage != nil {
             return item.homepage
         } else {
@@ -50,25 +50,25 @@ class GSource: NSObject {
         }
     }
 
-    func log(item: GItem) -> String {
+    func log(_ item: GItem) -> String {
         return home(item)
     }
 
-    func contents(item: GItem) -> String {
+    func contents(_ item: GItem) -> String {
         return ""
     }
 
-    func cat(item: GItem) -> String {
+    func cat(_ item: GItem) -> String {
         return "[Not Available]"
     }
 
 
-    func deps(item: GItem) -> String {
+    func deps(_ item: GItem) -> String {
         return ""
     }
 
 
-    func dependents(item: GItem) -> String {
+    func dependents(_ item: GItem) -> String {
         return ""
     }
 
@@ -76,7 +76,7 @@ class GSource: NSObject {
 
 
 @objc(GSourceTransformer)
-class GSourceTransformer: NSValueTransformer {
+class GSourceTransformer: ValueTransformer {
 
     override class func transformedValueClass() -> AnyClass {
         return NSImage.self
@@ -86,7 +86,7 @@ class GSourceTransformer: NSValueTransformer {
         return false
     }
 
-    override func transformedValue(source: AnyObject?) -> AnyObject? {
+    override func transformedValue(_ source: AnyObject?) -> AnyObject? {
         if source == nil {
             return nil
         }
