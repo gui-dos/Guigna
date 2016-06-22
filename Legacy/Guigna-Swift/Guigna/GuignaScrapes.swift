@@ -251,7 +251,7 @@ class PyPI: GScrape {
     }
 
     override func log(_ item: GItem) -> String {
-        return "\(self.homepage)/\(item.name)/\(item.version)"
+        return "\(self.homepage!)/\(item.name)/\(item.version)"
     }
 }
 
@@ -299,7 +299,7 @@ class RubyGems: GScrape {
     }
 
     override func log(_ item: GItem) -> String {
-        return "\(self.homepage)gems/\(item.name)"
+        return "\(self.homepage!)gems/\(item.name)"
     }
 
 }
