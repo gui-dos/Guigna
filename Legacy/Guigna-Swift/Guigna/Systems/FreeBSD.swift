@@ -16,28 +16,61 @@ final class FreeBSD: GSystem {
         index.removeAll(keepingCapacity: true)
         items.removeAll(keepingCapacity: true)
 
-        let indexPath = ("~/Library/Application Support/Guigna/FreeBSD/INDEX" as NSString).expandingTildeInPath
+        // TODO: parse packagesite.yaml instead of INDEX
+
+//        let indexPath = ("~/Library/Application Support/Guigna/FreeBSD/INDEX" as NSString).expandingTildeInPath
+        let indexPath = ("~/Library/Application Support/Guigna/FreeBSD/packagesite.yaml" as NSString).expandingTildeInPath
         if indexPath.exists {
-            let lines = (try! String(contentsOfFile: indexPath, encoding: String.Encoding.utf8)).split("\n")
-            for line in lines {
-                let components = line.split("|")
-                var name = components[0]
-                let idx = name.rindex("-")
-                if idx == NSNotFound {
-                    continue
+            let packagesite = try! String(contentsOfFile: indexPath, encoding: .isoLatin1)
+            let packages = packagesite.split("\n")
+            for pkg in packages {
+                do {
+                    let pkgDict = try JSONSerialization.jsonObject(with: pkg.data(using: .isoLatin1)!, options: [])
+                    let name = pkgDict["name"] as! String
+                    let version = pkgDict["version"] as! String
+                    let description = pkgDict["comment"] as! String
+                    let categories = ((pkgDict["categories"] as! NSArray) as Array).join()
+                    var license: String = ""
+                    let licenselogic = pkgDict["licenselogic"] as? String
+                    if licenselogic != nil {
+                        license = pkgDict["licenselogic"]! as! String
+                    }
+                    let licenses = pkgDict["licenses"] as? NSArray
+                    if licenses != nil {
+                        license = ((pkgDict["licenses"]! as! NSArray) as Array).join()
+                    }
+                    let homepage = pkgDict["www"] as! String
+                    let pkg = GPackage(name: name, version: version, system: self, status: .available)
+                    pkg.description = description
+                    pkg.categories = categories
+                    pkg.homepage = homepage
+                    pkg.license = license
+                    // TODO:
+                    items.append(pkg)
+                } catch {
                 }
-                let version = name.substringFromIndex(idx + 1)
-                name = name.substringToIndex(idx)
-                let description = components[3]
-                let category = components[6]
-                let homepage = components[9]
-                let pkg = GPackage(name: name, version: version, system: self, status: .available)
-                pkg.categories = category
-                pkg.description = description
-                pkg.homepage = homepage
-                items.append(pkg)
-                // self[id] = pkg
             }
+            items.sort {$0.name < $1.name}
+//            let lines = (try! String(contentsOfFile: indexPath, encoding: String.Encoding.utf8)).split("\n")
+//            for line in lines {
+//                let components = line.split("|")
+//                var name = components[0]
+//                let idx = name.rindex("-")
+//                if idx == NSNotFound {
+//                    continue
+//                }
+//                let version = name.substring(from: idx + 1)
+//                name = name.substring(to: idx)
+//                let description = components[3]
+//                let category = components[6]
+//                let homepage = components[9]
+//                let pkg = GPackage(name: name, version: version, system: self, status: .available)
+//                pkg.categories = category
+//                pkg.description = description
+//                pkg.homepage = homepage
+//                items.append(pkg)
+//                // self[id] = pkg
+//            }
 
         } else {
             let url = URL(string: "http://www.freebsd.org/ports/master-index.html")!
@@ -49,10 +82,10 @@ final class FreeBSD: GSystem {
                 for node in names {
                     var name = node.stringValue!
                     let idx = name.rindex("-")
-                    let version = name.substringFromIndex(idx + 1)
-                    name = name.substringToIndex(idx)
+                    let version = name.substring(from: idx + 1)
+                    name = name.substring(to: idx)
                     var category = node.href
-                    category = category.substringToIndex(category.index(".html"))
+                    category = category.substring(to: category.index(".html"))
                     let description = descriptions[i].stringValue!
                     let pkg = GPackage(name: name, version: version, system: self, status: .available)
                     pkg.categories = category
@@ -92,7 +125,7 @@ final class FreeBSD: GSystem {
                 for line in Array(pkgDescr.split("\n").reversed()) {
                     let idx = line.index("WWW:")
                     if idx != NSNotFound {
-                        return line.substringFromIndex(idx + 4).trim()
+                        return line.substring(from: idx + 4).trim()
                     }
                 }
             }
