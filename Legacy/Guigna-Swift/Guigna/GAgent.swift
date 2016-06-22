@@ -4,7 +4,8 @@ class GAgent: NSObject {
 
     var appDelegate: GAppDelegate?
     var processID: CInt?
-
+    
+    @discardableResult
     func output(_ command: String) -> String {
 
         let task = Task()

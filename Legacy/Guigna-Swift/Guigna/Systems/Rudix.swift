@@ -19,6 +19,7 @@ final class Rudix: GSystem {
         return osVersion
     }
 
+    @discardableResult
     override func list() -> [GPackage] {
 
         index.removeAll(keepingCapacity: true)
@@ -67,6 +68,7 @@ final class Rudix: GSystem {
     }
 
 
+    @discardableResult
     override func installed() -> [GPackage] {
 
         if self.isHidden {

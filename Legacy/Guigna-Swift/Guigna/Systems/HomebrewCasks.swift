@@ -11,6 +11,7 @@ final class HomebrewCasks: GSystem {
         cmd = "\(prefix)/bin/brew cask"
     }
 
+    @discardableResult
     override func list() -> [GPackage] {
 
         index.removeAll(keepingCapacity: true)
@@ -84,6 +85,7 @@ final class HomebrewCasks: GSystem {
 
     // TODO: port from Homebrew
 
+    @discardableResult
     override func installed() -> [GPackage] {
 
         if self.isHidden {
@@ -141,7 +143,8 @@ final class HomebrewCasks: GSystem {
         return pkgs
     }
 
-
+    
+    @discardableResult
     override func outdated() -> [GPackage] {
 
         if self.isHidden {

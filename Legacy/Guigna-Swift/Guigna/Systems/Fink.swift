@@ -12,6 +12,7 @@ final class Fink: GSystem {
         cmd = "\(prefix)/bin/fink"
     }
 
+    @discardableResult
     override func list() -> [GPackage] {
 
         index.removeAll(keepingCapacity: true)
@@ -66,6 +67,7 @@ final class Fink: GSystem {
     }
 
 
+    @discardableResult
     override func installed() -> [GPackage] {
 
         if self.isHidden {
@@ -109,6 +111,8 @@ final class Fink: GSystem {
         return pkgs
     }
 
+    
+    @discardableResult
     override func outdated() -> [GPackage] {
 
         if self.isHidden {

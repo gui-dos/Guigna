@@ -28,14 +28,17 @@ class GSystem: GSource {
         self.agent?.appDelegate?.defaults[key] = value as! NSObject
     }
 
+    @discardableResult
     func list() -> [GPackage] {
         return []
     }
 
+    @discardableResult
     func installed() -> [GPackage] {
         return []
     }
 
+    @discardableResult
     func outdated() -> [GPackage] {
         return []
     }

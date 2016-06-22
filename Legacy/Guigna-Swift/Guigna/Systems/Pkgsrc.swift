@@ -20,6 +20,7 @@ final class Pkgsrc: GSystem {
         }
     }
 
+    @discardableResult
     override func list() -> [GPackage] {
 
         index.removeAll(keepingCapacity: true)
@@ -90,6 +91,8 @@ final class Pkgsrc: GSystem {
     }
 
     // TODO: outdated()
+
+    @discardableResult
     override func installed() -> [GPackage] {
 
         if self.isHidden {

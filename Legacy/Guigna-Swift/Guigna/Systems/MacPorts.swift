@@ -11,6 +11,7 @@ final class MacPorts: GSystem {
         cmd = "\(prefix)/bin/port"
     }
 
+    @discardableResult
     override func list() -> [GPackage] {
 
         index.removeAll(keepingCapacity: true)
@@ -111,6 +112,7 @@ final class MacPorts: GSystem {
     }
 
 
+    @discardableResult
     override func installed() -> [GPackage] {
 
         if self.isHidden {
@@ -183,6 +185,7 @@ final class MacPorts: GSystem {
     }
 
 
+    @discardableResult
     override func outdated() -> [GPackage] {
 
         if self.isHidden {

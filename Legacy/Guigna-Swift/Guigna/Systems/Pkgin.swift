@@ -27,6 +27,7 @@ final class Pkgin: GSystem {
         }
     }
 
+    @discardableResult
     override func list() -> [GPackage] {
 
         index.removeAll(keepingCapacity: true)
@@ -131,6 +132,8 @@ final class Pkgin: GSystem {
     }
 
     // TODO: outdated()
+
+    @discardableResult
     override func installed() -> [GPackage] {
 
         if self.isHidden {

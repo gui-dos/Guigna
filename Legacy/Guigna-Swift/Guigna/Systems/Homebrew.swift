@@ -11,6 +11,7 @@ final class Homebrew: GSystem {
         cmd = "\(prefix)/bin/brew"
     }
 
+    @discardableResult
     override func list() -> [GPackage] {
 
         index.removeAll(keepingCapacity: true)
@@ -81,7 +82,7 @@ final class Homebrew: GSystem {
         return items as! [GPackage]
     }
 
-
+    @discardableResult
     override func installed() -> [GPackage] {
 
         if self.isHidden {
@@ -146,7 +147,7 @@ final class Homebrew: GSystem {
         return pkgs
     }
 
-
+    @discardableResult
     override func outdated() -> [GPackage] {
 
         if self.isHidden {

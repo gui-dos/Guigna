@@ -11,6 +11,7 @@ final class FreeBSD: GSystem {
         cmd = "\(prefix)freebsd"
     }
 
+    @discardableResult
     override func list() -> [GPackage] {
 
         index.removeAll(keepingCapacity: true)

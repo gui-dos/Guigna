@@ -11,6 +11,7 @@ final class MacOSX: GSystem {
         cmd = "/usr/sbin/pkgutil"
     }
 
+    @discardableResult
     override func list() -> [GPackage] {
 
         index.removeAll(keepingCapacity: true)
@@ -21,6 +22,7 @@ final class MacOSX: GSystem {
     }
 
 
+    @discardableResult
     override func installed() -> [GPackage] {
 
         var pkgs = [GPackage]()
@@ -68,7 +70,7 @@ final class MacOSX: GSystem {
         return pkgs
     }
 
-
+    @discardableResult
     override func outdated() -> [GPackage] {
         let pkgs = [GPackage]()
         // TODO: sudo /usr/sbin/softwareupdate --list

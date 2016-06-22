@@ -11,6 +11,7 @@ final class ITunes: GSystem {
         cmd = "/Applications/iTunes.app/Contents/MacOS/iTunes"
     }
 
+    @discardableResult
     override func list() -> [GPackage] {
 
         index.removeAll(keepingCapacity: true)
@@ -21,6 +22,7 @@ final class ITunes: GSystem {
     }
 
 
+    @discardableResult
     override func installed() -> [GPackage] {
 
         var pkgs = [GPackage]()
