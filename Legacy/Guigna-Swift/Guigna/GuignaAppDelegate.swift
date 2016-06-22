@@ -327,7 +327,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             systems.append(pkgin)
         }
 
-        if "\(APPDIR)/FreeBSD/INDEX".exists {
+        if "\(APPDIR)/FreeBSD/packagesite.yaml".exists {
             if defaults["FreeBSDStatus"] == nil {
                 defaults["FreeBSDStatus"] = GState.on.rawValue
             }

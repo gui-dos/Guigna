@@ -16,9 +16,8 @@ final class FreeBSD: GSystem {
         index.removeAll(keepingCapacity: true)
         items.removeAll(keepingCapacity: true)
 
-        // TODO: parse packagesite.yaml instead of INDEX
+        // TODO: port to Objective-C
 
-//        let indexPath = ("~/Library/Application Support/Guigna/FreeBSD/INDEX" as NSString).expandingTildeInPath
         let indexPath = ("~/Library/Application Support/Guigna/FreeBSD/packagesite.yaml" as NSString).expandingTildeInPath
         if indexPath.exists {
             let packagesite = try! String(contentsOfFile: indexPath, encoding: .isoLatin1)
@@ -51,6 +50,10 @@ final class FreeBSD: GSystem {
                 }
             }
             items.sort {$0.name < $1.name}
+
+// Legacy code:
+//
+//        let indexPath = ("~/Library/Application Support/Guigna/FreeBSD/INDEX" as NSString).expandingTildeInPath
 //            let lines = (try! String(contentsOfFile: indexPath, encoding: String.Encoding.utf8)).split("\n")
 //            for line in lines {
 //                let components = line.split("|")
