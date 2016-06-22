@@ -25,6 +25,7 @@ TODO
 * mdfind 'kMDItemContentType==com.apple.application-bundle'
 * Manage --force flags
 * itemsTable date column
+* FreeBSD: parse packagesite.yaml instead of INDEX, deps
 * Fink categories, deps, binaries
 * pkgsrc deps, outdated, options, Pkgsrc.se CVSWeb
   Faster pkgsrc cvs update -dP (i.e. github.com/jsonn/pkgsrc)
@@ -37,7 +38,7 @@ TODO
 * Contextual options when marking items
 * commandsPopUp suggestions
 * Suggest 'sudo chown $USER:admin /usr/local'
-* Monitor displaying background tasks
+* A monitor displaying background tasks
 * Launch/Run action, detecting binaries
 * Scriptability
 * Editor for launchd and preferences plists
@@ -54,7 +55,6 @@ TODO
 * Option not to hide prefixes
 * Screenshots from Debian, NSWorkspace.sharedWorkspace.iconForFile
 * Download BSD INDEXes when activated in Options
-* FreeBSD Deps
 * Freecode log->home
 * http://opensourcemac.org, http://www.freesmug.org/
 * http://packages.gentoo.org/arch/x64-macos?arches=prefix

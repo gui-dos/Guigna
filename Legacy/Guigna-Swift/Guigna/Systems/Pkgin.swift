@@ -44,11 +44,11 @@ final class Pkgin: GSystem {
         //                if idx == NSNotFound {
         //                    continue
         //                }
-        //                let version = name.substringFromIndex(idx + 1)
+        //                let version = name.substring(from: idx + 1)
         //                // name = [name substringToIndex:idx];
         //                let id = components[1]
         //                idx = id.rindex("/")
-        //                name = id.substringFromIndex(idx + 1)
+        //                name = id.substring(from: idx + 1)
         //                let description = components[3]
         //                let category = components[6]
         //                let homepage = components[11]
@@ -76,13 +76,13 @@ final class Pkgin: GSystem {
         //                        continue
         //                    }
         //                    let version = name.substring(idx + 1, name.length - idx - 3)
-        //                    name = name.substringToIndex(idx)
+        //                    name = name.substring(to: idx)
         //                    var category = rowData[1].stringValue!
         //                    category = category.substring(1, category.length - 3)
         //                    var description = rowData[2].stringValue!
         //                    idx = description.rindex("  ")
         //                    if idx != NSNotFound {
-        //                        description = description.substringToIndex(idx)
+        //                        description = description.substring(to: idx)
         //                    }
         //                    let pkg = GPackage(name: name, version: version, system: self, status: .Available)
         //                    pkg.categories = category
@@ -107,14 +107,14 @@ final class Pkgin: GSystem {
             let whitespaceCharacterSet = CharacterSet.whitespaces
             for line in outputLines.reversed() {
                 var idx = line.index(" ")
-                var name = line.substringToIndex(idx)
-                let description = line.substringFromIndex(idx + 1).trim(whitespaceCharacterSet)
+                var name = line.substring(to: idx)
+                let description = line.substring(from: idx + 1).trim(whitespaceCharacterSet)
                 idx = name.rindex("-")
-                let version = name.substringFromIndex(idx + 1)
-                name = name.substringToIndex(idx)
+                let version = name.substring(from: idx + 1)
+                name = name.substring(to: idx)
                 // let id = ids[i]
                 // idx = id.index("/")
-                // name = id.substringFromIndex(idx + 1)
+                // name = id.substring(from: idx + 1)
                 let pkg = GPackage(name: name, version: version, system: self, status: .available)
                 pkg.categories = category
                 pkg.description = description
@@ -160,14 +160,14 @@ final class Pkgin: GSystem {
         var i = 0
         for line in outputLines {
             var idx = line.index(" ")
-            var name = line.substringToIndex(idx)
-            let description = line.substringFromIndex(idx + 1).trim(whitespaceCharacterSet)
+            var name = line.substring(to: idx)
+            let description = line.substring(from: idx + 1).trim(whitespaceCharacterSet)
             idx = name.rindex("-")
-            let version = name.substringFromIndex(idx + 1)
-            // name = name.substringToIndex(idx)
+            let version = name.substring(from: idx + 1)
+            // name = name.substring(to: idx)
             let id = ids[i]
             idx = id.index("/")
-            name = id.substringFromIndex(idx + 1)
+            name = id.substring(from: idx + 1)
             status = .upToDate
             var pkg: GPackage! = self[id]
             let latestVersion: String = (pkg == nil) ? "" : pkg.version

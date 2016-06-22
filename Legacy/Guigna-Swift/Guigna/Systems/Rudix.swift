@@ -92,7 +92,7 @@ final class Rudix: GSystem {
         }
         // self.outdated() // update status
         for line in outputLines {
-            let name = line.substringFromIndex(line.rindex(".") + 1)
+            let name = line.substring(from: line.rindex(".") + 1)
             var pkg: GPackage! = self[name]
             let latestVersion: String = (pkg == nil) ? "" : pkg.version
             if pkg == nil {
@@ -113,7 +113,7 @@ final class Rudix: GSystem {
     override func home(_ item: GItem) -> String {
         for line in cat(item).split("\n") {
             if line.hasPrefix("Site=") {
-                homepage = line.substringFromIndex(5).trim()
+                homepage = line.substring(from: 5).trim()
                 if homepage.hasPrefix("http") {
                     return homepage
                 }

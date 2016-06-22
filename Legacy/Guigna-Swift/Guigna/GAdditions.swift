@@ -48,10 +48,6 @@ extension String {
         }
     }
 
-    func contains(_ string: String) -> Bool {
-        return self.range(of: string) != nil ? true : false
-    }
-
     subscript(index: Int) -> Character {
         return self[self.index(startIndex, offsetBy: index)]
     }
@@ -70,11 +66,11 @@ extension String {
         return self[locationIndex..<self.index(locationIndex, offsetBy: length)]
     }
 
-    func substringFromIndex(_ index: Int) -> String {
+    func substring(from index: Int) -> String {
         return self[self.index(startIndex, offsetBy: index)..<endIndex]
     }
 
-    func substringToIndex(_ index: Int) -> String {
+    func substring(to index: Int) -> String {
         return self[startIndex..<self.index(startIndex, offsetBy: index)]
     }
 
@@ -88,7 +84,7 @@ extension String {
 
     func trim(_ characters: String = "") -> String {
         var charSet: CharacterSet
-        if characters.length == 0 {
+        if characters.isEmpty {
             charSet = CharacterSet.whitespacesAndNewlines
         } else {
             charSet = CharacterSet(charactersIn: characters)

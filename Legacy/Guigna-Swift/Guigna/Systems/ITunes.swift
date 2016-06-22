@@ -43,7 +43,7 @@ final class ITunes: GSystem {
                 let metadata = plist.propertyList() as! NSDictionary
                 let name = metadata["itemName"]! as! String
                 let pkg = GPackage(name: name, version: "", system: self, status: .upToDate)
-                pkg.id = filename.substringToIndex(filename.length - 4)
+                pkg.id = filename.substring(to: filename.length - 4)
                 pkg.installed = version
                 pkg.categories = metadata["genre"]! as? String
                 pkgs.append(pkg)

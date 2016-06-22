@@ -22,7 +22,7 @@ final class HomebrewCasks: GSystem {
         for line in outputLines {
             let components = line.trim(whitespaceCharacterSet).split()
             var name = (components[0] as NSString).lastPathComponent
-            name = name.substringToIndex(name.length - 4)
+            name = name.substring(to: name.length - 4)
             var version = components.last!
             if !(version.hasPrefix("'") || version.hasPrefix(":")) {
                 let prev = components[components.count - 2]
@@ -60,7 +60,7 @@ final class HomebrewCasks: GSystem {
         for line in outputLines {
             let components = line.trim(whitespaceCharacterSet).split()
             var name = (components[0] as NSString).lastPathComponent
-            name = name.substringToIndex(name.length - 4)
+            name = name.substring(to: name.length - 4)
             if let pkg = self[name] {
                 var license = components.last!
                 if license.hasPrefix(":") {
@@ -181,7 +181,7 @@ final class HomebrewCasks: GSystem {
             for line in cat(item).split("\n") {
                 let idx = line.index("homepage")
                 if idx != NSNotFound {
-                    homepage = line.substringFromIndex(idx + 8).trim()
+                    homepage = line.substring(from: idx + 8).trim()
                     if homepage.contains("http") {
                         return homepage.trim("'\"")
                     }

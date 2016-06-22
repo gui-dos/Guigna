@@ -1246,7 +1246,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             segmentedControl.selectedSegment = -1
             updateTabView(item)
             if cmd == "sudo" {
-                sudo(input.substringFromIndex(5))
+                sudo(input.substring(from: 5))
             } else {
                 for system in systems {
                     if system.cmd.hasSuffix(cmd) {
@@ -1258,7 +1258,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 if !cmd.hasPrefix("/") {
                     output = agent.output("/bin/bash -l -c which__\(cmd)")
                     if output.length != 0 {
-                        tokens[0] = output.substringToIndex(output.length - 1)
+                        tokens[0] = output.substring(to: output.length - 1)
                         // } else // TODO:show stderr
                     }
                 }
@@ -2044,7 +2044,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             execute(Pkgsrc.removeCmd, baton: "relaunch")
 
         } else if title == "Fetch FreeBSD INDEX" {
-            execute("cd ~/Library/Application\\ Support/Guigna/FreeBSD ; curl -L -O ftp://ftp.freebsd.org/pub/FreeBSD/ports/packages/INDEX", baton: "relaunch")
+            execute("cd ~/Library/Application\\ Support/Guigna/FreeBSD ; curl -L -O http://pkg.freebsd.org/freebsd:11:x86:64/latest/packagesite.txz ; tar -xvzf packagesite.txz", baton: "relaunch")
 
         } else if title == "Install Fink" {
             execute(Fink.setupCmd, baton: "relaunch")

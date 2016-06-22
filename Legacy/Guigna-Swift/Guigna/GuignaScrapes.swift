@@ -37,19 +37,19 @@ class PkgsrcSE: GScrape {
             for (i, node) in names.enumerated() {
                 let id = node["a"][0].stringValue!
                 var idx = id.rindex("/")
-                let name = id.substringFromIndex(idx + 1)
-                let category = id.substringToIndex(idx)
+                let name = id.substring(from: idx + 1)
+                let category = id.substring(to: idx)
                 var version = dates[i].stringValue!
                 idx = version.index(" (")
                 if idx != NSNotFound {
-                    version = version.substringFromIndex(idx + 2)
-                    version = version.substringToIndex(version.index(")"))
+                    version = version.substring(from: idx + 2)
+                    version = version.substring(to: version.index(")"))
                 } else {
-                    version = version.substringFromIndex(version.rindex(" ") + 1)
+                    version = version.substring(from: version.rindex(" ") + 1)
                 }
                 var description = comments[i].stringValue!
-                description = description.substringToIndex(description.index("\n"))
-                description = description.substringFromIndex(description.index(": ") + 2)
+                description = description.substring(to: description.index("\n"))
+                description = description.substring(from: description.index(": ") + 2)
                 let entry = GItem(name: name, version: version, source: self, status: .available)
                 entry.id = id
                 entry.description = description
@@ -186,10 +186,10 @@ class CocoaPods: GScrape {
                 var licenseNodes = descriptionNode[".//li[starts-with(.,'License:')]"]
                 var license: String = ""
                 if licenseNodes.count > 0 {
-                    license = licenseNodes[0].stringValue!.substringFromIndex(9)
+                    license = licenseNodes[0].stringValue!.substring(from: 9)
                 }
                 var version = descriptionNode[".//li[starts-with(.,'Latest version:')]"][0].stringValue!
-                version = version.substringFromIndex(15)
+                version = version.substring(from: 15)
                 let home = descriptionNode[".//li[starts-with(.,'Homepage:')]/a"][0].stringValue!
                 var date = node["pubDate"][0].stringValue!
                 date = date.substring(4, 12)
@@ -324,8 +324,8 @@ class MacUpdate: GScrape {
                 let idx = name.rindex(" ")
                 var version = ""
                 if idx != NSNotFound {
-                    version = name.substringFromIndex(idx + 1)
-                    name = name.substringToIndex(idx)
+                    version = name.substring(from: idx + 1)
+                    name = name.substring(to: idx)
                 }
                 var description = node[".//span"][0].stringValue!
                 let price = node[".//span[contains(@class,\"appprice\")]"][0].stringValue!
@@ -376,7 +376,7 @@ class AppShopper: GScrape {
             for node in nodes {
                 let name = node[".//h2"][0].stringValue!.trim(whitespaceAndNewlineCharacterSet)
                 var version = node[".//span[starts-with(@class,\"version\")]"][0].stringValue!
-                version = version.substringFromIndex(2) // trim "V "
+                version = version.substring(from: 2) // trim "V "
                 var id = node.attribute("data-appid")
                 let nick = (node["a"][0].href as NSString).lastPathComponent
                 id = "\(id!) \(nick)"
@@ -447,7 +447,7 @@ class AppShopperIOS: GScrape {
             for node in nodes {
                 let name = node[".//h2"][0].stringValue!.trim(whitespaceAndNewlineCharacterSet)
                 var version = node[".//span[starts-with(@class,\"version\")]"][0].stringValue!
-                version = version.substringFromIndex(2) // trim "V "
+                version = version.substring(from: 2) // trim "V "
                 var id = node.attribute("data-appid")
                 let nick = (node["a"][0].href as NSString).lastPathComponent
                 id = "\(id!) \(nick)"

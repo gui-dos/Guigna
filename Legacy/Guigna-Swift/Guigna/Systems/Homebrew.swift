@@ -222,7 +222,7 @@ final class Homebrew: GSystem {
             for line in cat(item).split("\n") {
                 let idx = line.index("homepage")
                 if idx != NSNotFound {
-                    page = line.substringFromIndex(idx + 8).trim()
+                    page = line.substring(from: idx + 8).trim()
                     if page.contains("http") {
                         return page.trim("'\"")
                     }

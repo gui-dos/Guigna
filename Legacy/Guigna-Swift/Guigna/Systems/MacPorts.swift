@@ -145,12 +145,12 @@ final class MacPorts: GSystem {
         for line in outputLines {
             var components = line.trim(whitespaceCharacterSet).split()
             let name = components[0]
-            var version = components[1].substringFromIndex(1)
+            var version = components[1].substring(from: 1)
             var variants: String! = nil
             let idx = version.index("+")
             if idx != NSNotFound {
-                variants = version.substringFromIndex(idx + 1).split("+").join()
-                version = version.substringToIndex(idx)
+                variants = version.substring(from: idx + 1).split("+").join()
+                version = version.substring(to: idx)
             }
             if variants != nil {
                 variants = variants.replace(" ", "+")
@@ -264,7 +264,7 @@ final class MacPorts: GSystem {
             var homepage: String
             for line in cat(item).split("\n") {
                 if line.contains("homepage") {
-                    homepage = line.substringFromIndex(8).trim()
+                    homepage = line.substring(from: 8).trim()
                     if homepage.hasPrefix("http") {
                         return homepage
                     }
@@ -276,7 +276,7 @@ final class MacPorts: GSystem {
             return item.homepage
         }
         let url = output("\(cmd) -q info --homepage \(item.name)")
-        return url.substringToIndex(url.length - 1)
+        return url.substring(to: url.length - 1)
     }
 
     override func log(_ item: GItem) -> String {
@@ -321,7 +321,7 @@ final class MacPorts: GSystem {
         var variants: String! = nil
         let infoOutput = output("\(cmd) info --variants \(pkg.name)").trim()
         if infoOutput.length > 10 {
-            variants = infoOutput.substringFromIndex(10).split(", ").join()
+            variants = infoOutput.substring(from: 10).split(", ").join()
         }
         return variants
     }
