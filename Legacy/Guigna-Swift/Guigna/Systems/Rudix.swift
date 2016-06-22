@@ -26,7 +26,7 @@ final class Rudix: GSystem {
 
         var manifest = ""
         if mode == .online { // FIXME: manifest is not available anymore
-            manifest = (try? String(contentsOf: URL(string: "http://rudix.org/download/2014/10.9/00MANIFEST.txt")!, encoding: String.Encoding.utf8)) ?? ""
+            manifest = (try? String(contentsOf: URL(string: "http://rudix.org/download/2014/10.9/00MANIFEST.txt")!, encoding: .utf8)) ?? ""
         } else {
             var command = "\(cmd) search"
             let osxVersion = Rudix.clampedOSVersion()
@@ -136,7 +136,7 @@ final class Rudix: GSystem {
     }
 
     override func cat(_ item: GItem) -> String {
-        return (try? String(contentsOf: URL(string: "https://raw.githubusercontent.com/rudix-mac/rudix/master/Ports/\(item.name)/Makefile")!, encoding: String.Encoding.utf8)) ?? ""
+        return (try? String(contentsOf: URL(string: "https://raw.githubusercontent.com/rudix-mac/rudix/master/Ports/\(item.name)/Makefile")!, encoding: .utf8)) ?? ""
     }
 
 

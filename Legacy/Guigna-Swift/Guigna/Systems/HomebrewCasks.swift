@@ -221,7 +221,7 @@ final class HomebrewCasks: GSystem {
         if !self.isHidden {
             return output("/bin/sh -c export__PATH=\(prefix)/bin:$PATH__;__\(escapedCmd)__cat__\(item.name)")
         } else {
-            return (try? String(contentsOfFile: "\(prefix)_off/Library/Taps/caskroom/homebrew-cask/Casks/\(item.name).rb", encoding: String.Encoding.utf8)) ?? ""
+            return (try? String(contentsOfFile: "\(prefix)_off/Library/Taps/caskroom/homebrew-cask/Casks/\(item.name).rb", encoding: .utf8)) ?? ""
         }
     }
 

@@ -34,7 +34,7 @@ class GAgent: NSObject {
         task.waitUntilExit()
         processID = nil
         // int status = [task terminationStatus]; // TODO
-        let output = NSString(data: data, encoding: String.Encoding.utf8.rawValue) ?? ""
+        let output = String(data: data, encoding: .utf8) ?? ""
         // Uncomment to debug:
         // NSData *errorData = [[errorPipe fileHandleForReading] readDataToEndOfFile];
         // NSString __autoreleasing *errorOutput = [[NSString alloc] initWithData:errorData encoding:NSUTF8StringEncoding];
@@ -54,13 +54,13 @@ class GAgent: NSObject {
         }
         if page == nil {
             do {
-                page = try String(contentsOf: URL(string: url)!, encoding: String.Encoding.isoLatin1)
+                page = try String(contentsOf: URL(string: url)!, encoding: .isoLatin1)
             } catch let error1 as NSError {
                 error = error1
                 page = nil
             }
         }
-        let data: Data = page!.data(using: String.Encoding.utf8)!
+        let data: Data = page!.data(using: .utf8)!
         var nodes = [XMLNode]()
         do {
             let doc = try XMLDocument(data: data, options: Int(NSXMLDocumentTidyHTML))

@@ -266,7 +266,7 @@ final class Homebrew: GSystem {
         if !self.isHidden {
             return output("\(cmd) cat \(item.name)")
         } else {
-            return (try? String(contentsOfFile: "\(prefix)_off/Library/Formula/\(item.name).rb", encoding: String.Encoding.utf8)) ?? ""
+            return (try? String(contentsOfFile: "\(prefix)_off/Library/Formula/\(item.name).rb", encoding: .utf8)) ?? ""
         }
     }
 

@@ -25,7 +25,7 @@ TODO
 * mdfind 'kMDItemContentType==com.apple.application-bundle'
 * Manage --force flags
 * itemsTable date column
-* FreeBSD: port code to parse packagesite.yaml to Objective-C, deps
+* FreeBSD: port code to parse packagesite.yaml and id to Objective-C, deps
 * Fink categories, deps, binaries
 * pkgsrc deps, outdated, options, Pkgsrc.se CVSWeb
   Faster pkgsrc cvs update -dP (i.e. github.com/jsonn/pkgsrc)

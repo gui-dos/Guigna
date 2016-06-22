@@ -56,7 +56,7 @@ final class FreeBSD: GSystem {
 // Legacy code:
 //
 //        let indexPath = ("~/Library/Application Support/Guigna/FreeBSD/INDEX" as NSString).expandingTildeInPath
-//            let lines = (try! String(contentsOfFile: indexPath, encoding: String.Encoding.utf8)).split("\n")
+//            let lines = (try! String(contentsOfFile: indexPath, encoding: .utf8)).split("\n")
 //            for line in lines {
 //                let components = line.split("|")
 //                var name = components[0]
@@ -110,10 +110,10 @@ final class FreeBSD: GSystem {
     override func info(_ item: GItem) -> String { // TODO: Offline mode
         let category = item.categories!.split()[0]
         var itemName = item.name
-        var pkgDescr = (try? String(contentsOf: URL(string: "http://svnweb.freebsd.org/ports/head/\(category)/\(item.name)/pkg-descr?view=co")!, encoding: String.Encoding.utf8)) ?? ""
+        var pkgDescr = (try? String(contentsOf: URL(string: "http://svnweb.freebsd.org/ports/head/\(category)/\(item.name)/pkg-descr?view=co")!, encoding: .utf8)) ?? ""
         if pkgDescr.hasPrefix("<!DOCTYPE") { // 404 File Not Found
             itemName = itemName.lowercased()
-            pkgDescr = (try? String(contentsOf: URL(string: "http://svnweb.freebsd.org/ports/head/\(category)/\(item.name)/pkg-descr?view=co")!, encoding: String.Encoding.utf8)) ?? ""
+            pkgDescr = (try? String(contentsOf: URL(string: "http://svnweb.freebsd.org/ports/head/\(category)/\(item.name)/pkg-descr?view=co")!, encoding: .utf8)) ?? ""
         }
         if pkgDescr.hasPrefix("<!DOCTYPE") { // 404 File Not Found
             pkgDescr = "[Info not reachable]"
@@ -145,12 +145,12 @@ final class FreeBSD: GSystem {
     }
 
     override func contents(_ item: GItem) -> String {
-        let category = item.categories!.split()[0]
+        let category = item.id.split("/")[0]
         var itemName = item.name
-        var pkgPlist = (try? String(contentsOf: URL(string: "http://svnweb.freebsd.org/ports/head/\(category)/\(item.name)/pkg-plist?view=co")!, encoding: String.Encoding.utf8)) ?? ""
+        var pkgPlist = (try? String(contentsOf: URL(string: "http://svnweb.freebsd.org/ports/head/\(category)/\(item.name)/pkg-plist?view=co")!, encoding: .utf8)) ?? ""
         if pkgPlist.hasPrefix("<!DOCTYPE") { // 404 File Not Found
             itemName = itemName.lowercased()
-            pkgPlist = (try? String(contentsOf: URL(string: "http://svnweb.freebsd.org/ports/head/\(category)/\(item.name)/pkg-plist?view=co")!, encoding: String.Encoding.utf8)) ?? ""
+            pkgPlist = (try? String(contentsOf: URL(string: "http://svnweb.freebsd.org/ports/head/\(category)/\(item.name)/pkg-plist?view=co")!, encoding: .utf8)) ?? ""
         }
         if pkgPlist.hasPrefix("<!DOCTYPE") { // 404 File Not Found
             pkgPlist = ""
@@ -159,12 +159,12 @@ final class FreeBSD: GSystem {
     }
 
     override func cat(_ item: GItem) -> String {
-        let category = item.categories!.split()[0]
+        let category = item.id.split("/")[0]
         var itemName = item.name
-        var makefile = (try? String(contentsOf: URL(string: "http://svnweb.freebsd.org/ports/head/\(category)/\(item.name)/Makefile?view=co")!, encoding: String.Encoding.utf8)) ?? ""
+        var makefile = (try? String(contentsOf: URL(string: "http://svnweb.freebsd.org/ports/head/\(category)/\(item.name)/Makefile?view=co")!, encoding: .utf8)) ?? ""
         if makefile.hasPrefix("<!DOCTYPE") { // 404 File Not Found
             itemName = itemName.lowercased()
-            makefile = (try? String(contentsOf: URL(string: "http://svnweb.freebsd.org/ports/head/\(category)/\(item.name)/Makefile?view=co")!, encoding: String.Encoding.utf8)) ?? ""
+            makefile = (try? String(contentsOf: URL(string: "http://svnweb.freebsd.org/ports/head/\(category)/\(item.name)/Makefile?view=co")!, encoding: .utf8)) ?? ""
         }
         if makefile.hasPrefix("<!DOCTYPE") { // 404 File Not Found
             makefile = "[Makefile not reachable]"

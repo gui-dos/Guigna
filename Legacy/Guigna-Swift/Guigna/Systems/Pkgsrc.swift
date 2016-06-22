@@ -27,7 +27,7 @@ final class Pkgsrc: GSystem {
 
         let indexPath = ("~/Library/Application Support/Guigna/pkgsrc/INDEX" as NSString).expandingTildeInPath
         if indexPath.exists {
-            let lines = (try! String(contentsOfFile: indexPath, encoding: String.Encoding.utf8)).split("\n")
+            let lines = (try! String(contentsOfFile: indexPath, encoding: .utf8)).split("\n")
             for line in lines {
                 let components = line.split("|")
                 var name = components[0]
@@ -159,9 +159,9 @@ final class Pkgsrc: GSystem {
             return output("\(cmd) \(item.name)")
         } else {
             if item.id != nil {
-                return (try? String(contentsOf: URL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.id!)/DESCR")!, encoding: String.Encoding.utf8)) ?? ""
+                return (try? String(contentsOf: URL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.id!)/DESCR")!, encoding: .utf8)) ?? ""
             } else { // TODO lowercase (i.e. Hermes -> hermes)
-                return (try? String(contentsOf: URL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories!)/\(item.name)/DESCR")!, encoding: String.Encoding.utf8)) ?? ""
+                return (try? String(contentsOf: URL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories!)/\(item.name)/DESCR")!, encoding: .utf8)) ?? ""
             }
         }
     }
@@ -189,9 +189,9 @@ final class Pkgsrc: GSystem {
             return output("\(cmd) -L \(item.name)").split("Files:\n")[1]
         } else {
             if item.id != nil {
-                return (try? String(contentsOf: URL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.id!)/PLIST")!, encoding: String.Encoding.utf8)) ?? ""
+                return (try? String(contentsOf: URL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.id!)/PLIST")!, encoding: .utf8)) ?? ""
             } else { // TODO lowercase (i.e. Hermes -> hermes)
-                return (try? String(contentsOf: URL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories!)/\(item.name)/PLIST")!, encoding: String.Encoding.utf8)) ?? ""
+                return (try? String(contentsOf: URL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories!)/\(item.name)/PLIST")!, encoding: .utf8)) ?? ""
             }
         }
     }
@@ -202,9 +202,9 @@ final class Pkgsrc: GSystem {
             item.id = filtered[0].id
         }
         if item.id != nil {
-            return (try? String(contentsOf: URL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.id!)/Makefile")!, encoding: String.Encoding.utf8)) ?? ""
+            return (try? String(contentsOf: URL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.id!)/Makefile")!, encoding: .utf8)) ?? ""
         } else { // TODO lowercase (i.e. Hermes -> hermes)
-            return (try? String(contentsOf: URL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories!)/\(item.name)/Makefile")!, encoding: String.Encoding.utf8)) ?? ""
+            return (try? String(contentsOf: URL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories!)/\(item.name)/Makefile")!, encoding: .utf8)) ?? ""
         }
     }
 

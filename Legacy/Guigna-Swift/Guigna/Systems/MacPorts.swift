@@ -36,9 +36,9 @@ final class MacPorts: GSystem {
         } else {
             var portIndex = ""
             if mode == .online { // TODO: fetch PortIndex
-                portIndex = (try? String(contentsOfFile: ("~/Library/Application Support/Guigna/MacPorts/PortIndex" as NSString).expandingTildeInPath, encoding: String.Encoding.utf8)) ?? ""
+                portIndex = (try? String(contentsOfFile: ("~/Library/Application Support/Guigna/MacPorts/PortIndex" as NSString).expandingTildeInPath, encoding: .utf8)) ?? ""
             } else {
-                portIndex = (try? String(contentsOfFile: "\(prefix)/var/macports/sources/rsync.macports.org/release/tarballs/ports/PortIndex", encoding: String.Encoding.utf8)) ?? ""
+                portIndex = (try? String(contentsOfFile: "\(prefix)/var/macports/sources/rsync.macports.org/release/tarballs/ports/PortIndex", encoding: .utf8)) ?? ""
             }
             let s =  Scanner(string: portIndex)
             s.charactersToBeSkipped = CharacterSet(charactersIn: "")
@@ -293,7 +293,7 @@ final class MacPorts: GSystem {
 
     override func cat(_ item: GItem) -> String {
         if self.isHidden || mode == .online {
-            return (try? String(contentsOf: URL(string: "http://trac.macports.org/browser/trunk/dports/\(item.categories!.split()[0])/\(item.name)/Portfile?format=txt")!, encoding: String.Encoding.utf8)) ?? ""
+            return (try? String(contentsOf: URL(string: "http://trac.macports.org/browser/trunk/dports/\(item.categories!.split()[0])/\(item.name)/Portfile?format=txt")!, encoding: .utf8)) ?? ""
         }
         return output("\(cmd) cat \(item.name)")
     }

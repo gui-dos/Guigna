@@ -190,7 +190,7 @@ final class Fink: GSystem {
                 return "[.info not reachable]"
             } else {
                 let cvs = nodes[0].stringValue!
-                let info = (try? String(contentsOf: URL(string: "http://fink.cvs.sourceforge.net/fink/\(cvs)")!, encoding: String.Encoding.utf8)) ?? ""
+                let info = (try? String(contentsOf: URL(string: "http://fink.cvs.sourceforge.net/fink/\(cvs)")!, encoding: .utf8)) ?? ""
                 return info
             }
         } else {
