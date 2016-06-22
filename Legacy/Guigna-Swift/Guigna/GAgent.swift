@@ -4,7 +4,7 @@ class GAgent: NSObject {
 
     var appDelegate: GAppDelegate?
     var processID: CInt?
-    
+
     @discardableResult
     func output(_ command: String) -> String {
 
@@ -45,29 +45,16 @@ class GAgent: NSObject {
 
     func nodes(URL url: String, XPath xpath: String) -> [XMLNode] {
         // FIXME: doesn't allow xpath on childnodes
-        var error: NSError? = nil
-        var page: String?
-        do {
-            page = try String(contentsOf: URL(string: url)!, encoding: String.Encoding.utf8)
-        } catch let error1 as NSError {
-            error = error1
-            page = nil
-        }
+        var page = try? String(contentsOf: URL(string: url)!, encoding: .utf8)
         if page == nil {
-            do {
-                page = try String(contentsOf: URL(string: url)!, encoding: .isoLatin1)
-            } catch let error1 as NSError {
-                error = error1
-                page = nil
-            }
+            page = try? String(contentsOf: URL(string: url)!, encoding: .isoLatin1)
         }
         let data: Data = page!.data(using: .utf8)!
         var nodes = [XMLNode]()
         do {
             let doc = try XMLDocument(data: data, options: Int(NSXMLDocumentTidyHTML))
             nodes = try doc.rootElement()!.nodes(forXPath: xpath)
-        } catch let error1 as NSError {
-            error = error1
+        } catch {
         }
         return nodes
     }
