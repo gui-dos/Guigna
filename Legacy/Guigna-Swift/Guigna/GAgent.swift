@@ -3,7 +3,6 @@ import Foundation
 class GAgent: NSObject {
 
     var appDelegate: GAppDelegate?
-    var processID: CInt?
 
     @discardableResult
     func output(_ command: String) -> String {
@@ -30,16 +29,10 @@ class GAgent: NSObject {
         task.standardError = errorPipe
         task.standardInput = Pipe()
         task.launch()
-        processID = task.processIdentifier
         let data = pipe.fileHandleForReading.readDataToEndOfFile()
         task.waitUntilExit()
-        processID = nil
-        // int status = [task terminationStatus]; // TODO
         let output = String(data: data, encoding: .utf8) ?? ""
-        // Uncomment to debug:
-        // NSData *errorData = [[errorPipe fileHandleForReading] readDataToEndOfFile];
-        // NSString __autoreleasing *errorOutput = [[NSString alloc] initWithData:errorData encoding:NSUTF8StringEncoding];
-        return output as String
+        return output
     }
 
 
