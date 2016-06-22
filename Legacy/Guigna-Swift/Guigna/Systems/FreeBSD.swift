@@ -26,6 +26,7 @@ final class FreeBSD: GSystem {
                 do {
                     let pkgDict = try JSONSerialization.jsonObject(with: pkg.data(using: .isoLatin1)!, options: [])
                     let name = pkgDict["name"] as! String
+                    let id = pkgDict["origin"] as! String
                     let version = pkgDict["version"] as! String
                     let description = pkgDict["comment"] as! String
                     let categories = ((pkgDict["categories"] as! NSArray) as Array).join()
@@ -42,6 +43,7 @@ final class FreeBSD: GSystem {
                     let pkg = GPackage(name: name, version: version, system: self, status: .available)
                     pkg.description = description
                     pkg.categories = categories
+                    pkg.id = id
                     pkg.homepage = homepage
                     pkg.license = license
                     // TODO:
@@ -93,6 +95,7 @@ final class FreeBSD: GSystem {
                     let pkg = GPackage(name: name, version: version, system: self, status: .available)
                     pkg.categories = category
                     pkg.description = description
+                    pkg.id = "\(category)/\(name)"
                     items.append(pkg)
                     // self[id] = pkg
                     i += 1
@@ -137,7 +140,7 @@ final class FreeBSD: GSystem {
     }
 
     override func log(_ item: GItem) -> String {
-        let category = item.categories!.split()[0]
+        let category = item.id.split("/")[0]
         return "http://www.freshports.org/\(category)/\(item.name)"
     }
 
