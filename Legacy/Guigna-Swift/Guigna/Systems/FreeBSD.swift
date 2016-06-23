@@ -25,7 +25,7 @@ final class FreeBSD: GSystem {
             let packages = packagesite.split("\n")
             for pkg in packages {
                 do {
-                    let pkgDict = try JSONSerialization.jsonObject(with: pkg.data(using: .isoLatin1)!, options: [])
+                    let pkgDict = try JSONSerialization.jsonObject(with: pkg.data(using: .isoLatin1)!, options: []) as! NSDictionary
                     let name = pkgDict["name"] as! String
                     let id = pkgDict["origin"] as! String
                     let version = pkgDict["version"] as! String
