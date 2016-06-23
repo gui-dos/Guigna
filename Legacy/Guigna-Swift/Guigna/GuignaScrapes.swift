@@ -377,9 +377,9 @@ class AppShopper: GScrape {
                 let name = node[".//h2"][0].stringValue!.trim(whitespaceAndNewlineCharacterSet)
                 var version = node[".//span[starts-with(@class,\"version\")]"][0].stringValue!
                 version = version.substring(from: 2) // trim "V "
-                var id = node.attribute("data-appid")
+                var id = node.attribute("data-appid")!
                 let nick = (node["a"][0].href as NSString).lastPathComponent
-                id = "\(id!) \(nick)"
+                id = "\(id) \(nick)"
                 let category = node[".//h5/span"][0].stringValue!
                 let type = node[".//span[starts-with(@class,\"change\")]"][0].stringValue!
                 var description = node[".//p[@class=\"description\"]"][0].stringValue!
@@ -408,7 +408,7 @@ class AppShopper: GScrape {
             let mainDiv = xmlDoc.rootElement()!["//div[@id=\"main\"]"][0]
             let links = mainDiv["//div[@class=\"app-links\"]/a"]
             let screenshotsImgs = mainDiv["//div[contains(@class, \"screenshots\")]//img"]
-            item.screenshots = screenshotsImgs.map {$0.attribute("src")}.joined(separator: " ")
+            item.screenshots = screenshotsImgs.map {$0.attribute("src")!}.joined(separator: " ")
             var homepage = links[0].href
             if homepage == "http://" {
                 homepage = links[1].href
@@ -448,9 +448,9 @@ class AppShopperIOS: GScrape {
                 let name = node[".//h2"][0].stringValue!.trim(whitespaceAndNewlineCharacterSet)
                 var version = node[".//span[starts-with(@class,\"version\")]"][0].stringValue!
                 version = version.substring(from: 2) // trim "V "
-                var id = node.attribute("data-appid")
+                var id = node.attribute("data-appid")!
                 let nick = (node["a"][0].href as NSString).lastPathComponent
-                id = "\(id!) \(nick)"
+                id = "\(id) \(nick)"
                 let category = node[".//h5/span"][0].stringValue!
                 let type = node[".//span[starts-with(@class,\"change\")]"][0].stringValue!
                 var description = node[".//p[@class=\"description\"]"][0].stringValue!
@@ -479,7 +479,7 @@ class AppShopperIOS: GScrape {
             let mainDiv = xmlDoc.rootElement()!["//div[@id=\"main\"]"][0]
             let links = mainDiv["//div[@class=\"app-links\"]/a"]
             let screenshotsImgs = mainDiv["//div[contains(@class, \"screenshots\")]//img"]
-            item.screenshots = screenshotsImgs.map {$0.attribute("src")}.joined(separator: " ")
+            item.screenshots = screenshotsImgs.map {$0.attribute("src")!}.joined(separator: " ")
             var homepage = links[0].href
             if homepage == "http://" {
                 homepage = links[1].href

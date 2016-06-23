@@ -107,7 +107,7 @@ final class MacOSX: GSystem {
                     let links = mainDiv["//div[@class=\"app-links\"]/a"]
                     // TODO: get screenshots via JSON
                     let screenshotsImgs = mainDiv["//div[contains(@class, \"screenshots\")]//img"]
-                    item.screenshots = screenshotsImgs.map {$0.attribute("src")}.join()
+                    item.screenshots = screenshotsImgs.map {$0.attribute("src")!}.join()
                     homepage = links[0].href
                     if homepage == "http://" {
                         homepage = links[1].href

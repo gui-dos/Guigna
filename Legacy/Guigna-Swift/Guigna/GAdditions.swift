@@ -14,7 +14,6 @@ protocol GAppDelegate {
 extension Array {
 
     func join(_ separator: String = " ") -> String {
-        // return separator.join(self) // doesn't compile anymore with B6
         return self._bridgeToObjectiveC().componentsJoined(by: separator)
 
     }
