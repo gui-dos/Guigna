@@ -171,6 +171,9 @@ final class MacOSX: GSystem {
             dirs.removeLast()
             for dir in dirs {
                 let dirPath = NSString.path(withComponents: [plist["volume"] as! String, plist["install-location"] as! String, dir])
+                if !dirPath.exists {
+                    continue
+                }
                 let fileAttributes = (try! fileManager.attributesOfItem(atPath: dirPath)) as NSDictionary
                 if (!(Int(fileAttributes.fileOwnerAccountID()!) == 0) && !dirPath.hasPrefix("/usr/local"))
                     || dirPath.contains(pkg.name)
@@ -186,6 +189,9 @@ final class MacOSX: GSystem {
             files.removeLast()
             for file in files {
                 let filePath = NSString.path(withComponents: [plist["volume"] as! String, plist["install-location"] as! String, file])
+                if !filePath.exists {
+                    continue
+                }
                 if !(fileManager.fileExists(atPath: filePath, isDirectory: &isDir) && isDir) {
                     if (dirsToDelete.filter { filePath.contains($0) }).count == 0 {
                         commands.append("sudo rm \"\(filePath)\"")
