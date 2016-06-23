@@ -238,7 +238,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             }
         }
 
-        terminal.doScript("clear ; printf \"\\e[3J\" ; echo Welcome to Guigna! ; echo", in:shell)
+        let _ = terminal.doScript("clear ; printf \"\\e[3J\" ; echo Welcome to Guigna! ; echo", in:shell)
 
         if portPath.exists || "\(APPDIR)/MacPorts/PortIndex".exists {
             if defaults["MacPortsStatus"] == nil {
@@ -1310,7 +1310,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             command = command.replace("sudo", "echo \"\(adminPassword!)\" | sudo -S")
         }
         raiseShell(self)
-        terminal.doScript(command, in:self.shell)
+        let _ = terminal.doScript(command, in:self.shell)
 
     }
 

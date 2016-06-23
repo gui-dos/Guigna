@@ -16,28 +16,28 @@ TODO
 
 * Swift:
     - complete port of inactive packages management
-* Make use of Storyboards and ViewControllers
+* Objective-C:
+    - port new code from Swift (FreeBSD packagesite.yaml, ids, Pkgin)
+* Make use of Storyboards and NSViewControllers
 * Preload a cached index to speed up startup
 * Core Data, predicate editor
 * GTasks, Stop button, exception handling
 * Alternative use of PrivilegedHelperTools and XPC
-* Async URL fetches, download manager
+* Asyncronous URL fetches, download manager
 * mdfind 'kMDItemContentType==com.apple.application-bundle'
 * Manage --force flags
 * itemsTable date column
-* FreeBSD: port code to parse packagesite.yaml and id to Objective-C, deps
+* FreeBSD deps
 * Fink categories, deps, binaries
 * pkgsrc deps, outdated, options, Pkgsrc.se CVSWeb
   Faster pkgsrc cvs update -dP (i.e. github.com/jsonn/pkgsrc)
   port2pkg and pkgsrc wip
-* pkgin: merge with pkgsrc, Objective-C
 * Rudix online mode
 * GHMUG: http://www.hmug.org/pub/MacOS_X/Status.php
 * Display notes and caveats after installing
-* Details sliding panel
+* A sliding panel for details/properties
 * Contextual options when marking items
 * commandsPopUp suggestions
-* Suggest 'sudo chown $USER:admin /usr/local'
 * A monitor displaying background tasks
 * Launch/Run action, detecting binaries
 * Scriptability
