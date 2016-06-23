@@ -408,7 +408,7 @@ class AppShopper: GScrape {
             let mainDiv = xmlDoc.rootElement()!["//div[@id=\"main\"]"][0]
             let links = mainDiv["//div[@class=\"app-links\"]/a"]
             let screenshotsImgs = mainDiv["//div[contains(@class, \"screenshots\")]//img"]
-            item.screenshots = screenshotsImgs.map {$0.attribute("src")!}.joined(separator: " ")
+            item.screenshots = screenshotsImgs.map {$0.attribute("src")!}.join()
             var homepage = links[0].href
             if homepage == "http://" {
                 homepage = links[1].href
@@ -479,7 +479,7 @@ class AppShopperIOS: GScrape {
             let mainDiv = xmlDoc.rootElement()!["//div[@id=\"main\"]"][0]
             let links = mainDiv["//div[@class=\"app-links\"]/a"]
             let screenshotsImgs = mainDiv["//div[contains(@class, \"screenshots\")]//img"]
-            item.screenshots = screenshotsImgs.map {$0.attribute("src")!}.joined(separator: " ")
+            item.screenshots = screenshotsImgs.map {$0.attribute("src")!}.join()
             var homepage = links[0].href
             if homepage == "http://" {
                 homepage = links[1].href

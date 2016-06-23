@@ -403,8 +403,10 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     }
 
     func applicationDidBecomeActive(_ aNotification: Notification) {
-        if shellWindow != nil && (self.shellWindow.value(forKey: "name") as! NSString).contains("— sudo") {
-            raiseShell(self)
+        if let termName = self.shellWindow?.value(forKey: "name") as? NSString {
+            if termName.contains("— sudo") {
+                raiseShell(self)
+            }
         }
     }
 
