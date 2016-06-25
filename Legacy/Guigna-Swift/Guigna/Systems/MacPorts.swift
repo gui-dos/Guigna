@@ -341,7 +341,7 @@ final class MacPorts: GSystem {
 
     override func uninstallCmd(_ pkg: GPackage) -> String {
         if pkg.status == .outdated || pkg.status == .updated {
-            return "sudo \(cmd) -f uninstall \(pkg.name) ; sudo \(cmd) clean --all \(pkg.name)"
+            return "sudo \(cmd) -f uninstall \(pkg.name); sudo \(cmd) clean --all \(pkg.name)"
         } else {
             return "sudo \(cmd) -f uninstall \(pkg.name) @\(pkg.installed)"
         }
@@ -366,7 +366,7 @@ final class MacPorts: GSystem {
     override var updateCmd: String! {
         get {
             if mode == .online {
-                return "sudo cd ; cd ~/Library/Application\\ Support/Guigna/Macports ; /usr/bin/rsync -rtzv rsync://rsync.macports.org/release/tarballs/PortIndex_darwin_15_i386/PortIndex PortIndex"
+                return "sudo cd; cd ~/Library/Application\\ Support/Guigna/Macports; /usr/bin/rsync -rtzv rsync://rsync.macports.org/release/tarballs/PortIndex_darwin_15_i386/PortIndex PortIndex"
             } else {
                 return "sudo \(cmd) -d selfupdate"
             }

@@ -156,10 +156,10 @@ final class Rudix: GSystem {
     }
 
     override func fetchCmd(_ pkg: GPackage) -> String {
-        var command = "cd ~/Downloads ; \(cmd) --download \(pkg.name)"
+        var command = "cd ~/Downloads; \(cmd) --download \(pkg.name)"
         let osxVersion = Rudix.clampedOSVersion()
         if G.OSVersion() != osxVersion {
-            command = "cd ~/Downloads ; OSX_VERSION=\(osxVersion) \(cmd) --download \(pkg.name)"
+            command = "cd ~/Downloads; OSX_VERSION=\(osxVersion) \(cmd) --download \(pkg.name)"
         }
         return command
     }

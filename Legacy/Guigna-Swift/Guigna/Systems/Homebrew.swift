@@ -335,18 +335,18 @@ final class Homebrew: GSystem {
 
     override var hideCmd: String! {
         get {
-            return "for dir in bin etc include lib opt share ; do sudo mv \(prefix)/\"$dir\"{,_off} ; done"
+            return "for dir in bin etc include lib opt share; do sudo mv \(prefix)/\"$dir\"{,_off}; done"
         }
     }
 
     override var unhideCmd: String! {
         get {
-            return "for dir in bin etc include lib opt share ; do sudo mv \(prefix)/\"$dir\"{_off,} ; done"
+            return "for dir in bin etc include lib opt share; do sudo mv \(prefix)/\"$dir\"{_off,}; done"
         }
     }
 
     class var setupCmd: String! {
-        return "ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)\" ; /usr/local/bin/brew update"
+        return "ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)\"; /usr/local/bin/brew update"
     }
 
     class var removeCmd: String! {

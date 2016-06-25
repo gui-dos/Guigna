@@ -241,7 +241,7 @@ final class Fink: GSystem {
 
 
     class var setupCmd: String! {
-        return "for dir in bin etc include lib opt share ; do sudo mv /usr/local/\"$dir\"{,_off} ; done ; sudo mv /opt/local /opt/local_off ; sudo mv /usr/pkg /usr/pkg_off ; cd ~/Library/Application\\ Support/Guigna/Fink ; curl -L -O http://downloads.sourceforge.net/fink/fink-0.39.3.tar.gz ; tar -xvzf fink-0.39.3.tar.gz ; cd fink-0.39.3 ; sudo ./bootstrap ; /sw/bin/pathsetup.sh ; . /sw/bin/init.sh ; /sw/bin/fink selfupdate-rsync ; /sw/bin/fink index -f ; for dir in bin etc include lib opt share ; do sudo mv /usr/local/\"$dir\"{_off,} ; done ; sudo mv /opt/local_off /opt/local ; sudo mv /usr/pkg_off /usr/pkg"
+        return "for dir in bin etc include lib opt share; do sudo mv /usr/local/\"$dir\"{,_off}; done; sudo mv /opt/local /opt/local_off; sudo mv /usr/pkg /usr/pkg_off; cd ~/Library/Application\\ Support/Guigna/Fink; curl -L -O http://downloads.sourceforge.net/fink/fink-0.39.3.tar.gz; tar -xvzf fink-0.39.3.tar.gz; cd fink-0.39.3; sudo ./bootstrap; /sw/bin/pathsetup.sh; . /sw/bin/init.sh; /sw/bin/fink selfupdate-rsync; /sw/bin/fink index -f; for dir in bin etc include lib opt share; do sudo mv /usr/local/\"$dir\"{_off,}; done; sudo mv /opt/local_off /opt/local; sudo mv /usr/pkg_off /usr/pkg"
     }
 
     class var removeCmd: String! {

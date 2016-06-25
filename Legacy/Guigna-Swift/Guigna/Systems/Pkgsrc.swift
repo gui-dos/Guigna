@@ -246,9 +246,9 @@ final class Pkgsrc: GSystem {
 
     override func installCmd(_ pkg: GPackage) -> String {
         if pkg.id != nil {
-            return "cd /usr/pkgsrc/\(pkg.id) ; sudo /usr/pkg/bin/bmake install clean clean-depends"
+            return "cd /usr/pkgsrc/\(pkg.id); sudo /usr/pkg/bin/bmake install clean clean-depends"
         } else {
-            return "cd /usr/pkgsrc/\(pkg.categories!)/\(pkg.name) ; sudo /usr/pkg/bin/bmake install clean clean-depends"
+            return "cd /usr/pkgsrc/\(pkg.categories!)/\(pkg.name); sudo /usr/pkg/bin/bmake install clean clean-depends"
         }
     }
 
@@ -259,9 +259,9 @@ final class Pkgsrc: GSystem {
 
     override func cleanCmd(_ pkg: GPackage) -> String {
         if pkg.id != nil {
-            return "cd /usr/pkgsrc/\(pkg.id) ; sudo /usr/pkg/bin/bmake clean clean-depends"
+            return "cd /usr/pkgsrc/\(pkg.id); sudo /usr/pkg/bin/bmake clean clean-depends"
         } else {
-            return "cd /usr/pkgsrc/\(pkg.categories!)/\(pkg.name) ; sudo /usr/pkg/bin/bmake clean clean-depends"
+            return "cd /usr/pkgsrc/\(pkg.categories!)/\(pkg.name); sudo /usr/pkg/bin/bmake clean clean-depends"
         }
     }
 
@@ -270,7 +270,7 @@ final class Pkgsrc: GSystem {
             if mode == .online || (defaults("pkgsrcCVS") as? Bool ?? false) == false {
                 return nil
             } else {
-                return "sudo cd; cd /usr/pkgsrc ; sudo cvs update -dP"
+                return "sudo cd; cd /usr/pkgsrc; sudo cvs update -dP"
             }
         }
     }
@@ -287,10 +287,10 @@ final class Pkgsrc: GSystem {
 
 
     class var setupCmd: String! {
-        return "for dir in bin etc include lib opt share ; do sudo mv /usr/local/\"$dir\"{,_off} ; done ; sudo mv /opt/local /opt/local_off ; sudo mv /sw /sw_off ; cd ~/Library/Application\\ Support/Guigna/pkgsrc ; curl -L -O ftp://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc.tar.gz ; sudo tar -xvzf pkgsrc.tar.gz -C /usr; cd /usr/pkgsrc/bootstrap ; sudo ./bootstrap --compiler clang; for dir in bin etc include lib opt share ; do sudo mv /usr/local/\"$dir\"{_off,} ; done ; sudo mv /opt/local_off /opt/local ; sudo mv /sw_off /sw"
+        return "for dir in bin etc include lib opt share; do sudo mv /usr/local/\"$dir\"{,_off}; done; sudo mv /opt/local /opt/local_off; sudo mv /sw /sw_off; cd ~/Library/Application\\ Support/Guigna/pkgsrc; curl -L -O ftp://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc.tar.gz; sudo tar -xvzf pkgsrc.tar.gz -C /usr; cd /usr/pkgsrc/bootstrap; sudo ./bootstrap --compiler clang; for dir in bin etc include lib opt share; do sudo mv /usr/local/\"$dir\"{_off,}; done; sudo mv /opt/local_off /opt/local; sudo mv /sw_off /sw"
     }
 
     class var removeCmd: String! {
-        return "sudo rm -r /usr/pkg ; sudo rm -r /usr/pkgsrc ; sudo rm -r /var/db/pkg"
+        return "sudo rm -r /usr/pkg; sudo rm -r /usr/pkgsrc; sudo rm -r /var/db/pkg"
     }
 }

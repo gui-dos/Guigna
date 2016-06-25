@@ -183,7 +183,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         agent.output("/usr/bin/osascript -e tell__application__\"Terminal\"__to__close__(windows__whose__name__contains__\"Guigna__\")")
         terminal = SBApplication(bundleIdentifier: "com.apple.Terminal")
         let guignaFunction = "guigna() { osascript -e 'tell app \"Guigna\"' -e \"open POSIX file \\\"\(APPDIR)/$2\\\"\" -e 'end' &>/dev/null; }"
-        let initScript = "unset HISTFILE ; " + guignaFunction
+        let initScript = "unset HISTFILE; " + guignaFunction
         shell = terminal.doScript(initScript, in: nil)
         shell.setValue("Guigna", forKey: "customTitle")
         for window in terminal.value(forKey: "windows") as! [NSObject] {
@@ -221,7 +221,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     if prefix != "/usr/local" {
                         executeAsRoot("mv \(prefix)_off \(prefix)")
                     } else {
-                        executeAsRoot("for dir in bin etc include lib opt share ; do sudo mv \(prefix)/\"$dir\"{_off,} ; done")
+                        executeAsRoot("for dir in bin etc include lib opt share; do sudo mv \(prefix)/\"$dir\"{_off,}; done")
                     }
                 }
             }
@@ -238,7 +238,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             }
         }
 
-        let _ = terminal.doScript("clear ; printf \"\\e[3J\" ; echo Welcome to Guigna! ; echo", in:shell)
+        let _ = terminal.doScript("clear; printf \"\\e[3J\"; echo Welcome to Guigna!; echo", in:shell)
 
         if portPath.exists || "\(APPDIR)/MacPorts/PortIndex".exists {
             if defaults["MacPortsStatus"] == nil {
@@ -698,7 +698,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             for system in systemsToUpdateAsync {
                 updateCommands.append(system.updateCmd)
             }
-            execute(updateCommands.join(" ; "), baton: "sync")
+            execute(updateCommands.join("; "), baton: "sync")
         }
         if systemsToUpdate.count + systemsToList.count > 0 {
             segmentedControl.selectedSegment = -1
@@ -1297,15 +1297,15 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
 
 
     func execute(_ cmd: String, baton: String) {
-        let briefCmd = cmd.split(" ; ").filter { !($0.hasPrefix("sudo mv") || $0.hasPrefix("for dir in") || $0.hasPrefix("do sudo") || $0.hasPrefix("done")) }.join(" ; ")
+        let briefCmd = cmd.split("; ").filter { !($0.hasPrefix("sudo mv") || $0.hasPrefix("for dir in") || $0.hasPrefix("do sudo") || $0.hasPrefix("done")) }.join("; ")
         status("Executing '\(briefCmd)' in the shell...")
         log("😺===> \(briefCmd)\n")
         var command: String
         if baton == "relaunch" {
             self.ready = false
-            command = "\(cmd) ; osascript -e 'tell app \"Guigna\"' -e 'quit' -e 'end tell' &>/dev/null ; osascript -e 'tell app \"Guigna\"' -e 'ignoring application responses' -e 'activate' -e 'end ignoring' -e 'end tell' &>/dev/null"
+            command = "\(cmd); osascript -e 'tell app \"Guigna\"' -e 'quit' -e 'end tell' &>/dev/null; osascript -e 'tell app \"Guigna\"' -e 'ignoring application responses' -e 'activate' -e 'end ignoring' -e 'end tell' &>/dev/null"
         } else {
-            command = "\(cmd) ; guigna --baton \(baton)"
+            command = "\(cmd); guigna --baton \(baton)"
         }
 
         if adminPassword != nil {
@@ -1662,7 +1662,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     if prefix != "/usr/local" {
                         tasks.append("sudo mv \(prefix) \(prefix)_off")
                     } else {
-                        tasks.append("for dir in bin etc include lib opt share ; do sudo mv \(prefix)/\"$dir\"{,_off} ; done")
+                        tasks.append("for dir in bin etc include lib opt share; do sudo mv \(prefix)/\"$dir\"{,_off}; done")
                     }
                 }
             }
@@ -1684,12 +1684,12 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     if prefix != "/usr/local" {
                         tasks.append("sudo mv \(prefix)_off \(prefix)")
                     } else {
-                        tasks.append("for dir in bin etc include lib opt share ; do sudo mv \(prefix)/\"$dir\"{_off,} ; done")
+                        tasks.append("for dir in bin etc include lib opt share; do sudo mv \(prefix)/\"$dir\"{_off,}; done")
                     }
                 }
             }
         }
-        execute(tasks.join(" ; "))
+        execute(tasks.join("; "))
 
     }
 
@@ -2037,7 +2037,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             execute(Pkgsrc.setupCmd, baton: "relaunch")
 
         } else if title == "Fetch pkgsrc and INDEX" {
-            execute("cd ~/Library/Application\\ Support/Guigna/pkgsrc ; curl -L -O ftp://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/INDEX ; curl -L -O ftp://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc.tar.gz ; sudo tar -xvzf pkgsrc.tar.gz -C /usr", baton: "relaunch")
+            execute("cd ~/Library/Application\\ Support/Guigna/pkgsrc; curl -L -O ftp://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/INDEX; curl -L -O ftp://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc.tar.gz; sudo tar -xvzf pkgsrc.tar.gz -C /usr", baton: "relaunch")
 
         } else if title == "Install pkgin" {
             execute(Pkgin.setupCmd, baton: "relaunch")
@@ -2046,7 +2046,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             execute(Pkgsrc.removeCmd, baton: "relaunch")
 
         } else if title == "Fetch FreeBSD INDEX" {
-            execute("cd ~/Library/Application\\ Support/Guigna/FreeBSD ; curl -L -O http://pkg.freebsd.org/freebsd:11:x86:64/latest/packagesite.txz ; tar -xvzf packagesite.txz", baton: "relaunch")
+            execute("cd ~/Library/Application\\ Support/Guigna/FreeBSD; curl -L -O http://pkg.freebsd.org/freebsd:11:x86:64/latest/packagesite.txz; tar -xvzf packagesite.txz", baton: "relaunch")
 
         } else if title == "Install Fink" {
             execute(Fink.setupCmd, baton: "relaunch")
@@ -2064,7 +2064,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             execute(Homebrew.removeCmd, baton: "relaunch")
             
         } else if title == "Fetch MacPorts PortIndex" {
-            execute("cd ~/Library/Application\\ Support/Guigna/MacPorts ; /usr/bin/rsync -rtzv rsync://rsync.macports.org/release/tarballs/PortIndex_darwin_15_i386/PortIndex PortIndex", baton: "relaunch")
+            execute("cd ~/Library/Application\\ Support/Guigna/MacPorts; /usr/bin/rsync -rtzv rsync://rsync.macports.org/release/tarballs/PortIndex_darwin_15_i386/PortIndex PortIndex", baton: "relaunch")
             
         } else if title == "Install Rudix" {
             execute(Rudix.setupCmd, baton: "relaunch")
@@ -2073,7 +2073,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             execute(Rudix.removeCmd, baton: "relaunch")
             
         } else if title == "Reset Guigna" {
-            execute("defaults delete name.soranzio.guido.Guigna ; defaults delete name.soranzio.guido.Guigna-Swift ; rm -r Library/Application\\ Support/Guigna ; rm -r Library/Preferences/name.soranzio.guido.Guigna* ; rm -r Library/Saved\\ Application\\ State/name.soranzio.guido.Guigna*", baton: "relaunch")
+            execute("defaults delete name.soranzio.guido.Guigna; defaults delete name.soranzio.guido.Guigna-Swift; rm -r Library/Application\\ Support/Guigna; rm -r Library/Preferences/name.soranzio.guido.Guigna*; rm -r Library/Saved\\ Application\\ State/name.soranzio.guido.Guigna*", baton: "relaunch")
             
         } else {
             execute("echo TODO")

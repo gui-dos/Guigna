@@ -200,7 +200,7 @@ final class MacOSX: GSystem {
             }
             commands.append("sudo \(cmd) --forget \(pkgId)")
         }
-        return commands.join(" ; ")
+        return commands.join("; ")
 
         // TODO: disable Launchd daemons, clean Application Support, Caches, Preferences
         // SEE: https://github.com/caskroom/homebrew-cask/blob/master/lib/cask/artifact/pkg.rb

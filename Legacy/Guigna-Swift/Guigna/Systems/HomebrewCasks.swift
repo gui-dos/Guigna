@@ -254,7 +254,7 @@ final class HomebrewCasks: GSystem {
 
     // TODO: uninstall only, don't zap settings
     override func upgradeCmd(_ pkg: GPackage) -> String {
-        return "\(cmd) zap \(pkg.name) ; \(cmd) install \(pkg.name)"
+        return "\(cmd) zap \(pkg.name); \(cmd) install \(pkg.name)"
     }
 
     override func cleanCmd(_ pkg: GPackage) -> String {
@@ -269,13 +269,13 @@ final class HomebrewCasks: GSystem {
 
     override var hideCmd: String! {
         get {
-            return "for dir in bin etc include lib opt share ; do sudo mv \(prefix)/\"$dir\"{,_off} ; done"
+            return "for dir in bin etc include lib opt share; do sudo mv \(prefix)/\"$dir\"{,_off}; done"
         }
     }
 
     override var unhideCmd: String! {
         get {
-            return "for dir in bin etc include lib opt share ; do sudo mv \(prefix)/\"$dir\"{_off,} ; done"
+            return "for dir in bin etc include lib opt share; do sudo mv \(prefix)/\"$dir\"{_off,}; done"
         }
     }
 

@@ -289,9 +289,9 @@ final class Pkgin: GSystem {
 
     override func installCmd(_ pkg: GPackage) -> String {
         //        if pkg.id != nil {
-        //            return "cd /usr/pkgsrc/\(pkg.id) ; sudo /usr/pkg/bin/bmake install clean clean-depends"
+        //            return "cd /usr/pkgsrc/\(pkg.id); sudo /usr/pkg/bin/bmake install clean clean-depends"
         //        } else {
-        //            return "cd /usr/pkgsrc/\(pkg.categories!)/\(pkg.name) ; sudo /usr/pkg/bin/bmake install clean clean-depends"
+        //            return "cd /usr/pkgsrc/\(pkg.categories!)/\(pkg.name); sudo /usr/pkg/bin/bmake install clean clean-depends"
         //        }
         return "sudo \(cmd) -y install \(pkg.name)"
     }
@@ -304,9 +304,9 @@ final class Pkgin: GSystem {
 
     override func cleanCmd(_ pkg: GPackage) -> String {
         if pkg.id != nil {
-            return "cd /usr/pkgsrc/\(pkg.id) ; sudo /usr/pkg/bin/bmake clean clean-depends"
+            return "cd /usr/pkgsrc/\(pkg.id); sudo /usr/pkg/bin/bmake clean clean-depends"
         } else {
-            return "cd /usr/pkgsrc/\(pkg.categories!)/\(pkg.name) ; sudo /usr/pkg/bin/bmake clean clean-depends"
+            return "cd /usr/pkgsrc/\(pkg.categories!)/\(pkg.name); sudo /usr/pkg/bin/bmake clean clean-depends"
         }
     }
 
@@ -315,7 +315,7 @@ final class Pkgin: GSystem {
             //            if mode == .Online || (defaults("pkgsrcCVS") as? Bool ?? false) == false {
             //                return nil
             //            } else {
-            //                return "sudo cd; cd /usr/pkgsrc ; sudo cvs update -dP"
+            //                return "sudo cd; cd /usr/pkgsrc; sudo cvs update -dP"
             //            }
             return "sudo \(cmd) -y update"
         }
@@ -333,10 +333,10 @@ final class Pkgin: GSystem {
 
 
     class var setupCmd: String! {
-        return "for dir in bin etc include lib opt share ; do sudo mv /usr/local/\"$dir\"{,_off} ; done ; sudo mv /opt/local /opt/local_off ; sudo mv /sw /sw_off ; cd ~/Library/Application\\ Support/Guigna/pkgsrc ; git clone git://github.com/cmacrae/saveosx.git ; cd saveosx ; ./bootstrap ; for dir in bin etc include lib opt share ; do sudo mv /usr/local/\"$dir\"{_off,} ; done ; sudo mv /opt/local_off /opt/local ; sudo mv /sw_off /sw"
+        return "for dir in bin etc include lib opt share; do sudo mv /usr/local/\"$dir\"{,_off}; done; sudo mv /opt/local /opt/local_off; sudo mv /sw /sw_off; cd ~/Library/Application\\ Support/Guigna/pkgsrc; git clone git://github.com/cmacrae/saveosx.git; cd saveosx; ./bootstrap; for dir in bin etc include lib opt share; do sudo mv /usr/local/\"$dir\"{_off,}; done; sudo mv /opt/local_off /opt/local; sudo mv /sw_off /sw"
     }
     
     class var removeCmd: String! {
-        return "sudo rm -r /opt/pkg ; sudo rm -r /var/db/pkgin"
+        return "sudo rm -r /opt/pkg; sudo rm -r /var/db/pkgin"
     }
 }
