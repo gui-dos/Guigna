@@ -17,10 +17,10 @@
 		C56062DA198D0704001F0F93 /* Rudix.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56062D9198D0704001F0F93 /* Rudix.swift */; };
 		C56062DC198D0833001F0F93 /* GLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56062DB198D0833001F0F93 /* GLibrary.swift */; };
 		C562EF901993BA16001309A9 /* ITunes.swift in Sources */ = {isa = PBXBuildFile; fileRef = C562EF8F1993BA16001309A9 /* ITunes.swift */; };
+		C562FE291D1EE612002603EC /* TODO.md in Sources */ = {isa = PBXBuildFile; fileRef = C562FE281D1EE612002603EC /* TODO.md */; };
 		C5635BEB1952F53F007424E2 /* MacPorts.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5635BEA1952F53F007424E2 /* MacPorts.swift */; };
 		C5779CAA1969922B00755926 /* HomebrewCasks.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5779CA91969922B00755926 /* HomebrewCasks.swift */; };
 		C5A00A9B1B174F7600642B26 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = C5A00A9A1B174F7600642B26 /* README.md */; };
-		C5A00A9D1B174F8000642B26 /* TODO.txt in Resources */ = {isa = PBXBuildFile; fileRef = C5A00A9C1B174F8000642B26 /* TODO.txt */; };
 		C5A1214F1945D91800A351A8 /* GAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A1214E1945D91800A351A8 /* GAgent.swift */; };
 		C5A1215B1945E4A700A351A8 /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5A1215A1945E4A700A351A8 /* ScriptingBridge.framework */; };
 		C5A1215E1945EB2700A351A8 /* GItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A1215C1945EB2700A351A8 /* GItem.swift */; };
@@ -91,10 +91,10 @@
 		C56062D9198D0704001F0F93 /* Rudix.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Rudix.swift; sourceTree = "<group>"; };
 		C56062DB198D0833001F0F93 /* GLibrary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GLibrary.swift; sourceTree = "<group>"; };
 		C562EF8F1993BA16001309A9 /* ITunes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ITunes.swift; sourceTree = "<group>"; };
+		C562FE281D1EE612002603EC /* TODO.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = TODO.md; path = ../../TODO.md; sourceTree = "<group>"; };
 		C5635BEA1952F53F007424E2 /* MacPorts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MacPorts.swift; sourceTree = "<group>"; };
 		C5779CA91969922B00755926 /* HomebrewCasks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomebrewCasks.swift; sourceTree = "<group>"; };
 		C5A00A9A1B174F7600642B26 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
-		C5A00A9C1B174F8000642B26 /* TODO.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = TODO.txt; path = ../../TODO.txt; sourceTree = "<group>"; };
 		C5A1214E1945D91800A351A8 /* GAgent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GAgent.swift; sourceTree = "<group>"; };
 		C5A121541945E45200A351A8 /* Guigna-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Guigna-Bridging-Header.h"; sourceTree = "<group>"; };
 		C5A121571945E45200A351A8 /* Safari.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Safari.h; sourceTree = "<group>"; };
@@ -167,7 +167,7 @@
 			isa = PBXGroup;
 			children = (
 				C5A00A9A1B174F7600642B26 /* README.md */,
-				C5A00A9C1B174F8000642B26 /* TODO.txt */,
+				C562FE281D1EE612002603EC /* TODO.md */,
 				C51ED05819458CB0000B582A /* Guigna */,
 				C51ED06E19458CB0000B582A /* GuignaTests */,
 				C5A1215A1945E4A700A351A8 /* ScriptingBridge.framework */,
@@ -378,7 +378,6 @@
 				C5DB9B8C1945A9B80005244E /* source-freebsd.tiff in Resources */,
 				C5DB9B951945A9B80005244E /* status-updated.tiff in Resources */,
 				C5DB9B8A1945A9B80005244E /* source-cocoapods.tiff in Resources */,
-				C5A00A9D1B174F8000642B26 /* TODO.txt in Resources */,
 				C5DB9B9E1945A9B80005244E /* system-pkgsrc.tiff in Resources */,
 				C5DB9B971945A9B80005244E /* system-gentoo.tiff in Resources */,
 				C5DB9BA11945A9B80005244E /* toolbar-mark.tiff in Resources */,
@@ -429,6 +428,7 @@
 				C51ED05E19458CB0000B582A /* GuignaAppDelegate.swift in Sources */,
 				C5E07BBC1972779400DA3CD3 /* Pkgsrc.swift in Sources */,
 				C5E9D8A51966AA6000E5291C /* MacOSX.swift in Sources */,
+				C562FE291D1EE612002603EC /* TODO.md in Sources */,
 				C5AD0FB7196287360001FB53 /* GSource.swift in Sources */,
 				C5779CAA1969922B00755926 /* HomebrewCasks.swift in Sources */,
 				C56062DC198D0833001F0F93 /* GLibrary.swift in Sources */,
