@@ -1,4 +1,5 @@
 FIXME
+-----
 
 * El Capitan:
   - Selected sources are not highlighted until resizing the window
@@ -13,11 +14,12 @@ FIXME
 
 
 TODO
+----
 
 * Swift:
-    - complete port of inactive packages management
+  - complete port of inactive packages management
 * Objective-C:
-    - port new code from [“swift2”](https://github.com/gui-dos/Guigna/releases/tag/swift2) release on
+  - port new code from [“swift2”](https://github.com/gui-dos/Guigna/releases/tag/swift2) release on
 * Make use of Storyboards and NSViewControllers
 * Preload a cached index to speed up startup
 * Core Data, predicate editor
@@ -30,8 +32,8 @@ TODO
 * FreeBSD deps
 * Fink categories, deps, binaries
 * pkgsrc deps, outdated, options, Pkgsrc.se CVSWeb
-  Faster pkgsrc cvs update -dP (i.e. github.com/jsonn/pkgsrc)
-  port2pkg and pkgsrc wip
+  - Faster pkgsrc cvs update -dP (i.e. github.com/jsonn/pkgsrc)
+  - port2pkg and pkgsrc wip
 * Rudix online mode
 * GHMUG: http://www.hmug.org/pub/MacOS_X/Status.php
 * Display notes and caveats after installing
@@ -44,9 +46,9 @@ TODO
 * Editor for launchd and preferences plists
 * GPython and GRuby systems
 * JPortsGUI good ideas:
-    Sort MacPorts by date
-    Display status of dependencies
-    Get favicon.ico
+  - Sort MacPorts by date
+  - Display status of dependencies
+  - Get favicon.ico
 * Progress indicator in the dock tile
 * Back/Forward buttons for WebView
 * GSystem.search() using cmd's output
