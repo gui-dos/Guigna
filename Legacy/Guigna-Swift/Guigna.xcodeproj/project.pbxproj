@@ -17,10 +17,8 @@
 		C56062DA198D0704001F0F93 /* Rudix.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56062D9198D0704001F0F93 /* Rudix.swift */; };
 		C56062DC198D0833001F0F93 /* GLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56062DB198D0833001F0F93 /* GLibrary.swift */; };
 		C562EF901993BA16001309A9 /* ITunes.swift in Sources */ = {isa = PBXBuildFile; fileRef = C562EF8F1993BA16001309A9 /* ITunes.swift */; };
-		C562FE291D1EE612002603EC /* TODO.md in Sources */ = {isa = PBXBuildFile; fileRef = C562FE281D1EE612002603EC /* TODO.md */; };
 		C5635BEB1952F53F007424E2 /* MacPorts.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5635BEA1952F53F007424E2 /* MacPorts.swift */; };
 		C5779CAA1969922B00755926 /* HomebrewCasks.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5779CA91969922B00755926 /* HomebrewCasks.swift */; };
-		C5A00A9B1B174F7600642B26 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = C5A00A9A1B174F7600642B26 /* README.md */; };
 		C5A1214F1945D91800A351A8 /* GAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A1214E1945D91800A351A8 /* GAgent.swift */; };
 		C5A1215B1945E4A700A351A8 /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5A1215A1945E4A700A351A8 /* ScriptingBridge.framework */; };
 		C5A1215E1945EB2700A351A8 /* GItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A1215C1945EB2700A351A8 /* GItem.swift */; };
@@ -424,11 +422,9 @@
 			files = (
 				C5B736FF194732C90046B2E2 /* GAdditions.swift in Sources */,
 				C5A1215F1945EB2700A351A8 /* GSystem.swift in Sources */,
-				C5A00A9B1B174F7600642B26 /* README.md in Sources */,
 				C51ED05E19458CB0000B582A /* GuignaAppDelegate.swift in Sources */,
 				C5E07BBC1972779400DA3CD3 /* Pkgsrc.swift in Sources */,
 				C5E9D8A51966AA6000E5291C /* MacOSX.swift in Sources */,
-				C562FE291D1EE612002603EC /* TODO.md in Sources */,
 				C5AD0FB7196287360001FB53 /* GSource.swift in Sources */,
 				C5779CAA1969922B00755926 /* HomebrewCasks.swift in Sources */,
 				C56062DC198D0833001F0F93 /* GLibrary.swift in Sources */,
