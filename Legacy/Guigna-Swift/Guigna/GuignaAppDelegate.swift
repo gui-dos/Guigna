@@ -167,6 +167,12 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         let columnsMenuItem = NSMenuItem(title: "Columns", action: nil, keyEquivalent: "")
         columnsMenuItem.submenu = viewColumnsMenu
         viewMenu.submenu!.addItem(columnsMenuItem)
+        let editMenu = NSApplication.shared().mainMenu!.item(withTitle: "Edit")!
+        let markMenuItem = NSMenuItem(title: "Mark", action: nil, keyEquivalent: "")
+        markMenuItem.submenu = markMenu
+        let idx = editMenu.submenu!.indexOfItem(withTitle: "Select All")
+        editMenu.submenu!.insertItem(NSMenuItem.separator(), at: idx + 1)
+        editMenu.submenu!.insertItem(markMenuItem, at: idx + 2)
 
         agent.appDelegate = self
 
@@ -1337,11 +1343,13 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     }
 
     func minuteCheck(_ timer: Timer) {
-        if shellWindow != nil && (shellWindow.value(forKey: "name") as! NSString).contains("— sudo") {
-            if NSApplication.shared().isActive {
-                raiseShell(self)
+        if let termName = self.shellWindow?.value(forKey: "name") as? NSString {
+            if termName.contains("— sudo") {
+                if NSApplication.shared().isActive {
+                    raiseShell(self)
+                }
+                NSApplication.shared().requestUserAttention(.criticalRequest)
             }
-            NSApplication.shared().requestUserAttention(.criticalRequest)
         }
     }
 
@@ -1653,9 +1661,9 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                         && otherSystem.hideCmd != system.hideCmd
                         && systemTasks.index(of: otherSystem.hideCmd) == nil
                         && otherSystem.prefix.exists {
-                            tasks.append(otherSystem.hideCmd)
-                            systemTasks.append(otherSystem.hideCmd)
-                            // TODO: set GOnlineMode
+                        tasks.append(otherSystem.hideCmd)
+                        systemTasks.append(otherSystem.hideCmd)
+                        // TODO: set GOnlineMode
                     }
                 }
                 for prefix in detectedPrefixes {
@@ -1676,8 +1684,8 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                         && otherSystem.hideCmd != system.hideCmd
                         && systemTasks.index(of: otherSystem.unhideCmd) == nil
                         && otherSystem.prefix.exists {
-                            tasks.append(otherSystem.unhideCmd)
-                            systemTasks.append(otherSystem.unhideCmd)
+                        tasks.append(otherSystem.unhideCmd)
+                        systemTasks.append(otherSystem.unhideCmd)
                     }
                 }
                 for prefix in detectedPrefixes {
@@ -2062,7 +2070,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
 
         } else if title == "Remove Homebrew" {
             execute(Homebrew.removeCmd, baton: "relaunch")
-            
+
         } else if title == "Fetch MacPorts PortIndex" {
             execute("cd ~/Library/Application\\ Support/Guigna/MacPorts; /usr/bin/rsync -rtzv rsync://rsync.macports.org/release/tarballs/PortIndex_darwin_15_i386/PortIndex PortIndex", baton: "relaunch")
             
