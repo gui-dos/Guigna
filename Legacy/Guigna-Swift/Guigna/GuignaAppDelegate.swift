@@ -466,7 +466,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     affectedSystems.add(item.system)
                 }
                 // refresh statuses and versions
-                for system in affectedSystems.allObjects as! [GSystem] { // Explicit GStatus otherwise does not compile
+                for system in affectedSystems.allObjects as! [GSystem] {
                     for pkg in (system.items.filter { $0.status == GStatus.inactive}) as! [GPackage] {
                         itemsController.removeObject(pkg)
                     }
@@ -503,12 +503,12 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                         marksCount -= 1
                     }
 
-                    let itemSystem = item.system
-                    let systemName = itemSystem?.name
+                    let itemSystem = item.system!
+                    let systemName = itemSystem.name
                     log("😺 \(markName) \(systemName) \(item.name): DONE\n")
                     if mark == .uninstall && (systemName == "Mac OS X" || systemName == "iTunes") {
                         itemsController.removeObject(item)
-                        itemSystem?.mutableArrayValue(forKey: "items").remove(item)
+                        itemSystem.mutableArrayValue(forKey: "items").remove(item)
                     } else {
                         item.mark = .noMark
                     }

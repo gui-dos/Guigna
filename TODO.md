@@ -1,7 +1,7 @@
 FIXME
 -----
 
-* El Capitan:
+* El Capitan / Sierra:
   - Selected sources are not highlighted until resizing the window
   - the status() thread doesn't update the main GUI
 * Swift:
@@ -19,7 +19,8 @@ TODO
 * Swift:
   - complete port of inactive packages management
 * Objective-C:
-  - port new code from [“swift2”](https://github.com/gui-dos/Guigna/releases/tag/swift2) release on
+  - port new code from [“swift2”](https://github.com/gui-dos/Guigna/releases/tag/swift2)
+    release on (15 June)
 * Make use of Storyboards and NSViewControllers
 * Preload a cached index to speed up startup
 * Core Data, predicate editor
