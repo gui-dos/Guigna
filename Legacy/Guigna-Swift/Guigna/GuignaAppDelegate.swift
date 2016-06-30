@@ -244,7 +244,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             }
         }
 
-        let _ = terminal.doScript("clear; printf \"\\e[3J\"; echo Welcome to Guigna!; echo", in:shell)
+        let _ = terminal.doScript("clear; printf \"\\e[3J\"; echo Welcome to Guigna\\!; echo", in:shell)
 
         if portPath.exists || "\(APPDIR)/MacPorts/PortIndex".exists {
             if defaults["MacPortsStatus"] == nil {
