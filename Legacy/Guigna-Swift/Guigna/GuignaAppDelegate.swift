@@ -1786,6 +1786,11 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         self.window.endSheet(self.optionsPanel)
         if self.ready {
             syncButton.isEnabled = true
+            // FIXME: without this workaround the sourcesOutline isn't responsive after launch
+            if defaults["Theme"] == "Default" {
+                (sourcesOutline.superview!.superview! as! NSScrollView).borderType = .lineBorder
+                (sourcesOutline.superview!.superview! as! NSScrollView).borderType = .grooveBorder
+            }
         }
     }
 

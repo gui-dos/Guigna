@@ -20,7 +20,7 @@ TODO
   - complete port of inactive packages management
 * Objective-C:
   - port new code from [“swift2”](https://github.com/gui-dos/Guigna/releases/tag/swift2)
-    release on (15 June)
+    release on (15th June)
 * Make use of Storyboards and NSViewControllers
 * Preload a cached index to speed up startup
 * Core Data, predicate editor
