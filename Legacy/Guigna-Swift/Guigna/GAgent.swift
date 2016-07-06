@@ -1,4 +1,5 @@
 import Foundation
+import Security
 
 class GAgent: NSObject {
 
@@ -33,6 +34,48 @@ class GAgent: NSObject {
         task.waitUntilExit()
         let output = String(data: data, encoding: .utf8) ?? ""
         return output
+    }
+
+
+    // ported from: https://github.com/sveinbjornt/STPrivilegedTask
+    func executeWithPrivileges(_ cmd: String) -> String {
+        var err: OSStatus = noErr
+        var components = cmd.components(separatedBy: " ")
+        var toolPath = components.remove(at: 0).cString(using: .utf8)!
+        let cArgs = components.map { ($0.cString(using: .utf8)!) }
+        var args = [UnsafePointer<CChar>?]()
+        for cArg in cArgs {
+            args.append(UnsafePointer<CChar>(cArg))
+        }
+        args.append(nil)
+        let argsPointer = UnsafePointer<UnsafePointer<CChar>>(args)
+        var authorizationRef: AuthorizationRef? = nil
+        var myItems = AuthorizationItem(name: kAuthorizationRightExecute, valueLength: toolPath.count, value: &toolPath, flags: 0)
+        var myRights = AuthorizationRights(count: 1, items: &myItems)
+        let flags: AuthorizationFlags = [.interactionAllowed, .preAuthorize, .extendRights]
+        var outputFile = FILE()
+        var outputFilePointer = withUnsafeMutablePointer(&outputFile) {UnsafeMutablePointer<FILE>($0)}
+        var outputFilePointerPointer = withUnsafeMutablePointer(&outputFilePointer) {UnsafeMutablePointer<UnsafeMutablePointer<FILE>>($0)}
+        err = AuthorizationCreate(nil, nil, [], &authorizationRef)
+        //    if err != errAuthorizationSuccess {
+        //    }
+        err = AuthorizationCopyRights(authorizationRef!, &myRights, nil, flags, nil)
+        //    if err != errAuthorizationSuccess {
+        //    }
+        let RTLD_DEFAULT = UnsafeMutablePointer<Void>(bitPattern: -2)
+        var authExecuteWithPrivsFn: @convention(c) (AuthorizationRef, UnsafePointer<CChar>, AuthorizationFlags, UnsafePointer<UnsafePointer<CChar>>?,  UnsafeMutablePointer<UnsafeMutablePointer<FILE>>?) -> OSStatus
+        authExecuteWithPrivsFn = unsafeBitCast(dlsym(RTLD_DEFAULT, "AuthorizationExecuteWithPrivileges"), to: authExecuteWithPrivsFn.dynamicType)
+        err = authExecuteWithPrivsFn(authorizationRef!, &toolPath, [], argsPointer, outputFilePointerPointer)
+        //    if err != errAuthorizationSuccess {
+        //    }
+        AuthorizationFree(authorizationRef!, [])
+        let outputFileHandle = FileHandle(fileDescriptor: fileno(outputFilePointer), closeOnDealloc: true)
+        let processIdentifier:pid_t = fcntl(fileno(outputFilePointer), F_GETOWN, 0)
+        var terminationStatus: Int32 = 0
+        waitpid(processIdentifier, &terminationStatus, 0)
+        let outputData = outputFileHandle.readDataToEndOfFile()
+        let outputString = String(data:outputData, encoding: .utf8)!
+        return outputString
     }
 
 

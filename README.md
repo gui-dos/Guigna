@@ -30,7 +30,7 @@ repositories.
 ## Feedback
 
 Guigna is at a very early stage of development and it is tested only for the
-latest versions of El Capitan, Xcode and Swift betas. Some preliminary builds are
+latest versions of Sierra, Xcode and Swift betas. Some preliminary builds are
 available from [Dropbox](https://www.dropbox.com/sh/y1wpmndu1vn7pqp/AABCqKxUa-_Soqf57EVzhYILa?dl=0).
 
 Some advice and warnings:
@@ -47,6 +47,7 @@ Some advice and warnings:
   should offer to unhide the detected prefixes. Remember that, in comparison
   to other traditional GUIs, Guigna is scripting the Terminal and you can
   always check the tasks which are executing in the shell.
+
 
 ```
     GSource is a collection of GItems
@@ -126,8 +127,8 @@ Some advice and warnings:
 ```
 --
 
-\* The [Kodkod](http://en.wikipedia.org/wiki/Kodkod) (Leopardus guigna), also
-called Guiña, is the smallest cat in the Americas.
+\* The [Kodkod](http://en.wikipedia.org/wiki/Kodkod) (_Leopardus guigna_), also
+called **guiña**, is the smallest cat in the Americas.
 
 ![icon](http://www.felineconservation.org/uploads/rauh_handicapped_guina.jpg)
 
