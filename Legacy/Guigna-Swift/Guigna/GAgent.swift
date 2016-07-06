@@ -38,7 +38,8 @@ class GAgent: NSObject {
 
 
     // ported from: https://github.com/sveinbjornt/STPrivilegedTask
-    func executeWithPrivileges(_ cmd: String) -> String {
+    @discardableResult
+    func sudo(_ cmd: String) -> String {
         var err: OSStatus = noErr
         var components = cmd.components(separatedBy: " ")
         var toolPath = components.remove(at: 0).cString(using: .utf8)!
