@@ -183,7 +183,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             try! fileManager.createDirectory(atPath: "\(APPDIR)/\(dir)", withIntermediateDirectories: true)
         }
         for file in ["output", "sync"] {
-            fileManager.createFile(atPath: "\(APPDIR)/\(file)", contents: nil, attributes: nil)
+            fileManager.createFile(atPath: "\(APPDIR)/\(file)", contents: nil)
         }
 
         var _ = NSAppleScript(source: "tell app \"Terminal\" to close (windows whose name contains \"Guigna \")")?.executeAndReturnError(nil)
@@ -1335,11 +1335,11 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         sudo(cmd, baton: "output")
     }
 
-    func executeAsRoot(_ cmd: String) {
-        var cmd = cmd
-        cmd = cmd.replace("\"", "\\\"").replace(" ", "__")
-        let command = "/usr/bin/osascript -e do__shell__script__\"\(cmd)\"__with__administrator__privileges"
-        agent.output(command)
+    @discardableResult
+    func executeAsRoot(_ cmd: String) -> String {
+        // TODO: use agent.sudo()
+        let result = NSAppleScript(source: "do shell script \"\(cmd)\" with administrator privileges")?.executeAndReturnError(nil)
+        return result!.stringValue!
     }
 
     func minuteCheck(_ timer: Timer) {
