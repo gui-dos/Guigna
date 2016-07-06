@@ -178,7 +178,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
 
         allPackages.reserveCapacity(150000)
 
-        let fileManager = FileManager.default()
+        let fileManager = FileManager.default
         for dir in ["MacPorts", "Homebrew", "Fink", "pkgsrc", "FreeBSD", "Gentoo"] {
             try! fileManager.createDirectory(atPath: "\(APPDIR)/\(dir)", withIntermediateDirectories: true)
         }
@@ -527,7 +527,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     // notification.subtitle = @"%ld changes applied";
                     notification.informativeText = "The changes to the marked packages have been applied."
                     notification.soundName = NSUserNotificationDefaultSoundName
-                    NSUserNotificationCenter.default().deliver(notification)
+                    NSUserNotificationCenter.default.deliver(notification)
                 }
             }
             status("Shell: OK.")
@@ -1981,7 +1981,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             (sourcesOutline.superview!.superview! as! NSScrollView).borderType = .lineBorder
             sourcesOutline.backgroundColor = NSColor.black()
             segmentedControl.segmentStyle = .smallSquare
-            commandsPopUp.bezelStyle = .smallSquareBezelStyle
+            commandsPopUp.bezelStyle = .smallSquare
             (infoText.superview!.superview! as! NSScrollView).borderType = .lineBorder
             infoText.backgroundColor = NSColor.black()
             infoText.textColor = NSColor.green()
@@ -1996,9 +1996,9 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             statusField.backgroundColor =  NSColor.green()
             cmdline.backgroundColor = NSColor.blue()
             cmdline.textColor = NSColor.white()
-            clearButton.bezelStyle = .smallSquareBezelStyle
-            screenshotsButton.bezelStyle = .smallSquareBezelStyle
-            moreButton.bezelStyle = .smallSquareBezelStyle
+            clearButton.bezelStyle = .smallSquare
+            screenshotsButton.bezelStyle = .smallSquare
+            moreButton.bezelStyle = .smallSquare
             statsLabel.drawsBackground = true
             statsLabel.backgroundColor = NSColor.green()
             shell.setValue(NSColor(calibratedRed: 0.0, green: 0.0, blue: 1.0, alpha: 1.0), forKey: "backgroundColor")
@@ -2016,7 +2016,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             (sourcesOutline.superview!.superview! as! NSScrollView).borderType = .grooveBorder
             sourcesOutline.backgroundColor = sourceListBackgroundColor
             segmentedControl.segmentStyle = .rounded
-            commandsPopUp.bezelStyle = .roundRectBezelStyle // TODO: Round in Mavericks
+            commandsPopUp.bezelStyle = .roundRect// TODO: Round in Mavericks
             (infoText.superview!.superview! as! NSScrollView).borderType = .grooveBorder
             infoText.backgroundColor = NSColor(calibratedRed: 0.82290249429999995, green: 0.97448979589999996, blue: 0.67131519269999995, alpha: 1.0) // light green
             infoText.textColor = NSColor.black()
@@ -2028,9 +2028,9 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             statusField.drawsBackground = false
             cmdline.backgroundColor = NSColor(calibratedRed: 1.0, green: 1.0, blue: 0.8, alpha: 1.0)
             cmdline.textColor = NSColor.black()
-            clearButton.bezelStyle = .texturedRoundedBezelStyle // TODO
-            screenshotsButton.bezelStyle = .texturedRoundedBezelStyle
-            moreButton.bezelStyle = .texturedRoundedBezelStyle
+            clearButton.bezelStyle = .texturedRounded // TODO
+            screenshotsButton.bezelStyle = .texturedRounded
+            moreButton.bezelStyle = .texturedRounded
             statsLabel.drawsBackground = false
             shell.setValue(NSColor(calibratedRed: 1.0, green: 1.0, blue: 0.8, alpha: 1.0), forKey: "backgroundColor")
             shell.setValue(NSColor(calibratedRed: 0.0, green: 0.0, blue: 0.0, alpha: 1.0), forKey: "normalTextColor")
