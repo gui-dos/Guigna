@@ -178,13 +178,14 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
 
         allPackages.reserveCapacity(150000)
 
+        let fileManager = FileManager.default()
+        for dir in ["MacPorts", "Homebrew", "Fink", "pkgsrc", "FreeBSD", "Gentoo"] {
+            try! fileManager.createDirectory(atPath: "\(APPDIR)/\(dir)", withIntermediateDirectories: true)
+        }
         let escapedAPPDIR = APPDIR.replace(" ", "__")
-        agent.output("/bin/mkdir -p \(escapedAPPDIR)")
         agent.output("/usr/bin/touch \(escapedAPPDIR)/output")
         agent.output("/usr/bin/touch \(escapedAPPDIR)/sync")
-        for dir in ["MacPorts", "Homebrew", "Fink", "pkgsrc", "FreeBSD", "Gentoo"] {
-            agent.output("/bin/mkdir -p \(escapedAPPDIR)/\(dir)")
-        }
+
 
         agent.output("/usr/bin/osascript -e tell__application__\"Terminal\"__to__close__(windows__whose__name__contains__\"Guigna__\")")
         terminal = SBApplication(bundleIdentifier: "com.apple.Terminal")

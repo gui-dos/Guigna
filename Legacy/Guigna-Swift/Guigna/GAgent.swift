@@ -42,7 +42,7 @@ class GAgent: NSObject {
         var err: OSStatus = noErr
         var components = cmd.components(separatedBy: " ")
         var toolPath = components.remove(at: 0).cString(using: .utf8)!
-        let cArgs = components.map { ($0.cString(using: .utf8)!) }
+        let cArgs = components.map { $0.cString(using: .utf8)! }
         var args = [UnsafePointer<CChar>?]()
         for cArg in cArgs {
             args.append(UnsafePointer<CChar>(cArg))
@@ -50,16 +50,16 @@ class GAgent: NSObject {
         args.append(nil)
         let argsPointer = UnsafePointer<UnsafePointer<CChar>>(args)
         var authorizationRef: AuthorizationRef? = nil
-        var myItems = AuthorizationItem(name: kAuthorizationRightExecute, valueLength: toolPath.count, value: &toolPath, flags: 0)
-        var myRights = AuthorizationRights(count: 1, items: &myItems)
+        var items = AuthorizationItem(name: kAuthorizationRightExecute, valueLength: toolPath.count, value: &toolPath, flags: 0)
+        var rights = AuthorizationRights(count: 1, items: &items)
         let flags: AuthorizationFlags = [.interactionAllowed, .preAuthorize, .extendRights]
         var outputFile = FILE()
-        var outputFilePointer = withUnsafeMutablePointer(&outputFile) {UnsafeMutablePointer<FILE>($0)}
+        var outputFilePointer = withUnsafeMutablePointer(&outputFile) { UnsafeMutablePointer<FILE>($0) }
         var outputFilePointerPointer = withUnsafeMutablePointer(&outputFilePointer) {UnsafeMutablePointer<UnsafeMutablePointer<FILE>>($0)}
         err = AuthorizationCreate(nil, nil, [], &authorizationRef)
         //    if err != errAuthorizationSuccess {
         //    }
-        err = AuthorizationCopyRights(authorizationRef!, &myRights, nil, flags, nil)
+        err = AuthorizationCopyRights(authorizationRef!, &rights, nil, flags, nil)
         //    if err != errAuthorizationSuccess {
         //    }
         let RTLD_DEFAULT = UnsafeMutablePointer<Void>(bitPattern: -2)
@@ -70,11 +70,11 @@ class GAgent: NSObject {
         //    }
         AuthorizationFree(authorizationRef!, [])
         let outputFileHandle = FileHandle(fileDescriptor: fileno(outputFilePointer), closeOnDealloc: true)
-        let processIdentifier:pid_t = fcntl(fileno(outputFilePointer), F_GETOWN, 0)
+        let processIdentifier: pid_t = fcntl(fileno(outputFilePointer), F_GETOWN, 0)
         var terminationStatus: Int32 = 0
         waitpid(processIdentifier, &terminationStatus, 0)
         let outputData = outputFileHandle.readDataToEndOfFile()
-        let outputString = String(data:outputData, encoding: .utf8)!
+        let outputString = String(data: outputData, encoding: .utf8)!
         return outputString
     }
 
