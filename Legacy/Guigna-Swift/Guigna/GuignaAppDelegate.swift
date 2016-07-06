@@ -186,7 +186,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             fileManager.createFile(atPath: "\(APPDIR)/\(file)", contents: nil, attributes: nil)
         }
 
-        agent.output("/usr/bin/osascript -e tell__application__\"Terminal\"__to__close__(windows__whose__name__contains__\"Guigna__\")")
+        var _ = NSAppleScript(source: "tell app \"Terminal\" to close (windows whose name contains \"Guigna \")")?.executeAndReturnError(nil)
         terminal = SBApplication(bundleIdentifier: "com.apple.Terminal")
         let guignaFunction = "guigna() { osascript -e 'tell app \"Guigna\"' -e \"open POSIX file \\\"\(APPDIR)/$2\\\"\" -e 'end' &>/dev/null; }"
         let initScript = "unset HISTFILE; " + guignaFunction
@@ -422,7 +422,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
 
     func windowWillClose(_ notification: Notification) {
         if self.ready {
-            agent.output("/usr/bin/osascript -e tell__application__\"Terminal\"__to__close__(windows__whose__name__contains__\"Guigna__\")")
+            var _ = NSAppleScript(source: "tell app \"Terminal\" to close (windows whose name contains \"Guigna \")")?.executeAndReturnError(nil)
         }
     }
 
