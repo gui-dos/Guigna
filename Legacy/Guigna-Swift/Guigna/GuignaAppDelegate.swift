@@ -1149,7 +1149,9 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         itemsTable.display()
         screenshotsButton.isHidden = false
         moreButton.isHidden = false
-        updateTabView(itemsController.selectedObjects[0] as! GItem)
+        if scrape.items.count > 0 {
+            updateTabView(itemsController.selectedObjects[0] as! GItem)
+        }
         tableProgressIndicator.stopAnimation(self)
         if !statusField.stringValue.hasPrefix("Executing") {
             status("OK.")
