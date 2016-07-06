@@ -27,7 +27,7 @@ final class ITunes: GSystem {
 
         var pkgs = [GPackage]()
         pkgs.reserveCapacity(1000)
-        let fileManager = FileManager.default()
+        let fileManager = FileManager.default
         if let contents = (try? fileManager.contentsOfDirectory(atPath: ("~/Music/iTunes/iTunes Media/Mobile Applications" as NSString).expandingTildeInPath)) {
             for filename in contents {
                 let ipa = ("~/Music/iTunes/iTunes Media/Mobile Applications/\(filename)" as NSString).expandingTildeInPath
@@ -74,7 +74,7 @@ final class ITunes: GSystem {
         let metadata = plist.propertyList() as! NSDictionary
         let itemId: Int = metadata["itemId"]! as! Int
         let url = URL(string: "http://itunes.apple.com/app/id\(itemId)")!
-        if let xmlDoc = try? XMLDocument(contentsOf: url, options: Int(NSXMLDocumentTidyHTML)) {
+        if let xmlDoc = try? XMLDocument(contentsOf: url, options: Int(XMLNodeOptions.documentTidyHTML.rawValue)) {
             let mainDiv = xmlDoc.rootElement()!["//div[@id=\"main\"]"][0]
             let links = mainDiv["//div[@class=\"app-links\"]/a"]
             // TODO: get screenshots via JSON

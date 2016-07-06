@@ -20,7 +20,7 @@ final class Fink: GSystem {
 
         if mode == .online {
             let url = URL(string: "http://pdb.finkproject.org/pdb/browse.php")!
-            if let xmlDoc = try? XMLDocument(contentsOf: url, options: Int(NSXMLDocumentTidyHTML)) {
+            if let xmlDoc = try? XMLDocument(contentsOf: url, options: Int(XMLNodeOptions.documentTidyHTML.rawValue)) {
                 let nodes = xmlDoc.rootElement()!["//tr[@class=\"package\"]"]
                 for node in nodes {
                     let dataRows = node["td"]

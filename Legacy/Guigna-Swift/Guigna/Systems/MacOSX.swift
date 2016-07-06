@@ -102,7 +102,7 @@ final class MacOSX: GSystem {
             if results.count > 0 {
                 let pkgId = (results[0] as! NSDictionary)["trackId"]!.stringValue!
                 let url = URL(string: "http://itunes.apple.com/app/id\(pkgId)")!
-                if let xmlDoc = try? XMLDocument(contentsOf: url, options: Int(NSXMLDocumentTidyHTML)) {
+                if let xmlDoc = try? XMLDocument(contentsOf: url, options: Int(XMLNodeOptions.documentTidyHTML.rawValue)) {
                     let mainDiv = xmlDoc.rootElement()!["//div[@id=\"main\"]"][0]
                     let links = mainDiv["//div[@class=\"app-links\"]/a"]
                     // TODO: get screenshots via JSON
@@ -158,7 +158,7 @@ final class MacOSX: GSystem {
     override func uninstallCmd(_ pkg: GPackage) -> String {
         // SEE: https://github.com/caskroom/homebrew-cask/blob/master/lib/cask/pkg.rb
         var commands = [String]()
-        let fileManager = FileManager.default()
+        let fileManager = FileManager.default
         var dirsToDelete = [String]()
         var isDir: ObjCBool = true
         for pkgId in pkg.id.split() {

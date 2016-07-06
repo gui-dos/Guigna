@@ -28,7 +28,7 @@ extension String {
     }
 
     var exists: Bool {
-        return FileManager.default().fileExists(atPath: (self as NSString).expandingTildeInPath)
+        return FileManager.default.fileExists(atPath: (self as NSString).expandingTildeInPath)
     }
 
     func index(_ string: String) -> Int {
@@ -40,7 +40,7 @@ extension String {
     }
 
     func rindex(_ string: String) -> Int {
-        if let range = self.range(of: string, options: .backwardsSearch) {
+        if let range = self.range(of: string, options: .backwards) {
             return self.distance(from: startIndex, to: range.lowerBound)
         } else {
             return NSNotFound

@@ -6,6 +6,7 @@ FIXME
   - the status() thread doesn't update the main GUI
 * Swift:
   - filter() for inactive packages should be called only for MacPorts and Homebrew
+  - simplify XMLDocument(contentsOf: url, options: Int(XMLNodeOptions.documentTidyHTML.rawValue)
 * Scraping the version numbers and the descriptions from Homebrew formulae is excessively slow
 * Help doesn't always open the wiki page
 * The password to sudo is echoed in clear text

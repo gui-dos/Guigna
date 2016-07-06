@@ -43,8 +43,8 @@ final class MacPorts: GSystem {
             }
             let s =  Scanner(string: portIndex)
             s.charactersToBeSkipped = CharacterSet(charactersIn: "")
-            let endsCharacterSet = NSMutableCharacterSet.whitespacesAndNewlines()
-            endsCharacterSet.addCharacters(in: "}")
+            var endsCharacterSet = NSMutableCharacterSet.whitespacesAndNewlines
+            endsCharacterSet.insert(charactersIn: "}")
             var str: NSString? = nil
             var name: NSString? = nil
             var key: NSString? = nil

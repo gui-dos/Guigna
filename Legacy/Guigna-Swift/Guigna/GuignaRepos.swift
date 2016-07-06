@@ -16,7 +16,7 @@ final class Native: GRepo {
     override func refresh() {
         var pkgs = [GItem]()
         let url = URL(string: "https://docs.google.com/spreadsheets/d/1HOslVAaEwrcd7hmu6rWzd7jayMUT-nzaL9YL8llE35Q")!
-        if let xmlDoc = try? XMLDocument(contentsOf: url, options: Int(NSXMLDocumentTidyHTML)) {
+        if let xmlDoc = try? XMLDocument(contentsOf: url, options: Int(XMLNodeOptions.documentTidyHTML.rawValue)) {
             let nodes = xmlDoc.rootElement()!["//table[@class=\"waffle\"]//tr"]
             let whitespaceCharacterSet = CharacterSet.whitespaces
             for node in nodes {
