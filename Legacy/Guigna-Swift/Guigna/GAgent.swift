@@ -5,6 +5,8 @@ class GAgent: NSObject {
 
     var appDelegate: GAppDelegate?
 
+    /// - parameter command:
+    ///   (replace spaces with `__` when passing multi-word strings as arguments)
     @discardableResult
     func output(_ command: String) -> String {
 
@@ -36,8 +38,7 @@ class GAgent: NSObject {
         return output
     }
 
-
-    // ported from: https://github.com/sveinbjornt/STPrivilegedTask
+    /// Ported from: [STPrivilegedTask](https://github.com/sveinbjornt/STPrivilegedTask)
     @discardableResult
     func sudo(_ cmd: String) -> String {
         var err: OSStatus = noErr
@@ -71,6 +72,7 @@ class GAgent: NSObject {
         //    }
         AuthorizationFree(authorizationRef!, [])
         let outputFileHandle = FileHandle(fileDescriptor: fileno(outputFilePointer), closeOnDealloc: true)
+        // FIXME: always return 0
         let processIdentifier: pid_t = fcntl(fileno(outputFilePointer), F_GETOWN, 0)
         var terminationStatus: Int32 = 0
         waitpid(processIdentifier, &terminationStatus, 0)
