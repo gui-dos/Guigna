@@ -274,26 +274,23 @@ final class Pkgin: GSystem {
     }
 
     override func installCmd(_ pkg: GPackage) -> String {
-        //        if pkg.id != nil {
-        //            return "cd /usr/pkgsrc/\(pkg.id); sudo /usr/pkg/bin/bmake install clean clean-depends"
-        //        } else {
-        //            return "cd /usr/pkgsrc/\(pkg.categories!)/\(pkg.name); sudo /usr/pkg/bin/bmake install clean clean-depends"
-        //        }
         return "sudo \(cmd) -y install \(pkg.name)"
     }
 
     override func uninstallCmd(_ pkg: GPackage) -> String {
-        //        return "sudo \(prefix)/sbin/pkg_delete \(pkg.name)"
         return "sudo \(cmd) -y remove \(pkg.name)"
     }
 
+    // TODO:
+    override func upgradeCmd(_ pkg: GPackage) -> String {
+        return "sudo \(cmd) -y upgrade"
+        // return "sudo \(cmd) -y remove \(pkg.name); sudo \(cmd) -y install \(pkg.name)"
+
+    }
 
     override func cleanCmd(_ pkg: GPackage) -> String {
-        if pkg.id != nil {
-            return "cd /usr/pkgsrc/\(pkg.id!); sudo /usr/pkg/bin/bmake clean clean-depends"
-        } else {
-            return "cd /usr/pkgsrc/\(pkg.categories!)/\(pkg.name); sudo /usr/pkg/bin/bmake clean clean-depends"
-        }
+        return "sudo \(cmd) clean \(pkg.name)"
+
     }
 
     override var updateCmd: String! {
