@@ -72,7 +72,7 @@ class GAgent: NSObject {
         //    }
         AuthorizationFree(authorizationRef!, [])
         let outputFileHandle = FileHandle(fileDescriptor: fileno(outputFilePointer), closeOnDealloc: true)
-        // FIXME: always return 0
+        // FIXME: always returns 0
         let processIdentifier: pid_t = fcntl(fileno(outputFilePointer), F_GETOWN, 0)
         var terminationStatus: Int32 = 0
         waitpid(processIdentifier, &terminationStatus, 0)
