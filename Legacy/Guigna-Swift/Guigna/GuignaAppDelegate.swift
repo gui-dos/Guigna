@@ -306,13 +306,13 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         // TODO detect pkgsrc in /opt/pkg
 
         // TODO: Index user defaults
-        if "/usr/pkg/sbin/pkg_info".exists || "\(APPDIR)/pkgsrc/INDEX".exists {
+        if "/usr/pkg/sbin/pkg_info".exists || "/opt/pkg/sbin/pkg_info".exists || "\(APPDIR)/pkgsrc/INDEX".exists {
             if defaults["pkgsrcStatus"] == nil {
                 defaults["pkgsrcStatus"] = GState.on.rawValue
                 defaults["pkgsrcCVS"] = true
             }
         }
-        if defaults["pkgsrcStatus"] != nil && defaults["pkgsrcStatus"] == GState.on.rawValue {
+        if defaults["pkgsrcStatus"] != nil && defaults["pkgsrcStatus"] == GState.on.rawValue && (defaults["pkginStatus"] != nil && defaults["pkginStatus"] == GState.off.rawValue) {
             let pkgsrc = Pkgsrc(agent: agent)
             if !"/usr/pkg/sbin/pkg_info".exists {
                 pkgsrc.mode = .online
@@ -325,7 +325,10 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 defaults["pkginStatus"] = GState.on.rawValue
             }
         }
-        if defaults["pkginStatus"] != nil && defaults["pkginStatus"] == GState.on.rawValue {
+        // TODO:
+        if defaults["pkginStatus"] != nil && defaults["pkginStatus"] == GState.on.rawValue &&
+        ( defaults["pkgsrcStatus"] != nil && defaults["pkgsrcStatus"] == GState.on.rawValue)
+        {
             let pkgin = Pkgin(agent: agent)
             if !"/opt/pkg/bin/pkgin".exists {
                 pkgin.mode = .online
@@ -1863,10 +1866,16 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                         addedSystems.append(system)
 
                     } else if title == "pkgsrc" {
-                        command = "/usr/pkg/sbin/pkg_info"
-                        system = Pkgsrc(agent: agent)
-                        system.mode = command.exists ? .offline : .online
-                        addedSystems.append(system)
+                        command = "/opt/pkg/bin/pkgin"
+                        if command.exists {
+                            system = Pkgin(agent: agent)
+                            addedSystems.append(system)
+                        } else {
+                            command = "/usr/pkg/sbin/pkg_info"
+                            system = Pkgsrc(agent: agent)
+                            system.mode = command.exists ? .offline : .online
+                            addedSystems.append(system)
+                        }
 
                     } else if title == "FreeBSD" {
                         system = FreeBSD(agent: agent)
@@ -1949,7 +1958,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         let systemsSource = sourcesContent[0] as! GSource
         let systemsArray = systemsSource.categories! as! [GSource]
         let systemsMutableArray = systemsSource.mutableArrayValue(forKey: "categories")
-        let filtered = systemsArray.filter { $0.name.hasPrefix(name) }
+        let filtered = systemsArray.filter { $0.name.hasPrefix(name) || (name == "pkgsrc" && $0.name == "pkgin") }
         var status: GState = .off
         if filtered.count > 0 {
             for source in filtered as! [GSystem] {
