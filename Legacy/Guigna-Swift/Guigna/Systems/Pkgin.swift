@@ -256,11 +256,14 @@ final class Pkgin: GSystem {
 
     // TODO: use specific pkgin commands
     override func contents(_ item: GItem) -> String {
-        return (try? String(contentsOf: URL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(firstCategoryOf(item))/\(item.name)/PLIST")!, encoding: .utf8)) ?? ""
+        return output("\(cmd) pkg-contents \(item.name)")
+
     }
 
     override func cat(_ item: GItem) -> String {
         return (try? String(contentsOf: URL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(firstCategoryOf(item))/\(item.name)/Makefile")!, encoding: .utf8)) ?? ""
+        // TODO: output("\(cmd) pkg-build-defs \(item.name)")
+
     }
 
     // TODO: Deps: pkg_info -n -r, scrape site, parse Index
