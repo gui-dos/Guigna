@@ -96,34 +96,46 @@ final class Pkgin: GSystem {
         //            }
         //        }
 
+        let whitespaceCharacterSet = CharacterSet.whitespaces
+        
+        var lines = output("\(cmd) avail").split("\n")
+        lines.removeLast()
+        for line in lines {
+            var idx = line.index(" ")
+            var name = line.substring(to: idx)
+            let description = line.substring(from: idx + 1).trim(whitespaceCharacterSet)
+            idx = name.rindex("-")
+            let version = name.substring(from: idx + 1)
+            name = name.substring(to: idx)
+            let pkg = GPackage(name: name, version: version, system: self, status: .available)
+            let category = "[multiple]"
+            pkg.categories = category
+            pkg.description = description
+            let id = "\(category)/\(name)"
+            pkg.id = id
+            items.append(pkg)
+            self[id] = pkg
+        }
+
         var categories = output("\(cmd) show-all-categories").split("\n")
         categories.removeLast()
         for category in categories {
             var outputLines = output("\(cmd) show-category \(category)").split("\n")
             outputLines.removeLast()
-
-            // duplicate from installed():
-            // TODO: categories / ids
-
-            let whitespaceCharacterSet = CharacterSet.whitespaces
-            for line in outputLines.reversed() {
+            for line in outputLines {
                 var idx = line.index(" ")
                 var name = line.substring(to: idx)
-                let description = line.substring(from: idx + 1).trim(whitespaceCharacterSet)
                 idx = name.rindex("-")
-                let version = name.substring(from: idx + 1)
                 name = name.substring(to: idx)
-                // let id = ids[i]
-                // idx = id.index("/")
-                // name = id.substring(from: idx + 1)
-                let pkg = GPackage(name: name, version: version, system: self, status: .available)
-                pkg.categories = category
-                pkg.description = description
                 let id = "\(category)/\(name)"
-                pkg.id = id
-                items.append(pkg)
-                self[id] = pkg
-                // i += 1
+                if let pkg = self["[multiple]/\(name)"] { // the same item in the same category could have been categorized already
+                    self[id] = pkg
+                    self["[multiple]/\(name)"] = nil
+                }
+                if self[id] != nil { // ignore a second item in a different category already categorized
+                    self[id].id = id
+                    self[id].categories = category
+                }
             }
         }
 
@@ -155,7 +167,7 @@ final class Pkgin: GSystem {
             }
         }
         // [self outdated]; // index outdated ports // TODO
-        var outputLines = output("\(cmd) list").split("\n")
+        var outputLines = output("/bin/sh -c \(cmd)__list__|__sort__-f").split("\n")
         outputLines.removeLast()
         var ids = output("\(pkgsrcCmd) -Q PKGPATH -a").split("\n")
         ids.removeLast()
