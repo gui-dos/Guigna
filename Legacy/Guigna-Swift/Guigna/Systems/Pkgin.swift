@@ -18,12 +18,20 @@ final class Pkgin: GSystem {
         return "\(prefix)/sbin/pkg_info"
     }
 
+    func firstCategoryOf(_ item: GItem) -> String {
+        if !item.id.hasPrefix("[multiple]/") {
+            return item.id.split("/")[0]
+        } else {
+            return output("\(cmd) show-pkg-category \(item.name)").split(" - ")[0].trim().split()[0]
+        }
+    }
+
     // include category for managing duplicates of xp, binutils, fuse, p5-Net-CUPS
     override func key(package pkg: GPackage) -> String {
         if pkg.id != nil {
             return "\(pkg.id)-\(name)"
         } else {
-            return "\(pkg.categories!.split()[0])/\(pkg.name)-\(name)"
+            return "\(firstCategoryOf(pkg))/\(pkg.name)-\(name)"
         }
     }
 
@@ -180,11 +188,15 @@ final class Pkgin: GSystem {
             idx = name.rindex("-")
             let version = name.substring(from: idx + 1)
             // name = name.substring(to: idx)
-            let id = ids[i]
+            var id = ids[i]
             idx = id.index("/")
             name = id.substring(from: idx + 1)
             status = .upToDate
             var pkg: GPackage! = self[id]
+            if pkg == nil {
+                id = "[multiple]/\(name)"
+                pkg = self[id]
+            }
             let latestVersion: String = (pkg == nil) ? "" : pkg.version
             if pkg == nil {
                 pkg = GPackage(name: name, version: latestVersion, system: self, status: status)
@@ -228,7 +240,7 @@ final class Pkgin: GSystem {
         if item.homepage != nil { // already available from INDEX
             return item.homepage
         } else {
-            let links = agent.nodes(URL: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories!)/\(item.name)/README.html", XPath: "//p/a")
+            let links = agent.nodes(URL: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(firstCategoryOf(item))/\(item.name)/README.html", XPath: "//p/a")
             return links[2].href
         }
     }
@@ -239,31 +251,16 @@ final class Pkgin: GSystem {
         //        } else {
         //            return "http://cvsweb.NetBSD.org/bsdweb.cgi/pkgsrc/\(item.categories!)/\(item.name)/"
         //        }
-        return "https://github.com/joyent/pkgsrc/commits/trunk/\(item.categories!)/\(item.name)"
+        return "https://github.com/joyent/pkgsrc/commits/trunk/\(firstCategoryOf(item))/\(item.name)"
     }
 
+    // TODO: use specific pkgin commands
     override func contents(_ item: GItem) -> String {
-        if item.status != .available {
-            return output("\(cmd) -L \(item.name)").split("Files:\n")[1]
-        } else {
-            if item.id != nil {
-                return (try? String(contentsOf: URL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.id!)/PLIST")!, encoding: .utf8)) ?? ""
-            } else { // TODO lowercase (i.e. Hermes -> hermes)
-                return (try? String(contentsOf: URL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories!)/\(item.name)/PLIST")!, encoding: .utf8)) ?? ""
-            }
-        }
+        return (try? String(contentsOf: URL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(firstCategoryOf(item))/\(item.name)/PLIST")!, encoding: .utf8)) ?? ""
     }
 
     override func cat(_ item: GItem) -> String {
-        if item.status != .available {
-            let filtered = items.filter { $0.name == item.name }
-            item.id = filtered[0].id
-        }
-        if item.id != nil {
-            return (try? String(contentsOf: URL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.id!)/Makefile")!, encoding: .utf8)) ?? ""
-        } else { // TODO lowercase (i.e. Hermes -> hermes)
-            return (try? String(contentsOf: URL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(item.categories!)/\(item.name)/Makefile")!, encoding: .utf8)) ?? ""
-        }
+        return (try? String(contentsOf: URL(string: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(firstCategoryOf(item))/\(item.name)/Makefile")!, encoding: .utf8)) ?? ""
     }
 
     // TODO: Deps: pkg_info -n -r, scrape site, parse Index
