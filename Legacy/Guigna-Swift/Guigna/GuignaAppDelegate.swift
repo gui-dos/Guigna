@@ -1535,6 +1535,8 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             if item.status == .inactive || systemName == "Mac OS X" || systemName == "iTunes" {
                 package = allPackages.filter { $0.name == item.name && $0.installed != nil && $0.installed == item.installed }[0]
             } else {
+                print(packagesIndex.keys)
+                print((item as! GPackage).key())
                 package = packagesIndex[(item as! GPackage).key()]!
                 package.version = item.version
                 package.options = (item as! GPackage).options

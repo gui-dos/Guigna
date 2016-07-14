@@ -29,7 +29,7 @@ final class Pkgin: GSystem {
     // include category for managing duplicates of xp, binutils, fuse, p5-Net-CUPS
     override func key(package pkg: GPackage) -> String {
         if pkg.id != nil {
-            return "\(pkg.id)-\(name)"
+            return "\(pkg.id!)-\(name)"
         } else {
             return "\(firstCategoryOf(pkg))/\(pkg.name)-\(name)"
         }
@@ -237,7 +237,7 @@ final class Pkgin: GSystem {
 
 
     override func home(_ item: GItem) -> String {
-        if item.homepage != nil { // already available from INDEX
+        if item.homepage != nil {
             return item.homepage
         } else {
             let links = agent.nodes(URL: "http://ftp.NetBSD.org/pub/pkgsrc/current/pkgsrc/\(firstCategoryOf(item))/\(item.name)/README.html", XPath: "//p/a")
@@ -246,11 +246,6 @@ final class Pkgin: GSystem {
     }
 
     override func log(_ item: GItem) -> String {
-        //        if item.id != nil {
-        //            return "http://cvsweb.NetBSD.org/bsdweb.cgi/pkgsrc/\(item.id!)/"
-        //        } else {
-        //            return "http://cvsweb.NetBSD.org/bsdweb.cgi/pkgsrc/\(item.categories!)/\(item.name)/"
-        //        }
         return "https://github.com/joyent/pkgsrc/commits/trunk/\(firstCategoryOf(item))/\(item.name)"
     }
 
@@ -266,37 +261,16 @@ final class Pkgin: GSystem {
 
     }
 
-    // TODO: Deps: pkg_info -n -r, scrape site, parse Index
-
-    override func deps(_ item: GItem) -> String { // FIXME: "*** PACKAGE MAY NOT BE DELETED *** "
-
-        if item.status != .available {
-            let components = output("\(cmd) -n \(item.name)").split("Requires:\n")
-            if components.count > 1 {
-                return components[1].trim()
-            } else {
-                return "[No depends]"
-            }
-        } else {
-            if "~/Library/Application Support/Guigna/pkgsrc/INDEX".exists {
-                // TODO: parse INDEX
-                // NSArray *lines = [NSString stringWithContentsOfFile:[@"~/Library/Application Support/Guigna/pkgsrc/INDEX" stringByExpandingTildeInPath] encoding:NSUTF8StringEncoding error:nil];
-            }
-            return "[Not available]"
-        }
+    override func deps(_ item: GItem) -> String {
+        var outputLines = output("\(cmd) show-full-deps \(item.name)").split("\n")
+        outputLines.removeFirst()
+        return outputLines.map{ $0.trim().replace(">=", " >= ") }.join("\n")
     }
 
     override func dependents(_ item: GItem) -> String {
-        if item.status != .available {
-            let components = output("\(cmd) -r \(item.name)").split("required by list:\n")
-            if components.count > 1 {
-                return components[1].trim()
-            } else {
-                return "[No dependents]"
-            }
-        } else {
-            return "[Not available]"
-        }
+        var outputLines = output("\(cmd) show-rev-deps \(item.name)").split("\n")
+        outputLines.removeFirst()
+        return outputLines.map{ $0.trim() }.join("\n")
     }
 
     override func installCmd(_ pkg: GPackage) -> String {
@@ -316,7 +290,7 @@ final class Pkgin: GSystem {
 
     override func cleanCmd(_ pkg: GPackage) -> String {
         if pkg.id != nil {
-            return "cd /usr/pkgsrc/\(pkg.id); sudo /usr/pkg/bin/bmake clean clean-depends"
+            return "cd /usr/pkgsrc/\(pkg.id!); sudo /usr/pkg/bin/bmake clean clean-depends"
         } else {
             return "cd /usr/pkgsrc/\(pkg.categories!)/\(pkg.name); sudo /usr/pkg/bin/bmake clean clean-depends"
         }
