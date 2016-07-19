@@ -740,6 +740,11 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     }
 
     func outlineViewSelectionDidChange(_ notification: Notification) {
+        // FIXME: without this workaround the selected sourcesOutline aren't highlighted after launch
+        if defaults["Theme"] == "Default" {
+            (sourcesOutline.superview!.superview! as! NSScrollView).borderType = .lineBorder
+            (sourcesOutline.superview!.superview! as! NSScrollView).borderType = .grooveBorder
+        }
         sourcesSelectionDidChange(notification)
     }
 
@@ -1791,11 +1796,6 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         self.window.endSheet(self.optionsPanel)
         if self.ready {
             syncButton.isEnabled = true
-            // FIXME: without this workaround the sourcesOutline isn't responsive after launch
-            if defaults["Theme"] == "Default" {
-                (sourcesOutline.superview!.superview! as! NSScrollView).borderType = .lineBorder
-                (sourcesOutline.superview!.superview! as! NSScrollView).borderType = .grooveBorder
-            }
         }
     }
 
