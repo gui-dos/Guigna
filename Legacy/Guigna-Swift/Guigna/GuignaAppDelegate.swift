@@ -740,10 +740,11 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     }
 
     func outlineViewSelectionDidChange(_ notification: Notification) {
-        // FIXME: without this workaround the selected sourcesOutline aren't highlighted after launch
+        // FIXME: without this workaround the selected sources aren't highlighted after launch
         if defaults["Theme"] == "Default" {
-            (sourcesOutline.superview!.superview! as! NSScrollView).borderType = .lineBorder
-            (sourcesOutline.superview!.superview! as! NSScrollView).borderType = .grooveBorder
+            let scrollView = sourcesOutline.superview!.superview! as! NSScrollView
+            scrollView.borderType = .lineBorder
+            scrollView.borderType = .grooveBorder
         }
         sourcesSelectionDidChange(notification)
     }

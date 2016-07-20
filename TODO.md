@@ -18,17 +18,18 @@ TODO
 
 * Swift:
   - complete port of inactive packages management
+  - simplify `XMLDocument(contentsOf: url, options: Int(XMLNodeOptions.documentTidyHTML.rawValue)`
 * Objective-C:
   - port new code from [“swift2”](https://github.com/gui-dos/Guigna/releases/tag/swift2)
     release on (15th June)
-* simplify `XMLDocument(contentsOf: url, options: Int(XMLNodeOptions.documentTidyHTML.rawValue)`
 * Make use of Storyboards and NSViewControllers
 * Preload a cached index to speed up startup
+* Scroll the webview by pressing the spacebar
 * Core Data, predicate editor
 * GTasks, Stop button, exception handling
 * Alternative use of ExecuteWithPrivileges() and PrivilegedHelperTools.
 * Asyncronous URL fetches, download manager
-* Manage --force flags
+* Manage `--force` flags
 * itemsTable date column
 * FreeBSD deps
 * Fink categories, deps, binaries
