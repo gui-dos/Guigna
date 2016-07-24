@@ -9,30 +9,25 @@ class GAgent: NSObject {
     ///   (replace spaces with `__` when passing multi-word strings as arguments)
     @discardableResult
     func output(_ command: String) -> String {
-
         let task = Task()
-        let tokens = command.components(separatedBy: " ")
-        let command = tokens[0]
-        var args: [String] = []
-        if tokens.count > 1 {
-            let components = tokens[1...tokens.count-1]
-            for component: String in components {
-                if component == "\"\"" {
-                    args.append("")
-                } else {
-                    args.append(component.replacingOccurrences(of: "__", with: " "))
-                }
+        var tokens = command.components(separatedBy: " ")
+        task.launchPath = tokens.removeFirst()
+        var args = [String]()
+        for token in tokens {
+            if token == "\"\"" {
+                args.append("")
+            } else {
+                args.append(token.replacingOccurrences(of: "__", with: " "))
             }
         }
-        task.launchPath = command
         task.arguments = args
-        let pipe = Pipe()
-        task.standardOutput = pipe
+        let outputPipe = Pipe()
+        task.standardOutput = outputPipe
         let errorPipe = Pipe()
         task.standardError = errorPipe
         task.standardInput = Pipe()
         task.launch()
-        let data = pipe.fileHandleForReading.readDataToEndOfFile()
+        let data = outputPipe.fileHandleForReading.readDataToEndOfFile()
         task.waitUntilExit()
         let output = String(data: data, encoding: .utf8) ?? ""
         return output
@@ -77,8 +72,8 @@ class GAgent: NSObject {
         var terminationStatus: Int32 = 0
         waitpid(processIdentifier, &terminationStatus, 0)
         let outputData = outputFileHandle.readDataToEndOfFile()
-        let outputString = String(data: outputData, encoding: .utf8)!
-        return outputString
+        let output = String(data: outputData, encoding: .utf8) ?? ""
+        return output
     }
 
 
