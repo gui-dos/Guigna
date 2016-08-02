@@ -86,7 +86,7 @@ class GAgent: NSObject {
         let data: Data = page!.data(using: .utf8)!
         var nodes = [XMLNode]()
         do {
-            let doc = try XMLDocument(data: data, options: Int(XMLNodeOptions.documentTidyHTML.rawValue))
+            let doc = try XMLDocument(data: data, options: Int(XMLNode.Options.documentTidyHTML.rawValue))
             nodes = try doc.rootElement()!.nodes(forXPath: xpath)
         } catch {
         }

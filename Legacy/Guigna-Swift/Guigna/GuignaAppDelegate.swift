@@ -113,7 +113,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     }
 
     func log(_ text: String) {
-        let attributedString = AttributedString(string: text, attributes: [NSFontAttributeName: NSFont(name: "Andale Mono", size:11.0)!, NSForegroundColorAttributeName: logTextColor])
+        let attributedString = NSAttributedString(string: text, attributes: [NSFontAttributeName: NSFont(name: "Andale Mono", size:11.0)!, NSForegroundColorAttributeName: logTextColor])
         let storage = logText.textStorage!
         storage.beginEditing()
         storage.append(attributedString)
@@ -129,13 +129,13 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         tableProgressIndicator.startAnimation(self)
 
         let defaultsTransformer = GDefaultsTransformer()
-        ValueTransformer.setValueTransformer(defaultsTransformer, forName: "GDefaultsTransformer" as ValueTransformerName)
+        ValueTransformer.setValueTransformer(defaultsTransformer, forName: "GDefaultsTransformer" as NSValueTransformerName)
         let statusTransformer = GStatusTransformer()
-        ValueTransformer.setValueTransformer(statusTransformer, forName: "GStatusTransformer" as ValueTransformerName)
+        ValueTransformer.setValueTransformer(statusTransformer, forName: "GStatusTransformer" as NSValueTransformerName)
         let markTransformer = GMarkTransformer()
-        ValueTransformer.setValueTransformer(markTransformer, forName: "GMarkTransformer" as ValueTransformerName)
+        ValueTransformer.setValueTransformer(markTransformer, forName: "GMarkTransformer" as NSValueTransformerName)
         let sourceTransformer = GSourceTransformer()
-        ValueTransformer.setValueTransformer(sourceTransformer, forName: "GSourceTransformer" as ValueTransformerName)
+        ValueTransformer.setValueTransformer(sourceTransformer, forName: "GSourceTransformer" as NSValueTransformerName)
 
         statusItem = NSStatusBar.system().statusItem(withLength: -1) // NSVariableStatusItemLength
         statusItem.title = "😺"
@@ -207,8 +207,8 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             shell.setValue(NSColor(calibratedRed: 1.0, green: 1.0, blue: 0.8, alpha: 1.0), forKey: "backgroundColor") // light yellow
             shell.setValue(NSColor(calibratedRed: 0.0, green: 0.0, blue: 0.0, alpha: 1.0), forKey: "normalTextColor")
             tableFont = NSFont.controlContentFont(ofSize: NSFont.systemFontSize(for: .small))
-            tableTextColor = NSColor.black()
-            logTextColor = NSColor.black()
+            tableTextColor = NSColor.black
+            logTextColor = NSColor.black
         } else {
             themesSegmentedControl.selectedSegment = ["Default", "Retro"].index(of: theme)!
             applyTheme(theme)
@@ -396,7 +396,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
 
         browser =  SBApplication(bundleIdentifier: "com.apple.Safari")
 
-        let queue = DispatchQueue(label: "name.Guigna", attributes: DispatchQueueAttributes.concurrent)
+        let queue = DispatchQueue(label: "name.Guigna", attributes: .concurrent)
         queue.async {
             self.reloadAllPackages()
         }
@@ -536,7 +536,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             status("Shell: OK.")
 
         } else if filename == "\(APPDIR)/sync" {
-            let queue = DispatchQueue(label: "name.Guigna", attributes: DispatchQueueAttributes.concurrent)
+            let queue = DispatchQueue(label: "name.Guigna", attributes: .concurrent)
             queue.async {
                 self.reloadAllPackages()
             }
@@ -663,7 +663,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         marksCount = 0
 
         DispatchQueue.main.sync {
-            self.itemsController.sortDescriptors = [SortDescriptor(key: "status", ascending: false)]
+            self.itemsController.sortDescriptors = [NSSortDescriptor(key: "status", ascending: false)]
             self.updateMarkedSource()
             self.tableProgressIndicator.stopAnimation(self)
             self.applyButton.isEnabled = false
@@ -712,7 +712,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         if systemsToUpdate.count + systemsToList.count > 0 {
             segmentedControl.selectedSegment = -1
             updateTabView(nil)
-            let queue = DispatchQueue(label: "name.Guigna", attributes: DispatchQueueAttributes.concurrent)
+            let queue = DispatchQueue(label: "name.Guigna", attributes: .concurrent)
             for system in systemsToList {
                 status("Syncing \(system.name)...")
                 queue.async {
@@ -790,7 +790,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     if src == "installed" {
                         if first {
                             status("Verifying installed packages...")
-                            itemsController.filterPredicate = Predicate(format: "status == \(GStatus.upToDate.rawValue)")
+                            itemsController.filterPredicate = NSPredicate(format: "status == \(GStatus.upToDate.rawValue)")
                             itemsTable.display()
                         }
                         packages = system.installed()
@@ -798,7 +798,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     } else if src == "outdated" {
                         if first {
                             status("Verifying outdated packages...")
-                            itemsController.filterPredicate = Predicate(format: "status == \(GStatus.outdated.rawValue)")
+                            itemsController.filterPredicate = NSPredicate(format: "status == \(GStatus.outdated.rawValue)")
                             itemsTable.display()
                         }
                         packages = system.outdated()
@@ -806,7 +806,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     } else if src == "inactive" {
                         if first {
                             status("Verifying inactive packages...")
-                            itemsController.filterPredicate = Predicate(format: "status == \(GStatus.inactive.rawValue)")
+                            itemsController.filterPredicate = NSPredicate(format: "status == \(GStatus.inactive.rawValue)")
                             itemsTable.display()
                         }
                         packages = system.inactive()
@@ -816,7 +816,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                         let st: GStatus = (src == "updated") ? .updated : .new
                         if first {
                             status("Verifying \(src) packages...")
-                            itemsController.filterPredicate = Predicate(format: "status == \(st.rawValue)")
+                            itemsController.filterPredicate = NSPredicate(format: "status == \(st.rawValue)")
                             itemsTable.display()
                             packages = (itemsController.arrangedObjects as! NSArray).mutableCopy() as! [GPackage]
                         }
@@ -825,7 +825,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                         src = src.split()[0]
                         if first {
                             status("Verifying marked packages...")
-                            itemsController.filterPredicate = Predicate(format: "mark != 0")
+                            itemsController.filterPredicate = NSPredicate(format: "mark != 0")
                             itemsTable.display()
                             packages = (itemsController.arrangedObjects as! NSArray).mutableCopy() as! [GPackage]
                         }
@@ -835,7 +835,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                             segmentedControl.selectedSegment = 2 // shows System Log
                             self.updateTabView(nil)
                         }
-                        itemsController.filterPredicate = Predicate(format: "categories CONTAINS[c] '\(src)'")
+                        itemsController.filterPredicate = NSPredicate(format: "categories CONTAINS[c] '\(src)'")
                         packages = system.items.filter { $0.categories != nil && $0.categories!.contains(src) } as! [GPackage]
 
                     } else { // a system was selected
@@ -887,7 +887,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         searchField.performClick(self)
 
         if selectedSystems.count > 0 {
-            itemsController.sortDescriptors = [SortDescriptor(key: "status", ascending: false)]
+            itemsController.sortDescriptors = [NSSortDescriptor(key: "status", ascending: false)]
         }
         tableProgressIndicator.stopAnimation(self)
         if self.ready && !(statusField.stringValue.hasPrefix("Executing") || statusField.stringValue.hasPrefix("Loading")) {
@@ -1126,7 +1126,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     func webView(_ sender: WebView!, mouseDidMoveOverElement elementInformation: [NSObject : AnyObject]!,modifierFlags: Int) {
         if !statusField.stringValue.hasSuffix("...") {
             if let url = elementInformation[WebElementLinkURLKey] {
-                status((url as! URL).absoluteString!)
+                status((url as! URL).absoluteString)
             } else {
                 status("OK.")
             }
@@ -1141,8 +1141,8 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         if self.ready && !statusField.stringValue.hasPrefix("Executing") {
             status("Scraping \(scrape.name)...")
         }
-        let scrapesCount: Int = defaults["ScrapesCount"] as! NSInteger
-        let pagesToScrape = Int(ceil(Double(scrapesCount) / Double(scrape.itemsPerPage)))
+        let scrapesCount = Double(defaults["ScrapesCount"] as! NSString as String)! // FIXME: ugly
+        let pagesToScrape = Int(ceil(scrapesCount / Double(scrape.itemsPerPage)))
         for i in 1...pagesToScrape {
             scrape.refresh()
             itemsController.add(contentsOf: scrape.items)
@@ -1229,8 +1229,8 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     func textView(_ textView: NSTextView, clickedOnLink link: AnyObject, at charIndex: Int) -> Bool {
         let url = link as! URL
         let urlString = url.absoluteString
-        if ((urlString?.hasPrefix("http")) != nil) {
-            cmdline.stringValue = urlString!
+        if urlString.hasPrefix("http") {
+            cmdline.stringValue = urlString
             segmentedControl.selectedSegment = 1
             selectedSegment = "Home"
             updateTabView(nil)
@@ -1903,7 +1903,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                         }
                         sourcesOutline.reloadData()
                         sourcesOutline.display()
-                        itemsController.sortDescriptors = [SortDescriptor(key: "status", ascending: false)]
+                        itemsController.sortDescriptors = [NSSortDescriptor(key: "status", ascending: false)]
                         optionsStatus("OK.")
                     } else {
                         optionsStatus("\(title)'s \(command) not detected.")
@@ -1981,65 +1981,65 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
 
     func applyTheme(_ theme: String) {
         if theme == "Retro" {
-            window.backgroundColor = NSColor.green()
+            window.backgroundColor = NSColor.green
             segmentedControl.superview!.wantsLayer = true
-            segmentedControl.superview!.layer!.backgroundColor = NSColor.black().cgColor
-            itemsTable.backgroundColor = NSColor.black()
+            segmentedControl.superview!.layer!.backgroundColor = NSColor.black.cgColor
+            itemsTable.backgroundColor = NSColor.black
             itemsTable.usesAlternatingRowBackgroundColors = false
             tableFont = NSFont(name: "Andale Mono", size: 11.0)
-            tableTextColor = NSColor.green()
-            itemsTable.gridColor = NSColor.green()
+            tableTextColor = NSColor.green
+            itemsTable.gridColor = NSColor.green
             itemsTable.gridStyleMask = .dashedHorizontalGridLineMask
             (sourcesOutline.superview!.superview! as! NSScrollView).borderType = .lineBorder
-            sourcesOutline.backgroundColor = NSColor.black()
+            sourcesOutline.backgroundColor = NSColor.black
             segmentedControl.segmentStyle = .smallSquare
             commandsPopUp.bezelStyle = .smallSquare
             (infoText.superview!.superview! as! NSScrollView).borderType = .lineBorder
-            infoText.backgroundColor = NSColor.black()
-            infoText.textColor = NSColor.green()
+            infoText.backgroundColor = NSColor.black
+            infoText.textColor = NSColor.green
             var cyanLinkAttribute = linkTextAttributes
-            cyanLinkAttribute?[NSForegroundColorAttributeName] = NSColor.cyan()
+            cyanLinkAttribute?[NSForegroundColorAttributeName] = NSColor.cyan
             infoText.linkTextAttributes = cyanLinkAttribute
             (logText.superview!.superview! as! NSScrollView).borderType = .lineBorder
-            logText.backgroundColor = NSColor.blue()
-            logText.textColor = NSColor.white()
-            logTextColor = NSColor.white()
+            logText.backgroundColor = NSColor.blue
+            logText.textColor = NSColor.white
+            logTextColor = NSColor.white
             statusField.drawsBackground = true
-            statusField.backgroundColor =  NSColor.green()
-            cmdline.backgroundColor = NSColor.blue()
-            cmdline.textColor = NSColor.white()
+            statusField.backgroundColor =  NSColor.green
+            cmdline.backgroundColor = NSColor.blue
+            cmdline.textColor = NSColor.white
             clearButton.bezelStyle = .smallSquare
             screenshotsButton.bezelStyle = .smallSquare
             moreButton.bezelStyle = .smallSquare
             statsLabel.drawsBackground = true
-            statsLabel.backgroundColor = NSColor.green()
+            statsLabel.backgroundColor = NSColor.green
             shell.setValue(NSColor(calibratedRed: 0.0, green: 0.0, blue: 1.0, alpha: 1.0), forKey: "backgroundColor")
             shell.setValue(NSColor(calibratedRed: 1.0, green: 1.0, blue: 1.0, alpha: 1.0), forKey: "normalTextColor")
 
         } else { // Default theme
-            window.backgroundColor = NSColor.windowBackgroundColor()
-            segmentedControl.superview!.layer!.backgroundColor = NSColor.windowBackgroundColor().cgColor
-            itemsTable.backgroundColor = NSColor.white()
+            window.backgroundColor = NSColor.windowBackgroundColor
+            segmentedControl.superview!.layer!.backgroundColor = NSColor.windowBackgroundColor.cgColor
+            itemsTable.backgroundColor = NSColor.white
             itemsTable.usesAlternatingRowBackgroundColors = true
             tableFont = NSFont.controlContentFont(ofSize: NSFont.systemFontSize(for: .small))
-            tableTextColor = NSColor.black()
+            tableTextColor = NSColor.black
             itemsTable.gridStyleMask = NSTableViewGridLineStyle()
-            itemsTable.gridColor = NSColor.gridColor()
+            itemsTable.gridColor = NSColor.gridColor
             (sourcesOutline.superview!.superview! as! NSScrollView).borderType = .grooveBorder
             sourcesOutline.backgroundColor = sourceListBackgroundColor
             segmentedControl.segmentStyle = .rounded
             commandsPopUp.bezelStyle = .roundRect// TODO: Round in Mavericks
             (infoText.superview!.superview! as! NSScrollView).borderType = .grooveBorder
             infoText.backgroundColor = NSColor(calibratedRed: 0.82290249429999995, green: 0.97448979589999996, blue: 0.67131519269999995, alpha: 1.0) // light green
-            infoText.textColor = NSColor.black()
+            infoText.textColor = NSColor.black
             infoText.linkTextAttributes = linkTextAttributes
             (logText.superview!.superview! as! NSScrollView).borderType = .grooveBorder
             logText.backgroundColor = NSColor(calibratedRed: 1.0, green: 1.0, blue: 0.8, alpha: 1.0) // lioght yellow
-            logText.textColor = NSColor.black()
-            logTextColor = NSColor.black()
+            logText.textColor = NSColor.black
+            logTextColor = NSColor.black
             statusField.drawsBackground = false
             cmdline.backgroundColor = NSColor(calibratedRed: 1.0, green: 1.0, blue: 0.8, alpha: 1.0)
-            cmdline.textColor = NSColor.black()
+            cmdline.textColor = NSColor.black
             clearButton.bezelStyle = .texturedRounded // TODO
             screenshotsButton.bezelStyle = .texturedRounded
             moreButton.bezelStyle = .texturedRounded

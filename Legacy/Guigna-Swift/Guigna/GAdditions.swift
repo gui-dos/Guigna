@@ -15,7 +15,6 @@ extension Array {
 
     func join(_ separator: String = " ") -> String {
         return self._bridgeToObjectiveC().componentsJoined(by: separator)
-
     }
 
 }

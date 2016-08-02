@@ -25,7 +25,7 @@ class PkgsrcSE: GScrape {
     override func refresh() {
         var entries = [GItem]()
         let url = URL(string: "http://pkgsrc.se/?page=\(pageNumber)")!
-        if let xmlDoc = try? XMLDocument(contentsOf: url, options: Int(XMLNodeOptions.documentTidyHTML.rawValue)) {
+        if let xmlDoc = try? XMLDocument(contentsOf: url, options: Int(XMLNode.Options.documentTidyHTML.rawValue)) {
             let mainDiv = xmlDoc.rootElement()!["//div[@id=\"main\"]"][0]
             var dates = mainDiv["h3"]
             var names = mainDiv["b"]
@@ -85,7 +85,7 @@ class Freecode: GScrape {
         // Don't use agent.nodesForUrl since NSXMLDocumentTidyHTML strips <article>
         if var page = try? String(contentsOf: url, encoding: .utf8) {
             page = page.replace("article", "div")
-            if let xmlDoc = try? XMLDocument(xmlString: page, options: Int(XMLNodeOptions.documentTidyHTML.rawValue)) {
+            if let xmlDoc = try? XMLDocument(xmlString: page, options: Int(XMLNode.Options.documentTidyHTML.rawValue)) {
                 let nodes = xmlDoc.rootElement()![".//div[starts-with(@class, 'project')]"]
                 for node in nodes {
                     let titleNodes = node["h3/a/node()"]
@@ -135,7 +135,7 @@ class Debian: GScrape {
     override func refresh() {
         var pkgs = [GItem]()
         let url = URL(string: "http://news.gmane.org/group/gmane.linux.debian.devel.changes.unstable/last=")!
-        if let xmlDoc = try? XMLDocument(contentsOf: url, options: Int(XMLNodeOptions.documentTidyHTML.rawValue)) {
+        if let xmlDoc = try? XMLDocument(contentsOf: url, options: Int(XMLNode.Options.documentTidyHTML.rawValue)) {
             let nodes = xmlDoc.rootElement()!["//table[@class=\"threads\"]//table/tr"]
             for node in nodes {
                 let link = node[".//a"][0].stringValue!
@@ -176,12 +176,12 @@ class CocoaPods: GScrape {
     override func refresh() {
         var pods = [GItem]()
         let url = URL(string: "https://feeds.cocoapods.org/new-pods.rss")!
-        if let xmlDoc = try? XMLDocument(contentsOf: url, options: Int(XMLNodeOptions.documentTidyXML.rawValue)) {
+        if let xmlDoc = try? XMLDocument(contentsOf: url, options: Int(XMLNode.Options.documentTidyXML.rawValue)) {
             let nodes = xmlDoc.rootElement()!["//item"]
             for node in nodes {
                 let name = node["title"][0].stringValue!
                 let htmlDescription = node["description"][0].stringValue!
-                let descriptionNode = (try! XMLDocument(xmlString: htmlDescription, options: Int(XMLNodeOptions.documentTidyHTML.rawValue))).rootElement()!
+                let descriptionNode = (try! XMLDocument(xmlString: htmlDescription, options: Int(XMLNode.Options.documentTidyHTML.rawValue))).rootElement()!
                 let description = descriptionNode[".//p"][1].stringValue!
                 var licenseNodes = descriptionNode[".//li[starts-with(.,'License:')]"]
                 var license: String = ""
@@ -225,7 +225,7 @@ class PyPI: GScrape {
     override func refresh() {
         var eggs = [GItem]()
         let url = URL(string: homepage)!
-        if let xmlDoc = try? XMLDocument(contentsOf: url, options: Int(XMLNodeOptions.documentTidyHTML.rawValue)) {
+        if let xmlDoc = try? XMLDocument(contentsOf: url, options: Int(XMLNode.Options.documentTidyHTML.rawValue)) {
             var nodes = xmlDoc.rootElement()!["//table[@class=\"list\"]//tr"]
             nodes.remove(at: 0)
             nodes.removeLast()
@@ -268,7 +268,7 @@ class RubyGems: GScrape {
     override func refresh() {
         var gems = [GItem]()
         let url = URL(string: "http://m.rubygems.org/")!
-        if let xmlDoc = try? XMLDocument(contentsOf: url, options: Int(XMLNodeOptions.documentTidyHTML.rawValue)) {
+        if let xmlDoc = try? XMLDocument(contentsOf: url, options: Int(XMLNode.Options.documentTidyHTML.rawValue)) {
             let nodes = xmlDoc.rootElement()!["//li"]
             for node in nodes {
                 let components = node.stringValue!.split()
@@ -317,7 +317,7 @@ class MacUpdate: GScrape {
     override func refresh() {
         var apps = [GItem]()
         let url = URL(string: "https://www.macupdate.com/page/\(pageNumber - 1)")!
-        if let xmlDoc = try? XMLDocument(contentsOf: url, options: Int(XMLNodeOptions.documentTidyHTML.rawValue)) {
+        if let xmlDoc = try? XMLDocument(contentsOf: url, options: Int(XMLNode.Options.documentTidyHTML.rawValue)) {
             let nodes = xmlDoc.rootElement()!["//tr[starts-with(@class,\"app_tr_row\")]"]
             for node in nodes {
                 var name = node[".//a"][0].stringValue!
@@ -371,7 +371,7 @@ class AppShopper: GScrape {
         let url = URL(string: "http://appshopper.com/mac/all/\(pageNumber)")!
         let whitespaceCharacterSet = CharacterSet.whitespaces
         let whitespaceAndNewlineCharacterSet = CharacterSet.whitespacesAndNewlines
-        if let xmlDoc = try? XMLDocument(contentsOf: url, options: Int(XMLNodeOptions.documentTidyHTML.rawValue)) {
+        if let xmlDoc = try? XMLDocument(contentsOf: url, options: Int(XMLNode.Options.documentTidyHTML.rawValue)) {
             let nodes = xmlDoc.rootElement()!["//div[@data-appid]"]
             for node in nodes {
                 let name = node[".//h2"][0].stringValue!.trim(whitespaceAndNewlineCharacterSet)
@@ -404,7 +404,7 @@ class AppShopper: GScrape {
 
     override func home(_ item: GItem) -> String {
         let url = URL(string: "http://itunes.apple.com/app/id" + item.id!.split()[0])!
-        if let xmlDoc = try? XMLDocument(contentsOf: url, options: Int(XMLNodeOptions.documentTidyHTML.rawValue)) {
+        if let xmlDoc = try? XMLDocument(contentsOf: url, options: Int(XMLNode.Options.documentTidyHTML.rawValue)) {
             let mainDiv = xmlDoc.rootElement()!["//div[@id=\"main\"]"][0]
             let links = mainDiv["//div[@class=\"app-links\"]/a"]
             let screenshotsImgs = mainDiv["//div[contains(@class, \"screenshots\")]//img"]
@@ -442,7 +442,7 @@ class AppShopperIOS: GScrape {
         let url = URL(string: "http://appshopper.com/all/\(pageNumber)")!
         let whitespaceCharacterSet = CharacterSet.whitespaces
         let whitespaceAndNewlineCharacterSet = CharacterSet.whitespacesAndNewlines
-        if let xmlDoc = try? XMLDocument(contentsOf: url, options: Int(XMLNodeOptions.documentTidyHTML.rawValue)) {
+        if let xmlDoc = try? XMLDocument(contentsOf: url, options: Int(XMLNode.Options.documentTidyHTML.rawValue)) {
             let nodes = xmlDoc.rootElement()!["//div[@data-appid]"]
             for node in nodes {
                 let name = node[".//h2"][0].stringValue!.trim(whitespaceAndNewlineCharacterSet)
@@ -475,7 +475,7 @@ class AppShopperIOS: GScrape {
 
     override func home(_ item: GItem) -> String {
         let url = URL(string: "http://itunes.apple.com/app/id" + item.id!.split()[0])!
-        if let xmlDoc = try? XMLDocument(contentsOf: url, options: Int(XMLNodeOptions.documentTidyHTML.rawValue)) {
+        if let xmlDoc = try? XMLDocument(contentsOf: url, options: Int(XMLNode.Options.documentTidyHTML.rawValue)) {
             let mainDiv = xmlDoc.rootElement()!["//div[@id=\"main\"]"][0]
             let links = mainDiv["//div[@class=\"app-links\"]/a"]
             let screenshotsImgs = mainDiv["//div[contains(@class, \"screenshots\")]//img"]

@@ -18,7 +18,7 @@ TODO
 
 * Swift:
   - complete port of inactive packages management
-  - simplify `XMLDocument(contentsOf: url, options: Int(XMLNodeOptions.documentTidyHTML.rawValue)`
+  - simplify `XMLDocument(contentsOf: url, options: Int(XMLNode.Options.documentTidyHTML.rawValue)`
 * Objective-C:
   - port new code from [“swift2”](https://github.com/gui-dos/Guigna/releases/tag/swift2)
     release on (15th June)
