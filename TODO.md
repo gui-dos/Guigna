@@ -3,7 +3,6 @@ FIXME
 
 * El Capitan / Sierra:
   - Selected sources are not highlighted until resizing the window
-  - status() doesn't update immediately
 * Swift:
   - filter() for inactive packages should be called only for MacPorts and Homebrew
 * Scraping the version numbers and the descriptions from Homebrew formulae is excessively slow

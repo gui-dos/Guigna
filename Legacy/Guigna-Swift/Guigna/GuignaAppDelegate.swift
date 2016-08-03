@@ -96,6 +96,9 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         statusField.stringValue = msg
         statusField.toolTip = msg
         statusField.display()
+        // workaround to update immediately
+        // see: https://forums.developer.apple.com/message/74446
+        RunLoop.main.run(until: Date(timeIntervalSinceNow: 0.01))
         if msg.hasSuffix("...") {
             statusItem.title = "💤"
         } else {
