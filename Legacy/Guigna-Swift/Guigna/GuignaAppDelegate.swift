@@ -1200,7 +1200,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         let line = storageString.substring(with: storageString.paragraphRange(for: selectedRange))
 
         if selectedSegment == "Contents" {
-            var file: String = line.trim()
+            var file: String = line.trim().trim("'")
             // TODO detect types
             if file.contains(" -> ") { // Homebrew Casks
                 file = file.split(" -> ")[1].trim("'")
