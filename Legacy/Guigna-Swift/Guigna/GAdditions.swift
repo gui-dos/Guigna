@@ -139,7 +139,7 @@ extension NSUserDefaultsController {
 
 extension WebView {
 
-    override public func swipe(with event: NSEvent) {
+    override open func swipe(with event: NSEvent) {
         let x = event.deltaX
         if x < 0 && self.canGoForward {
             self.goForward()
@@ -148,7 +148,7 @@ extension WebView {
         }
     }
 
-    override public func magnify(with event: NSEvent) {
+    override open func magnify(with event: NSEvent) {
         let multiplier: CFloat = self.textSizeMultiplier * CFloat(event.magnification + 1.0)
         self.textSizeMultiplier = multiplier
     }
