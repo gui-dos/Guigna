@@ -992,12 +992,14 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 if !page.contains("http") && !page.contains("www") {
                     page = "http://github.com/gui-dos/Guigna/"
                 }
-                if sourcesController.selectedObjects.count == 1 {
-                    if sourcesController.selectedObjects[0] is GSystem {
-                        page = (sourcesController.selectedObjects[0] as! GSystem).logpage
-                    } else {
-                        if let homepage = (sourcesController.selectedObjects[0] as! GSource).homepage {
-                            page = homepage
+                if page != "http://github.com/gui-dos/Guigna/wiki/The-Guigna-Guide" {
+                    if sourcesController.selectedObjects.count == 1 {
+                        if sourcesController.selectedObjects[0] is GSystem {
+                            page = (sourcesController.selectedObjects[0] as! GSystem).logpage
+                        } else {
+                            if let homepage = (sourcesController.selectedObjects[0] as! GSource).homepage {
+                                page = homepage
+                            }
                         }
                     }
                 }
