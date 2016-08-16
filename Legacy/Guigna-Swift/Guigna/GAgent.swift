@@ -9,7 +9,7 @@ class GAgent: NSObject {
     ///   (replace spaces with `__` when passing multi-word strings as arguments)
     @discardableResult
     func output(_ command: String) -> String {
-        let task = Task()
+        let task = Process()
         var tokens = command.components(separatedBy: " ")
         task.launchPath = tokens.removeFirst()
         var args = [String]()
