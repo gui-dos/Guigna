@@ -9,7 +9,7 @@ class GSystem: GSource {
     var defaults: [String: AnyObject]?
 
     override init(name: String, agent: GAgent!) {
-        prefix = self.dynamicType.prefix
+        prefix = type(of: self).prefix
         index = [String: GPackage](minimumCapacity: 50000)
         super.init(name: name, agent: agent)
         status = .on

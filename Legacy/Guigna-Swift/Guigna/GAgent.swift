@@ -61,7 +61,7 @@ class GAgent: NSObject {
         //    }
         let RTLD_DEFAULT = UnsafeMutablePointer<Void>(bitPattern: -2)
         var authExecuteWithPrivsFn: @convention(c) (AuthorizationRef, UnsafePointer<CChar>, AuthorizationFlags, UnsafePointer<UnsafePointer<CChar>>?,  UnsafeMutablePointer<UnsafeMutablePointer<FILE>>?) -> OSStatus
-        authExecuteWithPrivsFn = unsafeBitCast(dlsym(RTLD_DEFAULT, "AuthorizationExecuteWithPrivileges"), to: authExecuteWithPrivsFn.dynamicType)
+        authExecuteWithPrivsFn = unsafeBitCast(dlsym(RTLD_DEFAULT, "AuthorizationExecuteWithPrivileges"), to: type(of: authExecuteWithPrivsFn))
         err = authExecuteWithPrivsFn(authorizationRef!, &toolPath, [], argsPointer, outputFilePointerPointer)
         //    if err != errAuthorizationSuccess {
         //    }
