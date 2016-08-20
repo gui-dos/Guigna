@@ -132,13 +132,13 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         tableProgressIndicator.startAnimation(self)
 
         let defaultsTransformer = GDefaultsTransformer()
-        ValueTransformer.setValueTransformer(defaultsTransformer, forName: "GDefaultsTransformer" as NSValueTransformerName)
+        ValueTransformer.setValueTransformer(defaultsTransformer, forName: NSValueTransformerName("GDefaultsTransformer"))
         let statusTransformer = GStatusTransformer()
-        ValueTransformer.setValueTransformer(statusTransformer, forName: "GStatusTransformer" as NSValueTransformerName)
+        ValueTransformer.setValueTransformer(statusTransformer, forName: NSValueTransformerName("GStatusTransformer"))
         let markTransformer = GMarkTransformer()
-        ValueTransformer.setValueTransformer(markTransformer, forName: "GMarkTransformer" as NSValueTransformerName)
+        ValueTransformer.setValueTransformer(markTransformer, forName: NSValueTransformerName("GMarkTransformer"))
         let sourceTransformer = GSourceTransformer()
-        ValueTransformer.setValueTransformer(sourceTransformer, forName: "GSourceTransformer" as NSValueTransformerName)
+        ValueTransformer.setValueTransformer(sourceTransformer, forName: NSValueTransformerName("GSourceTransformer"))
 
         statusItem = NSStatusBar.system().statusItem(withLength: -1) // NSVariableStatusItemLength
         statusItem.title = "😺"
