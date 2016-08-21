@@ -34,6 +34,7 @@ class GAgent: NSObject {
     }
 
     /// Ported from: [STPrivilegedTask](https://github.com/sveinbjornt/STPrivilegedTask)
+    //  FIXME: it builds with Swift 3b6 but doesn't work anymore
     @discardableResult
     func sudo(_ cmd: String) -> String {
         var err: OSStatus = noErr
@@ -45,21 +46,23 @@ class GAgent: NSObject {
             args.append(UnsafePointer<CChar>(cArg))
         }
         args.append(nil)
-        let argsPointer = UnsafePointer<UnsafePointer<CChar>>(args)
+        // let argsPointer = UnsafePointer<UnsafePointer<CChar>>(args)
+        // var argsPointer = withUnsafePointer(to: &args) { UnsafePointer<UnsafePointer<CChar>>($0) }
+        var argsPointer = UnsafePointer(args).withMemoryRebound(to: UnsafePointer<CChar>.self, capacity: 1) { UnsafePointer<UnsafePointer<CChar>>($0) }
         var authorizationRef: AuthorizationRef? = nil
         var items = AuthorizationItem(name: kAuthorizationRightExecute, valueLength: toolPath.count, value: &toolPath, flags: 0)
         var rights = AuthorizationRights(count: 1, items: &items)
         let flags: AuthorizationFlags = [.interactionAllowed, .preAuthorize, .extendRights]
         var outputFile = FILE()
-        var outputFilePointer = withUnsafeMutablePointer(&outputFile) { UnsafeMutablePointer<FILE>($0) }
-        var outputFilePointerPointer = withUnsafeMutablePointer(&outputFilePointer) {UnsafeMutablePointer<UnsafeMutablePointer<FILE>>($0)}
+        var outputFilePointer = withUnsafeMutablePointer(to: &outputFile) { UnsafeMutablePointer<FILE>($0) }
+        var outputFilePointerPointer = withUnsafeMutablePointer(to: &outputFilePointer) { UnsafeMutablePointer<UnsafeMutablePointer<FILE>>($0) }
         err = AuthorizationCreate(nil, nil, [], &authorizationRef)
         //    if err != errAuthorizationSuccess {
         //    }
         err = AuthorizationCopyRights(authorizationRef!, &rights, nil, flags, nil)
         //    if err != errAuthorizationSuccess {
         //    }
-        let RTLD_DEFAULT = UnsafeMutablePointer<Void>(bitPattern: -2)
+        let RTLD_DEFAULT = UnsafeMutableRawPointer(bitPattern: -2)
         var authExecuteWithPrivsFn: @convention(c) (AuthorizationRef, UnsafePointer<CChar>, AuthorizationFlags, UnsafePointer<UnsafePointer<CChar>>?,  UnsafeMutablePointer<UnsafeMutablePointer<FILE>>?) -> OSStatus
         authExecuteWithPrivsFn = unsafeBitCast(dlsym(RTLD_DEFAULT, "AuthorizationExecuteWithPrivileges"), to: type(of: authExecuteWithPrivsFn))
         err = authExecuteWithPrivsFn(authorizationRef!, &toolPath, [], argsPointer, outputFilePointerPointer)
