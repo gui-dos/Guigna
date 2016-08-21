@@ -15,7 +15,7 @@ class GSystem: GSource {
         status = .on
     }
 
-    func defaults(_ key: String) -> AnyObject? {
+    func defaults(_ key: String) -> Any? {
         if self.agent != nil {
             return self.agent.appDelegate?.defaults[key]
         } else {

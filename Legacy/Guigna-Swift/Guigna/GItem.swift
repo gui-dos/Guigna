@@ -113,11 +113,11 @@ class GStatusTransformer: ValueTransformer {
         return false
     }
 
-    override func transformedValue(_ value: AnyObject?) -> AnyObject? {
+    override func transformedValue(_ value: Any?) -> Any? {
         if value == nil {
             return nil
         }
-        let status = GStatus(rawValue: value!.intValue)!
+        let status = GStatus(rawValue: (value! as AnyObject).intValue)!
         switch status {
         case .inactive:
             return NSImage(named: NSImageNameStatusNone)
@@ -149,11 +149,11 @@ class GMarkTransformer: ValueTransformer {
         return false
     }
 
-    override func transformedValue(_ value: AnyObject?) -> AnyObject? {
+    override func transformedValue(_ value: Any?) -> Any? {
         if value == nil {
             return nil
         }
-        let mark = GMark(rawValue: value!.intValue)!
+        let mark = GMark(rawValue: (value! as AnyObject).intValue)!
         switch mark {
         case .install:
             return NSImage(named: NSImageNameAddTemplate)

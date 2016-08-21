@@ -86,11 +86,11 @@ class GSourceTransformer: ValueTransformer {
         return false
     }
 
-    override func transformedValue(_ source: AnyObject?) -> AnyObject? {
+    override func transformedValue(_ source: Any?) -> Any? {
         if source == nil {
             return nil
         }
-        let name: String = source!.name
+        let name: String = (source! as AnyObject).name
         switch name {
         case "MacPorts":
             return NSImage(named: "system-macports.tiff")

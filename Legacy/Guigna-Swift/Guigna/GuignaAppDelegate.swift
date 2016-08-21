@@ -66,7 +66,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     dynamic var tableFont: NSFont!
     dynamic var tableTextColor: NSColor!
     dynamic var logTextColor: NSColor!
-    dynamic var linkTextAttributes: [String : AnyObject]!
+    dynamic var linkTextAttributes: [String : Any]!
     dynamic var sourceListBackgroundColor: NSColor!
 
     dynamic var adminPassword: String?
@@ -193,7 +193,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         terminal = SBApplication(bundleIdentifier: "com.apple.Terminal")
         let guignaFunction = "guigna() { osascript -e 'tell app \"Guigna\"' -e \"open POSIX file \\\"\(APPDIR)/$2\\\"\" -e 'end' &>/dev/null; }"
         let initScript = "unset HISTFILE; " + guignaFunction
-        shell = terminal.doScript(initScript, in: nil)
+        shell = (terminal as AnyObject).doScript(initScript, in: nil) as AnyObject
         shell.setValue("Guigna", forKey: "customTitle")
         for window in terminal.value(forKey: "windows") as! [NSObject] {
             if (window.value(forKey: "name") as! NSString).contains("Guigna ") {
@@ -257,7 +257,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         if defaults["MacPortsParsePortIndex"] == nil {
             defaults["MacPortsParsePortIndex"] = true
         }
-        if defaults["MacPortsStatus"] != nil && defaults["MacPortsStatus"] == GState.on.rawValue {
+        if defaults["MacPortsStatus"] != nil && defaults["MacPortsStatus"] as! Int == GState.on.rawValue {
             let macports = MacPorts(agent: agent)
             if !portPath.exists {
                 macports.mode = .online
@@ -276,7 +276,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 defaults["HomebrewStatus"] = GState.on.rawValue
             }
         }
-        if defaults["HomebrewStatus"] != nil && defaults["HomebrewStatus"] == GState.on.rawValue {
+        if defaults["HomebrewStatus"] != nil && defaults["HomebrewStatus"] as! Int == GState.on.rawValue {
             if brewPath.exists { // TODO: online mode
                 let homebrew = Homebrew(agent: agent)
                 systems.append(homebrew)
@@ -298,7 +298,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 defaults["FinkStatus"] = GState.on.rawValue
             }
         }
-        if defaults["FinkStatus"] != nil && defaults["FinkStatus"] == GState.on.rawValue {
+        if defaults["FinkStatus"] != nil && defaults["FinkStatus"] as! Int == GState.on.rawValue {
             let fink = Fink(agent: agent)
             if !"/sw/bin/fink".exists {
                 fink.mode = .online
@@ -315,7 +315,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 defaults["pkgsrcCVS"] = true
             }
         }
-        if defaults["pkgsrcStatus"] != nil && defaults["pkgsrcStatus"] == GState.on.rawValue && (defaults["pkginStatus"] != nil && defaults["pkginStatus"] == GState.off.rawValue) {
+        if defaults["pkgsrcStatus"] != nil && defaults["pkgsrcStatus"] as! Int == GState.on.rawValue && (defaults["pkginStatus"] != nil && defaults["pkginStatus"] as! Int == GState.off.rawValue) {
             let pkgsrc = Pkgsrc(agent: agent)
             if !"/usr/pkg/sbin/pkg_info".exists {
                 pkgsrc.mode = .online
@@ -329,8 +329,8 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             }
         }
         // TODO:
-        if defaults["pkginStatus"] != nil && defaults["pkginStatus"] == GState.on.rawValue &&
-        ( defaults["pkgsrcStatus"] != nil && defaults["pkgsrcStatus"] == GState.on.rawValue)
+        if defaults["pkginStatus"] != nil && defaults["pkginStatus"] as! Int == GState.on.rawValue &&
+        ( defaults["pkgsrcStatus"] != nil && defaults["pkgsrcStatus"] as! Int == GState.on.rawValue)
         {
             let pkgin = Pkgin(agent: agent)
             if !"/opt/pkg/bin/pkgin".exists {
@@ -344,7 +344,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 defaults["FreeBSDStatus"] = GState.on.rawValue
             }
         }
-        if defaults["FreeBSDStatus"] != nil && defaults["FreeBSDStatus"] == GState.on.rawValue {
+        if defaults["FreeBSDStatus"] != nil && defaults["FreeBSDStatus"] as! Int == GState.on.rawValue {
             let freebsd = FreeBSD(agent: agent)
             freebsd.mode = .online
             systems.append(freebsd)
@@ -355,7 +355,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 defaults["RudixStatus"] = GState.on.rawValue
             }
         }
-        if defaults["RudixStatus"] != nil && defaults["RudixStatus"] == GState.on.rawValue {
+        if defaults["RudixStatus"] != nil && defaults["RudixStatus"] as! Int == GState.on.rawValue {
             let rudix = Rudix(agent: agent)
             if !"/usr/local/bin/rudix".exists {
                 rudix.mode = .online
@@ -368,7 +368,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         if defaults["iTunesStatus"] == nil {
             defaults["iTunesStatus"] = GState.on.rawValue
         }
-        if defaults["iTunesStatus"] != nil && defaults["iTunesStatus"] == GState.on.rawValue {
+        if defaults["iTunesStatus"] != nil && defaults["iTunesStatus"] as! Int == GState.on.rawValue {
             let itunes = ITunes(agent: agent)
             systems.append(itunes)
         }
@@ -436,13 +436,13 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         return !subview.isEqual(to: splitView.subviews[0])
     }
 
-    func outlineView(_ outlineView: NSOutlineView, isGroupItem item: AnyObject) -> Bool {
-        let source = item.representedObject as! GSource
+    func outlineView(_ outlineView: NSOutlineView, isGroupItem item: Any) -> Bool {
+        let source = (item as AnyObject).representedObject as! GSource
         return source.categories != nil && !(source is GSystem)
     }
 
-    func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: AnyObject) -> NSView? {
-        let source = item.representedObject as! GSource
+    func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
+        let source = (item as AnyObject).representedObject as! GSource
         if !((item as! NSTreeNode).parent!.representedObject is GSource) {
             return outlineView.make(withIdentifier: "HeaderCell", owner:self) as! NSTableCellView
         } else {
@@ -454,8 +454,8 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
     }
 
-    func outlineView(_ outlineView: NSOutlineView, shouldShowOutlineCellForItem item: AnyObject) -> Bool {
-        return (item.representedObject as! GSource) is GSystem
+    func outlineView(_ outlineView: NSOutlineView, shouldShowOutlineCellForItem item: Any) -> Bool {
+        return ((item as AnyObject).representedObject as! GSource) is GSystem
     }
 
 
@@ -527,7 +527,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     itemsTable.reloadData()
                 }
                 self.updateMarkedSource()
-                if (self.terminal.value(forKey: "frontmost") as! NSObject) == false {
+                if (self.terminal as! NSObject).value(forKey: "frontmost") as! Bool == false {
                     let notification = NSUserNotification()
                     notification.title = "Ready."
                     // notification.subtitle = @"%ld changes applied";
@@ -552,7 +552,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         self.ready = false
         DispatchQueue.main.sync {
             self.itemsController.filterPredicate = nil
-            self.itemsController.remove(atArrangedObjectIndexes: IndexSet(integersIn: NSRange(location: 0, length: self.itemsController.arrangedObjects.count).toRange() ?? 0..<0))
+            self.itemsController.remove(atArrangedObjectIndexes: IndexSet(integersIn: NSRange(location: 0, length: (self.itemsController.arrangedObjects as AnyObject).count).toRange() ?? 0..<0))
             self.itemsController.sortDescriptors = []
             self.tableProgressIndicator.startAnimation(self)
         }
@@ -744,12 +744,12 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
 
     func outlineViewSelectionDidChange(_ notification: Notification) {
         // FIXME: without this workaround the selected sources aren't highlighted after launch
-        if defaults["Theme"] == "Default" {
+        if defaults["Theme"] as! String == "Default" {
             let scrollView = sourcesOutline.superview!.superview! as! NSScrollView
             scrollView.borderType = .lineBorder
             scrollView.borderType = .grooveBorder
         }
-        sourcesSelectionDidChange(notification)
+        sourcesSelectionDidChange(notification as AnyObject!)
     }
 
     func sourcesSelectionDidChange(_ sender: AnyObject!) {
@@ -773,7 +773,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         var src: String
         let filter = searchField.stringValue
         itemsController.filterPredicate = nil
-        itemsController.remove(atArrangedObjectIndexes: IndexSet(integersIn: NSRange(location: 0, length: itemsController.arrangedObjects.count).toRange() ?? 0..<0))
+        itemsController.remove(atArrangedObjectIndexes: IndexSet(integersIn: NSRange(location: 0, length: (itemsController.arrangedObjects as AnyObject).count).toRange() ?? 0..<0))
         itemsController.sortDescriptors = []
         var first = true
         for source in selectedSources {
@@ -857,7 +857,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
 
                     if first {
                         itemsController.filterPredicate = nil
-                        itemsController.remove(atArrangedObjectIndexes: IndexSet(integersIn: NSRange(location: 0, length: itemsController.arrangedObjects.count).toRange() ?? 0..<0))
+                        itemsController.remove(atArrangedObjectIndexes: IndexSet(integersIn: NSRange(location: 0, length: (itemsController.arrangedObjects as AnyObject).count).toRange() ?? 0..<0))
                         itemsController.sortDescriptors = []
                         first = false
                     }
@@ -907,11 +907,11 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         if item == nil {
             info("[No package selected]")
         }
-        if selectedItems?.count > 1 || selectedSegment == "Shell" || (selectedSegment == "Log" && cmdline.stringValue == item?.log) {
+        if (selectedItems?.count)! > 1 || selectedSegment == "Shell" || (selectedSegment == "Log" && cmdline.stringValue == item?.log) {
             segmentedControl.selectedSegment = 0
             selectedSegment = "Info"
         }
-        if selectedItems?.count > 1 {
+        if (selectedItems?.count)! > 1 {
             let itemList = (selectedItems as! [GItem]).map {$0.name}.join("\n")
             info("[Multiple selection]\n\n\(itemList)")
         }
@@ -927,7 +927,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         selectedSegment = sender.label(forSegment: sender.selectedSegment)!
         let selectedItems = itemsController.selectedObjects
         var item: GItem? = nil
-        if selectedItems?.count > 0 {
+        if (selectedItems?.count)! > 0 {
             item = selectedItems?[0] as? GItem
         }
         if selectedSegment == "Shell" || selectedSegment == "Info" || selectedSegment == "Home" || selectedSegment == "Log" || selectedSegment == "Contents" || selectedSegment == "Spec" || selectedSegment == "Deps" {
@@ -939,7 +939,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     @IBAction func toggleShell(_ button: NSButton) {
         let selectedItems = itemsController.selectedObjects
         var item: GItem? = nil
-        if selectedItems?.count > 0 {
+        if (selectedItems?.count)! > 0 {
             item = selectedItems?[0] as? GItem
         }
         if button.state == NSOnState {
@@ -1128,7 +1128,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     }
 
 
-    func webView(_ sender: WebView!, mouseDidMoveOverElement elementInformation: [NSObject : AnyObject]!,modifierFlags: Int) {
+    func webView(_ sender: WebView!, mouseDidMoveOverElement elementInformation: [AnyHashable : AnyObject]!,modifierFlags: Int) {
         if !statusField.stringValue.hasSuffix("...") {
             if let url = elementInformation[WebElementLinkURLKey] {
                 status((url as! URL).absoluteString)
@@ -1185,7 +1185,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     @IBAction func toggleScreenshots(_ sender: AnyObject) {
         let selectedItems = itemsController.selectedObjects
         var item: GItem? = nil
-        if selectedItems?.count > 0 {
+        if (selectedItems?.count)! > 0 {
             tableProgressIndicator.startAnimation(self)
             item = selectedItems?[0] as? GItem
             updateTabView(item)
@@ -1218,7 +1218,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             let dep = line.trim()
             let selectedItems = itemsController.selectedObjects
             var item: GItem! = nil
-            if selectedItems?.count > 0 {
+            if (selectedItems?.count)! > 0 {
                 item = selectedItems?[0] as? GItem
                 if let pkg = item.system[dep] {
                     searchField.stringValue = dep
@@ -1231,7 +1231,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
     }
 
-    func textView(_ textView: NSTextView, clickedOnLink link: AnyObject, at charIndex: Int) -> Bool {
+    func textView(_ textView: NSTextView, clickedOnLink link: Any, at charIndex: Int) -> Bool {
         let url = link as! URL
         let urlString = url.absoluteString
         if urlString.hasPrefix("http") {
@@ -1248,7 +1248,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     @IBAction func executeCmdLine(_ sender: AnyObject) {
         let selectedItems = itemsController.selectedObjects
         var item: GItem? = nil
-        if selectedItems?.count > 0 {
+        if (selectedItems?.count)! > 0 {
             item = selectedItems?[0] as? GItem
         }
         var output = ""
@@ -1304,7 +1304,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     @IBAction func executeCommandsMenu(_ sender: NSPopUpButton) {
         let selectedItems = itemsController.selectedObjects
         var item: GItem! = nil
-        if selectedItems?.count > 0 {
+        if (selectedItems?.count)! > 0 {
             item = selectedItems?[0] as! GItem
         }
         let title = sender.titleOfSelectedItem!
@@ -1661,7 +1661,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 }
 
                 if command != nil {
-                    if defaults["DebugMode"] == true {
+                    if defaults["DebugMode"] as! Bool == true {
                         command = item.system.verbosifiedCmd(command)
                     }
                     systemCommands.append(command)
@@ -1721,7 +1721,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     func raiseBrowser(_ sender: AnyObject) {
         let selectedItems = itemsController.selectedObjects
         var item: GItem? = nil
-        if selectedItems?.count > 0 {
+        if (selectedItems?.count)! > 0 {
             item = selectedItems?[0] as? GItem
         }
         var url = cmdline.stringValue
@@ -1756,7 +1756,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             firstWindow.setValue(lastTab, forKey: "currentTab")
         }
         firstWindow = (browser.value(forKey: "windows") as! [NSObject])[0]
-        firstWindow.value(forKey: "document")!.setValue(URL(string: url)!, forKey: "URL")
+        (firstWindow.value(forKey: "document")! as AnyObject).setValue(URL(string: url)!, forKey: "URL")
     }
 
     func raiseShell(_ sender: AnyObject) {
@@ -1785,7 +1785,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     }
 
     func open(_ sender: AnyObject) {
-        NSApp.activateIgnoringOtherApps(true)
+        NSApp.activate(ignoringOtherApps: true)
         window.makeKeyAndOrderFront(nil)
         raiseShell(self)
     }
@@ -1935,7 +1935,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         sourcesController.setSelectionIndexPath(IndexPath(index: 0).appending(systemsCount))
         sourcesOutline.reloadData()
         sourcesOutline.display()
-        sourcesSelectionDidChange(systemsMutableArray[systemsCount])
+        sourcesSelectionDidChange(systemsMutableArray[systemsCount] as AnyObject!)
         itemsController.add(contentsOf: system.list())
         itemsTable.display()
         allPackages += system.items as! [GPackage]

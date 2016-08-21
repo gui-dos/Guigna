@@ -122,9 +122,9 @@ extension XMLNode {
 
 
 extension NSUserDefaultsController {
-    subscript(key: String) -> NSObject! {
+    subscript(key: String) -> Any! {
         get {
-            if let value = (self.values as AnyObject).value(forKey: key) as! NSObject! {
+            if let value = (self.values as AnyObject).value(forKey: key) as Any! {
                 return value
             } else {
                 return nil
