@@ -17,7 +17,7 @@ final class HomebrewCasks: GSystem {
         index.removeAll(keepingCapacity: true)
         items.removeAll(keepingCapacity: true)
 
-        var outputLines = output("/bin/sh -c /usr/bin/grep__\"__version__\"__-r__/\(prefix)/Library/Taps/caskroom/homebrew-cask/Casks").split("\n")
+        var outputLines = output("/bin/sh -c /usr/bin/grep__\"__version__\"__-r__/\(prefix)/Library/Taps/caskroom/homebrew-*/Casks").split("\n")
         outputLines.removeLast()
         let whitespaceCharacterSet = CharacterSet.whitespaces
         for line in outputLines {
@@ -35,6 +35,7 @@ final class HomebrewCasks: GSystem {
             }
             let offset = version.hasPrefix(":") ? 1 : 2
             version = version.substring(1, version.length - offset)
+            let repo = line.split("/Taps/")[1].split("/Casks/")[0]
             var pkg = GPackage(name: name, version: version, system: self, status: .available)
             // avoid duplicate entries (i.e. aquamacs, opensesame)
             if self[pkg.name] != nil {
@@ -53,10 +54,11 @@ final class HomebrewCasks: GSystem {
                     pkg = prevPackage!
                 }
             }
+            pkg.repo = repo
             items.append(pkg)
             self[name] = pkg
         }
-        outputLines = output("/bin/sh -c /usr/bin/grep__\"license__\"__-r__/\(prefix)/Library/Taps/caskroom/homebrew-cask/Casks").split("\n")
+        outputLines = output("/bin/sh -c /usr/bin/grep__\"license__\"__-r__/\(prefix)/Library/Taps/caskroom/homebrew-*/Casks").split("\n")
         outputLines.removeLast()
         for line in outputLines {
             let components = line.trim(whitespaceCharacterSet).split()
@@ -70,7 +72,7 @@ final class HomebrewCasks: GSystem {
                 }
             }
         }
-        outputLines = output("/bin/sh -c /usr/bin/grep__\"name__'\"__-r__/\(prefix)/Library/Taps/caskroom/homebrew-cask/Casks").split("\n")
+        outputLines = output("/bin/sh -c /usr/bin/grep__\"name__'\"__-r__/\(prefix)/Library/Taps/caskroom/homebrew-*/Casks").split("\n")
         outputLines.removeLast()
         for line in outputLines {
             let components = line.trim(whitespaceCharacterSet).split(".rb:  name '")
@@ -202,10 +204,10 @@ final class HomebrewCasks: GSystem {
         var path = ""
         if (item as! GPackage).repo == nil {
             path = "caskroom/homebrew-cask/commits/master/Casks"
-            //            } else {
-            //                let tokens = (item as! GPackage).repo!.split("/")
-            //                let user = tokens[0]
-            //                path = "\(user)/homebrew-\(tokens[1])/commits/master"
+        } else {
+            let tokens = (item as! GPackage).repo!.split("/")
+            let user = tokens[0]
+            path = "\(user)/\(tokens[1])/commits/master/Casks"
         }
         return "http://github.com/\(path)/\(item.name).rb"
     }
@@ -224,6 +226,7 @@ final class HomebrewCasks: GSystem {
         if !self.isHidden {
             return output("/bin/sh -c export__PATH=\(prefix)/bin:$PATH__;__\(escapedCmd)__cat__\(item.name)")
         } else {
+            // TODO: repo
             return (try? String(contentsOfFile: "\(prefix)_off/Library/Taps/caskroom/homebrew-cask/Casks/\(item.name).rb", encoding: .utf8)) ?? ""
         }
     }
