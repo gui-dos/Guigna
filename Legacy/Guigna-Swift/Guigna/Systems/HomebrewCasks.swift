@@ -35,7 +35,7 @@ final class HomebrewCasks: GSystem {
             }
             let offset = version.hasPrefix(":") ? 1 : 2
             version = version.substring(1, version.length - offset)
-            let repo = line.split("/Taps/")[1].split("/Casks/")[0]
+            let repo = line.split("/Taps/")[1].split("/Casks/")[0].replace("homebrew-", "")
             var pkg = GPackage(name: name, version: version, system: self, status: .available)
             // avoid duplicate entries (i.e. aquamacs, opensesame)
             if self[pkg.name] != nil {
@@ -207,7 +207,7 @@ final class HomebrewCasks: GSystem {
         } else {
             let tokens = (item as! GPackage).repo!.split("/")
             let user = tokens[0]
-            path = "\(user)/\(tokens[1])/commits/master/Casks"
+            path = "\(user)/homebrew-\(tokens[1])/commits/master/Casks"
         }
         return "http://github.com/\(path)/\(item.name).rb"
     }
