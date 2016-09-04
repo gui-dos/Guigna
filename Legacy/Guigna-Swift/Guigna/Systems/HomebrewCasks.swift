@@ -181,7 +181,9 @@ final class HomebrewCasks: GSystem {
 
     override func home(_ item: GItem) -> String {
         let escapedCmd = cmd.replace(" ", "__")
-        if self.isHidden {
+        if !self.isHidden {
+            return output("/bin/sh -c export__PATH=\(prefix)/bin:$PATH__;__\(escapedCmd)__info__\(item.name)").split("\n")[1]
+        } else {
             var homepage = ""
             for line in cat(item).split("\n") {
                 let idx = line.index("homepage")
@@ -191,10 +193,6 @@ final class HomebrewCasks: GSystem {
                         return homepage.trim("'\"")
                     }
                 }
-            }
-        } else {
-            if !self.isHidden && (item as! GPackage).repo == nil {
-                return output("/bin/sh -c export__PATH=\(prefix)/bin:$PATH__;__\(escapedCmd)__info__\(item.name)").split("\n")[1]
             }
         }
         return log(item)
