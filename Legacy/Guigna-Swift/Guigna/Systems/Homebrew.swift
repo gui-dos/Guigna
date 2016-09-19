@@ -17,12 +17,12 @@ final class Homebrew: GSystem {
         index.removeAll(keepingCapacity: true)
         items.removeAll(keepingCapacity: true)
 
-        // /usr/bin/ruby -C /usr/local/Library/Homebrew -I. -e "require 'global'; require 'formula'; Formula.each {|f| puts \"#{f.name} #{f.pkg_version}\"}" not supported anymore
+        // /usr/bin/ruby -C /usr/local/Homebrew/Library/Homebrew -I. -e "require 'global'; require 'formula'; Formula.each {|f| puts \"#{f.name} #{f.pkg_version}\"}" not supported anymore
         // see: https://github.com/Homebrew/homebrew/pull/48261
 
-        let workaround = "ENV['HOMEBREW_BREW_FILE']='\(prefix)/bin/brew';ENV['HOMEBREW_PREFIX']='\(prefix)';ENV['HOMEBREW_REPOSITORY']='\(prefix)';ENV['HOMEBREW_LIBRARY']='\(prefix)/Library';ENV['HOMEBREW_CELLAR']='\(prefix)/Cellar';ENV['HOMEBREW_OSX_VERSION']=`/usr/bin/sw_vers__-productVersion`.to_s;ENV['HOMEBREW_CACHE']=File.expand_path('~/Library/Caches/Homebrew');"
+        let workaround = "ENV['HOMEBREW_BREW_FILE']='\(prefix)/bin/brew';ENV['HOMEBREW_PREFIX']='\(prefix)';ENV['HOMEBREW_REPOSITORY']='\(prefix)/Homebrew';ENV['HOMEBREW_LIBRARY']='\(prefix)/Homebrew/Library';ENV['HOMEBREW_CELLAR']='\(prefix)/Cellar';ENV['HOMEBREW_OSX_VERSION']=`/usr/bin/sw_vers__-productVersion`.to_s;ENV['HOMEBREW_CACHE']=File.expand_path('~/Library/Caches/Homebrew');"
 
-        var outputLines = output("/usr/bin/ruby -C \(prefix)/Library/Homebrew -I. -e " + workaround + "require__'global';require__'formula';__Formula.each__{|f|__puts__\"#{f.full_name}|#{f.pkg_version}|#{f.bottle}|#{f.desc}\"}").split("\n")
+        var outputLines = output("/usr/bin/ruby -C \(prefix)/Homebrew/Library/Homebrew -I. -e " + workaround + "require__'global';require__'formula';__Formula.each__{|f|__puts__\"#{f.full_name}|#{f.pkg_version}|#{f.bottle}|#{f.desc}\"}").split("\n")
         outputLines.removeLast()
         for line in outputLines {
             let components = line.split("|")
@@ -53,7 +53,7 @@ final class Homebrew: GSystem {
         }
 
         if (defaults("HomebrewMainTaps") as? Bool ?? false) == true {
-            let brewCaskCommandAvailable = "\(prefix)/Library/Homebrew/cask/cmd/brew-cask.rb".exists
+            let brewCaskCommandAvailable = "\(prefix)/Homebrew/Library/Homebrew/cask/cmd/brew-cask.rb".exists
             outputLines = output("\(cmd) search \"\"").components(separatedBy: CharacterSet.whitespacesAndNewlines)
             for line in outputLines {
                 if !line.contains("/") {
@@ -248,7 +248,7 @@ final class Homebrew: GSystem {
             let tokens = (item as! GPackage).repo!.split("/")
             let user = tokens[0]
             path = "\(user)/homebrew-\(tokens[1])/commits/master"
-            if "\(prefix)/Library/Taps/\(user)/homebrew-\(tokens[1])/Formula".exists {
+            if "\(prefix)/Homebrew/Library/Taps/\(user)/homebrew-\(tokens[1])/Formula".exists {
                 path += "/Formula"
             }
         }
@@ -267,7 +267,7 @@ final class Homebrew: GSystem {
         if !self.isHidden {
             return output("\(cmd) cat \(item.name)")
         } else {
-            return (try? String(contentsOfFile: "\(prefix)_off/Library/Formula/\(item.name).rb", encoding: .utf8)) ?? ""
+            return (try? String(contentsOfFile: "\(prefix)_off/Library/Homebrew/Formula/\(item.name).rb", encoding: .utf8)) ?? ""
         }
     }
 

@@ -284,7 +284,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     homebrew.prefix = ((brewPath as NSString).deletingLastPathComponent as NSString).deletingLastPathComponent
                     homebrew.cmd = brewPath
                 }
-                if "\(homebrew.prefix)/Library/Homebrew/cask/cmd/brew-cask.rb".exists {
+                if "\(homebrew.prefix)/Homebrew/Library/Homebrew/cask/cmd/brew-cask.rb".exists {
                     let homebrewcasks = HomebrewCasks(agent: agent)
                     systems.append(homebrewcasks)
                     homebrewcasks.prefix = homebrew.prefix
@@ -1849,7 +1849,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                         if command.exists {
                             system = Homebrew(agent: agent)
                             addedSystems.append(system)
-                            if "/usr/local/Library/Homebrew/cask/cmd/brew-cask.rb".exists {
+                            if "/usr/local/Homebrew/Library/Homebrew/cask/cmd/brew-cask.rb".exists {
                                 system = HomebrewCasks(agent: agent)
                                 addedSystems.append(system)
                             }

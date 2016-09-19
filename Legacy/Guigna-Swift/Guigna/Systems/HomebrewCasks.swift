@@ -17,7 +17,7 @@ final class HomebrewCasks: GSystem {
         index.removeAll(keepingCapacity: true)
         items.removeAll(keepingCapacity: true)
 
-        var outputLines = output("/bin/sh -c /usr/bin/grep__\"__version__\"__-r__/\(prefix)/Library/Taps/caskroom/homebrew-*/Casks").split("\n")
+        var outputLines = output("/bin/sh -c /usr/bin/grep__\"__version__\"__-r__/\(prefix)/Homebrew/Library/Taps/caskroom/homebrew-*/Casks").split("\n")
         outputLines.removeLast()
         let whitespaceCharacterSet = CharacterSet.whitespaces
         for line in outputLines {
@@ -58,7 +58,7 @@ final class HomebrewCasks: GSystem {
             items.append(pkg)
             self[name] = pkg
         }
-        outputLines = output("/bin/sh -c /usr/bin/grep__\"license__\"__-r__/\(prefix)/Library/Taps/caskroom/homebrew-*/Casks").split("\n")
+        outputLines = output("/bin/sh -c /usr/bin/grep__\"license__\"__-r__/\(prefix)/Homebrew/Library/Taps/caskroom/homebrew-*/Casks").split("\n")
         outputLines.removeLast()
         for line in outputLines {
             let components = line.trim(whitespaceCharacterSet).split()
@@ -72,7 +72,7 @@ final class HomebrewCasks: GSystem {
                 }
             }
         }
-        outputLines = output("/bin/sh -c /usr/bin/grep__\"name__'\"__-r__/\(prefix)/Library/Taps/caskroom/homebrew-*/Casks").split("\n")
+        outputLines = output("/bin/sh -c /usr/bin/grep__\"name__'\"__-r__/\(prefix)/Homebrew/Library/Taps/caskroom/homebrew-*/Casks").split("\n")
         outputLines.removeLast()
         for line in outputLines {
             let components = line.trim(whitespaceCharacterSet).split(".rb:  name '")
@@ -121,7 +121,7 @@ final class HomebrewCasks: GSystem {
             if name == "Error:" {
                 return pkgs
             }
-            var version = output("/bin/ls \(prefix)/Caskroom/\(name)").trim()
+            var version = output("/bin/ls \(prefix)/Homebrew/Caskroom/\(name)").trim()
             // TODO: manage multiple versions
             version = version.replace("\n", ", ")
             var pkg: GPackage! = self[name]
@@ -225,7 +225,7 @@ final class HomebrewCasks: GSystem {
             return output("/bin/sh -c export__PATH=\(prefix)/bin:$PATH__;__\(escapedCmd)__cat__\(item.name)")
         } else {
             // TODO: repo
-            return (try? String(contentsOfFile: "\(prefix)_off/Library/Taps/caskroom/homebrew-cask/Casks/\(item.name).rb", encoding: .utf8)) ?? ""
+            return (try? String(contentsOfFile: "\(prefix)_off/Homebrew/Library/Taps/caskroom/homebrew-cask/Casks/\(item.name).rb", encoding: .utf8)) ?? ""
         }
     }
 
