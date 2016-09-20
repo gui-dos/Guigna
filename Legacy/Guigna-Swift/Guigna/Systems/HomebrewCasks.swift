@@ -121,7 +121,7 @@ final class HomebrewCasks: GSystem {
             if name == "Error:" {
                 return pkgs
             }
-            var version = output("/bin/ls \(prefix)/Homebrew/Caskroom/\(name)").trim()
+            var version = output("/bin/ls \(prefix)/Caskroom/\(name)").trim()
             // TODO: manage multiple versions
             version = version.replace("\n", ", ")
             var pkg: GPackage! = self[name]
