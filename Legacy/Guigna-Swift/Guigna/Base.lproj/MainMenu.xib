@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11201" systemVersion="16A323" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="10117"/>
-        <plugIn identifier="com.apple.WebKitIBPlugin" version="10117"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11201"/>
+        <plugIn identifier="com.apple.WebKitIBPlugin" version="11201"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -38,11 +38,11 @@
                                         <rect key="frame" x="-2" y="0.0" width="65" height="422"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <clipView key="contentView" drawsBackground="NO" id="n5t-DS-xZ3">
-                                            <rect key="frame" x="2" y="2" width="67" height="418"/>
+                                            <rect key="frame" x="2" y="2" width="61" height="418"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <outlineView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" floatsGroupRows="NO" indentationMarkerFollowsCell="NO" outlineTableColumn="1130" id="1126">
-                                                    <rect key="frame" x="0.0" y="0.0" width="61" height="0.0"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="61" height="418"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <size key="intercellSpacing" width="3" height="3"/>
                                                     <color key="backgroundColor" name="_sourceListBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -175,7 +175,7 @@
                                                 <rect key="frame" x="0.0" y="0.0" width="583" height="162"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <clipView key="contentView" id="C6S-Hg-ACk">
-                                                    <rect key="frame" x="0.0" y="17" width="577" height="145"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="583" height="162"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" autosaveColumns="NO" rowHeight="16" headerView="379" viewBased="YES" id="378">
@@ -532,7 +532,6 @@
                                                             </connections>
                                                         </tableView>
                                                     </subviews>
-                                                    <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                 </clipView>
                                                 <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="377">
                                                     <rect key="frame" x="0.0" y="146" width="577" height="16"/>
@@ -543,7 +542,7 @@
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </scroller>
                                                 <tableHeaderView key="headerView" id="379">
-                                                    <rect key="frame" x="0.0" y="0.0" width="719" height="17"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="583" height="17"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </tableHeaderView>
                                             </scrollView>
@@ -565,18 +564,16 @@
                                                                             <rect key="frame" x="-1" y="0.0" width="585" height="231"/>
                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                             <clipView key="contentView" id="1Qf-vz-qAv">
-                                                                                <rect key="frame" x="2" y="2" width="575" height="227"/>
+                                                                                <rect key="frame" x="2" y="2" width="581" height="227"/>
                                                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                 <subviews>
-                                                                                    <textView importsGraphics="NO" findStyle="panel" allowsUndo="YES" usesRuler="YES" usesFontPanel="YES" verticallyResizable="YES" allowsNonContiguousLayout="YES" linkDetection="YES" spellingCorrection="YES" smartInsertDelete="YES" id="429">
+                                                                                    <textView importsGraphics="NO" usesFontPanel="YES" findStyle="panel" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" linkDetection="YES" spellingCorrection="YES" smartInsertDelete="YES" id="429">
                                                                                         <rect key="frame" x="0.0" y="0.0" width="581" height="227"/>
                                                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                         <color key="backgroundColor" red="0.82290249429999995" green="0.97448979589999996" blue="0.67131519269999995" alpha="1" colorSpace="calibratedRGB"/>
                                                                                         <size key="minSize" width="581" height="227"/>
                                                                                         <size key="maxSize" width="680" height="10000000"/>
                                                                                         <color key="insertionPointColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                                                                        <size key="minSize" width="581" height="227"/>
-                                                                                        <size key="maxSize" width="680" height="10000000"/>
                                                                                         <connections>
                                                                                             <outlet property="delegate" destination="386" id="791"/>
                                                                                         </connections>
@@ -625,15 +622,13 @@
                                                                                 <rect key="frame" x="2" y="2" width="580" height="227"/>
                                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                                 <subviews>
-                                                                                    <textView editable="NO" importsGraphics="NO" findStyle="panel" allowsUndo="YES" usesRuler="YES" usesFontPanel="YES" verticallyResizable="YES" allowsNonContiguousLayout="YES" spellingCorrection="YES" smartInsertDelete="YES" id="634">
+                                                                                    <textView editable="NO" importsGraphics="NO" usesFontPanel="YES" findStyle="panel" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" spellingCorrection="YES" smartInsertDelete="YES" id="634">
                                                                                         <rect key="frame" x="0.0" y="0.0" width="580" height="227"/>
                                                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                         <color key="backgroundColor" red="0.99607849120000003" green="0.99607849120000003" blue="0.84313732389999996" alpha="1" colorSpace="deviceRGB"/>
                                                                                         <size key="minSize" width="580" height="227"/>
                                                                                         <size key="maxSize" width="680" height="10000000"/>
                                                                                         <color key="insertionPointColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                                                                        <size key="minSize" width="580" height="227"/>
-                                                                                        <size key="maxSize" width="680" height="10000000"/>
                                                                                         <connections>
                                                                                             <outlet property="delegate" destination="386" id="790"/>
                                                                                         </connections>
@@ -791,7 +786,7 @@
                         </connections>
                     </button>
                     <button hidden="YES" toolTip="Show only the screenshots" verticalHuggingPriority="750" id="735">
-                        <rect key="frame" x="458" y="2" width="62" height="17"/>
+                        <rect key="frame" x="457" y="2" width="65" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                         <buttonCell key="cell" type="roundTextured" title="Screenshots" bezelStyle="texturedRounded" alignment="center" controlSize="mini" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="736">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
@@ -1586,11 +1581,6 @@
                             </binding>
                         </connections>
                     </button>
-                    <imageView id="774">
-                        <rect key="frame" x="20" y="234" width="40" height="8"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" image="system-homebrew" id="775"/>
-                    </imageView>
                     <imageView id="776">
                         <rect key="frame" x="28" y="215" width="32" height="8"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -1928,8 +1918,14 @@ DQ
                             </binding>
                         </connections>
                     </button>
+                    <imageView misplaced="YES" id="774">
+                        <rect key="frame" x="44" y="230" width="16" height="16"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" image="system-homebrew" id="775"/>
+                    </imageView>
                 </subviews>
             </view>
+            <point key="canvasLocation" x="173" y="-349.5"/>
         </window>
         <menu title="Tools" id="1301">
             <items>
@@ -2089,7 +2085,7 @@ DQ
         <image name="source-native" width="16" height="16"/>
         <image name="status-updated" width="16" height="16"/>
         <image name="system-fink" width="32" height="16"/>
-        <image name="system-homebrew" width="40" height="8"/>
+        <image name="system-homebrew" width="16" height="16"/>
         <image name="system-itunes" width="16" height="16"/>
         <image name="system-macports" width="32" height="8"/>
         <image name="system-pkgsrc" width="16" height="16"/>
