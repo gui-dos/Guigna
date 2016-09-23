@@ -1581,8 +1581,8 @@
                             </binding>
                         </connections>
                     </button>
-                    <imageView id="776">
-                        <rect key="frame" x="28" y="215" width="32" height="8"/>
+                    <imageView misplaced="YES" id="776">
+                        <rect key="frame" x="44" y="211" width="16" height="16"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyDown" image="system-macports" id="777"/>
                     </imageView>
@@ -2087,7 +2087,7 @@ DQ
         <image name="system-fink" width="32" height="16"/>
         <image name="system-homebrew" width="16" height="16"/>
         <image name="system-itunes" width="16" height="16"/>
-        <image name="system-macports" width="32" height="8"/>
+        <image name="system-macports" width="16" height="16"/>
         <image name="system-pkgsrc" width="16" height="16"/>
         <image name="system-rudix" width="16" height="16"/>
         <image name="toolbar-apply" width="32" height="32"/>
