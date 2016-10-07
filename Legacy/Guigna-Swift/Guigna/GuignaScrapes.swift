@@ -123,6 +123,7 @@ class Freecode: GScrape {
 }
 
 
+// FIXME: gmane.org has shut down
 class Debian: GScrape {
 
     init(agent: GAgent) {

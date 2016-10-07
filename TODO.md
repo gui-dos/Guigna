@@ -1,13 +1,12 @@
 FIXME
 -----
 
-* El Capitan / Sierra:
-  - Selected sources are not highlighted until resizing the window
 * Swift:
   - filter() for inactive packages should be called only for MacPorts and Homebrew
 * Scraping the version numbers and the descriptions from Homebrew formulae is excessively slow
 * The password to sudo is echoed in clear text
 * Old uninstalled Mac OS X packages shouldn't be shown
+* Scrape new Debian packages (gmane.org has shut down)
 * A new Shell should be opened if the user closed the last one
 
 
