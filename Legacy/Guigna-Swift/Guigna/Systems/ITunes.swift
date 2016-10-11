@@ -122,7 +122,7 @@ final class ITunes: GSystem {
     }
 
     override func uninstallCmd(_ pkg: GPackage) -> String {
-        return "rm -r '" + ("~/Music/iTunes/iTunes Media/Mobile Applications/\(pkg.id).ipa" as NSString).expandingTildeInPath + "'"
+        return "rm -r '" + ("~/Music/iTunes/iTunes Media/Mobile Applications/\(pkg.id!).ipa" as NSString).expandingTildeInPath + "'"
     }
 
 
