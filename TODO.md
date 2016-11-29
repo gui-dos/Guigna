@@ -15,7 +15,6 @@ TODO
 
 * Swift:
   - complete port of inactive packages management
-  - simplify `XMLDocument(contentsOf: url, options: Int(XMLNode.Options.documentTidyHTML.rawValue)`
 * Objective-C:
   - port new code from [“swift2”](https://github.com/gui-dos/Guigna/releases/tag/swift2)
     release on (15th June)
@@ -28,6 +27,7 @@ TODO
 * Asyncronous URL fetches, download manager
 * Manage `--force` flags
 * itemsTable date column
+* Integrate App Store command line interface (https://github.com/mas-cli/mas)
 * FreeBSD deps
 * Fink categories, deps, binaries
 * pkgsrc deps, outdated, options, Pkgsrc.se CVSWeb
