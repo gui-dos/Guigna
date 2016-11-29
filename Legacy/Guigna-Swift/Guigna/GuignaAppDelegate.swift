@@ -521,9 +521,8 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     if mark == .uninstall && (systemName == "Mac OS X" || systemName == "iTunes") {
                         itemsController.removeObject(item)
                         itemSystem.mutableArrayValue(forKey: "items").remove(item)
-                    } else {
-                        item.mark = .noMark
                     }
+                    item.mark = .noMark
                     itemsTable.reloadData()
                 }
                 self.updateMarkedSource()
@@ -1508,7 +1507,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 mark = .noMark
                 if item is GPackage {
                     (item as! GPackage).markedOptions = nil
-                    packagesIndex[(item as! GPackage).key()]!.markedOptions = nil
+                    packagesIndex[(item as! GPackage).key()]?.markedOptions = nil
                 }
             } else { // variant/option submenu selected
                 var markedOptions = [String]()
