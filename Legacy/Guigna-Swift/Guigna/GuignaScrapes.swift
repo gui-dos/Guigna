@@ -498,3 +498,45 @@ class AppShopperIOS: GScrape {
         return "http://www.appshopper.com/\(category)/\(name)"
     }
 }
+
+
+class MacTorrents: GScrape {
+
+    init(agent: GAgent) {
+        super.init(name: "Mac Torrents", agent: agent)
+        homepage = "http://mac-torrents.com/"
+        itemsPerPage = 18
+        cmd = "macupdate"
+    }
+
+    override func refresh() {
+        var apps = [GItem]()
+        let url = URL(string: "http://mac-torrents.com/page/\(pageNumber - 1)")!
+        if let xmlDoc = try? XMLDocument(contentsOf: url, options: Int(XMLNode.Options.documentTidyHTML.rawValue)) {
+            let nodes = xmlDoc.rootElement()!["//h3[@class=\"entry-title\"]"]
+            for node in nodes {
+                var name = node[".//a"][0].stringValue!
+                let idx = name.rindex(" ")
+                var version = ""
+                if idx != NSNotFound {
+                    version = name.substring(from: idx + 1)
+                    name = name.substring(to: idx)
+                }
+                // var description = node[".//TODO"][0].stringValue!
+                let app = GItem(name: name, version: version, source: self, status: .available)
+                app.homepage =  node[".//a"][0].href
+                // app.description = description
+                apps.append(app)
+            }
+        }
+        items = apps
+    }
+
+    override func home(_ item: GItem) -> String {
+        return item.homepage
+    }
+    
+    override func log(_ item: GItem) -> String {
+        return item.homepage
+    }
+}

@@ -126,6 +126,8 @@ class GSourceTransformer: ValueTransformer {
             return NSImage(named: "source-cocoapods.tiff")
         case "MacUpdate":
             return NSImage(named: "source-macupdate.tiff")
+        case "Mac Torrents":
+            return NSImage(named: "source-mactorrents.tiff")
         case "AppShopper", "AppShopper iOS":
             return NSImage(named: "source-appshopper.tiff")
         case "installed":
