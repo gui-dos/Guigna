@@ -62,7 +62,7 @@
 		C5DB9BA41945A9B80005244E /* toolbar-sync.tiff in Resources */ = {isa = PBXBuildFile; fileRef = C5DB9B871945A9B80005244E /* toolbar-sync.tiff */; };
 		C5DB9BA61945ABF60005244E /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5DB9BA51945ABF60005244E /* WebKit.framework */; };
 		C5E07BBC1972779400DA3CD3 /* Pkgsrc.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E07BBB1972779400DA3CD3 /* Pkgsrc.swift */; };
-		C5E9D8A51966AA6000E5291C /* MacOSX.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E9D8A41966AA6000E5291C /* MacOSX.swift */; };
+		C5E9D8A51966AA6000E5291C /* MacOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E9D8A41966AA6000E5291C /* MacOS.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -140,7 +140,7 @@
 		C5DB9B871945A9B80005244E /* toolbar-sync.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "toolbar-sync.tiff"; sourceTree = "<group>"; };
 		C5DB9BA51945ABF60005244E /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		C5E07BBB1972779400DA3CD3 /* Pkgsrc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pkgsrc.swift; sourceTree = "<group>"; };
-		C5E9D8A41966AA6000E5291C /* MacOSX.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MacOSX.swift; sourceTree = "<group>"; };
+		C5E9D8A41966AA6000E5291C /* MacOS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MacOS.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -241,7 +241,7 @@
 			children = (
 				C5A121611945EB4300A351A8 /* Homebrew.swift */,
 				C5779CA91969922B00755926 /* HomebrewCasks.swift */,
-				C5E9D8A41966AA6000E5291C /* MacOSX.swift */,
+				C5E9D8A41966AA6000E5291C /* MacOS.swift */,
 				C5635BEA1952F53F007424E2 /* MacPorts.swift */,
 				C554334B1972EE060080B0BD /* Fink.swift */,
 				C5E07BBB1972779400DA3CD3 /* Pkgsrc.swift */,
@@ -428,7 +428,7 @@
 				C5A1215F1945EB2700A351A8 /* GSystem.swift in Sources */,
 				C51ED05E19458CB0000B582A /* GuignaAppDelegate.swift in Sources */,
 				C5E07BBC1972779400DA3CD3 /* Pkgsrc.swift in Sources */,
-				C5E9D8A51966AA6000E5291C /* MacOSX.swift in Sources */,
+				C5E9D8A51966AA6000E5291C /* MacOS.swift in Sources */,
 				C5AD0FB7196287360001FB53 /* GSource.swift in Sources */,
 				C5779CAA1969922B00755926 /* HomebrewCasks.swift in Sources */,
 				C56062DC198D0833001F0F93 /* GLibrary.swift in Sources */,
@@ -523,7 +523,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				METAL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -563,7 +563,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				METAL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";

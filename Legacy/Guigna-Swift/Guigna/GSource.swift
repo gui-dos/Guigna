@@ -98,7 +98,7 @@ class GSourceTransformer: ValueTransformer {
             return NSImage(named: "system-homebrew.tiff")
         case "Homebrew Casks":
             return NSImage(named: "system-homebrewcasks.tiff")
-        case "Mac OS X":
+        case "macOS":
             return NSImage(named: "system-macosx.tiff")
         case "iTunes":
             return NSImage(named: "system-itunes.tiff")

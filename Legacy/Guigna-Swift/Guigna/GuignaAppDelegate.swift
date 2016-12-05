@@ -363,7 +363,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             systems.append(rudix)
         }
 
-        systems.append(MacOSX(agent: agent))
+        systems.append(MacOS(agent: agent))
 
         if defaults["iTunesStatus"] == nil {
             defaults["iTunesStatus"] = GState.on.rawValue
@@ -518,7 +518,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     let itemSystem = item.system!
                     let systemName = itemSystem.name
                     log("😺 \(markName) \(systemName) \(item.name): DONE\n")
-                    if mark == .uninstall && (systemName == "Mac OS X" || systemName == "iTunes") {
+                    if mark == .uninstall && (systemName == "macOS" || systemName == "iTunes") {
                         itemsController.removeObject(item)
                         itemSystem.mutableArrayValue(forKey: "items").remove(item)
                     }
@@ -571,7 +571,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 self.itemsController.add(contentsOf: system.items)
                 self.itemsTable.display()
             }
-            if packagesIndex.count > 0 && !(systemName == "Mac OS X" || systemName == "FreeBSD" || systemName == "iTunes") {
+            if packagesIndex.count > 0 && !(systemName == "macOS" || systemName == "FreeBSD" || systemName == "iTunes") {
                 for package in system.items as! [GPackage] {
                     if package.status == .inactive {
                         continue
@@ -1021,7 +1021,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         } else {
             if item != nil {
                 let cmd = (item.source.cmd as NSString).lastPathComponent
-                if item.source.name == "Mac OS X" {
+                if item.source.name == "macOS" {
                     updateCmdLine("\(cmd) \(item.id!)")
                 } else {
                     updateCmdLine("\(cmd) \(item.name)")
@@ -1542,7 +1542,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             let systemName = item.system.name
             var package: GPackage!
 
-            if item.status == .inactive || systemName == "Mac OS X" || systemName == "iTunes" {
+            if item.status == .inactive || systemName == "macOS" || systemName == "iTunes" {
                 package = allPackages.filter { $0.name == item.name && $0.installed != nil && $0.installed == item.installed }[0]
             } else {
                 package = packagesIndex[(item as! GPackage).key()]!
