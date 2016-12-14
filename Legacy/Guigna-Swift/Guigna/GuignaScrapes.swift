@@ -511,7 +511,8 @@ class MacTorrents: GScrape {
 
     override func refresh() {
         var apps = [GItem]()
-        let url = URL(string: "http://mac-torrents.com/page/\(pageNumber - 1)")!
+        var index = [String: GItem]()
+        var url = URL(string: "http://mac-torrents.com/page/\(pageNumber - 1)")!
         if let xmlDoc = try? XMLDocument(contentsOf: url, options: Int(XMLNode.Options.documentTidyHTML.rawValue)) {
             let nodes = xmlDoc.rootElement()!["//h3[@class=\"entry-title\"]"]
             for node in nodes {
@@ -522,16 +523,54 @@ class MacTorrents: GScrape {
                     version = name.substring(from: idx + 1)
                     name = name.substring(to: idx)
                 }
-                // var description = node[".//TODO"][0].stringValue!
                 let app = GItem(name: name, version: version, source: self, status: .available)
                 app.homepage =  node[".//a"][0].href
-                // app.description = description
                 apps.append(app)
+                index["\(name)-\(version)"] = app
             }
         }
+        for page in [1...(pageNumber/2) + 1] {
+            url = URL(string: "https://www.macbed.com/page/\(page)")!
+            if let xmlDoc = try? XMLDocument(contentsOf: url, options: Int(XMLNode.Options.documentTidyHTML.rawValue)) {
+                let nodes = xmlDoc.rootElement()!["//li[starts-with(@class,\"post\")]"]
+                for node in nodes {
+                    var parts = node[".//div[@class=\"entry\"]//a"][0].stringValue!.split(" – ")
+                    if parts.count < 2 {
+                        continue
+                    }
+                    var name = parts[0]
+                    let description = parts[1]
+                    let idx = name.rindex(" ")
+                    var version = ""
+                    if idx != NSNotFound {
+                        version = name.substring(from: idx + 1)
+                        name = name.substring(to: idx)
+                    }
+                    if let app = index["\(name)-\(version)"] {
+                        app.description = description
+                        var categories = ""
+                        for link in node[".//div[@class=\"tag\"]/a"] {
+                            let tag = link.stringValue!
+                            if tag != name {
+                                categories.append(tag.lowercased())
+                            }
+                        }
+                        for link in node[".//div[@class=\"desc\"]/a"] {
+                            let category = link.stringValue!
+                            if category != "Featured" && categories != category.lowercased() {
+                                categories.append(" \(category.lowercased())")
+                            }
+                        }
+                        app.categories = categories.replace(" & ", " ")
+                    }
+                }
+            }
+
+        }
+        
         items = apps
     }
-
+    
     override func home(_ item: GItem) -> String {
         return item.homepage
     }
