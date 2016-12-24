@@ -4,6 +4,7 @@ import WebKit
 protocol GAppDelegate {
     var defaults: NSUserDefaultsController! { get set }
     func log(_ text: String)
+    func status(_ msg: String)
     // var allPackages: [GPackage] { get set } // to avoid in Swift since it returns a copy
     func addItem(_ item: GItem) // to add an inactive package without requiring a copy of allPackages
     func removeItem(_ item: GItem) // TODO
