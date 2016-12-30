@@ -1637,7 +1637,6 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
 
                 if mark == .install {
                     command = item.installCmd
-
                     if item.system.name != "Homebrew Casks" && item.system.name != "Rudix" {
                         hidesOthers = true
                     }
@@ -1650,7 +1649,9 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
 
                 } else if mark == .upgrade {
                     command = item.upgradeCmd
-                    hidesOthers = true
+                    if item.system.name != "Homebrew Casks" && item.system.name != "Rudix" {
+                        hidesOthers = true
+                    }
 
                 } else if mark == .fetch {
                     command = item.fetchCmd
