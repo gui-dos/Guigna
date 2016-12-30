@@ -18,6 +18,7 @@ TODO
 * Objective-C:
   - port new code from [“swift2”](https://github.com/gui-dos/Guigna/releases/tag/swift2)
     release on (15th June)
+* Make use of `brew info -d —json=v1 --all`
 * Make use of Storyboards and NSViewControllers
 * Preload a cached index to speed up startup
 * Scroll the webview by pressing the spacebar

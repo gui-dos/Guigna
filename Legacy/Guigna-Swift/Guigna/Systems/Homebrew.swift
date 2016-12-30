@@ -24,19 +24,16 @@ final class Homebrew: GSystem {
 
         var outputLines = output("/usr/bin/ruby -C \(prefix)/Homebrew/Library/Homebrew -I. -e " + workaround + "require__'global';require__'formula';__Formula.each__{|f|__puts__\"#{f.full_name}|#{f.pkg_version}|#{f.bottle}|#{f.desc}\"}").split("\n")
         outputLines.removeLast()
-        for line in outputLines {
+        let total = Double(outputLines.count)
+        for (idx, line) in outputLines.enumerated() {
             let components = line.split("|")
             let fullName = components[0]
             var nameComponents = fullName.split("/")
-            let name = nameComponents.last!
-            nameComponents.removeLast()
-            var repo: String! = nil
-            if nameComponents.count > 0 {
-                repo = nameComponents.join("/")
-            }
+            let name = nameComponents.removeLast()
+            let repo: String! = nameComponents.count > 0 ? nameComponents.join("/") : nil
             let version = components[1]
-            let bottle = components[2]
-            var desc = components[3]
+            let bottle  = components[2]
+            var desc    = components[3]
             let pkg = GPackage(name: name, version: version, system: self, status: .available)
             if bottle != "" {
                 desc = "🍶\(desc)"
@@ -50,6 +47,9 @@ final class Homebrew: GSystem {
             }
             items.append(pkg)
             self[name] = pkg
+            DispatchQueue.main.async {
+                self.agent.appDelegate?.status("Indexing Homebrew... (\(Int(Double(idx) / total * 100))%)")
+            }
         }
 
         if (defaults("HomebrewMainTaps") as? Bool ?? false) == true {
