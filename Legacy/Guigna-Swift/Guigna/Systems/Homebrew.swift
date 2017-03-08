@@ -17,7 +17,7 @@ final class Homebrew: GSystem {
         index.removeAll(keepingCapacity: true)
         items.removeAll(keepingCapacity: true)
 
-        // /* TODO
+        /* TODO
         let jsonInfo = output("\(cmd) info --json=v1 --all")
         let formulae = try! JSONSerialization.jsonObject(with: jsonInfo.data(using: .utf8)!)
         for formula in formulae as! [[String: Any]] {
@@ -47,7 +47,7 @@ final class Homebrew: GSystem {
             }
 
         }
-        // */
+        */
 
         // /usr/bin/ruby -C /usr/local/Homebrew/Library/Homebrew -I. -e "require 'global'; require 'formula'; Formula.each {|f| puts \"#{f.name} #{f.pkg_version}\"}" not supported anymore
         // see: https://github.com/Homebrew/homebrew/pull/48261
