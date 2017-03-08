@@ -85,7 +85,7 @@ final class Homebrew: GSystem {
         }
 
         if (defaults("HomebrewMainTaps") as? Bool ?? false) == true {
-            let brewCaskCommandAvailable = "\(prefix)/Homebrew/Library/Homebrew/cask/cmd/brew-cask.rb".exists
+            let brewCaskCommandAvailable = "\(prefix)/Homebrew/Library/Homebrew/cmd/cask.rb".exists
             outputLines = output("\(cmd) search \"\"").components(separatedBy: CharacterSet.whitespacesAndNewlines)
             for line in outputLines {
                 if !line.contains("/") {
