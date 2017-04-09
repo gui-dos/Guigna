@@ -39,7 +39,7 @@ final class MacPorts: GSystem {
             if mode == .online { // TODO: fetch PortIndex
                 portIndex = (try? String(contentsOfFile: ("~/Library/Application Support/Guigna/MacPorts/PortIndex" as NSString).expandingTildeInPath, encoding: .utf8)) ?? ""
             } else {
-                portIndex = (try? String(contentsOfFile: "\(prefix)/var/macports/sources/rsync.macports.org/release/tarballs/ports/PortIndex", encoding: .utf8)) ?? ""
+                portIndex = (try? String(contentsOfFile: "\(prefix)/var/macports/sources/rsync.macports.org/macports/release/tarballs/ports/PortIndex", encoding: .utf8)) ?? ""
             }
             let s =  Scanner(string: portIndex)
             s.charactersToBeSkipped = CharacterSet(charactersIn: "")
