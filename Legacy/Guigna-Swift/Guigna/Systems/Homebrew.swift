@@ -18,36 +18,36 @@ final class Homebrew: GSystem {
         items.removeAll(keepingCapacity: true)
 
         /* TODO
-        let jsonInfo = output("\(cmd) info --json=v1 --all")
-        let formulae = try! JSONSerialization.jsonObject(with: jsonInfo.data(using: .utf8)!)
-        for formula in formulae as! [[String: Any]] {
-            let name  = formula["full_name"]! as! String
-            let versions = formula["versions"] as! [String: Any]
-            var version = versions["stable"]! as! String
-            let revision = formula["revision"]! as! Int
-            if revision != 0 {
-                version = "\(version)_\(revision)"
-            }
-            let description = formula["desc"]! as? String ?? ""
+         let jsonInfo = output("\(cmd) info --json=v1 --all")
+         let formulae = try! JSONSerialization.jsonObject(with: jsonInfo.data(using: .utf8)!)
+         for formula in formulae as! [[String: Any]] {
+         let name  = formula["full_name"]! as! String
+         let versions = formula["versions"] as! [String: Any]
+         var version = versions["stable"]! as! String
+         let revision = formula["revision"]! as! Int
+         if revision != 0 {
+         version = "\(version)_\(revision)"
+         }
+         let description = formula["desc"]! as? String ?? ""
 
-            print("\(name) \(version) - \(description)")
+         print("\(name) \(version) - \(description)")
 
-            let installed = formula["installed"] as! [[String: Any]]
-            var installedVersion: String! = nil
-            if installed.count > 0 {
-                installedVersion = installed[0]["version"] as! String
-            }
-            if installedVersion != nil {
-                print("installed: \(installedVersion!)")
-            }
+         let installed = formula["installed"] as! [[String: Any]]
+         var installedVersion: String! = nil
+         if installed.count > 0 {
+         installedVersion = installed[0]["version"] as! String
+         }
+         if installedVersion != nil {
+         print("installed: \(installedVersion!)")
+         }
 
-            let outdated = formula["outdated"] as! Bool
-            if outdated {
-                print("outdated")
-            }
+         let outdated = formula["outdated"] as! Bool
+         if outdated {
+         print("outdated")
+         }
 
-        }
-        */
+         }
+         */
 
         // /usr/bin/ruby -C /usr/local/Homebrew/Library/Homebrew -I. -e "require 'global'; require 'formula'; Formula.each {|f| puts \"#{f.name} #{f.pkg_version}\"}" not supported anymore
         // see: https://github.com/Homebrew/homebrew/pull/48261
@@ -79,9 +79,6 @@ final class Homebrew: GSystem {
             }
             items.append(pkg)
             self[name] = pkg
-            DispatchQueue.main.async {
-                self.agent.appDelegate?.status("Indexing Homebrew... (\(Int(Double(idx) / total * 100))%)")
-            }
         }
 
         if (defaults("HomebrewMainTaps") as? Bool ?? false) == true {
