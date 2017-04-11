@@ -247,8 +247,15 @@ class PyPI: GScrape {
     }
 
     override func home(_ item: GItem) -> String {
-        return agent.nodes(URL: self.log(item), XPath:"//ul[@class=\"nodot\"]/li/a")[0].stringValue!
-        // if nil return [self log:item];
+        var homeURL = self.log(item)
+        let links = agent.nodes(URL: self.log(item), XPath:"//ul[@class=\"nodot\"]/li/a")
+        if links.count > 0 {
+            let link = links[0]
+            if !link.href.hasPrefix("/pypi") {
+                homeURL = link.stringValue!
+            }
+        }
+        return homeURL
     }
 
     override func log(_ item: GItem) -> String {

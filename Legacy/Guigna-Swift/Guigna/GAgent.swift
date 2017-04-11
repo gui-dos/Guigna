@@ -87,11 +87,13 @@ class GAgent: NSObject {
             page = try? String(contentsOf: URL(string: url)!, encoding: .isoLatin1)
         }
         let data: Data = page!.data(using: .utf8)!
+        var doc = XMLDocument()
         var nodes = [XMLNode]()
         do {
-            let doc = try XMLDocument(data: data, options: Int(XMLNode.Options.documentTidyHTML.rawValue))
+            doc = try XMLDocument(data: data, options: Int(XMLNode.Options.documentTidyHTML.rawValue))
             nodes = try doc.rootElement()!.nodes(forXPath: xpath)
-        } catch {
+        } catch let error as NSError {
+            print(error.localizedDescription)
         }
         return nodes
     }
