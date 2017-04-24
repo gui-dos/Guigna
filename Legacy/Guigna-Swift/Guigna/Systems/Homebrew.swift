@@ -352,7 +352,7 @@ final class Homebrew: GSystem {
 
 
     override func cleanCmd(_ pkg: GPackage) -> String {
-        return "\(cmd) cleanup --force \(pkg.name) &>/dev/null"
+        return "\(cmd) cleanup --force \(pkg.name)"
     }
 
 

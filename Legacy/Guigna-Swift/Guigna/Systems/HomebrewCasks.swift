@@ -253,13 +253,13 @@ final class HomebrewCasks: GSystem {
         return "\(cmd) zap \(pkg.name)"
     }
 
-    // TODO: uninstall only, don't zap settings
+
     override func upgradeCmd(_ pkg: GPackage) -> String {
-        return "\(cmd) zap \(pkg.name); \(cmd) install \(pkg.name)"
+        return "\(cmd) uninstall \(pkg.name); \(cmd) install \(pkg.name)"
     }
 
     override func cleanCmd(_ pkg: GPackage) -> String {
-        return "\(cmd) cleanup --force \(pkg.name) &>/dev/null"
+        return "\(cmd) zap \(pkg.name) ; \(cmd) cleanup --force \(pkg.name)"
     }
 
     //    override var updateCmd: String! {
