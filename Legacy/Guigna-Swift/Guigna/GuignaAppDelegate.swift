@@ -182,7 +182,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         allPackages.reserveCapacity(150000)
 
         let fileManager = FileManager.default
-        for dir in ["MacPorts", "Homebrew", "Fink", "pkgsrc", "FreeBSD", "Gentoo"] {
+        for dir in ["MacPorts", "Homebrew", "iTunes", "Fink", "pkgsrc", "FreeBSD", "Gentoo"] {
             try! fileManager.createDirectory(atPath: "\(APPDIR)/\(dir)", withIntermediateDirectories: true)
         }
         for file in ["output", "sync"] {
@@ -330,7 +330,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
         // TODO:
         if defaults["pkginStatus"] != nil && Int(defaults["pkginStatus"] as! NSNumber) == GState.on.rawValue &&
-        ( defaults["pkgsrcStatus"] != nil && Int(defaults["pkgsrcStatus"] as! NSNumber) == GState.on.rawValue)
+            ( defaults["pkgsrcStatus"] != nil && Int(defaults["pkgsrcStatus"] as! NSNumber) == GState.on.rawValue)
         {
             let pkgin = Pkgin(agent: agent)
             if !"/opt/pkg/bin/pkgin".exists {
@@ -1199,9 +1199,33 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         let selectedRange = infoText.selectedRange as NSRange
         let storageString = infoText.textStorage!.string as NSString
         let line = storageString.substring(with: storageString.paragraphRange(for: selectedRange))
+        let fileManager = FileManager.default
 
         if selectedSegment == "Contents" {
             var file: String = line.trim().trim("'")
+            let selectedItems = itemsController.selectedObjects
+            var item: GItem! = nil
+            if (selectedItems?.count)! > 0 {
+                item = selectedItems?[0] as! GItem
+                let system = item.system!
+                if system.name == "iTunes" {
+                    let ipa = ("~/Music/iTunes/iTunes Media/Mobile Applications/\(item.id!).ipa" as NSString).expandingTildeInPath
+                    let dest = APPDIR + "/iTunes/" + item.id!
+                    if !dest.exists {
+                        try! fileManager.createDirectory(atPath: dest, withIntermediateDirectories: true)
+                        let escapedIpa = ipa.replace(" ", "__")
+                        let escapedDest = dest.replace(" ", "__")
+                        _ = agent.output("/usr/bin/unzip -o \(escapedIpa) -d \(escapedDest)")
+                        var appFolder = try! fileManager.contentsOfDirectory(atPath: dest + "/Payload")[0]
+                        appFolder = dest + "/Payload/" + appFolder
+                        let renamedAppFolder = appFolder.replace(".app", "_app")
+                        try! fileManager.moveItem(atPath: appFolder, toPath: renamedAppFolder)
+                    }
+                    file = dest + "/" + file.replace(".app", "_app")
+                    let parentDir = (file as NSString).deletingLastPathComponent
+                    NSWorkspace.shared().openFile(parentDir)
+                }
+            }
             // TODO detect types
             if file.contains(" -> ") { // Homebrew Casks
                 file = file.split(" -> ")[1].trim("'")
