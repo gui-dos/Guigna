@@ -120,17 +120,17 @@ class GStatusTransformer: ValueTransformer {
         let status = GStatus(rawValue: (value! as AnyObject).intValue)!
         switch status {
         case .inactive:
-            return NSImage(named: NSImage.Name.statusNone)
+            return NSImage(named: .statusNone)
         case .upToDate:
-            return NSImage(named: NSImage.Name.statusAvailable)
+            return NSImage(named: .statusAvailable)
         case .outdated:
-            return NSImage(named: NSImage.Name.statusPartiallyAvailable)
+            return NSImage(named: .statusPartiallyAvailable)
         case .updated:
-            return NSImage(named: NSImage.Name(rawValue: "status-updated.tiff"))
+            return NSImage(named: NSImage.Name("status-updated.tiff"))
         case .new:
-            return NSImage(named: NSImage.Name(rawValue: "status-new.tiff"))
+            return NSImage(named: NSImage.Name("status-new.tiff"))
         case .broken:
-            return NSImage(named: NSImage.Name.statusUnavailable)
+            return NSImage(named: .statusUnavailable)
         default:
             return nil
         }
