@@ -175,7 +175,7 @@ final class MacOS: GSystem {
                     continue
                 }
                 let fileAttributes = (try! fileManager.attributesOfItem(atPath: dirPath)) as NSDictionary
-                if (!(Int(fileAttributes.fileOwnerAccountID()!) == 0) && !dirPath.hasPrefix("/usr/local"))
+                if (!(fileAttributes.fileOwnerAccountID()! == 0) && !dirPath.hasPrefix("/usr/local"))
                     || dirPath.contains(pkg.name)
                     || dirPath.contains(".")
                     || dirPath.hasPrefix("/opt/") {
