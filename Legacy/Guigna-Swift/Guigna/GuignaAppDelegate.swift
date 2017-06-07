@@ -551,7 +551,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         self.ready = false
         DispatchQueue.main.sync {
             self.itemsController.filterPredicate = nil
-            self.itemsController.remove(atArrangedObjectIndexes: IndexSet(integersIn: NSRange(location: 0, length: (self.itemsController.arrangedObjects as AnyObject).count).toRange() ?? 0..<0))
+            self.itemsController.remove(atArrangedObjectIndexes: IndexSet(integersIn: 0..<(self.itemsController.arrangedObjects as AnyObject).count))
             self.itemsController.sortDescriptors = []
             self.tableProgressIndicator.startAnimation(self)
         }
@@ -772,7 +772,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         var src: String
         let filter = searchField.stringValue
         itemsController.filterPredicate = nil
-        itemsController.remove(atArrangedObjectIndexes: IndexSet(integersIn: NSRange(location: 0, length: (itemsController.arrangedObjects as AnyObject).count).toRange() ?? 0..<0))
+        itemsController.remove(atArrangedObjectIndexes: IndexSet(integersIn: 0..<(itemsController.arrangedObjects as AnyObject).count))
         itemsController.sortDescriptors = []
         var first = true
         for source in selectedSources {
@@ -856,7 +856,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
 
                     if first {
                         itemsController.filterPredicate = nil
-                        itemsController.remove(atArrangedObjectIndexes: IndexSet(integersIn: NSRange(location: 0, length: (itemsController.arrangedObjects as AnyObject).count).toRange() ?? 0..<0))
+                        itemsController.remove(atArrangedObjectIndexes: IndexSet(integersIn: 0..<(itemsController.arrangedObjects as AnyObject).count))
                         itemsController.sortDescriptors = []
                         first = false
                     }
