@@ -179,10 +179,10 @@ final class MacOS: GSystem {
                     || dirPath.contains(pkg.name)
                     || dirPath.contains(".")
                     || dirPath.hasPrefix("/opt/") {
-                        if (dirsToDelete.filter { dirPath.contains($0) }).count == 0 {
-                            dirsToDelete.append(dirPath)
-                            commands.append("sudo rm -r \"\(dirPath)\"")
-                        }
+                    if (dirsToDelete.filter { dirPath.contains($0) }).count == 0 {
+                        dirsToDelete.append(dirPath)
+                        commands.append("sudo rm -r \"\(dirPath)\"")
+                    }
                 }
             }
             var files = output("\(cmd) --files \(pkgId)").split("\n") // links are not detected with --only-files
@@ -201,7 +201,7 @@ final class MacOS: GSystem {
             commands.append("sudo \(cmd) --forget \(pkgId)")
         }
         return commands.join("; ")
-
+        
         // TODO: disable Launchd daemons, clean Application Support, Caches, Preferences
         // SEE: https://github.com/caskroom/homebrew-cask/blob/master/lib/cask/artifact/pkg.rb
     }

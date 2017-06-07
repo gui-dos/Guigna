@@ -941,7 +941,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         if (selectedItems?.count)! > 0 {
             item = selectedItems?[0] as? GItem
         }
-        if button.state == NSControl.StateValue.onState {
+        if button.state == .on {
             previousSegment = segmentedControl.selectedSegment
             segmentedControl.selectedSegment = -1
             selectedSegment = "Shell"
@@ -956,10 +956,10 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
 
     func updateTabView(_ item: GItem!) {
         if segmentedControl.selectedSegment == -1 {
-            shellDisclosure.state = NSControl.StateValue.onState
+            shellDisclosure.state = .on
             selectedSegment = "Shell"
         } else {
-            shellDisclosure.state = NSControl.StateValue.offState
+            shellDisclosure.state = .off
             selectedSegment = segmentedControl.label(forSegment: segmentedControl.selectedSegment)!
         }
         clearButton.isHidden = (selectedSegment != "Shell")
@@ -1003,7 +1003,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     }
                 }
             }
-            if item != nil && item.screenshots != nil && screenshotsButton.state == NSControl.StateValue.onState {
+            if item != nil && item.screenshots != nil && screenshotsButton.state == .on {
                 var htmlString = "<html><body>"
                 for url in item.screenshots.split() {
                     htmlString += "<img src=\"\(url)\" border=\"1\">"
@@ -1448,7 +1448,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                                 options.formUnion(currentOptions)
                                 for option in options {
                                     if option == availableOption {
-                                        optionsMenu.item(withTitle: availableOption)?.state = NSControl.StateValue.onState
+                                        optionsMenu.item(withTitle: availableOption)?.state = .on
                                     }
                                 }
                             }
@@ -1538,7 +1538,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 if (item as! GPackage).markedOptions != nil {
                     markedOptions += (item as! GPackage).markedOptions.split()
                 }
-                if sender.state == NSControl.StateValue.offState {
+                if sender.state == .off {
                     markedOptions.append(title)
                 } else {
                     markedOptions.remove(at: markedOptions.index(of: title)!)
@@ -1864,7 +1864,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 var command = "command"
                 var addedSystems = [GSystem]()
 
-                if state == NSControl.StateValue.onState {
+                if state == .on {
                     optionsStatus("Adding \(title)...")
                     agent.output("/bin/echo") // workaround for updating status in El Capitan
 
