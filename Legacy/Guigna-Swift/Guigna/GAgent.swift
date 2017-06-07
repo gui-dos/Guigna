@@ -90,7 +90,7 @@ class GAgent: NSObject {
         var doc = XMLDocument()
         var nodes = [XMLNode]()
         do {
-            doc = try XMLDocument(data: data, options: Int(XMLNode.Options.documentTidyHTML.rawValue))
+            doc = try XMLDocument(data: data, options: .documentTidyHTML)
             nodes = try doc.rootElement()!.nodes(forXPath: xpath)
         } catch let error as NSError {
             print(error.localizedDescription)

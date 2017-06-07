@@ -74,7 +74,7 @@ final class ITunes: GSystem {
         let metadata = plist.propertyList() as! NSDictionary
         let itemId: Int = metadata["itemId"]! as! Int
         let url = URL(string: "http://itunes.apple.com/app/id\(itemId)")!
-        if let xmlDoc = try? XMLDocument(contentsOf: url, options: Int(XMLNode.Options.documentTidyHTML.rawValue)) {
+        if let xmlDoc = try? XMLDocument(contentsOf: url, options: .documentTidyHTML) {
             let mainDiv = xmlDoc.rootElement()!["//div[@id=\"main\"]"][0]
             let links = mainDiv["//div[@class=\"app-links\"]/a"]
             // TODO: get screenshots via JSON

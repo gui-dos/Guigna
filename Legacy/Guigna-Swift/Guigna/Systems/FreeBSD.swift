@@ -80,7 +80,7 @@ final class FreeBSD: GSystem {
 
         } else {
             let url = URL(string: "http://www.freebsd.org/ports/master-index.html")!
-            if let xmlDoc = try? XMLDocument(contentsOf: url, options: Int(XMLNode.Options.documentTidyHTML.rawValue)) {
+            if let xmlDoc = try? XMLDocument(contentsOf: url, options: .documentTidyHTML) {
                 let root = xmlDoc.rootElement()!["/*"][0]
                 let names = root["//p/strong/a"]
                 let descriptions = root["//p/em"]

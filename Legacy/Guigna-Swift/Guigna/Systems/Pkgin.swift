@@ -72,7 +72,7 @@ final class Pkgin: GSystem {
         //
         //        } else {
         //            let url = NSURL(string: "http://ftp.netbsd.org/pub/pkgsrc/current/pkgsrc/README-all.html")!
-        //            if let xmlDoc = try? NSXMLDocument(contentsOf: url, options: Int(NSXMLDocumentTidyHTML)) {
+        //            if let xmlDoc = try? NSXMLDocument(contentsOf: url, options: .documentTidyHTML) {
         //                let nodes = xmlDoc.rootElement()!["//tr"]
         //                for node in nodes {
         //                    let rowData = node["td"]

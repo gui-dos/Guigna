@@ -102,7 +102,7 @@ final class MacOS: GSystem {
             if results.count > 0 {
                 let pkgId = ((results[0] as! NSDictionary)["trackId"]! as AnyObject).stringValue!
                 let url = URL(string: "http://itunes.apple.com/app/id\(pkgId)")!
-                if let xmlDoc = try? XMLDocument(contentsOf: url, options: Int(XMLNode.Options.documentTidyHTML.rawValue)) {
+                if let xmlDoc = try? XMLDocument(contentsOf: url, options: .documentTidyHTML) {
                     let mainDiv = xmlDoc.rootElement()!["//div[@id=\"main\"]"][0]
                     let links = mainDiv["//div[@class=\"app-links\"]/a"]
                     // TODO: get screenshots via JSON
