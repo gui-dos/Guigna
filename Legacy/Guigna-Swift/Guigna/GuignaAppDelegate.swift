@@ -257,7 +257,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         if defaults["MacPortsParsePortIndex"] == nil {
             defaults["MacPortsParsePortIndex"] = true
         }
-        if defaults["MacPortsStatus"] != nil && Int(defaults["MacPortsStatus"] as! NSNumber) == GState.on.rawValue {
+        if defaults["MacPortsStatus"] != nil && defaults["MacPortsStatus"] as! Int == GState.on.rawValue {
             let macports = MacPorts(agent: agent)
             if !portPath.exists {
                 macports.mode = .online
@@ -276,7 +276,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 defaults["HomebrewStatus"] = GState.on.rawValue
             }
         }
-        if defaults["HomebrewStatus"] != nil && Int(defaults["HomebrewStatus"] as! NSNumber) == GState.on.rawValue {
+        if defaults["HomebrewStatus"] != nil && defaults["HomebrewStatus"] as! Int == GState.on.rawValue {
             if brewPath.exists { // TODO: online mode
                 let homebrew = Homebrew(agent: agent)
                 systems.append(homebrew)
@@ -298,7 +298,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 defaults["FinkStatus"] = GState.on.rawValue
             }
         }
-        if defaults["FinkStatus"] != nil && Int(defaults["FinkStatus"] as! NSNumber) == GState.on.rawValue {
+        if defaults["FinkStatus"] != nil && defaults["FinkStatus"] as! Int == GState.on.rawValue {
             let fink = Fink(agent: agent)
             if !"/sw/bin/fink".exists {
                 fink.mode = .online
@@ -315,7 +315,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 defaults["pkgsrcCVS"] = true
             }
         }
-        if defaults["pkgsrcStatus"] != nil && Int(defaults["pkgsrcStatus"]  as! NSNumber) == GState.on.rawValue && (defaults["pkginStatus"] != nil && Int(defaults["pkginStatus"] as! NSNumber) == GState.off.rawValue) {
+        if defaults["pkgsrcStatus"] != nil && defaults["pkgsrcStatus"]  as! Int == GState.on.rawValue && (defaults["pkginStatus"] != nil && defaults["pkginStatus"] as! Int == GState.off.rawValue) {
             let pkgsrc = Pkgsrc(agent: agent)
             if !"/usr/pkg/sbin/pkg_info".exists {
                 pkgsrc.mode = .online
@@ -329,8 +329,8 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             }
         }
         // TODO:
-        if defaults["pkginStatus"] != nil && Int(defaults["pkginStatus"] as! NSNumber) == GState.on.rawValue &&
-            ( defaults["pkgsrcStatus"] != nil && Int(defaults["pkgsrcStatus"] as! NSNumber) == GState.on.rawValue)
+        if defaults["pkginStatus"] != nil && defaults["pkginStatus"] as! Int == GState.on.rawValue &&
+            ( defaults["pkgsrcStatus"] != nil && defaults["pkgsrcStatus"] as! Int == GState.on.rawValue)
         {
             let pkgin = Pkgin(agent: agent)
             if !"/opt/pkg/bin/pkgin".exists {
@@ -344,7 +344,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 defaults["FreeBSDStatus"] = GState.on.rawValue
             }
         }
-        if defaults["FreeBSDStatus"] != nil && Int(defaults["FreeBSDStatus"] as! NSNumber) == GState.on.rawValue {
+        if defaults["FreeBSDStatus"] != nil && defaults["FreeBSDStatus"] as! Int == GState.on.rawValue {
             let freebsd = FreeBSD(agent: agent)
             freebsd.mode = .online
             systems.append(freebsd)
@@ -355,7 +355,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 defaults["RudixStatus"] = GState.on.rawValue
             }
         }
-        if defaults["RudixStatus"] != nil && Int(defaults["RudixStatus"] as! NSNumber) == GState.on.rawValue {
+        if defaults["RudixStatus"] != nil && defaults["RudixStatus"] as! Int == GState.on.rawValue {
             let rudix = Rudix(agent: agent)
             if !"/usr/local/bin/rudix".exists {
                 rudix.mode = .online
@@ -368,7 +368,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         if defaults["iTunesStatus"] == nil {
             defaults["iTunesStatus"] = GState.on.rawValue
         }
-        if defaults["iTunesStatus"] != nil && Int(defaults["iTunesStatus"] as! NSNumber) == GState.on.rawValue {
+        if defaults["iTunesStatus"] != nil && defaults["iTunesStatus"] as! Int == GState.on.rawValue {
             let itunes = ITunes(agent: agent)
             systems.append(itunes)
         }
