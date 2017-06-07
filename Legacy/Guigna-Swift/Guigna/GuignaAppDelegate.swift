@@ -63,19 +63,19 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     var previousSegment = 0
     let APPDIR = ("~/Library/Application Support/Guigna" as NSString).expandingTildeInPath
 
-    dynamic var tableFont: NSFont!
-    dynamic var tableTextColor: NSColor!
-    dynamic var logTextColor: NSColor!
-    dynamic var linkTextAttributes: [String : Any]!
-    dynamic var sourceListBackgroundColor: NSColor!
+    @objc dynamic var tableFont: NSFont!
+    @objc dynamic var tableTextColor: NSColor!
+    @objc dynamic var logTextColor: NSColor!
+    @objc dynamic var linkTextAttributes: [String : Any]!
+    @objc dynamic var sourceListBackgroundColor: NSColor!
 
-    dynamic var adminPassword: String?
+    @objc dynamic var adminPassword: String?
     var minuteTimer: Timer?
-    dynamic var ready = false
+    @objc dynamic var ready = false
 
     var shellColumns: Int {
         get {
-            let attrs = [NSFontAttributeName: NSFont(name: "Andale Mono", size: 11.0)!]
+            let attrs = [NSAttributedStringKey.font: NSFont(name: "Andale Mono", size: 11.0)!]
             let charWidth = ("MMM".size(withAttributes: attrs).width - "M".size(withAttributes: attrs).width) / 2.0
             let columns = Int(round((infoText.frame.size.width - 16.0) / charWidth + 0.5))
             return columns
@@ -116,13 +116,13 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     }
 
     func log(_ text: String) {
-        let attributedString = NSAttributedString(string: text, attributes: [NSFontAttributeName: NSFont(name: "Andale Mono", size:11.0)!, NSForegroundColorAttributeName: logTextColor])
+        let attributedString = NSAttributedString(string: text, attributes: [NSAttributedStringKey.font: NSFont(name: "Andale Mono", size:11.0)!, NSAttributedStringKey.foregroundColor: logTextColor])
         let storage = logText.textStorage!
         storage.beginEditing()
         storage.append(attributedString)
         storage.endEditing()
         logText.display()
-        logText.scrollRangeToVisible(NSRange(location: logText.string!.length, length: 0))
+        logText.scrollRangeToVisible(NSRange(location: logText.string.length, length: 0))
         tabView.display()
     }
 
@@ -140,7 +140,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         let sourceTransformer = GSourceTransformer()
         ValueTransformer.setValueTransformer(sourceTransformer, forName: NSValueTransformerName("GSourceTransformer"))
 
-        statusItem = NSStatusBar.system().statusItem(withLength: -1) // NSVariableStatusItemLength
+        statusItem = NSStatusBar.system.statusItem(withLength: -1) // NSVariableStatusItemLength
         statusItem.title = "😺"
         statusItem.highlightMode = true
         statusItem.menu = statusMenu
@@ -165,12 +165,12 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             menu.delegate = self
         }
         itemsTable.headerView!.menu = columnsMenu
-        let viewMenu = NSApplication.shared().mainMenu!.item(withTitle: "View")!
+        let viewMenu = NSApplication.shared.mainMenu!.item(withTitle: "View")!
         viewMenu.submenu!.addItem(NSMenuItem.separator())
         let columnsMenuItem = NSMenuItem(title: "Columns", action: nil, keyEquivalent: "")
         columnsMenuItem.submenu = viewColumnsMenu
         viewMenu.submenu!.addItem(columnsMenuItem)
-        let editMenu = NSApplication.shared().mainMenu!.item(withTitle: "Edit")!
+        let editMenu = NSApplication.shared.mainMenu!.item(withTitle: "Edit")!
         let markMenuItem = NSMenuItem(title: "Mark", action: nil, keyEquivalent: "")
         markMenuItem.submenu = markMenu
         let idx = editMenu.submenu!.indexOfItem(withTitle: "Select All")
@@ -226,7 +226,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 alert.informativeText = "The path to \(system) is currently hidden by an \"_off\" suffix."
                 alert.addButton(withTitle: "Unhide")
                 alert.addButton(withTitle: "Continue")
-                if alert.runModal() == NSAlertFirstButtonReturn {
+                if alert.runModal() == NSApplication.ModalResponse.alertFirstButtonReturn {
                     if prefix != "/usr/local" {
                         executeAsRoot("mv \(prefix)_off \(prefix)")
                     } else {
@@ -444,12 +444,12 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
         let source = (item as AnyObject).representedObject as! GSource
         if !((item as! NSTreeNode).parent!.representedObject is GSource) {
-            return outlineView.make(withIdentifier: "HeaderCell", owner:self) as! NSTableCellView
+            return outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "HeaderCell"), owner:self) as! NSTableCellView
         } else {
             if source.categories == nil && ((item as! NSTreeNode).parent!.representedObject is GSystem) {
-                return outlineView.make(withIdentifier: "LeafCell", owner:self) as! NSTableCellView
+                return outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "LeafCell"), owner:self) as! NSTableCellView
             } else {
-                return outlineView.make(withIdentifier: "DataCell", owner:self) as! NSTableCellView
+                return outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "DataCell"), owner:self) as! NSTableCellView
             }
         }
     }
@@ -917,7 +917,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         updateTabView(item)
     }
 
-    func toggleTableColumn(_ sender: NSMenuItem) {
+    @objc func toggleTableColumn(_ sender: NSMenuItem) {
         let column = sender.representedObject as! NSTableColumn
         column.isHidden = !column.isHidden
     }
@@ -941,7 +941,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         if (selectedItems?.count)! > 0 {
             item = selectedItems?[0] as? GItem
         }
-        if button.state == NSOnState {
+        if button.state == NSControl.StateValue.onState {
             previousSegment = segmentedControl.selectedSegment
             segmentedControl.selectedSegment = -1
             selectedSegment = "Shell"
@@ -956,10 +956,10 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
 
     func updateTabView(_ item: GItem!) {
         if segmentedControl.selectedSegment == -1 {
-            shellDisclosure.state = NSOnState
+            shellDisclosure.state = NSControl.StateValue.onState
             selectedSegment = "Shell"
         } else {
-            shellDisclosure.state = NSOffState
+            shellDisclosure.state = NSControl.StateValue.offState
             selectedSegment = segmentedControl.label(forSegment: segmentedControl.selectedSegment)!
         }
         clearButton.isHidden = (selectedSegment != "Shell")
@@ -1003,7 +1003,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     }
                 }
             }
-            if item != nil && item.screenshots != nil && screenshotsButton.state == NSOnState {
+            if item != nil && item.screenshots != nil && screenshotsButton.state == NSControl.StateValue.onState {
                 var htmlString = "<html><body>"
                 for url in item.screenshots.split() {
                     htmlString += "<img src=\"\(url)\" border=\"1\">"
@@ -1223,7 +1223,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     }
                     file = dest + "/" + file.replace(".app", "_app")
                     let parentDir = (file as NSString).deletingLastPathComponent
-                    NSWorkspace.shared().openFile(parentDir)
+                    NSWorkspace.shared.openFile(parentDir)
                 }
             }
             // TODO detect types
@@ -1234,7 +1234,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             if file.hasSuffix(".nib") {
                 execute("/usr/bin/plutil -convert xml1 -o - \(file)")
             } else {
-                NSWorkspace.shared().openFile(file)
+                NSWorkspace.shared.openFile(file)
             }
 
         } else if selectedSegment == "Deps" {
@@ -1381,13 +1381,13 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         return result!.stringValue!
     }
 
-    func minuteCheck(_ timer: Timer) {
+    @objc func minuteCheck(_ timer: Timer) {
         if let termName = self.shellWindow?.value(forKey: "name") as? NSString {
             if termName.contains("— sudo") {
-                if NSApplication.shared().isActive {
+                if NSApplication.shared.isActive {
                     raiseShell(self)
                 }
-                NSApplication.shared().requestUserAttention(.criticalRequest)
+                NSApplication.shared.requestUserAttention(.criticalRequest)
             }
         }
     }
@@ -1399,7 +1399,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         if title == "ItemsColumnsMenu" {
             for menuItem in menu.items {
                 let column = menuItem.representedObject as! NSTableColumn
-                menuItem.state = column.isHidden ? NSOffState : NSOnState
+                menuItem.state = column.isHidden ? NSControl.StateValue.offState : NSControl.StateValue.onState
             }
         } else {
             let selectedObjects = itemsController.selectedObjects as NSArray
@@ -1448,7 +1448,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                                 options.formUnion(currentOptions)
                                 for option in options {
                                     if option == availableOption {
-                                        optionsMenu.item(withTitle: availableOption)?.state = NSOnState
+                                        optionsMenu.item(withTitle: availableOption)?.state = NSControl.StateValue.onState
                                     }
                                 }
                             }
@@ -1503,7 +1503,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
 
             if title == "Install" {
                 if (item.source is GScrape) && item.URL != nil {
-                    NSWorkspace.shared().open(URL(string: item.URL)!)
+                    NSWorkspace.shared.open(URL(string: item.URL)!)
                     continue
                 }
                 mark = .install
@@ -1519,7 +1519,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
 
             } else if title == "Fetch" {
                 if (item.source is GScrape) && item.URL != nil {
-                    NSWorkspace.shared().open(URL(string: item.URL)!)
+                    NSWorkspace.shared.open(URL(string: item.URL)!)
                     continue
                 }
                 mark = .fetch
@@ -1538,7 +1538,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 if (item as! GPackage).markedOptions != nil {
                     markedOptions += (item as! GPackage).markedOptions.split()
                 }
-                if sender.state == NSOffState {
+                if sender.state == NSControl.StateValue.offState {
                     markedOptions.append(title)
                 } else {
                     markedOptions.remove(at: markedOptions.index(of: title)!)
@@ -1596,9 +1596,9 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             } else {
                 (currentMarked[0] as GSource).name = name
             }
-            NSApplication.shared().dockTile.badgeLabel = "\(marksCount)"
+            NSApplication.shared.dockTile.badgeLabel = "\(marksCount)"
         } else {
-            NSApplication.shared().dockTile.badgeLabel = nil
+            NSApplication.shared.dockTile.badgeLabel = nil
         }
         sourcesOutline.delegate = self
         applyButton.isEnabled = (marksCount > 0)
@@ -1816,7 +1816,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
 
     @IBAction func options(_ sender: AnyObject) {
         window.beginSheet(optionsPanel) {
-            if $0 == NSModalResponseStop {
+            if $0 == NSApplication.ModalResponse.stop {
                 // TODO
             }
         }
@@ -1864,7 +1864,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 var command = "command"
                 var addedSystems = [GSystem]()
 
-                if state == NSOnState {
+                if state == NSControl.StateValue.onState {
                     optionsStatus("Adding \(title)...")
                     agent.output("/bin/echo") // workaround for updating status in El Capitan
 
@@ -2027,7 +2027,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             infoText.backgroundColor = NSColor.black
             infoText.textColor = NSColor.green
             var cyanLinkAttribute = linkTextAttributes
-            cyanLinkAttribute?[NSForegroundColorAttributeName] = NSColor.cyan
+            cyanLinkAttribute?[NSAttributedStringKey.foregroundColor] = NSColor.cyan
             infoText.linkTextAttributes = cyanLinkAttribute
             (logText.superview!.superview! as! NSScrollView).borderType = .lineBorder
             logText.backgroundColor = NSColor.blue
@@ -2052,7 +2052,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             itemsTable.usesAlternatingRowBackgroundColors = true
             tableFont = NSFont.controlContentFont(ofSize: NSFont.systemFontSize(for: .small))
             tableTextColor = NSColor.black
-            itemsTable.gridStyleMask = NSTableViewGridLineStyle()
+            itemsTable.gridStyleMask = NSTableView.GridLineStyle()
             itemsTable.gridColor = NSColor.gridColor
             (sourcesOutline.superview!.superview! as! NSScrollView).borderType = .grooveBorder
             sourcesOutline.backgroundColor = sourceListBackgroundColor

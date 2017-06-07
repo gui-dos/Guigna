@@ -23,15 +23,15 @@ import Foundation
 
 class GItem: NSObject {
     let name: String
-    dynamic var version: String
+    @objc dynamic var version: String
     weak var source: GSource!
     weak var system: GSystem!
 
-    dynamic var status: GStatus
-    dynamic var mark: GMark
-    dynamic var installed: String!
-    dynamic var categories: String?
-    dynamic var license: String?
+    @objc dynamic var status: GStatus
+    @objc dynamic var mark: GMark
+    @objc dynamic var installed: String!
+    @objc dynamic var categories: String?
+    @objc dynamic var license: String?
     var _description: String?
     override var description: String {
         get {
@@ -120,17 +120,17 @@ class GStatusTransformer: ValueTransformer {
         let status = GStatus(rawValue: (value! as AnyObject).intValue)!
         switch status {
         case .inactive:
-            return NSImage(named: NSImageNameStatusNone)
+            return NSImage(named: NSImage.Name.statusNone)
         case .upToDate:
-            return NSImage(named: NSImageNameStatusAvailable)
+            return NSImage(named: NSImage.Name.statusAvailable)
         case .outdated:
-            return NSImage(named: NSImageNameStatusPartiallyAvailable)
+            return NSImage(named: NSImage.Name.statusPartiallyAvailable)
         case .updated:
-            return NSImage(named: "status-updated.tiff")
+            return NSImage(named: NSImage.Name(rawValue: "status-updated.tiff"))
         case .new:
-            return NSImage(named: "status-new.tiff")
+            return NSImage(named: NSImage.Name(rawValue: "status-new.tiff"))
         case .broken:
-            return NSImage(named: NSImageNameStatusUnavailable)
+            return NSImage(named: NSImage.Name.statusUnavailable)
         default:
             return nil
         }
@@ -156,17 +156,17 @@ class GMarkTransformer: ValueTransformer {
         let mark = GMark(rawValue: (value! as AnyObject).intValue)!
         switch mark {
         case .install:
-            return NSImage(named: NSImageNameAddTemplate)
+            return NSImage(named: NSImage.Name.addTemplate)
         case .uninstall:
-            return NSImage(named: NSImageNameRemoveTemplate)
+            return NSImage(named: NSImage.Name.removeTemplate)
         case .deactivate:
-            return NSImage(named: NSImageNameStopProgressTemplate)
+            return NSImage(named: NSImage.Name.stopProgressTemplate)
         case .upgrade:
-            return NSImage(named: NSImageNameRefreshTemplate)
+            return NSImage(named: NSImage.Name.refreshTemplate)
         case .fetch:
-            return NSImage(named: "source-native.tiff")
+            return NSImage(named: NSImage.Name(rawValue: "source-native.tiff"))
         case .clean:
-            return NSImage(named: NSImageNameActionTemplate)
+            return NSImage(named: NSImage.Name.actionTemplate)
         default:
             return nil
         }

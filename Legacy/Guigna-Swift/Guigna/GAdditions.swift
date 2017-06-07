@@ -53,24 +53,24 @@ extension String {
 
     subscript(range: CountableRange<Int>) -> String {
         let lowerIndex = self.index(startIndex, offsetBy: range.lowerBound)
-        return self[lowerIndex..<self.index(lowerIndex, offsetBy: range.upperBound - range.lowerBound)]
+        return String(self[lowerIndex..<self.index(lowerIndex, offsetBy: range.upperBound - range.lowerBound)])
     }
 
     subscript(range: CountableClosedRange<Int>) -> String {
         let lowerIndex = self.index(startIndex, offsetBy: range.lowerBound)
-        return self[lowerIndex...self.index(lowerIndex, offsetBy: range.upperBound - range.lowerBound)]
+        return String(self[lowerIndex...self.index(lowerIndex, offsetBy: range.upperBound - range.lowerBound)])
     }
     func substring(_ location: Int, _ length: Int) -> String {
         let locationIndex = self.index(startIndex, offsetBy: location)
-        return self[locationIndex..<self.index(locationIndex, offsetBy: length)]
+        return String(self[locationIndex..<self.index(locationIndex, offsetBy: length)])
     }
 
     func substring(from index: Int) -> String {
-        return self[self.index(startIndex, offsetBy: index)..<endIndex]
+        return String(self[self.index(startIndex, offsetBy: index)..<endIndex])
     }
 
     func substring(to index: Int) -> String {
-        return self[startIndex..<self.index(startIndex, offsetBy: index)]
+        return String(self[startIndex..<self.index(startIndex, offsetBy: index)])
     }
 
     func split(_ delimiter: String = " ") -> [String] {
