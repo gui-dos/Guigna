@@ -49,12 +49,12 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     @IBOutlet var sourcesController: NSTreeController!
     @IBOutlet var itemsController: NSArrayController!
 
-    var sources = [GSource]()
+    @objc var sources = [GSource]()
     var systems = [GSystem]()
     var scrapes = [GScrape]()
     var repos   = [GRepo]()
 
-    var items = [GItem]()
+    @objc var items = [GItem]()
     var allPackages = [GPackage]()
     var packagesIndex = [String: GPackage](minimumCapacity: 150000)
     var markedItems = [GItem]()
@@ -432,7 +432,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
     }
 
-    func splitView(_ splitView: NSSplitView, shouldAdjustSizeOfSubview subview: NSView) -> Bool {
+    @objc func splitView(_ splitView: NSSplitView, shouldAdjustSizeOfSubview subview: NSView) -> Bool {
         return !subview.isEqual(to: splitView.subviews[0])
     }
 
