@@ -1399,7 +1399,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         if title == "ItemsColumnsMenu" {
             for menuItem in menu.items {
                 let column = menuItem.representedObject as! NSTableColumn
-                menuItem.state = column.isHidden ? NSControl.StateValue.offState : NSControl.StateValue.onState
+                menuItem.state = column.isHidden ? .off : .on
             }
         } else {
             let selectedObjects = itemsController.selectedObjects as NSArray
