@@ -101,8 +101,7 @@ final class HomebrewCasks: GSystem {
             return pkgs
         }
 
-        let escapedCmd = cmd.replace(" ", "__")
-        var outputLines = output("/bin/sh -c export__PATH=\(prefix)/bin:$PATH__;__\(escapedCmd)__list__2>/dev/null").split("\n")
+        var outputLines = output("\(cmd) list").split("\n")
         outputLines.removeLast()
         var status: GStatus
 
@@ -171,18 +170,16 @@ final class HomebrewCasks: GSystem {
 
 
     override func info(_ item: GItem) -> String {
-        let escapedCmd = cmd.replace(" ", "__")
         if !self.isHidden {
-            return output("/bin/sh -c export__PATH=\(prefix)/bin:$PATH__;__\(escapedCmd)__info__\(item.name)")
+            return output("\(cmd) info \(item.name)")
         } else {
             return super.info(item)
         }
     }
 
     override func home(_ item: GItem) -> String {
-        let escapedCmd = cmd.replace(" ", "__")
         if !self.isHidden {
-            return output("/bin/sh -c export__PATH=\(prefix)/bin:$PATH__;__\(escapedCmd)__info__\(item.name)").split("\n")[1]
+            return output("\(cmd) info \(item.name)").split("\n")[1]
         } else {
             var homepage = ""
             for line in cat(item).split("\n") {
@@ -211,18 +208,16 @@ final class HomebrewCasks: GSystem {
     }
 
     override func contents(_ item: GItem) -> String {
-        let escapedCmd = cmd.replace(" ", "__")
         if !self.isHidden {
-            return output("/bin/sh -c export__PATH=\(prefix)/bin:$PATH__;__\(escapedCmd)__list__\(item.name)")
+            return output("\(cmd) list \(item.name)")
         } else {
             return ""
         }
     }
 
     override func cat(_ item: GItem) -> String {
-        let escapedCmd = cmd.replace(" ", "__")
         if !self.isHidden {
-            return output("/bin/sh -c export__PATH=\(prefix)/bin:$PATH__;__\(escapedCmd)__cat__\(item.name)")
+            return output("\(cmd) cat \(item.name)")
         } else {
             // TODO: repo
             return (try? String(contentsOfFile: "\(prefix)_off/Homebrew/Library/Taps/caskroom/homebrew-cask/Casks/\(item.name).rb", encoding: .utf8)) ?? ""
