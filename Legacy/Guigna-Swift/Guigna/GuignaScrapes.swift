@@ -325,26 +325,24 @@ class MacUpdate: GScrape {
     override func refresh() {
         var apps = [GItem]()
         let url = URL(string: "https://www.macupdate.com/page/\(pageNumber - 1)")!
-        if let xmlDoc = try? XMLDocument(contentsOf: url, options: .documentTidyHTML) {
-            let nodes = xmlDoc.rootElement()!["//tr[starts-with(@class,\"app_tr_row\")]"]
+        if let xmlDoc = try? XMLDocument(contentsOf: url, options: .documentTidyXML) {
+            // use tidy XML option to parse <meta itemprop>
+            let nodes = xmlDoc.rootElement()!["//tr[@class=\"app-row\"]"]
             for node in nodes {
-                var name = node[".//a"][0].stringValue!
-                let idx = name.rindex(" ")
-                var version = ""
-                if idx != NSNotFound {
-                    version = name.substring(from: idx + 1)
-                    name = name.substring(to: idx)
+                let name = node[".//span[@itemprop=\"name\"]"][0].stringValue!
+                let version = node[".//span[@itemprop=\"version\"]"][0].stringValue!
+                var description = node[".//span[@itemprop=\"description\"]"][0].stringValue!
+                let license = node[".//meta[@itemprop=\"license\"]"][0].attribute("content")!
+                let category = node[".//meta[@itemprop=\"applicationCategory\"]"][0].attribute("content")!
+                let id = node[".//a[starts-with(@class,\"app-name-link\")]"][0].href.split("/")[3]
+                let price = node[".//td[starts-with(@class,\"td-app-price\")]"][0].stringValue!
+                if price != "Free" {
+                    description += " - \(price)"
                 }
-                var description = node[".//span"][0].stringValue!
-                let price = node[".//span[contains(@class,\"appprice\")]"][0].stringValue!
-                let id = node[".//a"][0].href.split("/")[3]
                 let app = GItem(name: name, version: version, source: self, status: .available)
                 app.id = id
-                if price != "Free" {
-                    description += " - $\(price)"
-                } else {
-                    app.license = "Free"
-                }
+                app.categories = category
+                app.license = license
                 app.description = description
                 apps.append(app)
             }
@@ -356,6 +354,7 @@ class MacUpdate: GScrape {
         let nodes = agent.nodes(URL: log(item), XPath: "//a[@target=\"devsite\"]")
         let href = nodes[0].href.removingPercentEncoding
         return "http://www.macupdate.com\(href!)"
+        // TODO: get the orginal URL
     }
 
     override func log(_ item: GItem) -> String {
