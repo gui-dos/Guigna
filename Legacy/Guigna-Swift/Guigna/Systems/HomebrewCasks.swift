@@ -78,7 +78,7 @@ final class HomebrewCasks: GSystem {
             let components = line.trim(whitespaceCharacterSet).split(".rb:  name '")
             let name = (components[0] as NSString).lastPathComponent
             if let pkg = self[name] {
-                pkg.description = String((components.last!).characters.dropLast())
+                pkg.description = String((components.last!).dropLast())
             }
         }
         self.installed() // update status
