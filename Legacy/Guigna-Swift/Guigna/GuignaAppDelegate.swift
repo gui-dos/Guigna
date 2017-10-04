@@ -426,7 +426,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         return true
     }
 
-    func windowWillClose(_ notification: Notification) {
+    @objc func windowWillClose(_ notification: Notification) {
         if self.ready {
             var _ = NSAppleScript(source: "tell app \"Terminal\" to close (windows whose name contains \"Guigna \")")?.executeAndReturnError(nil)
         }
@@ -1091,7 +1091,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     }
 
 
-    func webView(_ sender: WebView, didStartProvisionalLoadForFrame: WebFrame) {
+    @objc func webView(_ sender: WebView, didStartProvisionalLoadForFrame: WebFrame) {
         var url = webView.mainFrameURL
         if url!.hasPrefix("about:") {
             url = cmdline.stringValue
@@ -1102,7 +1102,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
     }
 
-    func webView(_ sender: WebView, didFinishLoadForFrame: WebFrame) {
+    @objc func webView(_ sender: WebView, didFinishLoadForFrame: WebFrame) {
         let cmdlineString = cmdline.stringValue
         if cmdlineString.hasPrefix("Loading") {
             updateCmdLine(cmdlineString.substring(8, cmdlineString.length - 11))
@@ -1114,7 +1114,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
     }
 
-    func webView(_ sender: WebView, didFailProvisionalLoadWithError: NSError, forFrame: WebFrame) {
+    @objc func webView(_ sender: WebView, didFailProvisionalLoadWithError: NSError, forFrame: WebFrame) {
         let cmdlineString = cmdline.stringValue
         if cmdlineString.hasPrefix("Loading") {
             updateCmdLine("Failed: \(cmdlineString.substring(8, cmdlineString.length - 11))")
@@ -1127,7 +1127,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     }
 
 
-    func webView(_ sender: WebView!, mouseDidMoveOverElement elementInformation: [AnyHashable : AnyObject]!,modifierFlags: Int) {
+    @objc func webView(_ sender: WebView!, mouseDidMoveOverElement elementInformation: [AnyHashable : AnyObject]!,modifierFlags: Int) {
         if !statusField.stringValue.hasSuffix("...") {
             if let url = elementInformation[WebElementLinkURLKey] {
                 status((url as! URL).absoluteString)

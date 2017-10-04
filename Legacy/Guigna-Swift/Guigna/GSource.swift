@@ -13,10 +13,10 @@ enum GMode: Int {
 }
 
 
-class GSource: NSObject {
+@objc class GSource: NSObject {
 
     @objc var name: String
-    var categories: [AnyObject]?
+    @objc var categories: [AnyObject]?
     var items: [GItem]
     var agent: GAgent!
     var mode: GMode

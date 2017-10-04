@@ -21,11 +21,11 @@ import Foundation
 }
 
 
-class GItem: NSObject {
-    let name: String
+@objc class GItem: NSObject {
+    @objc let name: String
     @objc dynamic var version: String
-    weak var source: GSource!
-    weak var system: GSystem!
+    @objc weak var source: GSource!
+    @objc weak var system: GSystem!
 
     @objc dynamic var status: GStatus
     @objc dynamic var mark: GMark
