@@ -149,11 +149,11 @@ final class Homebrew: GSystem {
             }
             components.remove(at: 0)
             let versionCount = components.count
-            let version = components.last!
+            let version = components.first!
             var pkg: GPackage! = self[name]
             let latestVersion: String = (pkg == nil) ? "" : pkg.version
             if versionCount > 1 {
-                for i in 0..<versionCount - 1 {
+                for i in 1..<versionCount {
                     let inactivePkg = GPackage(name: name, version: latestVersion, system: self, status: .inactive)
                     inactivePkg.installed = components[i]
                     items.append(inactivePkg)
