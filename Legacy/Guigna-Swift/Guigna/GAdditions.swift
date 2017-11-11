@@ -12,10 +12,10 @@ protocol GAppDelegate {
     var shellColumns: Int { get }
 }
 
-extension Array {
+extension Array where Element: StringProtocol {
 
     func join(_ separator: String = " ") -> String {
-        return self._bridgeToObjectiveC().componentsJoined(by: separator)
+        return self.joined(separator: separator)
     }
 
 }

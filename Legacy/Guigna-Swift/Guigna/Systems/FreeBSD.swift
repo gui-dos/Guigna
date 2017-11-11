@@ -30,15 +30,15 @@ final class FreeBSD: GSystem {
                     let id = pkgDict["origin"] as! String
                     let version = pkgDict["version"] as! String
                     let description = pkgDict["comment"] as! String
-                    let categories = ((pkgDict["categories"] as! NSArray) as Array).join()
+                    let categories = (pkgDict["categories"] as! Array<String>).join()
                     var license: String = ""
                     let licenselogic = pkgDict["licenselogic"] as? String
                     if licenselogic != nil {
                         license = pkgDict["licenselogic"]! as! String
                     }
-                    let licenses = pkgDict["licenses"] as? NSArray
+                    let licenses = pkgDict["licenses"] as? Array<String>
                     if licenses != nil {
-                        license = ((pkgDict["licenses"]! as! NSArray) as Array).join()
+                        license = (pkgDict["licenses"]! as! Array<String>).join()
                     }
                     let homepage = pkgDict["www"] as! String
                     let pkg = GPackage(name: name, version: version, system: self, status: .available)
