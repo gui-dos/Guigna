@@ -327,7 +327,7 @@ class MacUpdate: GScrape {
         let url = URL(string: "https://www.macupdate.com/page/\(pageNumber - 1)")!
         if let xmlDoc = try? XMLDocument(contentsOf: url, options: .documentTidyXML) {
             // use tidy XML option to parse <meta itemprop>
-            let nodes = xmlDoc.rootElement()!["//tr[@class=\"app-row\"]"]
+            let nodes = xmlDoc.rootElement()!["//tr[starts-with(@class, \"app-row\")]"]
             for node in nodes {
                 let name = node[".//span[@itemprop=\"name\"]"][0].stringValue!
                 let version = node[".//span[@itemprop=\"version\"]"][0].stringValue!
