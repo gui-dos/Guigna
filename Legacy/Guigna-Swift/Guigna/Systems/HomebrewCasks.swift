@@ -144,7 +144,7 @@ final class HomebrewCasks: GSystem {
         return pkgs
     }
 
-    
+    // TODO: use `brew cask outdated`
     @discardableResult
     override func outdated() -> [GPackage] {
 
@@ -250,7 +250,7 @@ final class HomebrewCasks: GSystem {
 
 
     override func upgradeCmd(_ pkg: GPackage) -> String {
-        return "\(cmd) uninstall \(pkg.name); \(cmd) install \(pkg.name)"
+        return "\(cmd) upgrade \(pkg.name)"
     }
 
     override func cleanCmd(_ pkg: GPackage) -> String {
