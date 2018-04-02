@@ -58,6 +58,9 @@ final class Homebrew: GSystem {
         outputLines.removeLast()
         for line in outputLines {
             let components = line.split("|")
+            if components.count < 4 {
+                continue
+            }
             let fullName = components[0]
             var nameComponents = fullName.split("/")
             let name = nameComponents.removeLast()
