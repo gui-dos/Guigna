@@ -151,6 +151,7 @@ final class Homebrew: GSystem {
                 return pkgs
             }
             components.remove(at: 0)
+            components.sort()
             let versionCount = components.count
             let version = components.last!
             var pkg: GPackage! = self[name]
