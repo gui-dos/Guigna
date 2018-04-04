@@ -103,16 +103,12 @@ final class MacOS: GSystem {
                 let pkgId = ((results[0] as! NSDictionary)["trackId"]! as AnyObject).stringValue!
                 let url = URL(string: "http://itunes.apple.com/app/id\(pkgId)")!
                 if let xmlDoc = try? XMLDocument(contentsOf: url, options: .documentTidyHTML) {
-                    let mainDiv = xmlDoc.rootElement()!["//div[@id=\"main\"]"][0]
-                    let links = mainDiv["//div[@class=\"app-links\"]/a"]
+                    let body = xmlDoc.rootElement()!["//body"][0]
+                    let links = body[".//a[contains(@class,\"targeted-link\")]"]
                     // TODO: get screenshots via JSON
-                    let screenshotsImgs = mainDiv["//div[contains(@class, \"screenshots\")]//img"]
+                    let screenshotsImgs = body["//div[contains(@class,\"screenshots\")]//img"]
                     item.screenshots = screenshotsImgs.map {$0.attribute("src")!}.join()
-                    homepage = links[0].href
-                    if homepage == "http://" {
-                        homepage = links[1].href
-                    }
-                }
+                    homepage = links[0].href                }
             }
         }
         return homepage

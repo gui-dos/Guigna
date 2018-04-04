@@ -412,14 +412,11 @@ class AppShopper: GScrape {
     override func home(_ item: GItem) -> String {
         let url = URL(string: "http://itunes.apple.com/app/id" + item.id!.split()[0])!
         if let xmlDoc = try? XMLDocument(contentsOf: url, options: .documentTidyHTML) {
-            let mainDiv = xmlDoc.rootElement()!["//div[@id=\"main\"]"][0]
-            let links = mainDiv["//div[@class=\"app-links\"]/a"]
-            let screenshotsImgs = mainDiv["//div[contains(@class, \"screenshots\")]//img"]
+            let body = xmlDoc.rootElement()!["//body"][0]
+            let links = body[".//a[contains(@class,\"targeted-link\")]"]
+            let screenshotsImgs = body["//div[contains(@class,\"screenshots\")]//img"]
             item.screenshots = screenshotsImgs.map {$0.attribute("src")!}.join()
-            var homepage = links[0].href
-            if homepage == "http://" {
-                homepage = links[1].href
-            }
+            let homepage = links[0].href
             return homepage
         } else {
             return log(item)
@@ -483,14 +480,11 @@ class AppShopperIOS: GScrape {
     override func home(_ item: GItem) -> String {
         let url = URL(string: "http://itunes.apple.com/app/id" + item.id!.split()[0])!
         if let xmlDoc = try? XMLDocument(contentsOf: url, options: .documentTidyHTML) {
-            let mainDiv = xmlDoc.rootElement()!["//div[@id=\"main\"]"][0]
-            let links = mainDiv["//div[@class=\"app-links\"]/a"]
-            let screenshotsImgs = mainDiv["//div[contains(@class, \"screenshots\")]//img"]
+            let body = xmlDoc.rootElement()!["//body"][0]
+            let links = body[".//a[contains(@class,\"targeted-link\")]"]
+            let screenshotsImgs = body["//div[contains(@class,\"screenshots\")]//img"]
             item.screenshots = screenshotsImgs.map {$0.attribute("src")!}.join()
-            var homepage = links[0].href
-            if homepage == "http://" {
-                homepage = links[1].href
-            }
+            let homepage = links[0].href
             return homepage
         } else {
             return log(item)
