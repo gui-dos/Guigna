@@ -104,7 +104,7 @@ final class MacOS: GSystem {
                 let url = URL(string: "http://itunes.apple.com/app/id\(pkgId)")!
                 if let xmlDoc = try? XMLDocument(contentsOf: url, options: .documentTidyHTML) {
                     let body = xmlDoc.rootElement()!["//body"][0]
-                    let links = body[".//a[contains(@class,\"targeted-link\")]"]
+                    let links = body[".//a[contains(@class,\"external\")]"]
                     // TODO: get screenshots via JSON
                     let screenshotsImgs = body["//div[contains(@class,\"screenshots\")]//img"]
                     item.screenshots = screenshotsImgs.map {$0.attribute("src")!}.join()

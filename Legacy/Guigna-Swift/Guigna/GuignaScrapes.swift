@@ -413,7 +413,7 @@ class AppShopper: GScrape {
         let url = URL(string: "http://itunes.apple.com/app/id" + item.id!.split()[0])!
         if let xmlDoc = try? XMLDocument(contentsOf: url, options: .documentTidyHTML) {
             let body = xmlDoc.rootElement()!["//body"][0]
-            let links = body[".//a[contains(@class,\"targeted-link\")]"]
+            let links = body[".//a[contains(@class,\"external\")]"]
             let screenshotsImgs = body["//div[contains(@class,\"screenshots\")]//img"]
             item.screenshots = screenshotsImgs.map {$0.attribute("src")!}.join()
             let homepage = links[0].href
@@ -481,7 +481,7 @@ class AppShopperIOS: GScrape {
         let url = URL(string: "http://itunes.apple.com/app/id" + item.id!.split()[0])!
         if let xmlDoc = try? XMLDocument(contentsOf: url, options: .documentTidyHTML) {
             let body = xmlDoc.rootElement()!["//body"][0]
-            let links = body[".//a[contains(@class,\"targeted-link\")]"]
+            let links = body[".//a[contains(@class,\"external\")]"]
             let screenshotsImgs = body["//div[contains(@class,\"screenshots\")]//img"]
             item.screenshots = screenshotsImgs.map {$0.attribute("src")!}.join()
             let homepage = links[0].href
