@@ -315,7 +315,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 defaults["pkgsrcCVS"] = true
             }
         }
-        if defaults["pkgsrcStatus"] != nil && defaults["pkgsrcStatus"]  as! Int == GState.on.rawValue && (defaults["pkginStatus"] != nil && defaults["pkginStatus"] as! Int == GState.off.rawValue) {
+        if defaults["pkgsrcStatus"] != nil && defaults["pkgsrcStatus"]  as! Int == GState.on.rawValue || (defaults["pkginStatus"] != nil && defaults["pkginStatus"] as! Int == GState.off.rawValue) {
             let pkgsrc = Pkgsrc(agent: agent)
             if !"/usr/pkg/sbin/pkg_info".exists {
                 pkgsrc.mode = .online
