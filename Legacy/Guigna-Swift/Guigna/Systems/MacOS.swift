@@ -152,7 +152,7 @@ final class MacOS: GSystem {
 
 
     override func uninstallCmd(_ pkg: GPackage) -> String {
-        // SEE: https://github.com/caskroom/homebrew-cask/blob/master/lib/cask/pkg.rb
+        // SEE: https://github.com/homebrew/homebrew-cask/blob/master/lib/cask/pkg.rb
         var commands = [String]()
         let fileManager = FileManager.default
         var dirsToDelete = [String]()
@@ -199,7 +199,7 @@ final class MacOS: GSystem {
         return commands.join("; ")
         
         // TODO: disable Launchd daemons, clean Application Support, Caches, Preferences
-        // SEE: https://github.com/caskroom/homebrew-cask/blob/master/lib/cask/artifact/pkg.rb
+        // SEE: https://github.com/homebrew/homebrew-cask/blob/master/lib/cask/artifact/pkg.rb
     }
 
 }

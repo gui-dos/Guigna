@@ -7,7 +7,7 @@ final class HomebrewCasks: GSystem {
     init(agent: GAgent) {
         super.init(name: "Homebrew Casks", agent: agent)
         homepage = "http://caskroom.io"
-        logpage = "http://github.com/caskroom/homebrew-cask/commits"
+        logpage = "http://github.com/homebrew/homebrew-cask/commits"
         cmd = "\(prefix)/bin/brew cask"
     }
 
@@ -17,7 +17,7 @@ final class HomebrewCasks: GSystem {
         index.removeAll(keepingCapacity: true)
         items.removeAll(keepingCapacity: true)
 
-        var outputLines = output("/bin/sh -c /usr/bin/grep__\"__version__\"__-r__/\(prefix)/Homebrew/Library/Taps/caskroom/homebrew-*/Casks").split("\n")
+        var outputLines = output("/bin/sh -c /usr/bin/grep__\"__version__\"__-r__/\(prefix)/Homebrew/Library/Taps/homebrew/homebrew-*/Casks").split("\n")
         outputLines.removeLast()
         let whitespaceCharacterSet = CharacterSet.whitespaces
         for line in outputLines {
@@ -58,7 +58,7 @@ final class HomebrewCasks: GSystem {
             items.append(pkg)
             self[name] = pkg
         }
-        outputLines = output("/bin/sh -c /usr/bin/grep__\"license__\"__-r__/\(prefix)/Homebrew/Library/Taps/caskroom/homebrew-*/Casks").split("\n")
+        outputLines = output("/bin/sh -c /usr/bin/grep__\"license__\"__-r__/\(prefix)/Homebrew/Library/Taps/homebrew/homebrew-*/Casks").split("\n")
         outputLines.removeLast()
         for line in outputLines {
             let components = line.trim(whitespaceCharacterSet).split()
@@ -72,7 +72,7 @@ final class HomebrewCasks: GSystem {
                 }
             }
         }
-        outputLines = output("/bin/sh -c /usr/bin/grep__\"name__'\"__-r__/\(prefix)/Homebrew/Library/Taps/caskroom/homebrew-*/Casks").split("\n")
+        outputLines = output("/bin/sh -c /usr/bin/grep__\"name__'\"__-r__/\(prefix)/Homebrew/Library/Taps/homebrew/homebrew-*/Casks").split("\n")
         outputLines.removeLast()
         for line in outputLines {
             let components = line.trim(whitespaceCharacterSet).split(".rb:  name '")
@@ -198,7 +198,7 @@ final class HomebrewCasks: GSystem {
     override func log(_ item: GItem) -> String {
         var path = ""
         if (item as! GPackage).repo == nil {
-            path = "caskroom/homebrew-cask/commits/master/Casks"
+            path = "homebrew/homebrew-cask/commits/master/Casks"
         } else {
             let tokens = (item as! GPackage).repo!.split("/")
             let user = tokens[0]
@@ -220,7 +220,7 @@ final class HomebrewCasks: GSystem {
             return output("\(cmd) cat \(item.name)")
         } else {
             // TODO: repo
-            return (try? String(contentsOfFile: "\(prefix)_off/Homebrew/Library/Taps/caskroom/homebrew-cask/Casks/\(item.name).rb", encoding: .utf8)) ?? ""
+            return (try? String(contentsOfFile: "\(prefix)_off/Homebrew/Library/Taps/homebrew/homebrew-cask/Casks/\(item.name).rb", encoding: .utf8)) ?? ""
         }
     }
 
@@ -276,11 +276,11 @@ final class HomebrewCasks: GSystem {
     }
 
     class var setupCmd: String! {
-        return "\(prefix)/bin/brew tap caskroom/cask"
+        return "\(prefix)/bin/brew tap homebrew/cask"
     }
 
     class var removeCmd: String! {
-        return "\(prefix)/bin/brew untap caskroom/cask"
+        return "\(prefix)/bin/brew untap homebrew/cask"
     }
     
     override func verbosifiedCmd(_ command: String) -> String {
