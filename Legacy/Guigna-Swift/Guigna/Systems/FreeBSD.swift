@@ -41,7 +41,7 @@ final class FreeBSD: GSystem {
                         license = (pkgDict["licenses"]! as! Array<String>).join()
                     }
                     let homepage = pkgDict["www"] as! String
-                    let pkg = GPackage(name: name, version: version, system: self, status: .available)
+                    let pkg = GPackage(name: name, version: version, system: self)
                     pkg.description = description
                     pkg.categories = categories
                     pkg.id = id
@@ -70,7 +70,7 @@ final class FreeBSD: GSystem {
 //                let description = components[3]
 //                let category = components[6]
 //                let homepage = components[9]
-//                let pkg = GPackage(name: name, version: version, system: self, status: .available)
+//                let pkg = GPackage(name: name, version: version, system: self)
 //                pkg.categories = category
 //                pkg.description = description
 //                pkg.homepage = homepage
@@ -93,7 +93,7 @@ final class FreeBSD: GSystem {
                     var category = node.href
                     category = category.substring(to: category.index(".html"))
                     let description = descriptions[i].stringValue!
-                    let pkg = GPackage(name: name, version: version, system: self, status: .available)
+                    let pkg = GPackage(name: name, version: version, system: self)
                     pkg.categories = category
                     pkg.description = description
                     pkg.id = "\(category)/\(name)"

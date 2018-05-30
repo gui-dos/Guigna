@@ -28,7 +28,7 @@ final class MacPorts: GSystem {
                 let version = components[0]
                 // let revision = "..."
                 let categories = components.last!.split("/")[0]
-                let pkg = GPackage(name: name, version: version, system: self, status: .available)
+                let pkg = GPackage(name: name, version: version, system: self)
                 pkg.categories = categories
                 items.append(pkg)
                 self[name] = pkg

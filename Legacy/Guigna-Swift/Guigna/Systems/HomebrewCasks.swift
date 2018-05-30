@@ -36,7 +36,7 @@ final class HomebrewCasks: GSystem {
             let offset = version.hasPrefix(":") ? 1 : 2
             version = version.substring(1, version.length - offset)
             let repo = line.split("/Taps/")[1].split("/Casks/")[0].replace("homebrew-", "")
-            var pkg = GPackage(name: name, version: version, system: self, status: .available)
+            var pkg = GPackage(name: name, version: version, system: self)
             // avoid duplicate entries (i.e. aquamacs, opensesame)
             if self[pkg.name] != nil {
                 let prevPackage = self[pkg.name]

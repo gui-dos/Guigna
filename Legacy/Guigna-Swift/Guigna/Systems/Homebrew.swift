@@ -68,7 +68,7 @@ final class Homebrew: GSystem {
             let version = components[1]
             let bottle  = components[2]
             var desc    = components[3]
-            let pkg = GPackage(name: name, version: version, system: self, status: .available)
+            let pkg = GPackage(name: name, version: version, system: self)
             if bottle != "" {
                 desc = "🍶\(desc)"
             }
@@ -99,7 +99,7 @@ final class Homebrew: GSystem {
                     continue
                 }
                 let repo = "\(tokens[0])/\(tokens[1])"
-                let pkg = GPackage(name: name, version: "", system: self, status: .available)
+                let pkg = GPackage(name: name, version: "", system: self)
                 pkg.categories = tokens[1]
                 pkg.repo = repo
                 pkg.description = repo

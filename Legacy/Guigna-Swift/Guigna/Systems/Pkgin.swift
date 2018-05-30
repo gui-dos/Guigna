@@ -61,7 +61,7 @@ final class Pkgin: GSystem {
         //                let description = components[3]
         //                let category = components[6]
         //                let homepage = components[11]
-        //                let pkg = GPackage(name: name, version: version, system: self, status: .Available)
+        //                let pkg = GPackage(name: name, version: version, system: self)
         //                pkg.id = id
         //                pkg.categories = category
         //                pkg.description = description
@@ -93,7 +93,7 @@ final class Pkgin: GSystem {
         //                    if idx != NSNotFound {
         //                        description = description.substring(to: idx)
         //                    }
-        //                    let pkg = GPackage(name: name, version: version, system: self, status: .Available)
+        //                    let pkg = GPackage(name: name, version: version, system: self)
         //                    pkg.categories = category
         //                    pkg.description = description
         //                    let id = "\(category)/\(name)"
@@ -115,7 +115,7 @@ final class Pkgin: GSystem {
             idx = name.rindex("-")
             let version = name.substring(from: idx + 1)
             name = name.substring(to: idx)
-            let pkg = GPackage(name: name, version: version, system: self, status: .available)
+            let pkg = GPackage(name: name, version: version, system: self)
             let category = "[multiple]"
             pkg.categories = category
             pkg.description = description

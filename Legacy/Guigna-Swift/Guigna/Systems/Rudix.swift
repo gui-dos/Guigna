@@ -47,7 +47,7 @@ final class Rudix: GSystem {
             }
             var version = components[1]
             version += "-" + components[2].split(".")[0]
-            let pkg = GPackage(name: name, version: version, system: self, status: .available)
+            let pkg = GPackage(name: name, version: version, system: self)
             if self[name] != nil {
                 var found: Int?
                 for (i, pkg) in items.enumerated() {

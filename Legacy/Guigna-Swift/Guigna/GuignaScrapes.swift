@@ -50,7 +50,7 @@ class PkgsrcSE: GScrape {
                 var description = comments[i].stringValue!
                 description = description.substring(to: description.index("\n"))
                 description = description.substring(from: description.index(": ") + 2)
-                let entry = GItem(name: name, version: version, source: self, status: .available)
+                let entry = GItem(name: name, version: version, source: self)
                 entry.id = id
                 entry.description = description
                 entry.categories = category
@@ -99,7 +99,7 @@ class Freecode: GScrape {
                     let description = node[".//p[@itemprop='featureList']"][0].stringValue!
                     let tagNodes = node[".//p[@itemprop='keywords']/a"]
                     var tags = tagNodes.map {$0.stringValue!}
-                    let proj = GItem(name: name, version: version, source: self, status: .available)
+                    let proj = GItem(name: name, version: version, source: self)
                     proj.id = id
                     proj.license = tags[0]
                     tags.remove(at: 0)
@@ -143,7 +143,7 @@ class Debian: GScrape {
                 let components = link.split()
                 let name = components[1]
                 let version = components[2]
-                let pkg = GItem(name: name, version: version, source: self, status: .available)
+                let pkg = GItem(name: name, version: version, source: self)
                 pkgs.append(pkg)
             }
         }
@@ -194,7 +194,7 @@ class CocoaPods: GScrape {
                 let home = descriptionNode[".//li[starts-with(.,'Homepage:')]/a"][0].stringValue!
                 var date = node["pubDate"][0].stringValue!
                 date = date.substring(4, 12)
-                let pod = GItem(name: name, version: version, source: self, status: .available)
+                let pod = GItem(name: name, version: version, source: self)
                 pod.description = description
                 pod.homepage = home
                 pod.license = license
@@ -232,7 +232,7 @@ class PyPI: GScrape {
                 let name = node[".//a"][0].stringValue!
                 let version = node[".//span"][0].stringValue!
                 let description = node["p"][0].stringValue!
-                let pkg = GItem(name: name, version: version, source: self, status: .available)
+                let pkg = GItem(name: name, version: version, source: self)
                 pkg.description = description
                 pkgs.append(pkg)
             }
@@ -276,7 +276,7 @@ class RubyGems: GScrape {
                 let spans = node[".//span"]
                 // let date = spans[0].stringValue!
                 let info = spans[1].stringValue!
-                let gem = GItem(name: name, version: version, source: self, status: .available)
+                let gem = GItem(name: name, version: version, source: self)
                 gem.description = info
                 gems.append(gem)
             }
@@ -330,7 +330,7 @@ class MacUpdate: GScrape {
                 if price != "Free" {
                     description += " - \(price)"
                 }
-                let app = GItem(name: name, version: version, source: self, status: .available)
+                let app = GItem(name: name, version: version, source: self)
                 app.id = id
                 app.categories = category
                 app.license = license
@@ -384,7 +384,7 @@ class AppShopper: GScrape {
                 let price = node[".//div[@class=\"price\"]"][0].children![0].stringValue!
                 // TODO:NSXML UTF8 encoding
                 let localPrice = price.trim(whitespaceCharacterSet).replace("â‚¬", "€")
-                let app = GItem(name: name, version: version, source: self, status: .available)
+                let app = GItem(name: name, version: version, source: self)
                 app.id = id
                 app.categories = category
                 if localPrice != "Free" {
@@ -452,7 +452,7 @@ class AppShopperIOS: GScrape {
                 let price = node[".//div[@class=\"price\"]"][0].children![0].stringValue!
                 // TODO:NSXML UTF8 encoding
                 let localPrice = price.trim(whitespaceCharacterSet).replace("â‚¬", "€")
-                let app = GItem(name: name, version: version, source: self, status: .available)
+                let app = GItem(name: name, version: version, source: self)
                 app.id = id
                 app.categories = category
                 if localPrice != "Free" {
@@ -514,7 +514,7 @@ class MacTorrents: GScrape {
                     version = name.substring(from: idx + 1)
                     name = name.substring(to: idx)
                 }
-                let app = GItem(name: name, version: version, source: self, status: .available)
+                let app = GItem(name: name, version: version, source: self)
                 app.homepage =  node[".//a"][0].href
                 apps.append(app)
                 index["\(name)-\(version)"] = app

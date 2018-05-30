@@ -31,7 +31,7 @@ final class Native: GRepo {
                 let version = columns[1].stringValue!.trim(whitespaceCharacterSet)
                 let homepage = columns[3].stringValue!.trim(whitespaceCharacterSet)
                 let url = columns[4].stringValue!.trim(whitespaceCharacterSet)
-                let pkg = GItem(name: name, version: version, source: self, status: .available)
+                let pkg = GItem(name: name, version: version, source: self)
                 pkg.homepage = homepage
                 pkg.description = url
                 pkg.URL = url

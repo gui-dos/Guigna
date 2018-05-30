@@ -6,7 +6,7 @@ final class GPackage: GItem {
     var markedOptions: String!
     var repo: String?
 
-    init(name: String, version: String, system: GSystem, status: GStatus) {
+    init(name: String, version: String, system: GSystem, status: GStatus = .available) {
         super.init(name: name, version: version, source: system, status: status)
         self.system = system
     }

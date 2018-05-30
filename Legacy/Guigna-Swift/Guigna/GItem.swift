@@ -49,7 +49,7 @@ import Foundation
     var URL: String!
     var id: String!
 
-    init(name: String, version: String, source: GSource, status: GStatus) {
+    init(name: String, version: String, source: GSource, status: GStatus = .available) {
         self.name = name
         self.version = version
         self.source = source

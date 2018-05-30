@@ -30,7 +30,7 @@ final class Fink: GSystem {
                     }
                     let name = dataRows[0].stringValue!
                     let version = dataRows[1].stringValue!
-                    let pkg = GPackage(name: name, version: version, system: self, status: .available)
+                    let pkg = GPackage(name: name, version: version, system: self)
                     pkg.description = description
                     items.append(pkg)
                     self[name] = pkg
