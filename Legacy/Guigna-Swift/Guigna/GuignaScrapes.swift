@@ -218,48 +218,39 @@ class PyPI: GScrape {
 
     init(agent: GAgent) {
         super.init(name: "PyPI", agent: agent)
-        homepage = "http://pypi.python.org/pypi"
-        itemsPerPage = 40
+        homepage = "https://pypi.org"
+        itemsPerPage = 20
         cmd = "pip"
     }
 
     override func refresh() {
-        var eggs = [GItem]()
-        let url = URL(string: homepage)!
+        var pkgs = [GItem]()
+        let url = URL(string: "https://pypi.org/search/?q=+&o=-created")!
         if let xmlDoc = try? XMLDocument(contentsOf: url, options: .documentTidyHTML) {
-            var nodes = xmlDoc.rootElement()!["//table[@class=\"list\"]//tr"]
-            nodes.remove(at: 0)
-            nodes.removeLast()
+            let nodes = xmlDoc.rootElement()!["//div[@class=\"package-snippet\"]"]
             for node in nodes {
-                let rowData = node["td"]
-                // let date = rowData[0].stringValue!
-                let link = rowData[1]["a"][0].href
-                let splits = link.split("/")
-                let name = splits[splits.count - 2]
-                let version = splits.last!
-                let description = rowData[2].stringValue!
-                let egg = GItem(name: name, version: version, source: self, status: .available)
-                egg.description = description
-                eggs.append(egg)
+                let name = node[".//a"][0].stringValue!
+                let version = node[".//span"][0].stringValue!
+                let description = node["p"][0].stringValue!
+                let pkg = GItem(name: name, version: version, source: self, status: .available)
+                pkg.description = description
+                pkgs.append(pkg)
             }
         }
-        items = eggs
+        items = pkgs
     }
 
     override func home(_ item: GItem) -> String {
         var homeURL = self.log(item)
-        let links = agent.nodes(URL: self.log(item), XPath:"//ul[@class=\"nodot\"]/li/a")
+        let links = agent.nodes(URL: self.log(item), XPath:"//a[.='Homepage']")
         if links.count > 0 {
-            let link = links[0]
-            if !link.href.hasPrefix("/pypi") {
-                homeURL = link.stringValue!
-            }
+            homeURL = links[0].href
         }
         return homeURL
     }
 
     override func log(_ item: GItem) -> String {
-        return "\(self.homepage!)/\(item.name)/\(item.version)"
+        return "\(self.homepage!)/project/\(item.name)/"
     }
 }
 

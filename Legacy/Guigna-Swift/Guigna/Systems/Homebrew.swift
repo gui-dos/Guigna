@@ -349,6 +349,10 @@ final class Homebrew: GSystem {
         }
     }
 
+    override func deactivateCmd(_ pkg: GPackage) -> String {
+        return "\(cmd) unlink \(pkg.name)"
+    }
+
     override func upgradeCmd(_ pkg: GPackage) -> String {
         return "\(cmd) upgrade \(pkg.name)"
     }

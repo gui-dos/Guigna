@@ -513,6 +513,9 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
 
                     } else if mark == .fetch {
                         marksCount -= 1
+
+                    } else if mark == .clean {
+                        marksCount -= 1
                     }
 
                     let itemSystem = item.system!
