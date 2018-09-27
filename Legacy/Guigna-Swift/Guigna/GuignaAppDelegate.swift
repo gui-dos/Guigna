@@ -210,7 +210,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             shell.setValue(NSColor(calibratedRed: 1.0, green: 1.0, blue: 0.8, alpha: 1.0), forKey: "backgroundColor") // light yellow
             shell.setValue(NSColor(calibratedRed: 0.0, green: 0.0, blue: 0.0, alpha: 1.0), forKey: "normalTextColor")
             tableFont = NSFont.controlContentFont(ofSize: NSFont.systemFontSize(for: .small))
-            tableTextColor = NSColor.black
+            tableTextColor = NSColor.controlTextColor
             logTextColor = NSColor.black
         } else {
             themesSegmentedControl.selectedSegment = ["Default", "Retro"].index(of: theme)!
@@ -2051,10 +2051,10 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         } else { // Default theme
             window.backgroundColor = NSColor.windowBackgroundColor
             segmentedControl.superview!.layer!.backgroundColor = NSColor.windowBackgroundColor.cgColor
-            itemsTable.backgroundColor = NSColor.white
+            itemsTable.backgroundColor = NSColor.controlBackgroundColor
             itemsTable.usesAlternatingRowBackgroundColors = true
             tableFont = NSFont.controlContentFont(ofSize: NSFont.systemFontSize(for: .small))
-            tableTextColor = NSColor.black
+            tableTextColor = NSColor.controlTextColor
             itemsTable.gridStyleMask = NSTableView.GridLineStyle()
             itemsTable.gridColor = NSColor.gridColor
             (sourcesOutline.superview!.superview! as! NSScrollView).borderType = .grooveBorder
