@@ -226,11 +226,11 @@ class PyPI: GScrape {
     override func refresh() {
         var pkgs = [GItem]()
         let url = URL(string: "https://pypi.org/search/?q=+&o=-created")!
-        if let xmlDoc = try? XMLDocument(contentsOf: url, options: .documentTidyHTML) {
-            let nodes = xmlDoc.rootElement()!["//div[@class=\"package-snippet\"]"]
+        if let xmlDoc = try? XMLDocument(contentsOf: url, options: .documentTidyXML) {
+            let nodes = xmlDoc.rootElement()!["//a[@class=\"package-snippet\"]"]
             for node in nodes {
-                let name = node[".//a"][0].stringValue!
-                let version = node[".//span"][0].stringValue!
+                let name = node[".//h3/span"][0].stringValue!
+                let version = node[".//h3/span"][1].stringValue!
                 let description = node["p"][0].stringValue!
                 let pkg = GItem(name: name, version: version, source: self)
                 pkg.description = description
