@@ -254,7 +254,7 @@ final class HomebrewCasks: GSystem {
     }
 
     override func cleanCmd(_ pkg: GPackage) -> String {
-        return "\(cmd) zap \(pkg.name) ; \(cmd) cleanup --force \(pkg.name)"
+        return "\(cmd) zap \(pkg.name) ; \(cmd) cleanup \(pkg.name)"
     }
 
     //    override var updateCmd: String! {
