@@ -286,13 +286,9 @@ class RubyGems: GScrape {
 
     override func home(_ item: GItem) -> String {
         var page = log(item)
-        let links = agent.nodes(URL:page, XPath:"//div[@class=\"links\"]/a")
+        let links = agent.nodes(URL: page, XPath: "//a[@id=\"home\"]")
         if links.count > 0 {
-            for link in links {
-                if link.stringValue! == "Homepage" {
-                    page = link.href
-                }
-            }
+            page = links[0].href
         }
         return page
     }
@@ -572,14 +568,14 @@ class MacTorrents: GScrape {
 
 
 class Chocolatey: GScrape {
-    
+
     init(agent: GAgent) {
         super.init(name: "Chocolatey", agent: agent)
         homepage = "https://chocolatey.org/"
         itemsPerPage = 25
         cmd = "choco"
     }
-    
+
     override func refresh() {
         var pkgs = [GItem]()
         let url = URL(string: "https://chocolatey.org/packages?q=&prerelease=true&sortOrder=package-created")!
@@ -598,7 +594,7 @@ class Chocolatey: GScrape {
         }
         items = pkgs
     }
-    
+
     override func home(_ item: GItem) -> String {
         var page = log(item)
         let links = agent.nodes(URL: page, XPath: "//ul[@class=\"links\"]/li/a")
@@ -609,9 +605,9 @@ class Chocolatey: GScrape {
         }
         return page
     }
-    
+
     override func log(_ item: GItem) -> String {
         return "\(self.homepage!)/packages/\(item.id!)"
     }
-    
+
 }
