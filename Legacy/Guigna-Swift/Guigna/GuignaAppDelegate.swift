@@ -726,7 +726,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             }
             for system in systemsToUpdate {
                 status("Syncing \(system.name)...")
-                log("😺===> \(system.updateCmd)\n")
+                log("😺===> \(system.updateCmd!)\n")
                 queue.async {
                     let outputLog = self.agent.output(system.updateCmd)
                     DispatchQueue.main.sync {

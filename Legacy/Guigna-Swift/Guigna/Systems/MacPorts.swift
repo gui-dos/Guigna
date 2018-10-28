@@ -156,7 +156,7 @@ final class MacPorts: GSystem {
             }
             if variants != nil {
                 variants = variants.replace(" ", "+")
-                version = "\(version) +\(variants)"
+                version = "\(version) +\(variants!)"
             }
             status = components.count == 2 ? .inactive : .upToDate
             var pkg: GPackage! = self[name]
@@ -253,7 +253,7 @@ final class MacPorts: GSystem {
             var stringValue: String!
             for key in keys {
                 stringValue = key.stringValue!
-                info = info.replace(stringValue, "\n\n\(stringValue)\n")
+                info = info.replace(stringValue, "\n\n\(stringValue!)\n")
             }
             return info
         }

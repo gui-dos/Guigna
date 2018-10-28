@@ -14,7 +14,7 @@ final class Pkgsrc: GSystem {
     // include category for managing duplicates of xp, binutils, fuse, p5-Net-CUPS
     override func key(package pkg: GPackage) -> String {
         if pkg.id != nil {
-            return "\(pkg.id)-\(name)"
+            return "\(pkg.id!)-\(name)"
         } else {
             return "\(pkg.categories!.split()[0])/\(pkg.name)-\(name)"
         }
@@ -246,7 +246,7 @@ final class Pkgsrc: GSystem {
 
     override func installCmd(_ pkg: GPackage) -> String {
         if pkg.id != nil {
-            return "cd /usr/pkgsrc/\(pkg.id); sudo /usr/pkg/bin/bmake install clean clean-depends"
+            return "cd /usr/pkgsrc/\(pkg.id!); sudo /usr/pkg/bin/bmake install clean clean-depends"
         } else {
             return "cd /usr/pkgsrc/\(pkg.categories!)/\(pkg.name); sudo /usr/pkg/bin/bmake install clean clean-depends"
         }
@@ -259,7 +259,7 @@ final class Pkgsrc: GSystem {
 
     override func cleanCmd(_ pkg: GPackage) -> String {
         if pkg.id != nil {
-            return "cd /usr/pkgsrc/\(pkg.id); sudo /usr/pkg/bin/bmake clean clean-depends"
+            return "cd /usr/pkgsrc/\(pkg.id!); sudo /usr/pkg/bin/bmake clean clean-depends"
         } else {
             return "cd /usr/pkgsrc/\(pkg.categories!)/\(pkg.name); sudo /usr/pkg/bin/bmake clean clean-depends"
         }

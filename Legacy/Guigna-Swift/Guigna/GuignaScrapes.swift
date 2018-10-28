@@ -583,7 +583,7 @@ class Chocolatey: GScrape {
             let nodes = xmlDoc.rootElement()!["//ol/li"]
             for node in nodes {
                 let mainLink = node[".//div[@class=\"main\"]//a"][0]
-                var parts = mainLink.stringValue!.split(" ")
+                let parts = mainLink.stringValue!.split(" ")
                 let version = parts.last!
                 let name = parts.dropLast().join()
                 let id = mainLink.href.split("/")[2...].join("/")
