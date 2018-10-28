@@ -19,6 +19,7 @@
 		C56062DC198D0833001F0F93 /* GLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56062DB198D0833001F0F93 /* GLibrary.swift */; };
 		C562EF901993BA16001309A9 /* ITunes.swift in Sources */ = {isa = PBXBuildFile; fileRef = C562EF8F1993BA16001309A9 /* ITunes.swift */; };
 		C5635BEB1952F53F007424E2 /* MacPorts.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5635BEA1952F53F007424E2 /* MacPorts.swift */; };
+		C57135B2218472DA00D55EFA /* source-chocolatey.tiff in Resources */ = {isa = PBXBuildFile; fileRef = C57135B1218472DA00D55EFA /* source-chocolatey.tiff */; };
 		C5779CAA1969922B00755926 /* HomebrewCasks.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5779CA91969922B00755926 /* HomebrewCasks.swift */; };
 		C5A1214F1945D91800A351A8 /* GAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A1214E1945D91800A351A8 /* GAgent.swift */; };
 		C5A1215B1945E4A700A351A8 /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5A1215A1945E4A700A351A8 /* ScriptingBridge.framework */; };
@@ -93,6 +94,7 @@
 		C562EF8F1993BA16001309A9 /* ITunes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ITunes.swift; sourceTree = "<group>"; };
 		C562FE281D1EE612002603EC /* TODO.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = TODO.md; path = ../../TODO.md; sourceTree = "<group>"; };
 		C5635BEA1952F53F007424E2 /* MacPorts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MacPorts.swift; sourceTree = "<group>"; };
+		C57135B1218472DA00D55EFA /* source-chocolatey.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "source-chocolatey.tiff"; sourceTree = "<group>"; };
 		C5779CA91969922B00755926 /* HomebrewCasks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomebrewCasks.swift; sourceTree = "<group>"; };
 		C5A00A9A1B174F7600642B26 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
 		C5A1214E1945D91800A351A8 /* GAgent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GAgent.swift; sourceTree = "<group>"; };
@@ -258,6 +260,7 @@
 			children = (
 				C5DB9B6B1945A9B70005244E /* guigna.icns */,
 				C5DB9B6C1945A9B70005244E /* source-appshopper.tiff */,
+				C57135B1218472DA00D55EFA /* source-chocolatey.tiff */,
 				C5DB9B6D1945A9B70005244E /* source-cocoapods.tiff */,
 				C5DB9B6E1945A9B70005244E /* source-debian.tiff */,
 				C5DB9B6F1945A9B80005244E /* source-freebsd.tiff */,
@@ -402,6 +405,7 @@
 				C52777611DF36A81005395E0 /* source-mactorrents.tiff in Resources */,
 				C5DB9B9B1945A9B80005244E /* system-itunes.tiff in Resources */,
 				C5DB9B9F1945A9B80005244E /* system-rudix.tiff in Resources */,
+				C57135B2218472DA00D55EFA /* source-chocolatey.tiff in Resources */,
 				C5DB9B881945A9B80005244E /* guigna.icns in Resources */,
 				C5DB9B9D1945A9B80005244E /* system-macports.tiff in Resources */,
 				C5DB9BA01945A9B80005244E /* toolbar-apply.tiff in Resources */,

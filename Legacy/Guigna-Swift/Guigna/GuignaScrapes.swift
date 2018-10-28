@@ -569,3 +569,49 @@ class MacTorrents: GScrape {
         return item.homepage
     }
 }
+
+
+class Chocolatey: GScrape {
+    
+    init(agent: GAgent) {
+        super.init(name: "Chocolatey", agent: agent)
+        homepage = "https://chocolatey.org/"
+        itemsPerPage = 25
+        cmd = "choco"
+    }
+    
+    override func refresh() {
+        var pkgs = [GItem]()
+        let url = URL(string: "https://chocolatey.org/packages?q=&prerelease=true&sortOrder=package-created")!
+        if let xmlDoc = try? XMLDocument(contentsOf: url, options: .documentTidyHTML) {
+            let nodes = xmlDoc.rootElement()!["//ol/li"]
+            for node in nodes {
+                let mainLink = node[".//div[@class=\"main\"]//a"][0]
+                var parts = mainLink.stringValue!.split(" ")
+                let version = parts.last!
+                let name = parts.dropLast().join()
+                let id = mainLink.href.split("/")[2...].join("/")
+                let pkg = GItem(name: name, version: version, source: self)
+                pkg.id = id
+                pkgs.append(pkg)
+            }
+        }
+        items = pkgs
+    }
+    
+    override func home(_ item: GItem) -> String {
+        var page = log(item)
+        let links = agent.nodes(URL: page, XPath: "//ul[@class=\"links\"]/li/a")
+        if links.count > 0 {
+            if let home = links.first(where: { $0.stringValue! == "Software Site" }) {
+                page = home.href
+            }
+        }
+        return page
+    }
+    
+    override func log(_ item: GItem) -> String {
+        return "\(self.homepage!)/packages/\(item.id!)"
+    }
+    
+}

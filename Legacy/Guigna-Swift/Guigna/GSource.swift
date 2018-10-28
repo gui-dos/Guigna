@@ -130,6 +130,8 @@ class GSourceTransformer: ValueTransformer {
             return NSImage(named: NSImage.Name("source-mactorrents.tiff"))
         case "AppShopper", "AppShopper iOS":
             return NSImage(named: NSImage.Name("source-appshopper.tiff"))
+        case "Chocolatey":
+            return NSImage(named: NSImage.Name("source-chocolatey.tiff"))
         case "installed":
             return NSImage(named: .statusAvailable)
         case "outdated":

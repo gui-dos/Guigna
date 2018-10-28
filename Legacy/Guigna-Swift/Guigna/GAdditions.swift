@@ -20,6 +20,13 @@ extension Array where Element: StringProtocol {
 
 }
 
+extension ArraySlice where Element: StringProtocol {
+
+    func join(_ separator: String = " ") -> String {
+        return self.joined(separator: separator)
+    }
+
+}
 
 extension String {
 
