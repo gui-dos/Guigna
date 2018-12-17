@@ -1887,7 +1887,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                         system = MacPorts(agent: agent)
                         let escapedAppDir = APPDIR.replace(" ","__")
                         if !command.exists {
-                            agent.output("/usr/bin/rsync -rtzv rsync://rsync.macports.org/release/tarballs/PortIndex_darwin_15_i386/PortIndex \(escapedAppDir)/MacPorts/PortIndex")
+                            agent.output("/usr/bin/rsync -rtzv rsync://rsync.macports.org/release/tarballs/PortIndex_darwin_18_i386/PortIndex \(escapedAppDir)/MacPorts/PortIndex")
                             system.mode = .online
                         }
                         addedSystems.append(system)
@@ -2121,7 +2121,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             execute(Homebrew.removeCmd, baton: "relaunch")
 
         } else if title == "Fetch MacPorts PortIndex" {
-            execute("cd ~/Library/Application\\ Support/Guigna/MacPorts; /usr/bin/rsync -rtzv rsync://rsync.macports.org/release/tarballs/PortIndex_darwin_15_i386/PortIndex PortIndex", baton: "relaunch")
+            execute("cd ~/Library/Application\\ Support/Guigna/MacPorts; /usr/bin/rsync -rtzv rsync://rsync.macports.org/release/tarballs/PortIndex_darwin_18_i386/PortIndex PortIndex", baton: "relaunch")
             
         } else if title == "Install Rudix" {
             execute(Rudix.setupCmd, baton: "relaunch")

@@ -369,7 +369,7 @@ final class MacPorts: GSystem {
     override var updateCmd: String! {
         get {
             if mode == .online {
-                return "sudo cd; cd ~/Library/Application\\ Support/Guigna/Macports; /usr/bin/rsync -rtzv rsync://rsync.macports.org/release/tarballs/PortIndex_darwin_15_i386/PortIndex PortIndex"
+                return "sudo cd; cd ~/Library/Application\\ Support/Guigna/Macports; /usr/bin/rsync -rtzv rsync://rsync.macports.org/release/tarballs/PortIndex_darwin_18_i386/PortIndex PortIndex"
             } else {
                 return "sudo \(cmd) -d selfupdate"
             }
