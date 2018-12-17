@@ -132,7 +132,7 @@ extension XMLNode {
 extension NSUserDefaultsController {
     subscript(key: String) -> Any! {
         get {
-            if let value = (self.values as AnyObject).value(forKey: key) as Any! {
+            if let value = (self.values as AnyObject).value(forKey: key) {
                 return value
             } else {
                 return nil
