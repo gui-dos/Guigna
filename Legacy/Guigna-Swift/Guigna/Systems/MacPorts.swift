@@ -74,6 +74,9 @@ final class MacPorts: GSystem {
                         }
                         s.scanString("}", into: nil)
                         range = value.range(of: "{")
+                        if range.location == NSNotFound && s.scanUpTo(" ", into: &str) {
+                            value.append(str! as String)
+                        }
                     }
                     switch key! {
                     case "version":
