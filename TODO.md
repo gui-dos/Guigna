@@ -1,6 +1,8 @@
 FIXME
 -----
 
+* Mojave:
+  - not working raiseBrowser() and disclusure triangles for categories
 * Swift:
   - filter() for inactive packages should be called only for MacPorts and Homebrew
 * Scraping the version numbers and the descriptions from Homebrew formulae is excessively slow
@@ -15,11 +17,13 @@ TODO
 
 * Swift:
   - complete port of inactive packages management
+  - make use of Array's removeAll
 * Objective-C:
   - port new code from [“swift2”](https://github.com/gui-dos/Guigna/releases/tag/swift2)
     release on (15th June)
 * Make use of `brew info -d —json=v1 --all`
 * Make use of Storyboards and NSViewControllers
+* Make use of WKWebView and NSURLSession
 * Preload a cached index to speed up startup
 * Scroll the webview by pressing the spacebar
 * Core Data, predicate editor

@@ -679,7 +679,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
     }
 
-    @IBAction func syncAction(_ sender: AnyObject) {
+    @IBAction func syncAction(_ sender: Any) {
         tableProgressIndicator.startAnimation(self)
         info("[Contents not yet available]")
         updateCmdLine("")
@@ -688,7 +688,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         self.sync(sender)
     }
 
-    func sync(_ sender: AnyObject) {
+    func sync(_ sender: Any) {
         self.ready = false
         status("Syncing...")
         var systemsToUpdateAsync = [GSystem]()
@@ -1089,7 +1089,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         cmdline.display()
     }
 
-    func clear(_ sender: AnyObject) {
+    func clear(_ sender: Any) {
         logText.string = ""
     }
 
@@ -1175,7 +1175,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     }
 
 
-    @IBAction func moreScrapes(_ sender: AnyObject) {
+    @IBAction func moreScrapes(_ sender: Any) {
         tableProgressIndicator.startAnimation(self)
         let scrape = sourcesController.selectedObjects[0] as! GScrape
         scrape.pageNumber += 1
@@ -1184,7 +1184,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         tableProgressIndicator.stopAnimation(self)
     }
 
-    @IBAction func toggleScreenshots(_ sender: AnyObject) {
+    @IBAction func toggleScreenshots(_ sender: Any) {
         let selectedItems = itemsController.selectedObjects
         var item: GItem? = nil
         if (selectedItems?.count)! > 0 {
@@ -1271,7 +1271,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
     }
 
-    @IBAction func executeCmdLine(_ sender: AnyObject) {
+    @IBAction func executeCmdLine(_ sender: Any) {
         let selectedItems = itemsController.selectedObjects
         var item: GItem? = nil
         if (selectedItems?.count)! > 0 {
@@ -1483,12 +1483,12 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     }
 
 
-    @IBAction func marks(_ sender: AnyObject) {
+    @IBAction func marks(_ sender: Any) {
         // TODO
         showMarkMenu(self)
     }
 
-    @IBAction func showMarkMenu(_ sender: AnyObject) {
+    @IBAction func showMarkMenu(_ sender: Any) {
         NSMenu.popUpContextMenu(markMenu, with: NSApp.currentEvent!, for: itemsTable)
     }
 
@@ -1608,7 +1608,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     }
 
 
-    @IBAction func apply(_ sender: AnyObject) {
+    @IBAction func apply(_ sender: Any) {
         self.ready = false
         markedItems = allPackages.filter { $0.mark != .noMark } as [GItem]
         marksCount = markedItems.count
@@ -1745,7 +1745,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     }
 
 
-    func raiseBrowser(_ sender: AnyObject) {
+    func raiseBrowser(_ sender: Any) {
         let selectedItems = itemsController.selectedObjects
         var item: GItem? = nil
         if (selectedItems?.count)! > 0 {
@@ -1786,7 +1786,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         (firstWindow.value(forKey: "document")! as AnyObject).setValue(URL(string: url)!, forKey: "URL")
     }
 
-    func raiseShell(_ sender: AnyObject) {
+    func raiseShell(_ sender: Any) {
         for window in terminal.value(forKey: "windows") as! [NSObject] {
             if !(window.value(forKey: "name") as! NSString).contains("Guigna ") {
                 window.setValue(false, forKey: "visible")
@@ -1811,13 +1811,13 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
     }
 
-    func open(_ sender: AnyObject) {
+    func open(_ sender: Any) {
         NSApp.activate(ignoringOtherApps: true)
         window.makeKeyAndOrderFront(nil)
         raiseShell(self)
     }
 
-    @IBAction func options(_ sender: AnyObject) {
+    @IBAction func options(_ sender: Any) {
         window.beginSheet(optionsPanel) {
             if $0 == NSApplication.ModalResponse.stop {
                 // TODO
@@ -1825,7 +1825,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
     }
 
-    @IBAction func closeOptions(_ sender: AnyObject) {
+    @IBAction func closeOptions(_ sender: Any) {
         self.window.endSheet(self.optionsPanel)
         if self.ready {
             syncButton.isEnabled = true
@@ -1852,7 +1852,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     }
 
 
-    @IBAction func preferences(_ sender: AnyObject) {
+    @IBAction func preferences(_ sender: Any) {
         self.ready = false
         // optionsPanel.display()
         if sender is NSSegmentedControl {
@@ -2083,7 +2083,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     }
 
 
-    @IBAction func toolsAction(_ sender: AnyObject) {
+    @IBAction func toolsAction(_ sender: Any) {
         NSMenu.popUpContextMenu(toolsMenu, with: NSApp.currentEvent!, for: itemsTable)
     }
 
@@ -2138,21 +2138,21 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         
     }
     
-    @IBAction func search(_ sender: AnyObject) {
+    @IBAction func search(_ sender: Any) {
         window.makeFirstResponder(searchField)
     }
     
-    @IBAction func showHelp(_ sender: AnyObject) {
+    @IBAction func showHelp(_ sender: Any) {
         cmdline.stringValue = "http://github.com/gui-dos/Guigna/wiki/The-Guigna-Guide"
         segmentedControl.selectedSegment = 1
         selectedSegment = "Home"
         updateTabView(nil)
     }
     
-    @IBAction func stop(_ sender: AnyObject) {
+    @IBAction func stop(_ sender: Any) {
     }
     
-    @IBAction func details(_ sender: AnyObject) {
+    @IBAction func details(_ sender: Any) {
     }
     
     
