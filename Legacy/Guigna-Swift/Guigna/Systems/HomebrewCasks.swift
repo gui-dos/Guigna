@@ -25,7 +25,7 @@ final class HomebrewCasks: GSystem {
             var name = (components[0] as NSString).lastPathComponent
             name = name.substring(to: name.length - 4)
             var version = components.last!
-            if !(version.hasPrefix("'") || version.hasPrefix(":")) {
+            if (!(version.hasPrefix("'") || version.hasPrefix(":"))) || version == "'" {
                 let prev = components[components.count - 2]
                 if prev.hasPrefix("'") {
                     version = "\(prev) \(version)"
