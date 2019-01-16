@@ -51,10 +51,13 @@ final class Homebrew: GSystem {
 
         // /usr/bin/ruby -C /usr/local/Homebrew/Library/Homebrew -I. -e "require 'global'; require 'formula'; Formula.each {|f| puts \"#{f.name} #{f.pkg_version}\"}" not supported anymore
         // see: https://github.com/Homebrew/homebrew/pull/48261
+        //
+        //  let workaround = "ENV['HOMEBREW_BREW_FILE']='\(prefix)/bin/brew';ENV['HOMEBREW_PREFIX']='\(prefix)';ENV['HOMEBREW_REPOSITORY']='\(prefix)/Homebrew';ENV['HOMEBREW_LIBRARY']='\(prefix)/Homebrew/Library';ENV['HOMEBREW_CELLAR']='\(prefix)/Cellar';ENV['HOMEBREW_OSX_VERSION']=`/usr/bin/sw_vers__-productVersion`.to_s;ENV['HOMEBREW_CACHE']=File.expand_path('~/Library/Caches/Homebrew');ENV['HOMEBREW_LOGS']=File.expand_path('~/Library/Logs/Homebrew');ENV['HOMEBREW_TEMP']=File.expand_path('/private/tmp');"
+        //
+        //  var outputLines = output("/usr/bin/ruby -C \(prefix)/Homebrew/Library/Homebrew -I. -e " + workaround + "require__'global';require__'formula';__Formula.each__{|f|__puts__\"#{f.full_name}|#{f.pkg_version}|#{f.bottle}|#{f.desc}\"}").split("\n")
 
-        let workaround = "ENV['HOMEBREW_BREW_FILE']='\(prefix)/bin/brew';ENV['HOMEBREW_PREFIX']='\(prefix)';ENV['HOMEBREW_REPOSITORY']='\(prefix)/Homebrew';ENV['HOMEBREW_LIBRARY']='\(prefix)/Homebrew/Library';ENV['HOMEBREW_CELLAR']='\(prefix)/Cellar';ENV['HOMEBREW_OSX_VERSION']=`/usr/bin/sw_vers__-productVersion`.to_s;ENV['HOMEBREW_CACHE']=File.expand_path('~/Library/Caches/Homebrew');ENV['HOMEBREW_LOGS']=File.expand_path('~/Library/Logs/Homebrew');ENV['HOMEBREW_TEMP']=File.expand_path('/private/tmp');"
 
-        var outputLines = output("/usr/bin/ruby -C \(prefix)/Homebrew/Library/Homebrew -I. -e " + workaround + "require__'global';require__'formula';__Formula.each__{|f|__puts__\"#{f.full_name}|#{f.pkg_version}|#{f.bottle}|#{f.desc}\"}").split("\n")
+        var outputLines = output("\(cmd) ruby -e Formula.each__{|f|__puts__\"#{f.full_name}|#{f.pkg_version}|#{f.bottle}|#{f.desc}\"}").split("\n")
         outputLines.removeLast()
         for line in outputLines {
             let components = line.split("|")
