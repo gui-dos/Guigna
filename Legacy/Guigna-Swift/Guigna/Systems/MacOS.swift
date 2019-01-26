@@ -37,7 +37,7 @@ final class MacOS: GSystem {
             keepPkg = false
             var ids = dict["packageIdentifiers"]! as! [String]
             for pkgId in ids {
-                if let idx = pkgIds.index(of: pkgId) {
+                if let idx = pkgIds.firstIndex(of: pkgId) {
                     keepPkg = true
                     pkgIds.remove(at: idx)
                 }

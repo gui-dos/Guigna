@@ -66,7 +66,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     @objc dynamic var tableFont: NSFont!
     @objc dynamic var tableTextColor: NSColor!
     @objc dynamic var logTextColor: NSColor!
-    @objc dynamic var linkTextAttributes: [NSAttributedStringKey : Any]!
+    @objc dynamic var linkTextAttributes: [NSAttributedString.Key : Any]!
     @objc dynamic var sourceListBackgroundColor: NSColor!
 
     @objc dynamic var adminPassword: String?
@@ -75,7 +75,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
 
     var shellColumns: Int {
         get {
-            let attrs = [NSAttributedStringKey.font: NSFont(name: "Andale Mono", size: 11.0)!]
+            let attrs = [NSAttributedString.Key.font: NSFont(name: "Andale Mono", size: 11.0)!]
             let charWidth = ("MMM".size(withAttributes: attrs).width - "M".size(withAttributes: attrs).width) / 2.0
             let columns = Int(round((infoText.frame.size.width - 16.0) / charWidth + 0.5))
             return columns
@@ -116,7 +116,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     }
 
     func log(_ text: String) {
-        let attributedString = NSAttributedString(string: text, attributes: [NSAttributedStringKey.font: NSFont(name: "Andale Mono", size:11.0)!, NSAttributedStringKey.foregroundColor: logTextColor])
+        let attributedString = NSAttributedString(string: text, attributes: [NSAttributedString.Key.font: NSFont(name: "Andale Mono", size:11.0)!, NSAttributedString.Key.foregroundColor: logTextColor])
         let storage = logText.textStorage!
         storage.beginEditing()
         storage.append(attributedString)
@@ -213,7 +213,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             tableTextColor = NSColor.controlTextColor
             logTextColor = NSColor.black
         } else {
-            themesSegmentedControl.selectedSegment = ["Default", "Retro"].index(of: theme)!
+            themesSegmentedControl.selectedSegment = ["Default", "Retro"].firstIndex(of: theme)!
             applyTheme(theme)
         }
 
@@ -751,7 +751,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             scrollView.borderType = .lineBorder
             scrollView.borderType = .grooveBorder
         }
-        sourcesSelectionDidChange(notification as AnyObject!)
+        sourcesSelectionDidChange(notification as AnyObject?)
     }
 
     func sourcesSelectionDidChange(_ sender: AnyObject!) {
@@ -761,7 +761,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         let selectedNames = selectedSources.map {$0.name}
         var selectedSystems = [GSystem]()
         for system in systems {
-            if let idx = selectedNames.index(of: system.name) {
+            if let idx = selectedNames.firstIndex(of: system.name) {
                 selectedSystems.append(system)
                 selectedSources.remove(at: idx)
             }
@@ -1089,7 +1089,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         cmdline.display()
     }
 
-    func clear(_ sender: Any) {
+    @IBAction func clear(_ sender: Any) {
         logText.string = ""
     }
 
@@ -1195,7 +1195,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
     }
 
-    override func controlTextDidBeginEditing(_ aNotification: Notification) {
+    func controlTextDidBeginEditing(_ aNotification: Notification) {
     }
 
     func textViewDidChangeSelection(_ aNotification: Notification) {
@@ -1335,7 +1335,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
         let title = sender.titleOfSelectedItem!
         if let system = item.system {
-            let idx = system.availableCommands().map {$0[0]}.index(of: title)
+            let idx = system.availableCommands().map {$0[0]}.firstIndex(of: title)
             var command = system.availableCommands()[idx!][1]
             command = command.replace("CMD", (system.cmd as NSString).lastPathComponent)
             updateCmdLine(command)
@@ -1544,7 +1544,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 if sender.state == .off {
                     markedOptions.append(title)
                 } else {
-                    markedOptions.remove(at: markedOptions.index(of: title)!)
+                    markedOptions.remove(at: markedOptions.firstIndex(of: title)!)
                 }
                 var options: String! = nil
                 if markedOptions.count > 0 {
@@ -1644,7 +1644,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             }
         }
         for system in systems {
-            if let idx = detectedPrefixes.index(of: system.prefix) {
+            if let idx = detectedPrefixes.firstIndex(of: system.prefix) {
                 detectedPrefixes.remove(at: idx)
             }
         }
@@ -1702,7 +1702,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     }
                     if otherSystem.hideCmd != nil
                         && otherSystem.hideCmd != system.hideCmd
-                        && systemTasks.index(of: otherSystem.hideCmd) == nil
+                        && systemTasks.firstIndex(of: otherSystem.hideCmd) == nil
                         && otherSystem.prefix.exists {
                         tasks.append(otherSystem.hideCmd)
                         systemTasks.append(otherSystem.hideCmd)
@@ -1725,7 +1725,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     }
                     if otherSystem.hideCmd != nil
                         && otherSystem.hideCmd != system.hideCmd
-                        && systemTasks.index(of: otherSystem.unhideCmd) == nil
+                        && systemTasks.firstIndex(of: otherSystem.unhideCmd) == nil
                         && otherSystem.prefix.exists {
                         tasks.append(otherSystem.unhideCmd)
                         systemTasks.append(otherSystem.unhideCmd)
@@ -1745,7 +1745,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
     }
 
 
-    func raiseBrowser(_ sender: Any) {
+    @IBAction func raiseBrowser(_ sender: Any) {
         let selectedItems = itemsController.selectedObjects
         var item: GItem? = nil
         if (selectedItems?.count)! > 0 {
@@ -1786,7 +1786,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         (firstWindow.value(forKey: "document")! as AnyObject).setValue(URL(string: url)!, forKey: "URL")
     }
 
-    func raiseShell(_ sender: Any) {
+    @IBAction func raiseShell(_ sender: Any) {
         for window in terminal.value(forKey: "windows") as! [NSObject] {
             if !(window.value(forKey: "name") as! NSString).contains("Guigna ") {
                 window.setValue(false, forKey: "visible")
@@ -1811,7 +1811,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         }
     }
 
-    func open(_ sender: Any) {
+    @IBAction func open(_ sender: Any) {
         NSApp.activate(ignoringOtherApps: true)
         window.makeKeyAndOrderFront(nil)
         raiseShell(self)
@@ -1962,7 +1962,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         sourcesController.setSelectionIndexPath(IndexPath(index: 0).appending(systemsCount))
         sourcesOutline.reloadData()
         sourcesOutline.display()
-        sourcesSelectionDidChange(systemsMutableArray[systemsCount] as AnyObject!)
+        sourcesSelectionDidChange(systemsMutableArray[systemsCount] as AnyObject?)
         itemsController.add(contentsOf: system.list())
         itemsTable.display()
         allPackages += system.items as! [GPackage]
@@ -2004,7 +2004,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     }
                     source.items.removeAll()
                     systemsMutableArray.remove(source)
-                    systems.remove(at: systems.index(of: source)!)
+                    systems.remove(at: systems.firstIndex(of: source)!)
                 }
             }
         }
@@ -2030,7 +2030,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             infoText.backgroundColor = NSColor.black
             infoText.textColor = NSColor.green
             var cyanLinkAttribute = linkTextAttributes
-            cyanLinkAttribute?[NSAttributedStringKey.foregroundColor] = NSColor.cyan
+            cyanLinkAttribute?[NSAttributedString.Key.foregroundColor] = NSColor.cyan
             infoText.linkTextAttributes = cyanLinkAttribute
             (logText.superview!.superview! as! NSScrollView).borderType = .lineBorder
             logText.backgroundColor = NSColor.blue

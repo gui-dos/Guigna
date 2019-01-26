@@ -93,57 +93,57 @@ class GSourceTransformer: ValueTransformer {
         let name: String = (source! as AnyObject).name
         switch name {
         case "MacPorts":
-            return NSImage(named: NSImage.Name("system-macports.tiff"))
+            return NSImage(named: "system-macports.tiff")
         case "Homebrew":
-            return NSImage(named: NSImage.Name("system-homebrew.tiff"))
+            return NSImage(named: "system-homebrew.tiff")
         case "Homebrew Casks":
-            return NSImage(named: NSImage.Name("system-homebrewcasks.tiff"))
+            return NSImage(named: "system-homebrewcasks.tiff")
         case "macOS":
-            return NSImage(named: NSImage.Name("system-macosx.tiff"))
+            return NSImage(named: "system-macosx.tiff")
         case "iTunes":
-            return NSImage(named: NSImage.Name("system-itunes.tiff"))
+            return NSImage(named: "system-itunes.tiff")
         case "Fink":
-            return NSImage(named: NSImage.Name("system-fink.tiff"))
+            return NSImage(named: "system-fink.tiff")
         case "pkgsrc", "pkgin":
-            return NSImage(named: NSImage.Name("system-pkgsrc.tiff"))
+            return NSImage(named: "system-pkgsrc.tiff")
         case "FreeBSD":
-            return NSImage(named: NSImage.Name("source-freebsd.tiff"))
+            return NSImage(named: "source-freebsd.tiff")
         case "Rudix":
-            return NSImage(named: NSImage.Name("system-rudix.tiff"))
+            return NSImage(named: "system-rudix.tiff")
         case "Native Installers":
-            return NSImage(named: NSImage.Name("source-native.tiff"))
+            return NSImage(named: "source-native.tiff")
         case "Pkgsrc.se":
-            return NSImage(named: NSImage.Name("source-pkgsrc.se.tiff"))
+            return NSImage(named: "source-pkgsrc.se.tiff")
         case "Freecode":
-            return NSImage(named: NSImage.Name("source-freecode.tiff"))
+            return NSImage(named: "source-freecode.tiff")
         case "Debian":
-            return NSImage(named: NSImage.Name("source-debian.tiff"))
+            return NSImage(named: "source-debian.tiff")
         case "PyPI":
-            return NSImage(named: NSImage.Name("source-pypi.tiff"))
+            return NSImage(named: "source-pypi.tiff")
         case "RubyGems":
-            return NSImage(named: NSImage.Name("source-rubygems.tiff"))
+            return NSImage(named: "source-rubygems.tiff")
         case "CocoaPods":
-            return NSImage(named: NSImage.Name("source-cocoapods.tiff"))
+            return NSImage(named: "source-cocoapods.tiff")
         case "MacUpdate":
-            return NSImage(named: NSImage.Name("source-macupdate.tiff"))
+            return NSImage(named: "source-macupdate.tiff")
         case "Mac Torrents":
-            return NSImage(named: NSImage.Name("source-mactorrents.tiff"))
+            return NSImage(named: "source-mactorrents.tiff")
         case "AppShopper", "AppShopper iOS":
-            return NSImage(named: NSImage.Name("source-appshopper.tiff"))
+            return NSImage(named: "source-appshopper.tiff")
         case "Chocolatey":
-            return NSImage(named: NSImage.Name("source-chocolatey.tiff"))
+            return NSImage(named: "source-chocolatey.tiff")
         case "installed":
-            return NSImage(named: .statusAvailable)
+            return NSImage(named: NSImage.statusAvailableName)
         case "outdated":
-            return NSImage(named: .statusPartiallyAvailable)
+            return NSImage(named: NSImage.statusPartiallyAvailableName)
         case "inactive":
-            return NSImage(named: .statusNone)
+            return NSImage(named: NSImage.statusNoneName)
         case let n where n.hasPrefix("marked"):
-            return NSImage(named: NSImage.Name("status-marked.tiff"))
+            return NSImage(named: "status-marked.tiff")
         case let n where n.hasPrefix("new"):
-            return NSImage(named: NSImage.Name("status-new.tiff"))
+            return NSImage(named: "status-new.tiff")
         case let n where n.hasPrefix("updated"):
-            return NSImage(named: NSImage.Name("status-updated.tiff"))
+            return NSImage(named: "status-updated.tiff")
         default:
             return nil
         }

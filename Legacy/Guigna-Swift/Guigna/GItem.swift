@@ -120,17 +120,17 @@ class GStatusTransformer: ValueTransformer {
         let status = GStatus(rawValue: (value! as AnyObject).intValue)!
         switch status {
         case .inactive:
-            return NSImage(named: .statusNone)
+            return NSImage(named: NSImage.statusNoneName)
         case .upToDate:
-            return NSImage(named: .statusAvailable)
+            return NSImage(named: NSImage.statusAvailableName)
         case .outdated:
-            return NSImage(named: .statusPartiallyAvailable)
+            return NSImage(named: NSImage.statusPartiallyAvailableName)
         case .updated:
-            return NSImage(named: NSImage.Name("status-updated.tiff"))
+            return NSImage(named: "status-updated.tiff")
         case .new:
-            return NSImage(named: NSImage.Name("status-new.tiff"))
+            return NSImage(named: "status-new.tiff")
         case .broken:
-            return NSImage(named: .statusUnavailable)
+            return NSImage(named: NSImage.statusUnavailableName)
         default:
             return nil
         }
@@ -156,17 +156,17 @@ class GMarkTransformer: ValueTransformer {
         let mark = GMark(rawValue: (value! as AnyObject).intValue)!
         switch mark {
         case .install:
-            return NSImage(named: NSImage.Name.addTemplate)
+            return NSImage(named: NSImage.addTemplateName)
         case .uninstall:
-            return NSImage(named: NSImage.Name.removeTemplate)
+            return NSImage(named: NSImage.removeTemplateName)
         case .deactivate:
-            return NSImage(named: NSImage.Name.stopProgressTemplate)
+            return NSImage(named: NSImage.stopProgressTemplateName)
         case .upgrade:
-            return NSImage(named: NSImage.Name.refreshTemplate)
+            return NSImage(named: NSImage.refreshTemplateName)
         case .fetch:
-            return NSImage(named: NSImage.Name(rawValue: "source-native.tiff"))
+            return NSImage(named: "source-native.tiff")
         case .clean:
-            return NSImage(named: NSImage.Name.actionTemplate)
+            return NSImage(named: NSImage.actionTemplateName)
         default:
             return nil
         }
