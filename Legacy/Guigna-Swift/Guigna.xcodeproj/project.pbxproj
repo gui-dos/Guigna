@@ -202,7 +202,7 @@
 				C5264C9F197D710F00562D94 /* GuignaRepos.swift */,
 				C51ED06219458CB0000B582A /* Images.xcassets */,
 				C51ED06419458CB0000B582A /* MainMenu.xib */,
-				C5A121601945EB4300A351A8 /* Systems */,
+				C5A121601945EB4300A351A8 /* PackageManagers */,
 				C5DB9B6A1945A9B70005244E /* Images */,
 				C51ED05919458CB0000B582A /* Supporting Files */,
 			);
@@ -238,7 +238,7 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		C5A121601945EB4300A351A8 /* Systems */ = {
+		C5A121601945EB4300A351A8 /* PackageManagers */ = {
 			isa = PBXGroup;
 			children = (
 				C5A121611945EB4300A351A8 /* Homebrew.swift */,
@@ -252,7 +252,8 @@
 				C56062D9198D0704001F0F93 /* Rudix.swift */,
 				C562EF8F1993BA16001309A9 /* ITunes.swift */,
 			);
-			path = Systems;
+			name = PackageManagers;
+			path = ../../../Sources/PackageManagers;
 			sourceTree = "<group>";
 		};
 		C5DB9B6A1945A9B70005244E /* Images */ = {
