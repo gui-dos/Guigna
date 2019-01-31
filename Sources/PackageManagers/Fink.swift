@@ -4,7 +4,7 @@ final class Fink: GSystem {
 
     override class var prefix: String { return "/sw" }
 
-    init(agent: GAgent) {
+    required init(agent: GAgent) {
         super.init(name: "Fink", agent: agent)
         homepage = "http://www.finkproject.org"
         logpage = "http://www.finkproject.org/package-updates.php"

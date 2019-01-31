@@ -49,6 +49,10 @@ import Foundation
     var URL: String!
     var id: String!
 
+    override var debugDescription: String {
+        return "\(name) \(version)"
+    }
+
     init(name: String, version: String, source: GSource, status: GStatus = .available) {
         self.name = name
         self.version = version

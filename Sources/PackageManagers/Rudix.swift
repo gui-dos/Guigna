@@ -4,7 +4,7 @@ final class Rudix: GSystem {
 
     override class var prefix: String { return "/usr/local" }
 
-    init(agent: GAgent) {
+    required init(agent: GAgent) {
         super.init(name: "Rudix", agent: agent)
         homepage = "http://rudix.org/"
         logpage = "https://github.com/rudix-mac/rudix/commits"

@@ -7,7 +7,7 @@ final class Pkgin: GSystem {
 
     override class var prefix: String { return "/opt/pkg" }
 
-    init(agent: GAgent) {
+    required init(agent: GAgent) {
         super.init(name: "pkgin", agent: agent)
         homepage = "https://pkgsrc.joyent.com"
         logpage = "https://github.com/joyent/pkgsrc/commits/trunk"

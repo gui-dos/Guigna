@@ -4,7 +4,7 @@ final class HomebrewCasks: GSystem {
 
     override class var prefix: String { return "/usr/local" }
 
-    init(agent: GAgent) {
+    required init(agent: GAgent) {
         super.init(name: "Homebrew Casks", agent: agent)
         homepage = "http://caskroom.io"
         logpage = "http://github.com/homebrew/homebrew-cask/commits"

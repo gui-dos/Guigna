@@ -4,7 +4,7 @@ final class MacOS: GSystem {
 
     override class var prefix: String { return "" }
 
-    init(agent: GAgent) {
+    required init(agent: GAgent) {
         super.init(name: "macOS", agent: agent)
         homepage = "http://support.apple.com/downloads/"
         logpage = "http://support.apple.com/downloads/"

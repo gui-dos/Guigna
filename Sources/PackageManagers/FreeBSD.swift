@@ -4,7 +4,7 @@ final class FreeBSD: GSystem {
 
     override class var prefix: String { return  "" }
 
-    init(agent: GAgent) {
+    required init(agent: GAgent) {
         super.init(name: "FreeBSD", agent: agent)
         homepage = "http://www.freebsd.org/ports/"
         logpage = "http://www.freshports.org"

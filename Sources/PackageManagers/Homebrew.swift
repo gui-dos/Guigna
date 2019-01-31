@@ -4,7 +4,7 @@ final class Homebrew: GSystem {
 
     override class var prefix: String { return "/usr/local"}
 
-    init(agent: GAgent) {
+    required init(agent: GAgent) {
         super.init(name: "Homebrew", agent: agent)
         homepage = "http://brew.sh/"
         logpage = "http://github.com/Homebrew/homebrew-core/commits"
@@ -164,7 +164,7 @@ final class Homebrew: GSystem {
                     let inactivePkg = GPackage(name: name, version: latestVersion, system: self, status: .inactive)
                     inactivePkg.installed = components[i]
                     items.append(inactivePkg)
-                    self.agent.appDelegate!.addItem(inactivePkg) // TODO: ugly
+                    self.agent.appDelegate?.addItem(inactivePkg) // TODO: ugly
                     pkgs.append(inactivePkg)
                 }
             }

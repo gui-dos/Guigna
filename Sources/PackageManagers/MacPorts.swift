@@ -4,7 +4,7 @@ final class MacPorts: GSystem {
 
     override class var prefix: String { return "/opt/local"}
 
-    init(agent: GAgent) {
+    required init(agent: GAgent) {
         super.init(name: "MacPorts", agent: agent)
         homepage = "http://www.macports.org"
         logpage = "http://trac.macports.org/timeline"

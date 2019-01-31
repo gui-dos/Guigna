@@ -4,7 +4,7 @@ final class ITunes: GSystem {
 
     override class var prefix: String { return "" }
 
-    init(agent: GAgent) {
+    required init(agent: GAgent) {
         super.init(name: "iTunes", agent: agent)
         homepage = "https://itunes.apple.com/genre/ios/id36?mt=8"
         logpage = "https://itunes.apple.com/genre/ios/id36?mt=8"

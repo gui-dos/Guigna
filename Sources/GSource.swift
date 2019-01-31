@@ -25,17 +25,13 @@ enum GMode: Int {
     var logpage: String!
     var cmd: String = "CMD"
 
-    init(name: String, agent: GAgent?) {
+    init(name: String, agent: GAgent! = nil) {
         self.name = name
         self.agent = agent
         items = [GItem]()
         items.reserveCapacity(50000)
         status = .on
         mode = .offline
-    }
-
-    convenience init(name: String) {
-        self.init(name: name, agent: nil)
     }
 
     func info(_ item: GItem) -> String {

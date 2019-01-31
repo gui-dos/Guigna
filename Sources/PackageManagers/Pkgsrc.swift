@@ -4,7 +4,7 @@ final class Pkgsrc: GSystem {
 
     override class var prefix: String { return  "/usr/pkg" }
 
-    init(agent: GAgent) {
+    required init(agent: GAgent) {
         super.init(name: "pkgsrc", agent: agent)
         homepage = "http://www.pkgsrc.org"
         logpage = "http://www.netbsd.org/changes/pkg-changes.html"
