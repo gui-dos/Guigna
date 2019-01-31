@@ -2,6 +2,7 @@ import Foundation
 
 class GSystem: GSource {
 
+    class var name: String { return "Guigna" }
     class var prefix: String { return "" }
 
     var prefix: String
@@ -18,7 +19,7 @@ class GSystem: GSource {
     required init(agent: GAgent) {
         prefix = type(of: self).prefix
         index = [String: GPackage](minimumCapacity: 50000)
-        super.init(name: "Guigna", agent: agent)
+        super.init(name: type(of: self).name, agent: agent)
         status = .on
     }
 

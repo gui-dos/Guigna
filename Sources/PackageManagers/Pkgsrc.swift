@@ -2,10 +2,11 @@ import Foundation
 
 final class Pkgsrc: GSystem {
 
+    override class var name: String { return "pkgsrc"}
     override class var prefix: String { return  "/usr/pkg" }
 
     required init(agent: GAgent) {
-        super.init(name: "pkgsrc", agent: agent)
+        super.init(agent: agent)
         homepage = "http://www.pkgsrc.org"
         logpage = "http://www.netbsd.org/changes/pkg-changes.html"
         cmd = "\(prefix)/sbin/pkg_info"

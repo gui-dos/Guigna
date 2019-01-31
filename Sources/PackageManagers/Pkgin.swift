@@ -5,10 +5,11 @@ final class Pkgin: GSystem {
     // TODO: complete porting from Pkgsrc
     // TODO: Objective-C version
 
+    override class var name: String { return "pkgin"}
     override class var prefix: String { return "/opt/pkg" }
 
     required init(agent: GAgent) {
-        super.init(name: "pkgin", agent: agent)
+        super.init(agent: agent)
         homepage = "https://pkgsrc.joyent.com"
         logpage = "https://github.com/joyent/pkgsrc/commits/trunk"
         cmd = "\(prefix)/bin/pkgin"

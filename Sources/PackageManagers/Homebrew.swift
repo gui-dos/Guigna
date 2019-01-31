@@ -2,10 +2,11 @@ import Foundation
 
 final class Homebrew: GSystem {
 
+    override class var name: String { return "Homebrew"}
     override class var prefix: String { return "/usr/local"}
 
     required init(agent: GAgent) {
-        super.init(name: "Homebrew", agent: agent)
+        super.init(agent: agent)
         homepage = "http://brew.sh/"
         logpage = "http://github.com/Homebrew/homebrew-core/commits"
         cmd = "\(prefix)/bin/brew"

@@ -2,10 +2,11 @@ import Foundation
 
 final class FreeBSD: GSystem {
 
+    override class var name: String { return "FreeBSD"}
     override class var prefix: String { return  "" }
 
     required init(agent: GAgent) {
-        super.init(name: "FreeBSD", agent: agent)
+        super.init(agent: agent)
         homepage = "http://www.freebsd.org/ports/"
         logpage = "http://www.freshports.org"
         cmd = "\(prefix)freebsd"

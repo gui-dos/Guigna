@@ -1,11 +1,12 @@
 import Foundation
 
 final class HomebrewCasks: GSystem {
-
+    
+    override class var name: String { return "Homebrew Casks"}
     override class var prefix: String { return "/usr/local" }
 
     required init(agent: GAgent) {
-        super.init(name: "Homebrew Casks", agent: agent)
+        super.init(agent: agent)
         homepage = "http://caskroom.io"
         logpage = "http://github.com/homebrew/homebrew-cask/commits"
         cmd = "\(prefix)/bin/brew cask"

@@ -2,10 +2,11 @@ import Foundation
 
 final class Rudix: GSystem {
 
+    override class var name: String { return "Rudix"}
     override class var prefix: String { return "/usr/local" }
 
     required init(agent: GAgent) {
-        super.init(name: "Rudix", agent: agent)
+        super.init(agent: agent)
         homepage = "http://rudix.org/"
         logpage = "https://github.com/rudix-mac/rudix/commits"
         cmd = "\(prefix)/bin/rudix"

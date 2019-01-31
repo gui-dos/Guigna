@@ -2,10 +2,11 @@ import Foundation
 
 final class MacOS: GSystem {
 
+    override class var name: String { return "macOS"}
     override class var prefix: String { return "" }
 
     required init(agent: GAgent) {
-        super.init(name: "macOS", agent: agent)
+        super.init(agent: agent)
         homepage = "http://support.apple.com/downloads/"
         logpage = "http://support.apple.com/downloads/"
         cmd = "/usr/sbin/pkgutil"

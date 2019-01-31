@@ -2,10 +2,11 @@ import Foundation
 
 final class Fink: GSystem {
 
+    override class var name: String { return "Fink"}
     override class var prefix: String { return "/sw" }
 
     required init(agent: GAgent) {
-        super.init(name: "Fink", agent: agent)
+        super.init(agent: agent)
         homepage = "http://www.finkproject.org"
         logpage = "http://www.finkproject.org/package-updates.php"
         // @"http://github.com/fink/fink/commits/master"
