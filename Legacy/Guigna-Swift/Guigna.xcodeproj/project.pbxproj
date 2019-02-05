@@ -14,6 +14,7 @@
 		C51ED07219458CB0000B582A /* GuignaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51ED07119458CB0000B582A /* GuignaTests.swift */; };
 		C5264CA0197D710F00562D94 /* GuignaRepos.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5264C9F197D710F00562D94 /* GuignaRepos.swift */; };
 		C52777611DF36A81005395E0 /* source-mactorrents.tiff in Resources */ = {isa = PBXBuildFile; fileRef = C52777601DF36A81005395E0 /* source-mactorrents.tiff */; };
+		C53DDA98220A19CE008FD543 /* GuignaValueTransformers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53DDA97220A19CE008FD543 /* GuignaValueTransformers.swift */; };
 		C554334C1972EE060080B0BD /* Fink.swift in Sources */ = {isa = PBXBuildFile; fileRef = C554334B1972EE060080B0BD /* Fink.swift */; };
 		C56062DA198D0704001F0F93 /* Rudix.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56062D9198D0704001F0F93 /* Rudix.swift */; };
 		C56062DC198D0833001F0F93 /* GLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56062DB198D0833001F0F93 /* GLibrary.swift */; };
@@ -88,6 +89,7 @@
 		C51ED07119458CB0000B582A /* GuignaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuignaTests.swift; sourceTree = "<group>"; };
 		C5264C9F197D710F00562D94 /* GuignaRepos.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GuignaRepos.swift; sourceTree = "<group>"; };
 		C52777601DF36A81005395E0 /* source-mactorrents.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "source-mactorrents.tiff"; sourceTree = "<group>"; };
+		C53DDA97220A19CE008FD543 /* GuignaValueTransformers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuignaValueTransformers.swift; sourceTree = "<group>"; };
 		C554334B1972EE060080B0BD /* Fink.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Fink.swift; sourceTree = "<group>"; };
 		C56062D9198D0704001F0F93 /* Rudix.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Rudix.swift; sourceTree = "<group>"; };
 		C56062DB198D0833001F0F93 /* GLibrary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GLibrary.swift; path = ../../../Sources/GLibrary.swift; sourceTree = "<group>"; };
@@ -200,6 +202,7 @@
 				C5A1215D1945EB2700A351A8 /* GSystem.swift */,
 				C5D04FBA195D853300D968E5 /* GuignaScrapes.swift */,
 				C5264C9F197D710F00562D94 /* GuignaRepos.swift */,
+				C53DDA97220A19CE008FD543 /* GuignaValueTransformers.swift */,
 				C51ED06219458CB0000B582A /* Images.xcassets */,
 				C51ED06419458CB0000B582A /* MainMenu.xib */,
 				C5A121601945EB4300A351A8 /* PackageManagers */,
@@ -430,6 +433,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C5B736FF194732C90046B2E2 /* GAdditions.swift in Sources */,
+				C53DDA98220A19CE008FD543 /* GuignaValueTransformers.swift in Sources */,
 				C5A1215F1945EB2700A351A8 /* GSystem.swift in Sources */,
 				C51ED05E19458CB0000B582A /* GuignaAppDelegate.swift in Sources */,
 				C5E07BBC1972779400DA3CD3 /* Pkgsrc.swift in Sources */,
