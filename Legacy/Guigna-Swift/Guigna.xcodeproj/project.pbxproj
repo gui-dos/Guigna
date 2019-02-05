@@ -17,7 +17,7 @@
 		C53DDA98220A19CE008FD543 /* GuignaValueTransformers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53DDA97220A19CE008FD543 /* GuignaValueTransformers.swift */; };
 		C554334C1972EE060080B0BD /* Fink.swift in Sources */ = {isa = PBXBuildFile; fileRef = C554334B1972EE060080B0BD /* Fink.swift */; };
 		C56062DA198D0704001F0F93 /* Rudix.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56062D9198D0704001F0F93 /* Rudix.swift */; };
-		C56062DC198D0833001F0F93 /* GLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56062DB198D0833001F0F93 /* GLibrary.swift */; };
+		C56062DC198D0833001F0F93 /* GLib.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56062DB198D0833001F0F93 /* GLib.swift */; };
 		C562EF901993BA16001309A9 /* ITunes.swift in Sources */ = {isa = PBXBuildFile; fileRef = C562EF8F1993BA16001309A9 /* ITunes.swift */; };
 		C5635BEB1952F53F007424E2 /* MacPorts.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5635BEA1952F53F007424E2 /* MacPorts.swift */; };
 		C57135B2218472DA00D55EFA /* source-chocolatey.tiff in Resources */ = {isa = PBXBuildFile; fileRef = C57135B1218472DA00D55EFA /* source-chocolatey.tiff */; };
@@ -30,7 +30,7 @@
 		C5A5B207198FD9E7000CB3FD /* FreeBSD.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A5B206198FD9E7000CB3FD /* FreeBSD.swift */; };
 		C5AD0FB6196287360001FB53 /* GPackage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5AD0FB4196287360001FB53 /* GPackage.swift */; };
 		C5AD0FB7196287360001FB53 /* GSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5AD0FB5196287360001FB53 /* GSource.swift */; };
-		C5B736FF194732C90046B2E2 /* GAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5B736FE194732C80046B2E2 /* GAdditions.swift */; };
+		C5B736FF194732C90046B2E2 /* GExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5B736FE194732C80046B2E2 /* GExtensions.swift */; };
 		C5D04FBB195D853300D968E5 /* GuignaScrapes.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D04FBA195D853300D968E5 /* GuignaScrapes.swift */; };
 		C5DAB13F1C4D56F800868FFE /* Pkgin.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5DAB13E1C4D56F800868FFE /* Pkgin.swift */; };
 		C5DB9B881945A9B80005244E /* guigna.icns in Resources */ = {isa = PBXBuildFile; fileRef = C5DB9B6B1945A9B70005244E /* guigna.icns */; };
@@ -92,7 +92,7 @@
 		C53DDA97220A19CE008FD543 /* GuignaValueTransformers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuignaValueTransformers.swift; sourceTree = "<group>"; };
 		C554334B1972EE060080B0BD /* Fink.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Fink.swift; sourceTree = "<group>"; };
 		C56062D9198D0704001F0F93 /* Rudix.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Rudix.swift; sourceTree = "<group>"; };
-		C56062DB198D0833001F0F93 /* GLibrary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GLibrary.swift; path = ../../../Sources/GLibrary.swift; sourceTree = "<group>"; };
+		C56062DB198D0833001F0F93 /* GLib.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GLib.swift; path = ../../../Sources/GLib.swift; sourceTree = "<group>"; };
 		C562EF8F1993BA16001309A9 /* ITunes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ITunes.swift; sourceTree = "<group>"; };
 		C562FE281D1EE612002603EC /* TODO.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = TODO.md; path = ../../TODO.md; sourceTree = "<group>"; };
 		C5635BEA1952F53F007424E2 /* MacPorts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MacPorts.swift; sourceTree = "<group>"; };
@@ -110,7 +110,7 @@
 		C5A5B206198FD9E7000CB3FD /* FreeBSD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FreeBSD.swift; sourceTree = "<group>"; };
 		C5AD0FB4196287360001FB53 /* GPackage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GPackage.swift; path = ../../../Sources/GPackage.swift; sourceTree = "<group>"; };
 		C5AD0FB5196287360001FB53 /* GSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GSource.swift; path = ../../../Sources/GSource.swift; sourceTree = "<group>"; };
-		C5B736FE194732C80046B2E2 /* GAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GAdditions.swift; path = ../../../Sources/GAdditions.swift; sourceTree = "<group>"; };
+		C5B736FE194732C80046B2E2 /* GExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GExtensions.swift; path = ../../../Sources/GExtensions.swift; sourceTree = "<group>"; };
 		C5D04FBA195D853300D968E5 /* GuignaScrapes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GuignaScrapes.swift; sourceTree = "<group>"; };
 		C5DAB13E1C4D56F800868FFE /* Pkgin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pkgin.swift; sourceTree = "<group>"; };
 		C5DB9B6B1945A9B70005244E /* guigna.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = guigna.icns; sourceTree = "<group>"; };
@@ -194,8 +194,8 @@
 			children = (
 				C51ED05D19458CB0000B582A /* GuignaAppDelegate.swift */,
 				C5A1214E1945D91800A351A8 /* GAgent.swift */,
-				C5B736FE194732C80046B2E2 /* GAdditions.swift */,
-				C56062DB198D0833001F0F93 /* GLibrary.swift */,
+				C5B736FE194732C80046B2E2 /* GExtensions.swift */,
+				C56062DB198D0833001F0F93 /* GLib.swift */,
 				C5A1215C1945EB2700A351A8 /* GItem.swift */,
 				C5AD0FB5196287360001FB53 /* GSource.swift */,
 				C5AD0FB4196287360001FB53 /* GPackage.swift */,
@@ -432,7 +432,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C5B736FF194732C90046B2E2 /* GAdditions.swift in Sources */,
+				C5B736FF194732C90046B2E2 /* GExtensions.swift in Sources */,
 				C53DDA98220A19CE008FD543 /* GuignaValueTransformers.swift in Sources */,
 				C5A1215F1945EB2700A351A8 /* GSystem.swift in Sources */,
 				C51ED05E19458CB0000B582A /* GuignaAppDelegate.swift in Sources */,
@@ -440,7 +440,7 @@
 				C5E9D8A51966AA6000E5291C /* MacOS.swift in Sources */,
 				C5AD0FB7196287360001FB53 /* GSource.swift in Sources */,
 				C5779CAA1969922B00755926 /* HomebrewCasks.swift in Sources */,
-				C56062DC198D0833001F0F93 /* GLibrary.swift in Sources */,
+				C56062DC198D0833001F0F93 /* GLib.swift in Sources */,
 				C5D04FBB195D853300D968E5 /* GuignaScrapes.swift in Sources */,
 				C5A121621945EB4300A351A8 /* Homebrew.swift in Sources */,
 				C5635BEB1952F53F007424E2 /* MacPorts.swift in Sources */,
