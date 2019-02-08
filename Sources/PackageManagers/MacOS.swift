@@ -32,7 +32,7 @@ final class MacOS: GSystem {
         var pkgIds = output("/usr/sbin/pkgutil --pkgs").split("\n")
         pkgIds.removeLast()
 
-        let history = Array(((NSArray(contentsOfFile: "/Library/Receipts/InstallHistory.plist") as? [AnyObject]) ?? []).reversed())
+        let history = Array(((NSArray(contentsOfFile: "/Library/Receipts/InstallHistory.plist") as [AnyObject]?) ?? []).reversed())
         var keepPkg: Bool
         for dict in history as! [NSDictionary] {
             keepPkg = false

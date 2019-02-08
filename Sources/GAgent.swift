@@ -35,49 +35,49 @@ class GAgent: NSObject {
 
     /// Ported from: [STPrivilegedTask](https://github.com/sveinbjornt/STPrivilegedTask)
     //  FIXME: it builds with Swift 3b6 but doesn't work anymore
-    @discardableResult
-    func sudo(_ cmd: String) -> String {
-        var err: OSStatus = noErr
-        var components = cmd.components(separatedBy: " ")
-        var toolPath = components.remove(at: 0).cString(using: .utf8)!
-        let cArgs = components.map { $0.cString(using: .utf8)! }
-        var args = [UnsafePointer<CChar>?]()
-        for cArg in cArgs {
-            args.append(UnsafePointer<CChar>(cArg))
-        }
-        args.append(nil)
-        // let argsPointer = UnsafePointer<UnsafePointer<CChar>>(args)
-        // var argsPointer = withUnsafePointer(to: &args) { UnsafePointer<UnsafePointer<CChar>>($0) }
-        var argsPointer = UnsafePointer(args).withMemoryRebound(to: UnsafePointer<CChar>.self, capacity: 1) { UnsafePointer<UnsafePointer<CChar>>($0) }
-        var authorizationRef: AuthorizationRef? = nil
-        var items = AuthorizationItem(name: kAuthorizationRightExecute, valueLength: toolPath.count, value: &toolPath, flags: 0)
-        var rights = AuthorizationRights(count: 1, items: &items)
-        let flags: AuthorizationFlags = [.interactionAllowed, .preAuthorize, .extendRights]
-        var outputFile = FILE()
-        var outputFilePointer = withUnsafeMutablePointer(to: &outputFile) { UnsafeMutablePointer<FILE>($0) }
-        var outputFilePointerPointer = withUnsafeMutablePointer(to: &outputFilePointer) { UnsafeMutablePointer<UnsafeMutablePointer<FILE>>($0) }
-        err = AuthorizationCreate(nil, nil, [], &authorizationRef)
-        //    if err != errAuthorizationSuccess {
-        //    }
-        err = AuthorizationCopyRights(authorizationRef!, &rights, nil, flags, nil)
-        //    if err != errAuthorizationSuccess {
-        //    }
-        let RTLD_DEFAULT = UnsafeMutableRawPointer(bitPattern: -2)
-        var authExecuteWithPrivsFn: @convention(c) (AuthorizationRef, UnsafePointer<CChar>, AuthorizationFlags, UnsafePointer<UnsafePointer<CChar>>?,  UnsafeMutablePointer<UnsafeMutablePointer<FILE>>?) -> OSStatus
-        authExecuteWithPrivsFn = unsafeBitCast(dlsym(RTLD_DEFAULT, "AuthorizationExecuteWithPrivileges"), to: type(of: authExecuteWithPrivsFn))
-        err = authExecuteWithPrivsFn(authorizationRef!, &toolPath, [], argsPointer, outputFilePointerPointer)
-        //    if err != errAuthorizationSuccess {
-        //    }
-        AuthorizationFree(authorizationRef!, [])
-        let outputFileHandle = FileHandle(fileDescriptor: fileno(outputFilePointer), closeOnDealloc: true)
-        // FIXME: always returns 0
-        let processIdentifier: pid_t = fcntl(fileno(outputFilePointer), F_GETOWN, 0)
-        var terminationStatus: Int32 = 0
-        waitpid(processIdentifier, &terminationStatus, 0)
-        let outputData = outputFileHandle.readDataToEndOfFile()
-        let output = String(data: outputData, encoding: .utf8) ?? ""
-        return output
-    }
+//    @discardableResult
+//    func sudo(_ cmd: String) -> String {
+//        var err: OSStatus = noErr
+//        var components = cmd.components(separatedBy: " ")
+//        var toolPath = components.remove(at: 0).cString(using: .utf8)!
+//        let cArgs = components.map { $0.cString(using: .utf8)! }
+//        var args = [UnsafePointer<CChar>?]()
+//        for cArg in cArgs {
+//            args.append(UnsafePointer<CChar>(cArg))
+//        }
+//        args.append(nil)
+//        // let argsPointer = UnsafePointer<UnsafePointer<CChar>>(args)
+//        // var argsPointer = withUnsafePointer(to: &args) { UnsafePointer<UnsafePointer<CChar>>($0) }
+//        var argsPointer = UnsafePointer(args).withMemoryRebound(to: UnsafePointer<CChar>.self, capacity: 1) { UnsafePointer<UnsafePointer<CChar>>($0) }
+//        var authorizationRef: AuthorizationRef? = nil
+//        var items = AuthorizationItem(name: kAuthorizationRightExecute, valueLength: toolPath.count, value: &toolPath, flags: 0)
+//        var rights = AuthorizationRights(count: 1, items: &items)
+//        let flags: AuthorizationFlags = [.interactionAllowed, .preAuthorize, .extendRights]
+//        var outputFile = FILE()
+//        var outputFilePointer = withUnsafeMutablePointer(to: &outputFile) { UnsafeMutablePointer<FILE>($0) }
+//        var outputFilePointerPointer = withUnsafeMutablePointer(to: &outputFilePointer) { UnsafeMutablePointer<UnsafeMutablePointer<FILE>>($0) }
+//        err = AuthorizationCreate(nil, nil, [], &authorizationRef)
+//        //    if err != errAuthorizationSuccess {
+//        //    }
+//        err = AuthorizationCopyRights(authorizationRef!, &rights, nil, flags, nil)
+//        //    if err != errAuthorizationSuccess {
+//        //    }
+//        let RTLD_DEFAULT = UnsafeMutableRawPointer(bitPattern: -2)
+//        var authExecuteWithPrivsFn: @convention(c) (AuthorizationRef, UnsafePointer<CChar>, AuthorizationFlags, UnsafePointer<UnsafePointer<CChar>>?,  UnsafeMutablePointer<UnsafeMutablePointer<FILE>>?) -> OSStatus
+//        authExecuteWithPrivsFn = unsafeBitCast(dlsym(RTLD_DEFAULT, "AuthorizationExecuteWithPrivileges"), to: type(of: authExecuteWithPrivsFn))
+//        err = authExecuteWithPrivsFn(authorizationRef!, &toolPath, [], argsPointer, outputFilePointerPointer)
+//        //    if err != errAuthorizationSuccess {
+//        //    }
+//        AuthorizationFree(authorizationRef!, [])
+//        let outputFileHandle = FileHandle(fileDescriptor: fileno(outputFilePointer), closeOnDealloc: true)
+//        // FIXME: always returns 0
+//        let processIdentifier: pid_t = fcntl(fileno(outputFilePointer), F_GETOWN, 0)
+//        var terminationStatus: Int32 = 0
+//        waitpid(processIdentifier, &terminationStatus, 0)
+//        let outputData = outputFileHandle.readDataToEndOfFile()
+//        let output = String(data: outputData, encoding: .utf8) ?? ""
+//        return output
+//    }
 
 
     func nodes(URL url: String, XPath xpath: String) -> [XMLNode] {
