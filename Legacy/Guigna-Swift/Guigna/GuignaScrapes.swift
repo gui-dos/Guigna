@@ -515,35 +515,26 @@ class MacTorrents: GScrape {
                 index["\(name)-\(version)"] = app
             }
         }
-        for page in [1...(pageNumber/2) + 1] {
+        for page in 1...(pageNumber/2) + 1 {
             url = URL(string: "https://www.macbed.com/page/\(page)")!
             if let xmlDoc = try? XMLDocument(contentsOf: url, options: .documentTidyHTML) {
-                let nodes = xmlDoc.rootElement()!["//li[starts-with(@class,\"post\")]"]
+                let nodes = xmlDoc.rootElement()!["//div[starts-with(@class,\"post-inner\")]"]
                 for node in nodes {
-                    var parts = node[".//div[@class=\"entry\"]//a"][0].stringValue!.split(" – ")
-                    if parts.count < 2 {
+                    let title = node[".//a[@rel=\"bookmark\"]"][0].stringValue!
+                    let idx = title.rindex(" ")
+                    if idx == NSNotFound  {
                         continue
                     }
-                    var name = parts[0]
-                    let description = parts[1]
-                    let idx = name.rindex(" ")
-                    var version = ""
-                    if idx != NSNotFound {
-                        version = name.substring(from: idx + 1)
-                        name = name.substring(to: idx)
-                    }
+                    let name = title.substring(to: idx)
+                    let version = title.substring(from: idx + 1)
+                    var description = node[".//div[@class=\"entry excerpt\"]"][0].stringValue!
+
                     if let app = index["\(name)-\(version)"] {
                         app.description = description
                         var categories = ""
-                        for link in node[".//div[@class=\"tag\"]/a"] {
-                            let tag = link.stringValue!
-                            if tag != name {
-                                categories.append(tag.lowercased())
-                            }
-                        }
-                        for link in node[".//div[@class=\"desc\"]/a"] {
+                        for link in node[".//a[@rel=\"category tag\"]"] {
                             let category = link.stringValue!
-                            if category != "Featured" && categories != category.lowercased() {
+                            if category != "Featured" {
                                 categories.append(" \(category.lowercased())")
                             }
                         }

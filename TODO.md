@@ -18,10 +18,7 @@ TODO
 * Swift:
   - complete port of inactive packages management
   - make use of Array's removeAll
-* Objective-C:
-  - port new code from [“swift2”](https://github.com/gui-dos/Guigna/releases/tag/swift2)
-    release on (15th June)
-* Make use of `brew info -d —json=v1 --all`
+* Make use of `brew info -d —json=v1 --all` and https://formulae.brew.sh/docs/api/
 * Make use of Storyboards and NSViewControllers
 * Make use of WKWebView and NSURLSession
 * Preload a cached index to speed up startup

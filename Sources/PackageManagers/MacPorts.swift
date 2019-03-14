@@ -8,7 +8,7 @@ final class MacPorts: GSystem {
     required init(agent: GAgent) {
         super.init(agent: agent)
         homepage = "http://www.macports.org"
-        logpage = "http://trac.macports.org/timeline"
+        logpage = "https://github.com/macports/macports-ports/commits/master"
         cmd = "\(prefix)/bin/port"
     }
 
