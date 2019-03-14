@@ -46,7 +46,7 @@ TODO
 * Scriptability
 * Editor for launchd and preferences plists
 * GPython and GRuby systems
-* JPortsGUI good ideas:
+* JPortsUI good ideas:
   - Sort MacPorts by date
   - Display status of dependencies
   - Get favicon.ico
