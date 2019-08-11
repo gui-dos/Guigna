@@ -30,7 +30,7 @@ repositories.
 ## Feedback
 
 Guigna is at a very early stage of development and it is tested only for the
-latest versions of Sierra, Xcode and Swift betas. Some preliminary builds are
+latest versions of macOS, Xcode and Swift betas. Some preliminary builds are
 available from [Dropbox](https://www.dropbox.com/sh/y1wpmndu1vn7pqp/AABCqKxUa-_Soqf57EVzhYILa?dl=0).
 
 Some advice and warnings:
@@ -130,5 +130,5 @@ Some advice and warnings:
 \* The [Kodkod](http://en.wikipedia.org/wiki/Kodkod) (_Leopardus guigna_), also
 called **guiña**, is the smallest cat in the Americas.
 
-![icon](http://www.felineconservation.org/uploads/rauh_handicapped_guina.jpg)
+![icon](http://4.bp.blogspot.com/-tDKNTW-rJLU/UmU7Iro9vRI/AAAAAAAAAQQ/GR_SpJc1s6o/s1600/kodkod+(1).jpg)
 
