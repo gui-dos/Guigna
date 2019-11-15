@@ -149,7 +149,7 @@ final class MacPorts: GSystem {
         self.outdated() // index outdated ports
         let whitespaceCharacterSet = CharacterSet.whitespaces
         for line in outputLines {
-            var components = line.trim(whitespaceCharacterSet).split()
+            let components = line.trim(whitespaceCharacterSet).split()
             let name = components[0]
             var version = components[1].substring(from: 1)
             var variants: String! = nil

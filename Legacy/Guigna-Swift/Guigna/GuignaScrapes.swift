@@ -27,7 +27,7 @@ class PkgsrcSE: GScrape {
         let url = URL(string: "http://pkgsrc.se/?page=\(pageNumber)")!
         if let xmlDoc = try? XMLDocument(contentsOf: url, options: .documentTidyHTML) {
             let mainDiv = xmlDoc.rootElement()!["//div[@id=\"main\"]"][0]
-            var dates = mainDiv["h3"]
+            let dates = mainDiv["h3"]
             var names = mainDiv["b"]
             names.remove(at: 0)
             names.remove(at: 0)
@@ -184,7 +184,7 @@ class CocoaPods: GScrape {
                 let htmlDescription = node["description"][0].stringValue!
                 let descriptionNode = (try! XMLDocument(xmlString: htmlDescription, options: .documentTidyHTML)).rootElement()!
                 let description = descriptionNode[".//p"][1].stringValue!
-                var licenseNodes = descriptionNode[".//li[starts-with(.,'License:')]"]
+                let licenseNodes = descriptionNode[".//li[starts-with(.,'License:')]"]
                 var license: String = ""
                 if licenseNodes.count > 0 {
                     license = licenseNodes[0].stringValue!.substring(from: 9)
@@ -527,7 +527,7 @@ class MacTorrents: GScrape {
                     }
                     let name = title.substring(to: idx)
                     let version = title.substring(from: idx + 1)
-                    var description = node[".//div[@class=\"entry excerpt\"]"][0].stringValue!
+                    let description = node[".//div[@class=\"entry excerpt\"]"][0].stringValue!
 
                     if let app = index["\(name)-\(version)"] {
                         app.description = description

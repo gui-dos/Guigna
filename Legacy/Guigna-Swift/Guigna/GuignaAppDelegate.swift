@@ -603,7 +603,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 let statusSource = sourcesContent[2] as! GSource
                 let statuses = statusSource.categories! as! [GSource]
                 let statusesMutableArray = statusSource.mutableArrayValue(forKey: "categories")
-                var currentUpdated = statuses.filter { $0.name.hasPrefix("updated") }
+                let currentUpdated = statuses.filter { $0.name.hasPrefix("updated") }
                 if currentUpdated.count > 0 && updated == 0 {
                     statusesMutableArray.remove(currentUpdated[0])
                 }
@@ -616,7 +616,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                         (currentUpdated[0] as GSource).name = name
                     }
                 }
-                var currentNew = statuses.filter { $0.name.hasPrefix("new") }
+                let currentNew = statuses.filter { $0.name.hasPrefix("new") }
                 if currentNew.count > 0 && `new` == 0 {
                     statusesMutableArray.remove(currentNew[0])
                 }
@@ -1587,7 +1587,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
         let statusSource = sourcesContent[2] as! GSource
         let statuses = statusSource.categories! as! [GSource]
         let statusesMutableArray = statusSource.mutableArrayValue(forKey: "categories")
-        var currentMarked = statuses.filter { $0.name.hasPrefix("marked") }
+        let currentMarked = statuses.filter { $0.name.hasPrefix("marked") }
         if currentMarked.count > 0 && marksCount == 0 {
             statusesMutableArray.remove(currentMarked[0])
         }

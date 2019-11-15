@@ -36,7 +36,7 @@ final class MacOS: GSystem {
         var keepPkg: Bool
         for dict in history as! [NSDictionary] {
             keepPkg = false
-            var ids = dict["packageIdentifiers"]! as! [String]
+            let ids = dict["packageIdentifiers"]! as! [String]
             for pkgId in ids {
                 if let idx = pkgIds.firstIndex(of: pkgId) {
                     keepPkg = true
