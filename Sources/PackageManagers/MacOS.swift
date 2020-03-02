@@ -96,7 +96,7 @@ final class MacOS: GSystem {
 
     override func home(_ item: GItem) -> String {
         var homepage = "http://support.apple.com/downloads/"
-        if item.categories == "storeagent" || item.categories == "storedownloadd" {
+        if item.categories == "storeagent" || item.categories == "storedownloadd" || item.categories == "appstoreagent" {
             let url = "http://itunes.apple.com/lookup?bundleId=\(item.id!)"
             let data = (try? Data(contentsOf: URL(string: url)!)) ?? Data()
             let results = (((try! JSONSerialization.jsonObject(with: data, options: [])) as! NSDictionary)["results"]! as! NSArray)
@@ -117,7 +117,7 @@ final class MacOS: GSystem {
 
     override func log(_ item: GItem) -> String {
         var page = self.logpage
-        if item.categories == "storeagent" || item.categories == "storedownloadd" {
+        if item.categories == "storeagent" || item.categories == "storedownloadd" || item.categories == "appstoreagent" {
             let url = "http://itunes.apple.com/lookup?bundleId=\(item.id!)"
             let data = (try? Data(contentsOf: URL(string: url)!)) ?? Data()
             let results = (((try! JSONSerialization.jsonObject(with: data, options: [])) as! NSDictionary)["results"]! as! NSArray)
