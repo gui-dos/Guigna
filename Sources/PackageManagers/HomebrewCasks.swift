@@ -65,10 +65,19 @@ final class HomebrewCasks: GSystem {
                 }
             }
         }
-        outputLines = output("/bin/sh -c /usr/bin/grep__\"name__'\"__-r__/\(prefix)/Homebrew/Library/Taps/homebrew/homebrew-*/Casks").split("\n")
+        outputLines = output("/bin/sh -c /usr/bin/grep__\"name__\\\"\"__-r__/\(prefix)/Homebrew/Library/Taps/homebrew/homebrew-*/Casks").split("\n")
         outputLines.removeLast()
         for line in outputLines {
-            let components = line.trim(whitespaceCharacterSet).split(".rb:  name '")
+            let components = line.trim(whitespaceCharacterSet).split(".rb:  name \"")
+            let name = (components[0] as NSString).lastPathComponent
+            if let pkg = self[name] {
+                pkg.description = String((components.last!).dropLast())
+            }
+        }
+        outputLines = output("/bin/sh -c /usr/bin/grep__\"desc__\\\"\"__-r__/\(prefix)/Homebrew/Library/Taps/homebrew/homebrew-*/Casks").split("\n")
+        outputLines.removeLast()
+        for line in outputLines {
+            let components = line.trim(whitespaceCharacterSet).split(".rb:  desc \"")
             let name = (components[0] as NSString).lastPathComponent
             if let pkg = self[name] {
                 pkg.description = String((components.last!).dropLast())
