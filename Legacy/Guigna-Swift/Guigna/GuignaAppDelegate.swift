@@ -284,12 +284,10 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     homebrew.prefix = ((brewPath as NSString).deletingLastPathComponent as NSString).deletingLastPathComponent
                     homebrew.cmd = brewPath
                 }
-                if "\(homebrew.prefix)/Homebrew/Library/Homebrew/cmd/cask.rb".exists {
-                    let homebrewcasks = HomebrewCasks(agent: agent)
-                    systems.append(homebrewcasks)
-                    homebrewcasks.prefix = homebrew.prefix
-                    homebrewcasks.cmd = brewPath + " cask"
-                }
+                let homebrewcasks = HomebrewCasks(agent: agent)
+                systems.append(homebrewcasks)
+                homebrewcasks.prefix = homebrew.prefix
+                homebrewcasks.cmd = brewPath + " cask"
             }
         }
 
@@ -1876,10 +1874,8 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                         if command.exists {
                             system = Homebrew(agent: agent)
                             addedSystems.append(system)
-                            if "/usr/local/Homebrew/Library/Homebrew/cmd/cask.rb".exists {
-                                system = HomebrewCasks(agent: agent)
-                                addedSystems.append(system)
-                            }
+                            system = HomebrewCasks(agent: agent)
+                            addedSystems.append(system)
                         }
 
                     } else if title == "MacPorts" {
