@@ -202,7 +202,7 @@ final class HomebrewCasks: GSystem {
 
     override func contents(_ item: GItem) -> String {
         if !self.isHidden {
-            return output("\(cmd) list \(item.name)")
+            return output("\(cmd) list --cask \(item.name)")
         } else {
             return ""
         }
