@@ -7,9 +7,9 @@ final class HomebrewCasks: GSystem {
 
     required init(agent: GAgent) {
         super.init(agent: agent)
-        homepage = "http://caskroom.io"
+        homepage = "http://brew.sh/"
         logpage = "http://github.com/homebrew/homebrew-cask/commits"
-        cmd = "\(prefix)/bin/brew cask"
+        cmd = "\(prefix)/bin/brew"
     }
 
     @discardableResult
@@ -18,7 +18,7 @@ final class HomebrewCasks: GSystem {
         index.removeAll(keepingCapacity: true)
         items.removeAll(keepingCapacity: true)
 
-        var outputLines = output("/bin/sh -c /usr/bin/grep__\"__version__\"__-r__/\(prefix)/Homebrew/Library/Taps/homebrew/homebrew-*/Casks").split("\n")
+        var outputLines = output("/bin/sh -c /usr/bin/grep__\"__version__[\\\":]\"__-r__/\(prefix)/Homebrew/Library/Taps/homebrew/homebrew-*/Casks").split("\n")
         outputLines.removeLast()
         let whitespaceCharacterSet = CharacterSet.whitespaces
         for line in outputLines {
@@ -26,14 +26,6 @@ final class HomebrewCasks: GSystem {
             var name = (components[0] as NSString).lastPathComponent
             name = name.substring(to: name.length - 4)
             var version = components.last!
-            if (!(version.hasPrefix("'") || version.hasPrefix(":"))) || version == "'" {
-                let prev = components[components.count - 2]
-                if prev.hasPrefix("'") {
-                    version = "\(prev) \(version)"
-                } else {
-                    continue
-                }
-            }
             let offset = version.hasPrefix(":") ? 1 : 2
             version = version.substring(1, version.length - offset)
             let repo = line.split("/Taps/")[1].split("/Casks/")[0].replace("homebrew-", "")
