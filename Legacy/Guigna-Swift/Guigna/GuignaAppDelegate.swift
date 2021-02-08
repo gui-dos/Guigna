@@ -287,7 +287,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 let homebrewcasks = HomebrewCasks(agent: agent)
                 systems.append(homebrewcasks)
                 homebrewcasks.prefix = homebrew.prefix
-                homebrewcasks.cmd = brewPath + " cask"
+                homebrewcasks.cmd = brewPath
             }
         }
 

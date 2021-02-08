@@ -94,7 +94,7 @@ final class HomebrewCasks: GSystem {
             return pkgs
         }
 
-        var outputLines = output("\(cmd) list").split("\n")
+        var outputLines = output("\(cmd) list --cask").split("\n")
         outputLines.removeLast()
         var status: GStatus
 
