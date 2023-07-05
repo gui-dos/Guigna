@@ -18,7 +18,9 @@ final class HomebrewCasks: GSystem {
         index.removeAll(keepingCapacity: true)
         items.removeAll(keepingCapacity: true)
 
-        var outputLines = output("/bin/sh -c /usr/bin/grep__\"__version__[\\\":]\"__-r__/\(prefix)/Homebrew/Library/Taps/homebrew/homebrew-*/Casks").split("\n")
+        let libraryPath = prefix == "/opt/homebrew" ? "\(prefix)/Library" : "\(prefix)/Homebrew/Library"
+
+        var outputLines = output("/bin/sh -c /usr/bin/grep__\"__version__[\\\":]\"__-r__/\(libraryPath)/Taps/homebrew/homebrew-*/Casks").split("\n")
         outputLines.removeLast()
         let whitespaceCharacterSet = CharacterSet.whitespaces
         for line in outputLines {
@@ -51,7 +53,7 @@ final class HomebrewCasks: GSystem {
             items.append(pkg)
             self[name] = pkg
         }
-        outputLines = output("/bin/sh -c /usr/bin/grep__\"license__\"__-r__/\(prefix)/Homebrew/Library/Taps/homebrew/homebrew-*/Casks").split("\n")
+        outputLines = output("/bin/sh -c /usr/bin/grep__\"license__\"__-r__/\(libraryPath)/Taps/homebrew/homebrew-*/Casks").split("\n")
         outputLines.removeLast()
         for line in outputLines {
             let components = line.trim(whitespaceCharacterSet).split()
@@ -65,7 +67,7 @@ final class HomebrewCasks: GSystem {
                 }
             }
         }
-        outputLines = output("/bin/sh -c /usr/bin/grep__\"name__\\\"\"__-r__/\(prefix)/Homebrew/Library/Taps/homebrew/homebrew-*/Casks").split("\n")
+        outputLines = output("/bin/sh -c /usr/bin/grep__\"name__\\\"\"__-r__/\(libraryPath)/Taps/homebrew/homebrew-*/Casks").split("\n")
         outputLines.removeLast()
         for line in outputLines {
             let components = line.trim(whitespaceCharacterSet).split(".rb:  name \"")
@@ -74,7 +76,7 @@ final class HomebrewCasks: GSystem {
                 pkg.description = String((components.last!).dropLast())
             }
         }
-        outputLines = output("/bin/sh -c /usr/bin/grep__\"desc__\\\"\"__-r__/\(prefix)/Homebrew/Library/Taps/homebrew/homebrew-*/Casks").split("\n")
+        outputLines = output("/bin/sh -c /usr/bin/grep__\"desc__\\\"\"__-r__/\(libraryPath)/Taps/homebrew/homebrew-*/Casks").split("\n")
         outputLines.removeLast()
         for line in outputLines {
             let components = line.trim(whitespaceCharacterSet).split(".rb:  desc \"")
