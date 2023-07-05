@@ -2,8 +2,8 @@ import Foundation
 
 final class HomebrewCasks: GSystem {
     
-    override class var name: String { return "Homebrew Casks"}
-    override class var prefix: String { return "/usr/local" }
+    override class var name: String { "Homebrew Casks"}
+    override class var prefix: String { "/opt/homebrew".exists ? "/opt/homebrew" : "/usr/local" }
 
     required init(agent: GAgent) {
         super.init(agent: agent)

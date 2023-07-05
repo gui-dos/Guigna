@@ -217,7 +217,9 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
             applyTheme(theme)
         }
 
-        let knownPaths = ["MacPorts": "/opt/local", "Homebrew": "/usr/local", "pkgsrc": "/usr/pkg", "Fink": "/sw"]
+        var knownPaths = ["MacPorts": "/opt/local", "Homebrew": "/usr/local", "pkgsrc": "/usr/pkg", "Fink": "/sw"]
+        // Mac Silicon
+        if "/opt/homebrew".exists { knownPaths["Homebrew"] = "/opt/homebrew" }
         for (system, prefix) in knownPaths {
             if "\(prefix)_off".exists || "\(prefix)/bin_off".exists {
                 let alert = NSAlert()
@@ -238,7 +240,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
 
         var portPath = MacPorts.prefix + "/bin/port"
         var brewPath = Homebrew.prefix + "/bin/brew"
-        let paths = agent.output("/bin/bash -l -c which__port__brew").split("\n")
+        let paths = agent.output("/bin/zsh -l -c which__port__brew").split("\n")
         for path in paths {
             if path.hasSuffix("port") {
                 portPath = path
@@ -1304,7 +1306,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                     }
                 }
                 if !cmd.hasPrefix("/") {
-                    output = agent.output("/bin/bash -l -c which__\(cmd)")
+                    output = agent.output("/bin/zsh -l -c which__\(cmd)")
                     if output.length != 0 {
                         tokens[0] = output.substring(to: output.length - 1)
                         // } else // TODO:show stderr
@@ -1314,7 +1316,7 @@ class GuignaAppDelegate: NSObject, GAppDelegate, NSApplicationDelegate, NSMenuDe
                 log("😺===> \(cmd)\n")
                 status("Executing '\(cmd)'...")
                 cmd = cmd.replace(" ", "__")
-                cmd = "/bin/bash -l -c \(cmd)"
+                cmd = "/bin/zsh -l -c \(cmd)"
                 output = agent.output(cmd)
                 if self.ready {
                     status("OK.")

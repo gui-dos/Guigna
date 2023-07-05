@@ -2,8 +2,8 @@ import Foundation
 
 final class Homebrew: GSystem {
 
-    override class var name: String { return "Homebrew"}
-    override class var prefix: String { return "/usr/local"}
+    override class var name: String { "Homebrew"}
+    override class var prefix: String { "/opt/homebrew".exists ? "/opt/homebrew" : "/usr/local" }
 
     required init(agent: GAgent) {
         super.init(agent: agent)
@@ -58,7 +58,7 @@ final class Homebrew: GSystem {
         //  var outputLines = output("/usr/bin/ruby -C \(prefix)/Homebrew/Library/Homebrew -I. -e " + workaround + "require__'global';require__'formula';__Formula.each__{|f|__puts__\"#{f.full_name}|#{f.pkg_version}|#{f.bottle}|#{f.desc}\"}").split("\n")
 
 
-        var outputLines = output("\(cmd) ruby -r formula -e Formula.each__{|f|__puts__\"#{f.full_name}|#{f.pkg_version}|#{f.bottle}|#{f.desc}\"}").split("\n")
+        var outputLines = output("\(cmd) ruby -r formula -e Formula.all.each__{|f|__puts__\"#{f.full_name}|#{f.pkg_version}|#{f.bottle}|#{f.desc}\"}").split("\n")
         outputLines.removeLast()
         for line in outputLines {
             let components = line.split("|")
