@@ -96,6 +96,7 @@
 		C562EF8F1993BA16001309A9 /* ITunes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ITunes.swift; sourceTree = "<group>"; };
 		C562FE281D1EE612002603EC /* TODO.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = TODO.md; path = ../../TODO.md; sourceTree = "<group>"; };
 		C5635BEA1952F53F007424E2 /* MacPorts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MacPorts.swift; sourceTree = "<group>"; };
+		C57022332A575A88002B1612 /* Guigna.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Guigna.entitlements; sourceTree = "<group>"; };
 		C57135B1218472DA00D55EFA /* source-chocolatey.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = "source-chocolatey.tiff"; sourceTree = "<group>"; };
 		C5779CA91969922B00755926 /* HomebrewCasks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomebrewCasks.swift; sourceTree = "<group>"; };
 		C5A00A9A1B174F7600642B26 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../README.md; sourceTree = "<group>"; };
@@ -192,6 +193,7 @@
 		C51ED05819458CB0000B582A /* Guigna */ = {
 			isa = PBXGroup;
 			children = (
+				C57022332A575A88002B1612 /* Guigna.entitlements */,
 				C51ED05D19458CB0000B582A /* GuignaAppDelegate.swift */,
 				C5A1214E1945D91800A351A8 /* GAgent.swift */,
 				C5B736FE194732C80046B2E2 /* GExtensions.swift */,
@@ -348,7 +350,9 @@
 				TargetAttributes = {
 					C51ED05519458CB0000B582A = {
 						CreatedOnToolsVersion = 6.0;
+						DevelopmentTeam = Z25SC9UDC8;
 						LastSwiftMigration = 1020;
+						ProvisioningStyle = Automatic;
 					};
 					C51ED06A19458CB0000B582A = {
 						CreatedOnToolsVersion = 6.0;
@@ -524,6 +528,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -579,6 +584,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -601,12 +607,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Guigna/Guigna.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = Z25SC9UDC8;
+				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = Guigna/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				PRODUCT_BUNDLE_IDENTIFIER = "name.soranzio.guido.${PRODUCT_NAME:rfc1034identifier}-Swift";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Guigna/Guigna-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -618,12 +630,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Guigna/Guigna.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = Z25SC9UDC8;
+				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = Guigna/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				PRODUCT_BUNDLE_IDENTIFIER = "name.soranzio.guido.${PRODUCT_NAME:rfc1034identifier}-Swift";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Guigna/Guigna-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 5.0;
