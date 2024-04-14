@@ -58,7 +58,8 @@ final class Homebrew: GSystem {
         //  var outputLines = output("/usr/bin/ruby -C \(prefix)/Homebrew/Library/Homebrew -I. -e " + workaround + "require__'global';require__'formula';__Formula.each__{|f|__puts__\"#{f.full_name}|#{f.pkg_version}|#{f.bottle}|#{f.desc}\"}").split("\n")
 
 
-        var outputLines = output("\(cmd) ruby -r formula -e Formula.all.each__{|f|__puts__\"#{f.full_name}|#{f.pkg_version}|#{f.bottle}|#{f.desc}\"}").split("\n")
+        let workaround = "ENV['HOMEBREW_EVAL_ALL']='1';"
+        var outputLines = output("\(cmd) ruby -r formula -e \(workaround)Formula.all.each__{|f|__puts__\"#{f.full_name}|#{f.pkg_version}|#{f.bottle}|#{f.desc}\"}").split("\n")
         outputLines.removeLast()
         for line in outputLines {
             let components = line.split("|")
